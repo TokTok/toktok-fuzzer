@@ -14,25 +14,25 @@ fuzz_get_count:
    97|      6|}
 
 LLVMFuzzerTestOneInput:
-    5|      7|extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-    6|      7|  Tox_Err_Options_New error_options;
+    5|      8|extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+    6|      8|  Tox_Err_Options_New error_options;
     7|       |
-    8|      7|  struct Tox_Options *tox_options = tox_options_new(&error_options);
+    8|      8|  struct Tox_Options *tox_options = tox_options_new(&error_options);
     9|       |
-   10|      7|  assert(tox_options != nullptr);
+   10|      8|  assert(tox_options != nullptr);
    11|      0|  assert(error_options == TOX_ERR_OPTIONS_NEW_OK);
    12|       |
    13|       |  // pass test data to Tox
    14|      0|  tox_options_set_savedata_data(tox_options, data, size);
-   15|      7|  tox_options_set_savedata_type(tox_options, TOX_SAVEDATA_TYPE_TOX_SAVE);
+   15|      8|  tox_options_set_savedata_type(tox_options, TOX_SAVEDATA_TYPE_TOX_SAVE);
    16|       |
-   17|      7|  Tox *tox = tox_new(tox_options, nullptr);
+   17|      8|  Tox *tox = tox_new(tox_options, nullptr);
    18|       |
-   19|      7|  tox_options_free(tox_options);
+   19|      8|  tox_options_free(tox_options);
    20|       |
-   21|      7|  tox_kill(tox);
-   22|      7|  return 0;  // Non-zero return values are reserved for future use.
-   23|      7|}
+   21|      8|  tox_kill(tox);
+   22|      8|  return 0;  // Non-zero return values are reserved for future use.
+   23|      8|}
 
 dht_get_self_secret_key:
   127|      6|{
@@ -1788,22 +1788,22 @@ lendian_bytes_to_host32:
   134|     10|}
 
 tox_new:
-  423|      7|{
-  424|      7|    Tox *tox = (Tox *)calloc(1, sizeof(Tox));
+  423|      8|{
+  424|      8|    Tox *tox = (Tox *)calloc(1, sizeof(Tox));
   425|       |
-  426|      7|    if (tox == nullptr) {
+  426|      8|    if (tox == nullptr) {
   427|      0|        SET_ERROR_PARAMETER(error, TOX_ERR_NEW_MALLOC);
   428|      0|        return nullptr;
   429|      0|    }
   430|       |
-  431|      7|    Messenger_Options m_options = {0};
+  431|      8|    Messenger_Options m_options = {0};
   432|       |
-  433|      7|    bool load_savedata_sk = false;
-  434|      7|    bool load_savedata_tox = false;
+  433|      8|    bool load_savedata_sk = false;
+  434|      8|    bool load_savedata_tox = false;
   435|       |
-  436|      7|    struct Tox_Options *default_options = nullptr;
+  436|      8|    struct Tox_Options *default_options = nullptr;
   437|       |
-  438|      7|    if (options == nullptr) {
+  438|      8|    if (options == nullptr) {
   439|      0|        Tox_Err_Options_New err;
   440|      0|        default_options = tox_options_new(&err);
   441|       |
@@ -1820,19 +1820,19 @@ tox_new:
   452|      0|        }
   453|      0|    }
   454|       |
-  455|      7|    const struct Tox_Options *const opts = options != nullptr ? options : default_options;
-  456|      7|    assert(opts != nullptr);
+  455|      8|    const struct Tox_Options *const opts = options != nullptr ? options : default_options;
+  456|      8|    assert(opts != nullptr);
   457|       |
-  458|      7|    if (tox_options_get_savedata_type(opts) != TOX_SAVEDATA_TYPE_NONE) {
-  459|      7|        if (tox_options_get_savedata_data(opts) == nullptr || tox_options_get_savedata_length(opts) == 0) {
+  458|      8|    if (tox_options_get_savedata_type(opts) != TOX_SAVEDATA_TYPE_NONE) {
+  459|      8|        if (tox_options_get_savedata_data(opts) == nullptr || tox_options_get_savedata_length(opts) == 0) {
   460|      0|            SET_ERROR_PARAMETER(error, TOX_ERR_NEW_LOAD_BAD_FORMAT);
   461|      0|            tox_options_free(default_options);
   462|      0|            free(tox);
   463|      0|            return nullptr;
   464|      0|        }
-  465|      7|    }
+  465|      8|    }
   466|       |
-  467|      7|    if (tox_options_get_savedata_type(opts) == TOX_SAVEDATA_TYPE_SECRET_KEY) {
+  467|      8|    if (tox_options_get_savedata_type(opts) == TOX_SAVEDATA_TYPE_SECRET_KEY) {
   468|      0|        if (tox_options_get_savedata_length(opts) != TOX_SECRET_KEY_SIZE) {
   469|      0|            SET_ERROR_PARAMETER(error, TOX_ERR_NEW_LOAD_BAD_FORMAT);
   470|      0|            tox_options_free(default_options);
@@ -1841,13 +1841,13 @@ tox_new:
   473|      0|        }
   474|       |
   475|      0|        load_savedata_sk = true;
-  476|      7|    } else if (tox_options_get_savedata_type(opts) == TOX_SAVEDATA_TYPE_TOX_SAVE) {
-  477|      7|        if (tox_options_get_savedata_length(opts) < TOX_ENC_SAVE_MAGIC_LENGTH) {
-  478|      0|            SET_ERROR_PARAMETER(error, TOX_ERR_NEW_LOAD_BAD_FORMAT);
-  479|      0|            tox_options_free(default_options);
-  480|      0|            free(tox);
-  481|      0|            return nullptr;
-  482|      0|        }
+  476|      8|    } else if (tox_options_get_savedata_type(opts) == TOX_SAVEDATA_TYPE_TOX_SAVE) {
+  477|      8|        if (tox_options_get_savedata_length(opts) < TOX_ENC_SAVE_MAGIC_LENGTH) {
+  478|      1|            SET_ERROR_PARAMETER(error, TOX_ERR_NEW_LOAD_BAD_FORMAT);
+  479|      1|            tox_options_free(default_options);
+  480|      1|            free(tox);
+  481|      1|            return nullptr;
+  482|      1|        }
   483|       |
   484|      7|        if (memcmp(tox_options_get_savedata_data(opts), TOX_ENC_SAVE_MAGIC_NUMBER, TOX_ENC_SAVE_MAGIC_LENGTH) == 0) {
   485|      1|            SET_ERROR_PARAMETER(error, TOX_ERR_NEW_LOAD_ENCRYPTED);
@@ -2022,10 +2022,10 @@ tox_new:
   654|      6|    return tox;
   655|      6|}
 tox_kill:
-  658|      7|{
-  659|      7|    if (tox == nullptr) {
-  660|      1|        return;
-  661|      1|    }
+  658|      8|{
+  659|      8|    if (tox == nullptr) {
+  660|      2|        return;
+  661|      2|    }
   662|       |
   663|      6|    lock(tox);
   664|      6|    LOGGER_ASSERT(tox->m->log, tox->m->msi_packet == nullptr, "Attempted to kill tox while toxav is still alive");
@@ -2079,30 +2079,30 @@ tox_options_get_ipv6_enabled:
    52|      6|    return options->ns##name; \
    53|      6|} \
 tox_options_set_ipv6_enabled:
-   54|      7|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
-   55|      7|{ \
-   56|      7|    options->ns##name = name; \
-   57|      7|}
+   54|      8|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
+   55|      8|{ \
+   56|      8|    options->ns##name = name; \
+   57|      8|}
 tox_options_get_udp_enabled:
    50|      6|type tox_options_get_##ns##name(const struct Tox_Options *options) \
    51|      6|{ \
    52|      6|    return options->ns##name; \
    53|      6|} \
 tox_options_set_udp_enabled:
-   54|      7|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
-   55|      7|{ \
-   56|      7|    options->ns##name = name; \
-   57|      7|}
+   54|      8|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
+   55|      8|{ \
+   56|      8|    options->ns##name = name; \
+   57|      8|}
 tox_options_get_proxy_type:
    50|      6|type tox_options_get_##ns##name(const struct Tox_Options *options) \
    51|      6|{ \
    52|      6|    return options->ns##name; \
    53|      6|} \
 tox_options_set_proxy_type:
-   54|      7|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
-   55|      7|{ \
-   56|      7|    options->ns##name = name; \
-   57|      7|}
+   54|      8|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
+   55|      8|{ \
+   56|      8|    options->ns##name = name; \
+   57|      8|}
 tox_options_get_start_port:
    50|      6|type tox_options_get_##ns##name(const struct Tox_Options *options) \
    51|      6|{ \
@@ -2124,25 +2124,25 @@ tox_options_get_hole_punching_enabled:
    52|      6|    return options->ns##name; \
    53|      6|} \
 tox_options_set_hole_punching_enabled:
-   54|      7|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
-   55|      7|{ \
-   56|      7|    options->ns##name = name; \
-   57|      7|}
+   54|      8|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
+   55|      8|{ \
+   56|      8|    options->ns##name = name; \
+   57|      8|}
 tox_options_get_savedata_type:
-   50|     21|type tox_options_get_##ns##name(const struct Tox_Options *options) \
-   51|     21|{ \
-   52|     21|    return options->ns##name; \
-   53|     21|} \
+   50|     24|type tox_options_get_##ns##name(const struct Tox_Options *options) \
+   51|     24|{ \
+   52|     24|    return options->ns##name; \
+   53|     24|} \
 tox_options_set_savedata_type:
-   54|      7|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
-   55|      7|{ \
-   56|      7|    options->ns##name = name; \
-   57|      7|}
+   54|      8|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
+   55|      8|{ \
+   56|      8|    options->ns##name = name; \
+   57|      8|}
 tox_options_get_savedata_length:
-   50|     20|type tox_options_get_##ns##name(const struct Tox_Options *options) \
-   51|     20|{ \
-   52|     20|    return options->ns##name; \
-   53|     20|} \
+   50|     22|type tox_options_get_##ns##name(const struct Tox_Options *options) \
+   51|     22|{ \
+   52|     22|    return options->ns##name; \
+   53|     22|} \
 tox_options_get_log_callback:
    50|      6|type tox_options_get_##ns##name(const struct Tox_Options *options) \
    51|      6|{ \
@@ -2159,59 +2159,59 @@ tox_options_get_local_discovery_enabled:
    52|      6|    return options->ns##name; \
    53|      6|} \
 tox_options_set_local_discovery_enabled:
-   54|      7|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
-   55|      7|{ \
-   56|      7|    options->ns##name = name; \
-   57|      7|}
+   54|      8|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
+   55|      8|{ \
+   56|      8|    options->ns##name = name; \
+   57|      8|}
 tox_options_get_experimental_thread_safety:
    50|      6|type tox_options_get_##ns##name(const struct Tox_Options *options) \
    51|      6|{ \
    52|      6|    return options->ns##name; \
    53|      6|} \
 tox_options_set_experimental_thread_safety:
-   54|      7|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
-   55|      7|{ \
-   56|      7|    options->ns##name = name; \
-   57|      7|}
+   54|      8|void tox_options_set_##ns##name(struct Tox_Options *options, type name) \
+   55|      8|{ \
+   56|      8|    options->ns##name = name; \
+   57|      8|}
 tox_options_get_savedata_data:
-   78|     20|{
-   79|     20|    return options->savedata_data;
-   80|     20|}
+   78|     21|{
+   79|     21|    return options->savedata_data;
+   80|     21|}
 tox_options_set_savedata_data:
-   83|      7|{
-   84|      7|    options->savedata_data = data;
-   85|      7|    options->savedata_length = length;
-   86|      7|}
+   83|      8|{
+   84|      8|    options->savedata_data = data;
+   85|      8|    options->savedata_length = length;
+   86|      8|}
 tox_options_default:
-   89|      7|{
-   90|      7|    if (options) {
-   91|      7|        struct Tox_Options default_options = { 0 };
-   92|      7|        *options = default_options;
-   93|      7|        tox_options_set_ipv6_enabled(options, true);
-   94|      7|        tox_options_set_udp_enabled(options, true);
-   95|      7|        tox_options_set_proxy_type(options, TOX_PROXY_TYPE_NONE);
-   96|      7|        tox_options_set_hole_punching_enabled(options, true);
-   97|      7|        tox_options_set_local_discovery_enabled(options, true);
-   98|      7|        tox_options_set_experimental_thread_safety(options, false);
-   99|      7|    }
-  100|      7|}
+   89|      8|{
+   90|      8|    if (options) {
+   91|      8|        struct Tox_Options default_options = { 0 };
+   92|      8|        *options = default_options;
+   93|      8|        tox_options_set_ipv6_enabled(options, true);
+   94|      8|        tox_options_set_udp_enabled(options, true);
+   95|      8|        tox_options_set_proxy_type(options, TOX_PROXY_TYPE_NONE);
+   96|      8|        tox_options_set_hole_punching_enabled(options, true);
+   97|      8|        tox_options_set_local_discovery_enabled(options, true);
+   98|      8|        tox_options_set_experimental_thread_safety(options, false);
+   99|      8|    }
+  100|      8|}
 tox_options_new:
-  103|      7|{
-  104|      7|    struct Tox_Options *options = (struct Tox_Options *)calloc(1, sizeof(struct Tox_Options));
+  103|      8|{
+  104|      8|    struct Tox_Options *options = (struct Tox_Options *)calloc(1, sizeof(struct Tox_Options));
   105|       |
-  106|      7|    if (options) {
-  107|      7|        tox_options_default(options);
-  108|      7|        SET_ERROR_PARAMETER(error, TOX_ERR_OPTIONS_NEW_OK);
-  109|      7|        return options;
-  110|      7|    }
+  106|      8|    if (options) {
+  107|      8|        tox_options_default(options);
+  108|      8|        SET_ERROR_PARAMETER(error, TOX_ERR_OPTIONS_NEW_OK);
+  109|      8|        return options;
+  110|      8|    }
   111|       |
   112|      0|    SET_ERROR_PARAMETER(error, TOX_ERR_OPTIONS_NEW_MALLOC);
   113|      0|    return nullptr;
-  114|      7|}
+  114|      8|}
 tox_options_free:
-  117|     14|{
-  118|     14|    free(options);
-  119|     14|}
+  117|     16|{
+  118|     16|    free(options);
+  119|     16|}
 
 id_equal:
    25|  6.19k|{
