@@ -497,44 +497,45 @@ new_messenger:
  3296|      6|    set_filter_function(m->fr, &friend_already_added, m);
  3297|       |
  3298|      6|    m->lastdump = 0;
- 3299|       |
- 3300|      6|    m_register_default_plugins(m);
- 3301|       |
- 3302|      6|    if (error) {
- 3303|      6|        *error = MESSENGER_ERROR_NONE;
- 3304|      6|    }
- 3305|       |
- 3306|      6|    return m;
- 3307|      6|}
+ 3299|      6|    m->is_receiving_file = 0;
+ 3300|       |
+ 3301|      6|    m_register_default_plugins(m);
+ 3302|       |
+ 3303|      6|    if (error) {
+ 3304|      6|        *error = MESSENGER_ERROR_NONE;
+ 3305|      6|    }
+ 3306|       |
+ 3307|      6|    return m;
+ 3308|      6|}
 kill_messenger:
- 3313|      6|{
- 3314|      6|    if (!m) {
- 3315|      0|        return;
- 3316|      0|    }
- 3317|       |
- 3318|      6|    if (m->tcp_server) {
- 3319|      0|        kill_TCP_server(m->tcp_server);
- 3320|      0|    }
- 3321|       |
- 3322|      6|    kill_friend_connections(m->fr_c);
- 3323|      6|    kill_onion(m->onion);
- 3324|      6|    kill_onion_announce(m->onion_a);
- 3325|      6|    kill_onion_client(m->onion_c);
- 3326|      6|    kill_net_crypto(m->net_crypto);
- 3327|      6|    kill_dht(m->dht);
- 3328|      6|    kill_networking(m->net);
- 3329|       |
- 3330|      6|    for (uint32_t i = 0; i < m->numfriends; ++i) {
- 3331|      0|        clear_receipts(m, i);
- 3332|      0|    }
- 3333|       |
- 3334|      6|    logger_kill(m->log);
- 3335|      6|    free(m->friendlist);
- 3336|      6|    friendreq_kill(m->fr);
- 3337|       |
- 3338|      6|    free(m->options.state_plugins);
- 3339|      6|    free(m);
- 3340|      6|}
+ 3314|      6|{
+ 3315|      6|    if (!m) {
+ 3316|      0|        return;
+ 3317|      0|    }
+ 3318|       |
+ 3319|      6|    if (m->tcp_server) {
+ 3320|      0|        kill_TCP_server(m->tcp_server);
+ 3321|      0|    }
+ 3322|       |
+ 3323|      6|    kill_friend_connections(m->fr_c);
+ 3324|      6|    kill_onion(m->onion);
+ 3325|      6|    kill_onion_announce(m->onion_a);
+ 3326|      6|    kill_onion_client(m->onion_c);
+ 3327|      6|    kill_net_crypto(m->net_crypto);
+ 3328|      6|    kill_dht(m->dht);
+ 3329|      6|    kill_networking(m->net);
+ 3330|       |
+ 3331|      6|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+ 3332|      0|        clear_receipts(m, i);
+ 3333|      0|    }
+ 3334|       |
+ 3335|      6|    logger_kill(m->log);
+ 3336|      6|    free(m->friendlist);
+ 3337|      6|    friendreq_kill(m->fr);
+ 3338|       |
+ 3339|      6|    free(m->options.state_plugins);
+ 3340|      6|    free(m);
+ 3341|      6|}
 Messenger.c:m_register_default_plugins:
  3086|      6|{
  3087|      6|    m_register_state_plugin(m, STATE_TYPE_NOSPAMKEYS, nospam_keys_size, load_nospam_keys, save_nospam_keys);
