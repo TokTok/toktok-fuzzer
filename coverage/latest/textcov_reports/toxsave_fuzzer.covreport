@@ -43,223 +43,223 @@ dht_get_net:
   142|    102|    return dht->net;
   143|    102|}
 get_close_nodes:
-  911|      6|{
-  912|      6|    memset(nodes_list, 0, MAX_SENT_NODES * sizeof(Node_format));
-  913|      6|    return get_somewhat_close_nodes(dht, public_key, nodes_list, sa_family, is_LAN);
-  914|      6|}
+  909|      6|{
+  910|      6|    memset(nodes_list, 0, MAX_SENT_NODES * sizeof(Node_format));
+  911|      6|    return get_somewhat_close_nodes(dht, public_key, nodes_list, sa_family, is_LAN);
+  912|      6|}
 dht_addfriend:
- 1599|     12|{
- 1600|     12|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
- 1601|       |
- 1602|     12|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
- 1603|      6|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
- 1604|       |
- 1605|      6|        if (dht_friend->lock_count == DHT_FRIEND_MAX_LOCKS) {
- 1606|      0|            return -1;
- 1607|      0|        }
+ 1597|     12|{
+ 1598|     12|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
+ 1599|       |
+ 1600|     12|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
+ 1601|      6|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
+ 1602|       |
+ 1603|      6|        if (dht_friend->lock_count == DHT_FRIEND_MAX_LOCKS) {
+ 1604|      0|            return -1;
+ 1605|      0|        }
+ 1606|       |
+ 1607|      6|        dht_friend_lock(dht_friend, ip_callback, data, number, lock_count);
  1608|       |
- 1609|      6|        dht_friend_lock(dht_friend, ip_callback, data, number, lock_count);
- 1610|       |
- 1611|      6|        return 0;
- 1612|      6|    }
+ 1609|      6|        return 0;
+ 1610|      6|    }
+ 1611|       |
+ 1612|      6|    DHT_Friend *const temp = (DHT_Friend *)realloc(dht->friends_list, sizeof(DHT_Friend) * (dht->num_friends + 1));
  1613|       |
- 1614|      6|    DHT_Friend *const temp = (DHT_Friend *)realloc(dht->friends_list, sizeof(DHT_Friend) * (dht->num_friends + 1));
- 1615|       |
- 1616|      6|    if (temp == nullptr) {
- 1617|      0|        return -1;
- 1618|      0|    }
- 1619|       |
- 1620|      6|    dht->friends_list = temp;
- 1621|      6|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
- 1622|      6|    memset(dht_friend, 0, sizeof(DHT_Friend));
- 1623|      6|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
- 1624|       |
- 1625|      6|    dht_friend->nat.nat_ping_id = random_u64();
- 1626|      6|    ++dht->num_friends;
+ 1614|      6|    if (temp == nullptr) {
+ 1615|      0|        return -1;
+ 1616|      0|    }
+ 1617|       |
+ 1618|      6|    dht->friends_list = temp;
+ 1619|      6|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
+ 1620|      6|    memset(dht_friend, 0, sizeof(DHT_Friend));
+ 1621|      6|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
+ 1622|       |
+ 1623|      6|    dht_friend->nat.nat_ping_id = random_u64();
+ 1624|      6|    ++dht->num_friends;
+ 1625|       |
+ 1626|      6|    dht_friend_lock(dht_friend, ip_callback, data, number, lock_count);
  1627|       |
- 1628|      6|    dht_friend_lock(dht_friend, ip_callback, data, number, lock_count);
- 1629|       |
- 1630|      6|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec,
- 1631|      6|                                   1);
- 1632|       |
- 1633|      6|    return 0;
- 1634|      6|}
+ 1628|      6|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec,
+ 1629|      6|                                   1);
+ 1630|       |
+ 1631|      6|    return 0;
+ 1632|      6|}
 cryptopacket_registerhandler:
- 2450|     24|{
- 2451|     24|    dht->cryptopackethandlers[byte].function = cb;
- 2452|     24|    dht->cryptopackethandlers[byte].object = object;
- 2453|     24|}
+ 2448|     24|{
+ 2449|     24|    dht->cryptopackethandlers[byte].function = cb;
+ 2450|     24|    dht->cryptopackethandlers[byte].object = object;
+ 2451|     24|}
 dht_callback_get_nodes_response:
- 2500|      6|{
- 2501|      6|    dht->get_nodes_response = function;
- 2502|      6|}
+ 2498|      6|{
+ 2499|      6|    dht->get_nodes_response = function;
+ 2500|      6|}
 new_dht:
- 2507|      6|{
- 2508|      6|    if (net == nullptr) {
- 2509|      0|        return nullptr;
- 2510|      0|    }
+ 2505|      6|{
+ 2506|      6|    if (net == nullptr) {
+ 2507|      0|        return nullptr;
+ 2508|      0|    }
+ 2509|       |
+ 2510|      6|    DHT *const dht = (DHT *)calloc(1, sizeof(DHT));
  2511|       |
- 2512|      6|    DHT *const dht = (DHT *)calloc(1, sizeof(DHT));
- 2513|       |
- 2514|      6|    if (dht == nullptr) {
- 2515|      0|        return nullptr;
- 2516|      0|    }
- 2517|       |
- 2518|      6|    dht->mono_time = mono_time;
- 2519|      6|    dht->cur_time = mono_time_get(mono_time);
- 2520|      6|    dht->log = log;
- 2521|      6|    dht->net = net;
+ 2512|      6|    if (dht == nullptr) {
+ 2513|      0|        return nullptr;
+ 2514|      0|    }
+ 2515|       |
+ 2516|      6|    dht->mono_time = mono_time;
+ 2517|      6|    dht->cur_time = mono_time_get(mono_time);
+ 2518|      6|    dht->log = log;
+ 2519|      6|    dht->net = net;
+ 2520|       |
+ 2521|      6|    dht->hole_punching_enabled = holepunching_enabled;
  2522|       |
- 2523|      6|    dht->hole_punching_enabled = holepunching_enabled;
+ 2523|      6|    dht->ping = ping_new(mono_time, dht);
  2524|       |
- 2525|      6|    dht->ping = ping_new(mono_time, dht);
- 2526|       |
- 2527|      6|    if (dht->ping == nullptr) {
- 2528|      0|        kill_dht(dht);
- 2529|      0|        return nullptr;
- 2530|      0|    }
- 2531|       |
- 2532|      6|    networking_registerhandler(dht->net, NET_PACKET_GET_NODES, &handle_getnodes, dht);
- 2533|      6|    networking_registerhandler(dht->net, NET_PACKET_SEND_NODES_IPV6, &handle_sendnodes_ipv6, dht);
- 2534|      6|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
- 2535|      6|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_NATping, dht);
+ 2525|      6|    if (dht->ping == nullptr) {
+ 2526|      0|        kill_dht(dht);
+ 2527|      0|        return nullptr;
+ 2528|      0|    }
+ 2529|       |
+ 2530|      6|    networking_registerhandler(dht->net, NET_PACKET_GET_NODES, &handle_getnodes, dht);
+ 2531|      6|    networking_registerhandler(dht->net, NET_PACKET_SEND_NODES_IPV6, &handle_sendnodes_ipv6, dht);
+ 2532|      6|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
+ 2533|      6|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_NATping, dht);
+ 2534|       |
+ 2535|      6|    crypto_new_keypair(dht->self_public_key, dht->self_secret_key);
  2536|       |
- 2537|      6|    crypto_new_keypair(dht->self_public_key, dht->self_secret_key);
+ 2537|      6|    dht->dht_ping_array = ping_array_new(DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
  2538|       |
- 2539|      6|    dht->dht_ping_array = ping_array_new(DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
- 2540|       |
- 2541|      6|    if (dht->dht_ping_array == nullptr) {
- 2542|      0|        kill_dht(dht);
- 2543|      0|        return nullptr;
- 2544|      0|    }
- 2545|       |
- 2546|     18|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
- 2547|     12|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
- 2548|     12|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
+ 2539|      6|    if (dht->dht_ping_array == nullptr) {
+ 2540|      0|        kill_dht(dht);
+ 2541|      0|        return nullptr;
+ 2542|      0|    }
+ 2543|       |
+ 2544|     18|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
+ 2545|     12|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
+ 2546|     12|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
+ 2547|       |
+ 2548|     12|        crypto_new_keypair(random_public_key_bytes, random_secret_key_bytes);
  2549|       |
- 2550|     12|        crypto_new_keypair(random_public_key_bytes, random_secret_key_bytes);
- 2551|       |
- 2552|     12|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, nullptr) != 0) {
- 2553|      0|            kill_dht(dht);
- 2554|      0|            return nullptr;
- 2555|      0|        }
- 2556|     12|    }
- 2557|       |
- 2558|      6|    return dht;
- 2559|      6|}
+ 2550|     12|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, nullptr) != 0) {
+ 2551|      0|            kill_dht(dht);
+ 2552|      0|            return nullptr;
+ 2553|      0|        }
+ 2554|     12|    }
+ 2555|       |
+ 2556|      6|    return dht;
+ 2557|      6|}
 kill_dht:
- 2583|      6|{
- 2584|      6|    networking_registerhandler(dht->net, NET_PACKET_GET_NODES, nullptr, nullptr);
- 2585|      6|    networking_registerhandler(dht->net, NET_PACKET_SEND_NODES_IPV6, nullptr, nullptr);
- 2586|      6|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
- 2587|      6|    ping_array_kill(dht->dht_ping_array);
- 2588|      6|    ping_kill(dht->ping);
- 2589|      6|    free(dht->friends_list);
- 2590|      6|    free(dht->loaded_nodes_list);
- 2591|      6|    crypto_memzero(&dht->shared_keys_recv, sizeof(dht->shared_keys_recv));
- 2592|      6|    crypto_memzero(&dht->shared_keys_sent, sizeof(dht->shared_keys_sent));
- 2593|      6|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
- 2594|      6|    free(dht);
- 2595|      6|}
+ 2581|      6|{
+ 2582|      6|    networking_registerhandler(dht->net, NET_PACKET_GET_NODES, nullptr, nullptr);
+ 2583|      6|    networking_registerhandler(dht->net, NET_PACKET_SEND_NODES_IPV6, nullptr, nullptr);
+ 2584|      6|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
+ 2585|      6|    ping_array_kill(dht->dht_ping_array);
+ 2586|      6|    ping_kill(dht->ping);
+ 2587|      6|    free(dht->friends_list);
+ 2588|      6|    free(dht->loaded_nodes_list);
+ 2589|      6|    crypto_memzero(&dht->shared_keys_recv, sizeof(dht->shared_keys_recv));
+ 2590|      6|    crypto_memzero(&dht->shared_keys_sent, sizeof(dht->shared_keys_sent));
+ 2591|      6|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
+ 2592|      6|    free(dht);
+ 2593|      6|}
 DHT.c:get_somewhat_close_nodes:
-  895|      6|{
-  896|      6|    uint32_t num_nodes = 0;
-  897|      6|    get_close_nodes_inner(dht->cur_time, public_key, nodes_list, sa_family,
-  898|      6|                          dht->close_clientlist, LCLIENT_LIST, &num_nodes, is_LAN);
-  899|       |
-  900|     12|    for (uint32_t i = 0; i < dht->num_friends; ++i) {
-  901|      6|        get_close_nodes_inner(dht->cur_time, public_key, nodes_list, sa_family,
-  902|      6|                              dht->friends_list[i].client_list, MAX_FRIEND_CLIENTS,
-  903|      6|                              &num_nodes, is_LAN);
-  904|      6|    }
-  905|       |
-  906|      6|    return num_nodes;
-  907|      6|}
+  893|      6|{
+  894|      6|    uint32_t num_nodes = 0;
+  895|      6|    get_close_nodes_inner(dht->cur_time, public_key, nodes_list, sa_family,
+  896|      6|                          dht->close_clientlist, LCLIENT_LIST, &num_nodes, is_LAN);
+  897|       |
+  898|     12|    for (uint32_t i = 0; i < dht->num_friends; ++i) {
+  899|      6|        get_close_nodes_inner(dht->cur_time, public_key, nodes_list, sa_family,
+  900|      6|                              dht->friends_list[i].client_list, MAX_FRIEND_CLIENTS,
+  901|      6|                              &num_nodes, is_LAN);
+  902|      6|    }
+  903|       |
+  904|      6|    return num_nodes;
+  905|      6|}
 DHT.c:get_close_nodes_inner:
-  837|     12|{
-  838|     12|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
-  839|      0|        return;
-  840|      0|    }
+  835|     12|{
+  836|     12|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
+  837|      0|        return;
+  838|      0|    }
+  839|       |
+  840|     12|    uint32_t num_nodes = *num_nodes_ptr;
   841|       |
-  842|     12|    uint32_t num_nodes = *num_nodes_ptr;
-  843|       |
-  844|  6.20k|    for (uint32_t i = 0; i < client_list_length; ++i) {
-  845|  6.19k|        const Client_data *const client = &client_list[i];
-  846|       |
-  847|       |        /* node already in list? */
-  848|  6.19k|        if (index_of_node_pk(nodes_list, MAX_SENT_NODES, client->public_key) != UINT32_MAX) {
-  849|  6.19k|            continue;
-  850|  6.19k|        }
+  842|  6.20k|    for (uint32_t i = 0; i < client_list_length; ++i) {
+  843|  6.19k|        const Client_data *const client = &client_list[i];
+  844|       |
+  845|       |        /* node already in list? */
+  846|  6.19k|        if (index_of_node_pk(nodes_list, MAX_SENT_NODES, client->public_key) != UINT32_MAX) {
+  847|  6.19k|            continue;
+  848|  6.19k|        }
+  849|       |
+  850|      0|        const IPPTsPng *ipptp;
   851|       |
-  852|      0|        const IPPTsPng *ipptp;
-  853|       |
-  854|      0|        if (net_family_is_ipv4(sa_family)) {
-  855|      0|            ipptp = &client->assoc4;
-  856|      0|        } else if (net_family_is_ipv6(sa_family)) {
-  857|      0|            ipptp = &client->assoc6;
-  858|      0|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
-  859|      0|            ipptp = &client->assoc4;
-  860|      0|        } else {
-  861|      0|            ipptp = &client->assoc6;
-  862|      0|        }
-  863|       |
-  864|       |        /* node not in a good condition? */
-  865|      0|        if (assoc_timeout(cur_time, ipptp)) {
-  866|      0|            continue;
-  867|      0|        }
-  868|       |
-  869|       |        /* don't send LAN ips to non LAN peers */
-  870|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_LAN) {
-  871|      0|            continue;
-  872|      0|        }
-  873|       |
-  874|      0|        if (num_nodes < MAX_SENT_NODES) {
-  875|      0|            memcpy(nodes_list[num_nodes].public_key, client->public_key, CRYPTO_PUBLIC_KEY_SIZE);
-  876|      0|            nodes_list[num_nodes].ip_port = ipptp->ip_port;
-  877|      0|            ++num_nodes;
-  878|      0|        } else {
-  879|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
-  880|      0|        }
-  881|      0|    }
-  882|       |
-  883|     12|    *num_nodes_ptr = num_nodes;
-  884|     12|}
+  852|      0|        if (net_family_is_ipv4(sa_family)) {
+  853|      0|            ipptp = &client->assoc4;
+  854|      0|        } else if (net_family_is_ipv6(sa_family)) {
+  855|      0|            ipptp = &client->assoc6;
+  856|      0|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
+  857|      0|            ipptp = &client->assoc4;
+  858|      0|        } else {
+  859|      0|            ipptp = &client->assoc6;
+  860|      0|        }
+  861|       |
+  862|       |        /* node not in a good condition? */
+  863|      0|        if (assoc_timeout(cur_time, ipptp)) {
+  864|      0|            continue;
+  865|      0|        }
+  866|       |
+  867|       |        /* don't send LAN ips to non LAN peers */
+  868|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_LAN) {
+  869|      0|            continue;
+  870|      0|        }
+  871|       |
+  872|      0|        if (num_nodes < MAX_SENT_NODES) {
+  873|      0|            memcpy(nodes_list[num_nodes].public_key, client->public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  874|      0|            nodes_list[num_nodes].ip_port = ipptp->ip_port;
+  875|      0|            ++num_nodes;
+  876|      0|        } else {
+  877|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
+  878|      0|        }
+  879|      0|    }
+  880|       |
+  881|     12|    *num_nodes_ptr = num_nodes;
+  882|     12|}
 DHT.c:index_of_node_pk:
-  685|  6.19k|{
-  686|  6.19k|    assert(size == 0 || array != nullptr);
-  687|       |
-  688|  6.19k|    for (uint32_t i = 0; i < size; ++i) {
-  689|  6.19k|        if (id_equal(array[i].public_key, pk)) {
-  690|  6.19k|            return i;
-  691|  6.19k|        }
-  692|  6.19k|    }
-  693|       |
-  694|      0|    return UINT32_MAX;
-  695|  6.19k|}
+  684|  6.19k|{
+  685|  6.19k|    assert(size == 0 || array != nullptr);
+  686|       |
+  687|  6.19k|    for (uint32_t i = 0; i < size; ++i) {
+  688|  6.19k|        if (id_equal(array[i].public_key, pk)) {
+  689|  6.19k|            return i;
+  690|  6.19k|        }
+  691|  6.19k|    }
+  692|       |
+  693|      0|    return UINT32_MAX;
+  694|  6.19k|}
 DHT.c:index_of_friend_pk:
-  671|     12|{
-  672|     12|    assert(size == 0 || array != nullptr);
-  673|       |
-  674|     12|    for (uint32_t i = 0; i < size; ++i) {
-  675|      6|        if (id_equal(array[i].public_key, pk)) {
-  676|      6|            return i;
-  677|      6|        }
-  678|      6|    }
-  679|       |
-  680|      6|    return UINT32_MAX;
-  681|     12|}
+  670|     12|{
+  671|     12|    assert(size == 0 || array != nullptr);
+  672|       |
+  673|     12|    for (uint32_t i = 0; i < size; ++i) {
+  674|      6|        if (id_equal(array[i].public_key, pk)) {
+  675|      6|            return i;
+  676|      6|        }
+  677|      6|    }
+  678|       |
+  679|      6|    return UINT32_MAX;
+  680|     12|}
 DHT.c:dht_friend_lock:
- 1585|     12|{
- 1586|     12|    const uint16_t lock_num = dht_friend->lock_count;
- 1587|     12|    ++dht_friend->lock_count;
- 1588|     12|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
- 1589|     12|    dht_friend->callbacks[lock_num].data = data;
- 1590|     12|    dht_friend->callbacks[lock_num].number = number;
- 1591|       |
- 1592|     12|    if (lock_count) {
- 1593|      0|        *lock_count = lock_num + 1;
- 1594|      0|    }
- 1595|     12|}
+ 1583|     12|{
+ 1584|     12|    const uint16_t lock_num = dht_friend->lock_count;
+ 1585|     12|    ++dht_friend->lock_count;
+ 1586|     12|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
+ 1587|     12|    dht_friend->callbacks[lock_num].data = data;
+ 1588|     12|    dht_friend->callbacks[lock_num].number = number;
+ 1589|       |
+ 1590|     12|    if (lock_count != nullptr) {
+ 1591|      0|        *lock_count = lock_num + 1;
+ 1592|      0|    }
+ 1593|     12|}
 
 lan_discovery_init:
   403|      6|{
@@ -345,209 +345,209 @@ custom_lossless_packet_registerhandler:
  1899|      6|    m->lossless_packethandler = lossless_packethandler;
  1900|      6|}
 m_register_state_plugin:
- 2690|     48|{
- 2691|     48|    Messenger_State_Plugin *temp = (Messenger_State_Plugin *)realloc(m->options.state_plugins,
- 2692|     48|                                   sizeof(Messenger_State_Plugin) * (m->options.state_plugins_length + 1));
- 2693|       |
- 2694|     48|    if (!temp) {
- 2695|      0|        return false;
- 2696|      0|    }
- 2697|       |
- 2698|     48|    m->options.state_plugins = temp;
- 2699|     48|    ++m->options.state_plugins_length;
- 2700|       |
- 2701|     48|    const uint8_t index = m->options.state_plugins_length - 1;
- 2702|     48|    m->options.state_plugins[index].type = type;
- 2703|     48|    m->options.state_plugins[index].size = size_callback;
- 2704|     48|    m->options.state_plugins[index].load = load_callback;
- 2705|     48|    m->options.state_plugins[index].save = save_callback;
- 2706|       |
- 2707|     48|    return true;
- 2708|     48|}
+ 2692|     48|{
+ 2693|     48|    Messenger_State_Plugin *temp = (Messenger_State_Plugin *)realloc(m->options.state_plugins,
+ 2694|     48|                                   sizeof(Messenger_State_Plugin) * (m->options.state_plugins_length + 1));
+ 2695|       |
+ 2696|     48|    if (!temp) {
+ 2697|      0|        return false;
+ 2698|      0|    }
+ 2699|       |
+ 2700|     48|    m->options.state_plugins = temp;
+ 2701|     48|    ++m->options.state_plugins_length;
+ 2702|       |
+ 2703|     48|    const uint8_t index = m->options.state_plugins_length - 1;
+ 2704|     48|    m->options.state_plugins[index].type = type;
+ 2705|     48|    m->options.state_plugins[index].size = size_callback;
+ 2706|     48|    m->options.state_plugins[index].load = load_callback;
+ 2707|     48|    m->options.state_plugins[index].save = save_callback;
+ 2708|       |
+ 2709|     48|    return true;
+ 2710|     48|}
 new_messenger:
- 3168|      6|{
- 3169|      6|    if (!options) {
- 3170|      0|        return nullptr;
- 3171|      0|    }
- 3172|       |
- 3173|      6|    if (error) {
- 3174|      6|        *error = MESSENGER_ERROR_OTHER;
- 3175|      6|    }
- 3176|       |
- 3177|      6|    Messenger *m = (Messenger *)calloc(1, sizeof(Messenger));
+ 3170|      6|{
+ 3171|      6|    if (!options) {
+ 3172|      0|        return nullptr;
+ 3173|      0|    }
+ 3174|       |
+ 3175|      6|    if (error != nullptr) {
+ 3176|      6|        *error = MESSENGER_ERROR_OTHER;
+ 3177|      6|    }
  3178|       |
- 3179|      6|    if (!m) {
- 3180|      0|        return nullptr;
- 3181|      0|    }
- 3182|       |
- 3183|      6|    m->mono_time = mono_time;
+ 3179|      6|    Messenger *m = (Messenger *)calloc(1, sizeof(Messenger));
+ 3180|       |
+ 3181|      6|    if (!m) {
+ 3182|      0|        return nullptr;
+ 3183|      0|    }
  3184|       |
- 3185|      6|    m->fr = friendreq_new();
+ 3185|      6|    m->mono_time = mono_time;
  3186|       |
- 3187|      6|    if (!m->fr) {
- 3188|      0|        free(m);
- 3189|      0|        return nullptr;
- 3190|      0|    }
- 3191|       |
- 3192|      6|    m->log = logger_new();
+ 3187|      6|    m->fr = friendreq_new();
+ 3188|       |
+ 3189|      6|    if (!m->fr) {
+ 3190|      0|        free(m);
+ 3191|      0|        return nullptr;
+ 3192|      0|    }
  3193|       |
- 3194|      6|    if (m->log == nullptr) {
- 3195|      0|        friendreq_kill(m->fr);
- 3196|      0|        free(m);
- 3197|      0|        return nullptr;
- 3198|      0|    }
- 3199|       |
- 3200|      6|    logger_callback_log(m->log, options->log_callback, options->log_context, options->log_user_data);
+ 3194|      6|    m->log = logger_new();
+ 3195|       |
+ 3196|      6|    if (m->log == nullptr) {
+ 3197|      0|        friendreq_kill(m->fr);
+ 3198|      0|        free(m);
+ 3199|      0|        return nullptr;
+ 3200|      0|    }
  3201|       |
- 3202|      6|    unsigned int net_err = 0;
+ 3202|      6|    logger_callback_log(m->log, options->log_callback, options->log_context, options->log_user_data);
  3203|       |
- 3204|      6|    if (!options->udp_disabled && options->proxy_info.proxy_type != TCP_PROXY_NONE) {
- 3205|       |        // We don't currently support UDP over proxy.
- 3206|      0|        LOGGER_INFO(m->log, "UDP enabled and proxy set: disabling UDP");
- 3207|      0|        options->udp_disabled = true;
- 3208|      0|    }
- 3209|       |
- 3210|      6|    if (options->udp_disabled) {
- 3211|      0|        m->net = new_networking_no_udp(m->log);
- 3212|      6|    } else {
- 3213|      6|        IP ip;
- 3214|      6|        ip_init(&ip, options->ipv6enabled);
- 3215|      6|        m->net = new_networking_ex(m->log, &ip, options->port_range[0], options->port_range[1], &net_err);
- 3216|      6|    }
- 3217|       |
- 3218|      6|    if (m->net == nullptr) {
- 3219|      0|        friendreq_kill(m->fr);
- 3220|      0|        logger_kill(m->log);
- 3221|      0|        free(m);
- 3222|       |
- 3223|      0|        if (error && net_err == 1) {
- 3224|      0|            *error = MESSENGER_ERROR_PORT;
- 3225|      0|        }
- 3226|       |
- 3227|      0|        return nullptr;
- 3228|      0|    }
- 3229|       |
- 3230|      6|    m->dht = new_dht(m->log, m->mono_time, m->net, options->hole_punching_enabled);
+ 3204|      6|    unsigned int net_err = 0;
+ 3205|       |
+ 3206|      6|    if (!options->udp_disabled && options->proxy_info.proxy_type != TCP_PROXY_NONE) {
+ 3207|       |        // We don't currently support UDP over proxy.
+ 3208|      0|        LOGGER_INFO(m->log, "UDP enabled and proxy set: disabling UDP");
+ 3209|      0|        options->udp_disabled = true;
+ 3210|      0|    }
+ 3211|       |
+ 3212|      6|    if (options->udp_disabled) {
+ 3213|      0|        m->net = new_networking_no_udp(m->log);
+ 3214|      6|    } else {
+ 3215|      6|        IP ip;
+ 3216|      6|        ip_init(&ip, options->ipv6enabled);
+ 3217|      6|        m->net = new_networking_ex(m->log, &ip, options->port_range[0], options->port_range[1], &net_err);
+ 3218|      6|    }
+ 3219|       |
+ 3220|      6|    if (m->net == nullptr) {
+ 3221|      0|        friendreq_kill(m->fr);
+ 3222|      0|        logger_kill(m->log);
+ 3223|      0|        free(m);
+ 3224|       |
+ 3225|      0|        if (error && net_err == 1) {
+ 3226|      0|            *error = MESSENGER_ERROR_PORT;
+ 3227|      0|        }
+ 3228|       |
+ 3229|      0|        return nullptr;
+ 3230|      0|    }
  3231|       |
- 3232|      6|    if (m->dht == nullptr) {
- 3233|      0|        kill_networking(m->net);
- 3234|      0|        friendreq_kill(m->fr);
- 3235|      0|        logger_kill(m->log);
- 3236|      0|        free(m);
- 3237|      0|        return nullptr;
- 3238|      0|    }
- 3239|       |
- 3240|      6|    m->net_crypto = new_net_crypto(m->log, m->mono_time, m->dht, &options->proxy_info);
+ 3232|      6|    m->dht = new_dht(m->log, m->mono_time, m->net, options->hole_punching_enabled);
+ 3233|       |
+ 3234|      6|    if (m->dht == nullptr) {
+ 3235|      0|        kill_networking(m->net);
+ 3236|      0|        friendreq_kill(m->fr);
+ 3237|      0|        logger_kill(m->log);
+ 3238|      0|        free(m);
+ 3239|      0|        return nullptr;
+ 3240|      0|    }
  3241|       |
- 3242|      6|    if (m->net_crypto == nullptr) {
- 3243|      0|        kill_dht(m->dht);
- 3244|      0|        kill_networking(m->net);
- 3245|      0|        friendreq_kill(m->fr);
- 3246|      0|        logger_kill(m->log);
- 3247|      0|        free(m);
- 3248|      0|        return nullptr;
- 3249|      0|    }
- 3250|       |
- 3251|      6|    m->onion = new_onion(m->log, m->mono_time, m->dht);
- 3252|      6|    m->onion_a = new_onion_announce(m->log, m->mono_time, m->dht);
- 3253|      6|    m->onion_c =  new_onion_client(m->log, m->mono_time, m->net_crypto);
- 3254|      6|    m->fr_c = new_friend_connections(m->log, m->mono_time, m->onion_c, options->local_discovery_enabled);
- 3255|       |
- 3256|      6|    if (!(m->onion && m->onion_a && m->onion_c && m->fr_c)) {
- 3257|      0|        kill_friend_connections(m->fr_c);
- 3258|      0|        kill_onion(m->onion);
- 3259|      0|        kill_onion_announce(m->onion_a);
- 3260|      0|        kill_onion_client(m->onion_c);
- 3261|      0|        kill_net_crypto(m->net_crypto);
- 3262|      0|        kill_dht(m->dht);
- 3263|      0|        kill_networking(m->net);
- 3264|      0|        friendreq_kill(m->fr);
- 3265|      0|        logger_kill(m->log);
- 3266|      0|        free(m);
- 3267|      0|        return nullptr;
- 3268|      0|    }
- 3269|       |
- 3270|      6|    if (options->tcp_server_port) {
- 3271|      0|        m->tcp_server = new_TCP_server(m->log, options->ipv6enabled, 1, &options->tcp_server_port,
- 3272|      0|                                       dht_get_self_secret_key(m->dht), m->onion);
- 3273|       |
- 3274|      0|        if (m->tcp_server == nullptr) {
- 3275|      0|            kill_friend_connections(m->fr_c);
- 3276|      0|            kill_onion(m->onion);
- 3277|      0|            kill_onion_announce(m->onion_a);
- 3278|      0|            kill_onion_client(m->onion_c);
- 3279|      0|            kill_net_crypto(m->net_crypto);
- 3280|      0|            kill_dht(m->dht);
- 3281|      0|            kill_networking(m->net);
- 3282|      0|            friendreq_kill(m->fr);
- 3283|      0|            logger_kill(m->log);
- 3284|      0|            free(m);
- 3285|       |
- 3286|      0|            if (error) {
- 3287|      0|                *error = MESSENGER_ERROR_TCP_SERVER;
- 3288|      0|            }
- 3289|       |
- 3290|      0|            return nullptr;
- 3291|      0|        }
- 3292|      0|    }
- 3293|       |
- 3294|      6|    m->options = *options;
- 3295|      6|    friendreq_init(m->fr, m->fr_c);
- 3296|      6|    set_nospam(m->fr, random_u32());
- 3297|      6|    set_filter_function(m->fr, &friend_already_added, m);
- 3298|       |
- 3299|      6|    m->lastdump = 0;
- 3300|      6|    m->is_receiving_file = 0;
- 3301|       |
- 3302|      6|    m_register_default_plugins(m);
+ 3242|      6|    m->net_crypto = new_net_crypto(m->log, m->mono_time, m->dht, &options->proxy_info);
+ 3243|       |
+ 3244|      6|    if (m->net_crypto == nullptr) {
+ 3245|      0|        kill_dht(m->dht);
+ 3246|      0|        kill_networking(m->net);
+ 3247|      0|        friendreq_kill(m->fr);
+ 3248|      0|        logger_kill(m->log);
+ 3249|      0|        free(m);
+ 3250|      0|        return nullptr;
+ 3251|      0|    }
+ 3252|       |
+ 3253|      6|    m->onion = new_onion(m->log, m->mono_time, m->dht);
+ 3254|      6|    m->onion_a = new_onion_announce(m->log, m->mono_time, m->dht);
+ 3255|      6|    m->onion_c =  new_onion_client(m->log, m->mono_time, m->net_crypto);
+ 3256|      6|    m->fr_c = new_friend_connections(m->log, m->mono_time, m->onion_c, options->local_discovery_enabled);
+ 3257|       |
+ 3258|      6|    if (!(m->onion && m->onion_a && m->onion_c && m->fr_c)) {
+ 3259|      0|        kill_friend_connections(m->fr_c);
+ 3260|      0|        kill_onion(m->onion);
+ 3261|      0|        kill_onion_announce(m->onion_a);
+ 3262|      0|        kill_onion_client(m->onion_c);
+ 3263|      0|        kill_net_crypto(m->net_crypto);
+ 3264|      0|        kill_dht(m->dht);
+ 3265|      0|        kill_networking(m->net);
+ 3266|      0|        friendreq_kill(m->fr);
+ 3267|      0|        logger_kill(m->log);
+ 3268|      0|        free(m);
+ 3269|      0|        return nullptr;
+ 3270|      0|    }
+ 3271|       |
+ 3272|      6|    if (options->tcp_server_port) {
+ 3273|      0|        m->tcp_server = new_TCP_server(m->log, options->ipv6enabled, 1, &options->tcp_server_port,
+ 3274|      0|                                       dht_get_self_secret_key(m->dht), m->onion);
+ 3275|       |
+ 3276|      0|        if (m->tcp_server == nullptr) {
+ 3277|      0|            kill_friend_connections(m->fr_c);
+ 3278|      0|            kill_onion(m->onion);
+ 3279|      0|            kill_onion_announce(m->onion_a);
+ 3280|      0|            kill_onion_client(m->onion_c);
+ 3281|      0|            kill_net_crypto(m->net_crypto);
+ 3282|      0|            kill_dht(m->dht);
+ 3283|      0|            kill_networking(m->net);
+ 3284|      0|            friendreq_kill(m->fr);
+ 3285|      0|            logger_kill(m->log);
+ 3286|      0|            free(m);
+ 3287|       |
+ 3288|      0|            if (error != nullptr) {
+ 3289|      0|                *error = MESSENGER_ERROR_TCP_SERVER;
+ 3290|      0|            }
+ 3291|       |
+ 3292|      0|            return nullptr;
+ 3293|      0|        }
+ 3294|      0|    }
+ 3295|       |
+ 3296|      6|    m->options = *options;
+ 3297|      6|    friendreq_init(m->fr, m->fr_c);
+ 3298|      6|    set_nospam(m->fr, random_u32());
+ 3299|      6|    set_filter_function(m->fr, &friend_already_added, m);
+ 3300|       |
+ 3301|      6|    m->lastdump = 0;
+ 3302|      6|    m->is_receiving_file = 0;
  3303|       |
- 3304|      6|    if (error) {
- 3305|      6|        *error = MESSENGER_ERROR_NONE;
- 3306|      6|    }
- 3307|       |
- 3308|      6|    return m;
- 3309|      6|}
+ 3304|      6|    m_register_default_plugins(m);
+ 3305|       |
+ 3306|      6|    if (error != nullptr) {
+ 3307|      6|        *error = MESSENGER_ERROR_NONE;
+ 3308|      6|    }
+ 3309|       |
+ 3310|      6|    return m;
+ 3311|      6|}
 kill_messenger:
- 3315|      6|{
- 3316|      6|    if (!m) {
- 3317|      0|        return;
- 3318|      0|    }
- 3319|       |
- 3320|      6|    if (m->tcp_server) {
- 3321|      0|        kill_TCP_server(m->tcp_server);
- 3322|      0|    }
- 3323|       |
- 3324|      6|    kill_friend_connections(m->fr_c);
- 3325|      6|    kill_onion(m->onion);
- 3326|      6|    kill_onion_announce(m->onion_a);
- 3327|      6|    kill_onion_client(m->onion_c);
- 3328|      6|    kill_net_crypto(m->net_crypto);
- 3329|      6|    kill_dht(m->dht);
- 3330|      6|    kill_networking(m->net);
- 3331|       |
- 3332|      6|    for (uint32_t i = 0; i < m->numfriends; ++i) {
- 3333|      0|        clear_receipts(m, i);
- 3334|      0|    }
- 3335|       |
- 3336|      6|    logger_kill(m->log);
- 3337|      6|    free(m->friendlist);
- 3338|      6|    friendreq_kill(m->fr);
- 3339|       |
- 3340|      6|    free(m->options.state_plugins);
- 3341|      6|    free(m);
- 3342|      6|}
+ 3317|      6|{
+ 3318|      6|    if (!m) {
+ 3319|      0|        return;
+ 3320|      0|    }
+ 3321|       |
+ 3322|      6|    if (m->tcp_server != nullptr) {
+ 3323|      0|        kill_TCP_server(m->tcp_server);
+ 3324|      0|    }
+ 3325|       |
+ 3326|      6|    kill_friend_connections(m->fr_c);
+ 3327|      6|    kill_onion(m->onion);
+ 3328|      6|    kill_onion_announce(m->onion_a);
+ 3329|      6|    kill_onion_client(m->onion_c);
+ 3330|      6|    kill_net_crypto(m->net_crypto);
+ 3331|      6|    kill_dht(m->dht);
+ 3332|      6|    kill_networking(m->net);
+ 3333|       |
+ 3334|      6|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+ 3335|      0|        clear_receipts(m, i);
+ 3336|      0|    }
+ 3337|       |
+ 3338|      6|    logger_kill(m->log);
+ 3339|      6|    free(m->friendlist);
+ 3340|      6|    friendreq_kill(m->fr);
+ 3341|       |
+ 3342|      6|    free(m->options.state_plugins);
+ 3343|      6|    free(m);
+ 3344|      6|}
 Messenger.c:m_register_default_plugins:
- 3087|      6|{
- 3088|      6|    m_register_state_plugin(m, STATE_TYPE_NOSPAMKEYS, nospam_keys_size, load_nospam_keys, save_nospam_keys);
- 3089|      6|    m_register_state_plugin(m, STATE_TYPE_DHT, m_dht_size, m_dht_load, save_dht);
- 3090|      6|    m_register_state_plugin(m, STATE_TYPE_FRIENDS, saved_friendslist_size, friends_list_load, friends_list_save);
- 3091|      6|    m_register_state_plugin(m, STATE_TYPE_NAME, name_size, load_name, save_name);
- 3092|      6|    m_register_state_plugin(m, STATE_TYPE_STATUSMESSAGE, status_message_size, load_status_message,
- 3093|      6|                            save_status_message);
- 3094|      6|    m_register_state_plugin(m, STATE_TYPE_STATUS, status_size, load_status, save_status);
- 3095|      6|    m_register_state_plugin(m, STATE_TYPE_TCP_RELAY, tcp_relay_size, load_tcp_relays, save_tcp_relays);
- 3096|      6|    m_register_state_plugin(m, STATE_TYPE_PATH_NODE, path_node_size, load_path_nodes, save_path_nodes);
- 3097|      6|}
+ 3089|      6|{
+ 3090|      6|    m_register_state_plugin(m, STATE_TYPE_NOSPAMKEYS, nospam_keys_size, load_nospam_keys, save_nospam_keys);
+ 3091|      6|    m_register_state_plugin(m, STATE_TYPE_DHT, m_dht_size, m_dht_load, save_dht);
+ 3092|      6|    m_register_state_plugin(m, STATE_TYPE_FRIENDS, saved_friendslist_size, friends_list_load, friends_list_save);
+ 3093|      6|    m_register_state_plugin(m, STATE_TYPE_NAME, name_size, load_name, save_name);
+ 3094|      6|    m_register_state_plugin(m, STATE_TYPE_STATUSMESSAGE, status_message_size, load_status_message,
+ 3095|      6|                            save_status_message);
+ 3096|      6|    m_register_state_plugin(m, STATE_TYPE_STATUS, status_size, load_status, save_status);
+ 3097|      6|    m_register_state_plugin(m, STATE_TYPE_TCP_RELAY, tcp_relay_size, load_tcp_relays, save_tcp_relays);
+ 3098|      6|    m_register_state_plugin(m, STATE_TYPE_PATH_NODE, path_node_size, load_path_nodes, save_path_nodes);
+ 3099|      6|}
 
 set_packet_tcp_connection_callback:
   476|      6|{
@@ -565,38 +565,38 @@ set_onion_packet_tcp_connection_callback:
   494|     12|    tcp_c->tcp_onion_callback_object = object;
   495|     12|}
 new_tcp_connections:
- 1429|      6|{
- 1430|      6|    if (secret_key == nullptr) {
- 1431|      0|        return nullptr;
- 1432|      0|    }
- 1433|       |
- 1434|      6|    TCP_Connections *temp = (TCP_Connections *)calloc(1, sizeof(TCP_Connections));
- 1435|       |
- 1436|      6|    if (temp == nullptr) {
- 1437|      0|        return nullptr;
- 1438|      0|    }
- 1439|       |
- 1440|      6|    temp->logger = logger;
- 1441|      6|    temp->mono_time = mono_time;
- 1442|       |
- 1443|      6|    memcpy(temp->self_secret_key, secret_key, CRYPTO_SECRET_KEY_SIZE);
- 1444|      6|    crypto_derive_public_key(temp->self_public_key, temp->self_secret_key);
- 1445|      6|    temp->proxy_info = *proxy_info;
- 1446|       |
- 1447|      6|    return temp;
- 1448|      6|}
+ 1468|      6|{
+ 1469|      6|    if (secret_key == nullptr) {
+ 1470|      0|        return nullptr;
+ 1471|      0|    }
+ 1472|       |
+ 1473|      6|    TCP_Connections *temp = (TCP_Connections *)calloc(1, sizeof(TCP_Connections));
+ 1474|       |
+ 1475|      6|    if (temp == nullptr) {
+ 1476|      0|        return nullptr;
+ 1477|      0|    }
+ 1478|       |
+ 1479|      6|    temp->logger = logger;
+ 1480|      6|    temp->mono_time = mono_time;
+ 1481|       |
+ 1482|      6|    memcpy(temp->self_secret_key, secret_key, CRYPTO_SECRET_KEY_SIZE);
+ 1483|      6|    crypto_derive_public_key(temp->self_public_key, temp->self_secret_key);
+ 1484|      6|    temp->proxy_info = *proxy_info;
+ 1485|       |
+ 1486|      6|    return temp;
+ 1487|      6|}
 kill_tcp_connections:
- 1540|      6|{
- 1541|      6|    for (uint32_t i = 0; i < tcp_c->tcp_connections_length; ++i) {
- 1542|      0|        kill_TCP_connection(tcp_c->tcp_connections[i].connection);
- 1543|      0|    }
- 1544|       |
- 1545|      6|    crypto_memzero(tcp_c->self_secret_key, sizeof(tcp_c->self_secret_key));
- 1546|       |
- 1547|      6|    free(tcp_c->tcp_connections);
- 1548|      6|    free(tcp_c->connections);
- 1549|      6|    free(tcp_c);
- 1550|      6|}
+ 1579|      6|{
+ 1580|      6|    for (uint32_t i = 0; i < tcp_c->tcp_connections_length; ++i) {
+ 1581|      0|        kill_TCP_connection(tcp_c->tcp_connections[i].connection);
+ 1582|      0|    }
+ 1583|       |
+ 1584|      6|    crypto_memzero(tcp_c->self_secret_key, sizeof(tcp_c->self_secret_key));
+ 1585|       |
+ 1586|      6|    free(tcp_c->tcp_connections);
+ 1587|      6|    free(tcp_c->connections);
+ 1588|      6|    free(tcp_c);
+ 1589|      6|}
 
 crypto_memzero:
    86|     42|{
@@ -656,70 +656,70 @@ random_bytes:
   405|     66|}
 
 set_global_status_callback:
-  744|     12|{
-  745|     12|    if (object != nullptr && global_status_callback == nullptr) {
-  746|      0|        LOGGER_ERROR(fr_c->logger, "non-null user data object but null callback");
-  747|      0|        object = nullptr;
-  748|      0|    }
-  749|       |
-  750|     12|    fr_c->global_status_callback = global_status_callback;
-  751|     12|    fr_c->global_status_callback_object = object;
-  752|     12|}
+  748|     12|{
+  749|     12|    if (object != nullptr && global_status_callback == nullptr) {
+  750|      0|        LOGGER_ERROR(fr_c->logger, "non-null user data object but null callback");
+  751|      0|        object = nullptr;
+  752|      0|    }
+  753|       |
+  754|     12|    fr_c->global_status_callback = global_status_callback;
+  755|     12|    fr_c->global_status_callback_object = object;
+  756|     12|}
 set_friend_request_callback:
-  844|      6|{
-  845|      6|    fr_c->fr_request_callback = fr_request_callback;
-  846|      6|    fr_c->fr_request_object = object;
-  847|      6|    oniondata_registerhandler(fr_c->onion_c, CRYPTO_PACKET_FRIEND_REQ, fr_request_callback, object);
-  848|      6|}
+  848|      6|{
+  849|      6|    fr_c->fr_request_callback = fr_request_callback;
+  850|      6|    fr_c->fr_request_object = object;
+  851|      6|    oniondata_registerhandler(fr_c->onion_c, CRYPTO_PACKET_FRIEND_REQ, fr_request_callback, object);
+  852|      6|}
 new_friend_connections:
-  891|      6|{
-  892|      6|    if (onion_c == nullptr) {
-  893|      0|        return nullptr;
-  894|      0|    }
-  895|       |
-  896|      6|    Friend_Connections *const temp = (Friend_Connections *)calloc(1, sizeof(Friend_Connections));
-  897|       |
-  898|      6|    if (temp == nullptr) {
-  899|      0|        return nullptr;
-  900|      0|    }
+  895|      6|{
+  896|      6|    if (onion_c == nullptr) {
+  897|      0|        return nullptr;
+  898|      0|    }
+  899|       |
+  900|      6|    Friend_Connections *const temp = (Friend_Connections *)calloc(1, sizeof(Friend_Connections));
   901|       |
-  902|      6|    temp->mono_time = mono_time;
-  903|      6|    temp->logger = logger;
-  904|      6|    temp->dht = onion_get_dht(onion_c);
-  905|      6|    temp->net_crypto = onion_get_net_crypto(onion_c);
-  906|      6|    temp->onion_c = onion_c;
-  907|      6|    temp->local_discovery_enabled = local_discovery_enabled;
-  908|       |    // Don't include default port in port range
-  909|      6|    temp->next_lan_port = TOX_PORTRANGE_FROM + 1;
-  910|       |
-  911|      6|    new_connection_handler(temp->net_crypto, &handle_new_connections, temp);
-  912|       |
-  913|      6|    if (temp->local_discovery_enabled) {
-  914|      6|        temp->broadcast = lan_discovery_init(temp->dht);
-  915|       |
-  916|      6|        if (temp->broadcast == nullptr) {
-  917|      0|            LOGGER_ERROR(logger, "could not initialise LAN discovery");
-  918|      0|        }
-  919|      6|    }
-  920|       |
-  921|      6|    return temp;
-  922|      6|}
+  902|      6|    if (temp == nullptr) {
+  903|      0|        return nullptr;
+  904|      0|    }
+  905|       |
+  906|      6|    temp->mono_time = mono_time;
+  907|      6|    temp->logger = logger;
+  908|      6|    temp->dht = onion_get_dht(onion_c);
+  909|      6|    temp->net_crypto = onion_get_net_crypto(onion_c);
+  910|      6|    temp->onion_c = onion_c;
+  911|      6|    temp->local_discovery_enabled = local_discovery_enabled;
+  912|       |    // Don't include default port in port range
+  913|      6|    temp->next_lan_port = TOX_PORTRANGE_FROM + 1;
+  914|       |
+  915|      6|    new_connection_handler(temp->net_crypto, &handle_new_connections, temp);
+  916|       |
+  917|      6|    if (temp->local_discovery_enabled) {
+  918|      6|        temp->broadcast = lan_discovery_init(temp->dht);
+  919|       |
+  920|      6|        if (temp->broadcast == nullptr) {
+  921|      0|            LOGGER_ERROR(logger, "could not initialise LAN discovery");
+  922|      0|        }
+  923|      6|    }
+  924|       |
+  925|      6|    return temp;
+  926|      6|}
 kill_friend_connections:
- 1002|      6|{
- 1003|      6|    if (!fr_c) {
- 1004|      0|        return;
- 1005|      0|    }
- 1006|       |
- 1007|      6|    for (uint32_t i = 0; i < fr_c->num_cons; ++i) {
- 1008|      0|        kill_friend_connection(fr_c, i);
+ 1006|      6|{
+ 1007|      6|    if (!fr_c) {
+ 1008|      0|        return;
  1009|      0|    }
  1010|       |
- 1011|      6|    if (fr_c->local_discovery_enabled) {
- 1012|      6|        lan_discovery_kill(fr_c->dht, fr_c->broadcast);
- 1013|      6|    }
+ 1011|      6|    for (uint32_t i = 0; i < fr_c->num_cons; ++i) {
+ 1012|      0|        kill_friend_connection(fr_c, i);
+ 1013|      0|    }
  1014|       |
- 1015|      6|    free(fr_c);
- 1016|      6|}
+ 1015|      6|    if (fr_c->local_discovery_enabled) {
+ 1016|      6|        lan_discovery_kill(fr_c->dht, fr_c->broadcast);
+ 1017|      6|    }
+ 1018|       |
+ 1019|      6|    free(fr_c);
+ 1020|      6|}
 
 set_nospam:
    40|      6|{
@@ -1023,75 +1023,75 @@ new_connection_handler:
  2003|      6|    c->new_connection_callback_object = object;
  2004|      6|}
 new_keys:
- 3031|      6|{
- 3032|      6|    crypto_new_keypair(c->self_public_key, c->self_secret_key);
- 3033|      6|}
+ 3044|      6|{
+ 3045|      6|    crypto_new_keypair(c->self_public_key, c->self_secret_key);
+ 3046|      6|}
 new_net_crypto:
- 3059|      6|{
- 3060|      6|    if (dht == nullptr) {
- 3061|      0|        return nullptr;
- 3062|      0|    }
- 3063|       |
- 3064|      6|    Net_Crypto *temp = (Net_Crypto *)calloc(1, sizeof(Net_Crypto));
- 3065|       |
- 3066|      6|    if (temp == nullptr) {
- 3067|      0|        return nullptr;
- 3068|      0|    }
- 3069|       |
- 3070|      6|    temp->log = log;
- 3071|      6|    temp->mono_time = mono_time;
- 3072|       |
- 3073|      6|    temp->tcp_c = new_tcp_connections(log, mono_time, dht_get_self_secret_key(dht), proxy_info);
- 3074|       |
- 3075|      6|    if (temp->tcp_c == nullptr) {
- 3076|      0|        free(temp);
- 3077|      0|        return nullptr;
- 3078|      0|    }
- 3079|       |
- 3080|      6|    set_packet_tcp_connection_callback(temp->tcp_c, &tcp_data_callback, temp);
- 3081|      6|    set_oob_packet_tcp_connection_callback(temp->tcp_c, &tcp_oob_callback, temp);
+ 3072|      6|{
+ 3073|      6|    if (dht == nullptr) {
+ 3074|      0|        return nullptr;
+ 3075|      0|    }
+ 3076|       |
+ 3077|      6|    Net_Crypto *temp = (Net_Crypto *)calloc(1, sizeof(Net_Crypto));
+ 3078|       |
+ 3079|      6|    if (temp == nullptr) {
+ 3080|      0|        return nullptr;
+ 3081|      0|    }
  3082|       |
- 3083|      6|    if (create_recursive_mutex(&temp->tcp_mutex) != 0 ||
- 3084|      6|            pthread_mutex_init(&temp->connections_mutex, nullptr) != 0) {
- 3085|      0|        kill_tcp_connections(temp->tcp_c);
- 3086|      0|        free(temp);
- 3087|      0|        return nullptr;
- 3088|      0|    }
- 3089|       |
- 3090|      6|    temp->dht = dht;
- 3091|       |
- 3092|      6|    new_keys(temp);
- 3093|      6|    new_symmetric_key(temp->secret_symmetric_key);
- 3094|       |
- 3095|      6|    temp->current_sleep_time = CRYPTO_SEND_PACKET_INTERVAL;
- 3096|       |
- 3097|      6|    networking_registerhandler(dht_get_net(dht), NET_PACKET_COOKIE_REQUEST, &udp_handle_cookie_request, temp);
- 3098|      6|    networking_registerhandler(dht_get_net(dht), NET_PACKET_COOKIE_RESPONSE, &udp_handle_packet, temp);
- 3099|      6|    networking_registerhandler(dht_get_net(dht), NET_PACKET_CRYPTO_HS, &udp_handle_packet, temp);
- 3100|      6|    networking_registerhandler(dht_get_net(dht), NET_PACKET_CRYPTO_DATA, &udp_handle_packet, temp);
- 3101|       |
- 3102|      6|    bs_list_init(&temp->ip_port_list, sizeof(IP_Port), 8);
- 3103|       |
- 3104|      6|    return temp;
- 3105|      6|}
+ 3083|      6|    temp->log = log;
+ 3084|      6|    temp->mono_time = mono_time;
+ 3085|       |
+ 3086|      6|    temp->tcp_c = new_tcp_connections(log, mono_time, dht_get_self_secret_key(dht), proxy_info);
+ 3087|       |
+ 3088|      6|    if (temp->tcp_c == nullptr) {
+ 3089|      0|        free(temp);
+ 3090|      0|        return nullptr;
+ 3091|      0|    }
+ 3092|       |
+ 3093|      6|    set_packet_tcp_connection_callback(temp->tcp_c, &tcp_data_callback, temp);
+ 3094|      6|    set_oob_packet_tcp_connection_callback(temp->tcp_c, &tcp_oob_callback, temp);
+ 3095|       |
+ 3096|      6|    if (create_recursive_mutex(&temp->tcp_mutex) != 0 ||
+ 3097|      6|            pthread_mutex_init(&temp->connections_mutex, nullptr) != 0) {
+ 3098|      0|        kill_tcp_connections(temp->tcp_c);
+ 3099|      0|        free(temp);
+ 3100|      0|        return nullptr;
+ 3101|      0|    }
+ 3102|       |
+ 3103|      6|    temp->dht = dht;
+ 3104|       |
+ 3105|      6|    new_keys(temp);
+ 3106|      6|    new_symmetric_key(temp->secret_symmetric_key);
+ 3107|       |
+ 3108|      6|    temp->current_sleep_time = CRYPTO_SEND_PACKET_INTERVAL;
+ 3109|       |
+ 3110|      6|    networking_registerhandler(dht_get_net(dht), NET_PACKET_COOKIE_REQUEST, &udp_handle_cookie_request, temp);
+ 3111|      6|    networking_registerhandler(dht_get_net(dht), NET_PACKET_COOKIE_RESPONSE, &udp_handle_packet, temp);
+ 3112|      6|    networking_registerhandler(dht_get_net(dht), NET_PACKET_CRYPTO_HS, &udp_handle_packet, temp);
+ 3113|      6|    networking_registerhandler(dht_get_net(dht), NET_PACKET_CRYPTO_DATA, &udp_handle_packet, temp);
+ 3114|       |
+ 3115|      6|    bs_list_init(&temp->ip_port_list, sizeof(IP_Port), 8);
+ 3116|       |
+ 3117|      6|    return temp;
+ 3118|      6|}
 kill_net_crypto:
- 3153|      6|{
- 3154|      6|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
- 3155|      0|        crypto_kill(c, i);
- 3156|      0|    }
- 3157|       |
- 3158|      6|    pthread_mutex_destroy(&c->tcp_mutex);
- 3159|      6|    pthread_mutex_destroy(&c->connections_mutex);
- 3160|       |
- 3161|      6|    kill_tcp_connections(c->tcp_c);
- 3162|      6|    bs_list_free(&c->ip_port_list);
- 3163|      6|    networking_registerhandler(dht_get_net(c->dht), NET_PACKET_COOKIE_REQUEST, nullptr, nullptr);
- 3164|      6|    networking_registerhandler(dht_get_net(c->dht), NET_PACKET_COOKIE_RESPONSE, nullptr, nullptr);
- 3165|      6|    networking_registerhandler(dht_get_net(c->dht), NET_PACKET_CRYPTO_HS, nullptr, nullptr);
- 3166|      6|    networking_registerhandler(dht_get_net(c->dht), NET_PACKET_CRYPTO_DATA, nullptr, nullptr);
- 3167|      6|    crypto_memzero(c, sizeof(Net_Crypto));
- 3168|      6|    free(c);
- 3169|      6|}
+ 3166|      6|{
+ 3167|      6|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
+ 3168|      0|        crypto_kill(c, i);
+ 3169|      0|    }
+ 3170|       |
+ 3171|      6|    pthread_mutex_destroy(&c->tcp_mutex);
+ 3172|      6|    pthread_mutex_destroy(&c->connections_mutex);
+ 3173|       |
+ 3174|      6|    kill_tcp_connections(c->tcp_c);
+ 3175|      6|    bs_list_free(&c->ip_port_list);
+ 3176|      6|    networking_registerhandler(dht_get_net(c->dht), NET_PACKET_COOKIE_REQUEST, nullptr, nullptr);
+ 3177|      6|    networking_registerhandler(dht_get_net(c->dht), NET_PACKET_COOKIE_RESPONSE, nullptr, nullptr);
+ 3178|      6|    networking_registerhandler(dht_get_net(c->dht), NET_PACKET_CRYPTO_HS, nullptr, nullptr);
+ 3179|      6|    networking_registerhandler(dht_get_net(c->dht), NET_PACKET_CRYPTO_DATA, nullptr, nullptr);
+ 3180|      6|    crypto_memzero(c, sizeof(Net_Crypto));
+ 3181|      6|    free(c);
+ 3182|      6|}
 
 net_family_is_unspec:
   362|     18|{
@@ -1198,7 +1198,7 @@ new_networking_ex:
   835|      0|        port_to = temp;
   836|      0|    }
   837|       |
-  838|      6|    if (error) {
+  838|      6|    if (error != nullptr) {
   839|      6|        *error = 2;
   840|      6|    }
   841|       |
@@ -1234,7 +1234,7 @@ new_networking_ex:
   871|      0|        net_kill_strerror(strerror);
   872|      0|        free(temp);
   873|       |
-  874|      0|        if (error) {
+  874|      0|        if (error != nullptr) {
   875|      0|            *error = 1;
   876|      0|        }
   877|       |
@@ -1270,7 +1270,7 @@ new_networking_ex:
   907|      6|    if (!set_socket_nosigpipe(temp->sock)) {
   908|      0|        kill_networking(temp);
   909|       |
-  910|      0|        if (error) {
+  910|      0|        if (error != nullptr) {
   911|      0|            *error = 1;
   912|      0|        }
   913|       |
@@ -1281,7 +1281,7 @@ new_networking_ex:
   918|      6|    if (!set_socket_nonblock(temp->sock)) {
   919|      0|        kill_networking(temp);
   920|       |
-  921|      0|        if (error) {
+  921|      0|        if (error != nullptr) {
   922|      0|            *error = 1;
   923|      0|        }
   924|       |
@@ -1324,7 +1324,7 @@ new_networking_ex:
   961|       |#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   962|       |
   963|       |    if (net_family_is_ipv6(ip->family)) {
-  964|       |        const int is_dualstack = set_socket_dualstack(temp->sock);
+  964|       |        const bool is_dualstack = set_socket_dualstack(temp->sock);
   965|       |        LOGGER_DEBUG(log, "Dual-stack socket: %s",
   966|       |                     is_dualstack ? "enabled" : "Failed to enable, won't be able to receive from/send to IPv4 addresses");
   967|       |        /* multicast local nodes */
@@ -1391,7 +1391,7 @@ new_networking_ex:
  1028|      6|                errno = 0;
  1029|      6|            }
  1030|       |
- 1031|      6|            if (error) {
+ 1031|      6|            if (error != nullptr) {
  1032|      6|                *error = 0;
  1033|      6|            }
  1034|       |
@@ -1415,7 +1415,7 @@ new_networking_ex:
  1052|      0|    net_kill_strerror(strerror);
  1053|      0|    kill_networking(temp);
  1054|       |
- 1055|      0|    if (error) {
+ 1055|      0|    if (error != nullptr) {
  1056|      0|        *error = 1;
  1057|      0|    }
  1058|       |
@@ -1562,55 +1562,55 @@ oniondata_registerhandler:
  1676|     18|    onion_c->onion_data_handlers[byte].object = object;
  1677|     18|}
 new_onion_client:
- 1879|      6|{
- 1880|      6|    if (c == nullptr) {
- 1881|      0|        return nullptr;
- 1882|      0|    }
- 1883|       |
- 1884|      6|    Onion_Client *onion_c = (Onion_Client *)calloc(1, sizeof(Onion_Client));
+ 1875|      6|{
+ 1876|      6|    if (c == nullptr) {
+ 1877|      0|        return nullptr;
+ 1878|      0|    }
+ 1879|       |
+ 1880|      6|    Onion_Client *onion_c = (Onion_Client *)calloc(1, sizeof(Onion_Client));
+ 1881|       |
+ 1882|      6|    if (onion_c == nullptr) {
+ 1883|      0|        return nullptr;
+ 1884|      0|    }
  1885|       |
- 1886|      6|    if (onion_c == nullptr) {
- 1887|      0|        return nullptr;
- 1888|      0|    }
- 1889|       |
- 1890|      6|    onion_c->announce_ping_array = ping_array_new(ANNOUNCE_ARRAY_SIZE, ANNOUNCE_TIMEOUT);
- 1891|       |
- 1892|      6|    if (onion_c->announce_ping_array == nullptr) {
- 1893|      0|        free(onion_c);
- 1894|      0|        return nullptr;
- 1895|      0|    }
- 1896|       |
- 1897|      6|    onion_c->mono_time = mono_time;
- 1898|      6|    onion_c->logger = logger;
- 1899|      6|    onion_c->dht = nc_get_dht(c);
- 1900|      6|    onion_c->net = dht_get_net(onion_c->dht);
- 1901|      6|    onion_c->c = c;
- 1902|      6|    new_symmetric_key(onion_c->secret_symmetric_key);
- 1903|      6|    crypto_new_keypair(onion_c->temp_public_key, onion_c->temp_secret_key);
- 1904|      6|    networking_registerhandler(onion_c->net, NET_PACKET_ANNOUNCE_RESPONSE, &handle_announce_response, onion_c);
- 1905|      6|    networking_registerhandler(onion_c->net, NET_PACKET_ONION_DATA_RESPONSE, &handle_data_response, onion_c);
- 1906|      6|    oniondata_registerhandler(onion_c, ONION_DATA_DHTPK, &handle_dhtpk_announce, onion_c);
- 1907|      6|    cryptopacket_registerhandler(onion_c->dht, CRYPTO_PACKET_DHTPK, &handle_dht_dhtpk, onion_c);
- 1908|      6|    set_onion_packet_tcp_connection_callback(nc_get_tcp_c(onion_c->c), &handle_tcp_onion, onion_c);
- 1909|       |
- 1910|      6|    return onion_c;
- 1911|      6|}
+ 1886|      6|    onion_c->announce_ping_array = ping_array_new(ANNOUNCE_ARRAY_SIZE, ANNOUNCE_TIMEOUT);
+ 1887|       |
+ 1888|      6|    if (onion_c->announce_ping_array == nullptr) {
+ 1889|      0|        free(onion_c);
+ 1890|      0|        return nullptr;
+ 1891|      0|    }
+ 1892|       |
+ 1893|      6|    onion_c->mono_time = mono_time;
+ 1894|      6|    onion_c->logger = logger;
+ 1895|      6|    onion_c->dht = nc_get_dht(c);
+ 1896|      6|    onion_c->net = dht_get_net(onion_c->dht);
+ 1897|      6|    onion_c->c = c;
+ 1898|      6|    new_symmetric_key(onion_c->secret_symmetric_key);
+ 1899|      6|    crypto_new_keypair(onion_c->temp_public_key, onion_c->temp_secret_key);
+ 1900|      6|    networking_registerhandler(onion_c->net, NET_PACKET_ANNOUNCE_RESPONSE, &handle_announce_response, onion_c);
+ 1901|      6|    networking_registerhandler(onion_c->net, NET_PACKET_ONION_DATA_RESPONSE, &handle_data_response, onion_c);
+ 1902|      6|    oniondata_registerhandler(onion_c, ONION_DATA_DHTPK, &handle_dhtpk_announce, onion_c);
+ 1903|      6|    cryptopacket_registerhandler(onion_c->dht, CRYPTO_PACKET_DHTPK, &handle_dht_dhtpk, onion_c);
+ 1904|      6|    set_onion_packet_tcp_connection_callback(nc_get_tcp_c(onion_c->c), &handle_tcp_onion, onion_c);
+ 1905|       |
+ 1906|      6|    return onion_c;
+ 1907|      6|}
 kill_onion_client:
- 1914|      6|{
- 1915|      6|    if (onion_c == nullptr) {
- 1916|      0|        return;
- 1917|      0|    }
- 1918|       |
- 1919|      6|    ping_array_kill(onion_c->announce_ping_array);
- 1920|      6|    realloc_onion_friends(onion_c, 0);
- 1921|      6|    networking_registerhandler(onion_c->net, NET_PACKET_ANNOUNCE_RESPONSE, nullptr, nullptr);
- 1922|      6|    networking_registerhandler(onion_c->net, NET_PACKET_ONION_DATA_RESPONSE, nullptr, nullptr);
- 1923|      6|    oniondata_registerhandler(onion_c, ONION_DATA_DHTPK, nullptr, nullptr);
- 1924|      6|    cryptopacket_registerhandler(onion_c->dht, CRYPTO_PACKET_DHTPK, nullptr, nullptr);
- 1925|      6|    set_onion_packet_tcp_connection_callback(nc_get_tcp_c(onion_c->c), nullptr, nullptr);
- 1926|      6|    crypto_memzero(onion_c, sizeof(Onion_Client));
- 1927|      6|    free(onion_c);
- 1928|      6|}
+ 1910|      6|{
+ 1911|      6|    if (onion_c == nullptr) {
+ 1912|      0|        return;
+ 1913|      0|    }
+ 1914|       |
+ 1915|      6|    ping_array_kill(onion_c->announce_ping_array);
+ 1916|      6|    realloc_onion_friends(onion_c, 0);
+ 1917|      6|    networking_registerhandler(onion_c->net, NET_PACKET_ANNOUNCE_RESPONSE, nullptr, nullptr);
+ 1918|      6|    networking_registerhandler(onion_c->net, NET_PACKET_ONION_DATA_RESPONSE, nullptr, nullptr);
+ 1919|      6|    oniondata_registerhandler(onion_c, ONION_DATA_DHTPK, nullptr, nullptr);
+ 1920|      6|    cryptopacket_registerhandler(onion_c->dht, CRYPTO_PACKET_DHTPK, nullptr, nullptr);
+ 1921|      6|    set_onion_packet_tcp_connection_callback(nc_get_tcp_c(onion_c->c), nullptr, nullptr);
+ 1922|      6|    crypto_memzero(onion_c, sizeof(Onion_Client));
+ 1923|      6|    free(onion_c);
+ 1924|      6|}
 onion_client.c:realloc_onion_friends:
  1289|      6|{
  1290|      6|    if (num == 0) {
@@ -1955,7 +1955,7 @@ tox_new:
   586|       |
   587|      6|    lock(tox);
   588|       |
-  589|      6|    unsigned int m_error;
+  589|      6|    Messenger_Error m_error;
   590|      6|    tox->m = new_messenger(tox->mono_time, &m_options, &m_error);
   591|       |
   592|       |    // TODO(iphydf): Clarify this code, check for NULL before new_groupchats, so
@@ -2185,7 +2185,7 @@ tox_options_set_savedata_data:
    86|      8|}
 tox_options_default:
    89|      8|{
-   90|      8|    if (options) {
+   90|      8|    if (options != nullptr) {
    91|      8|        struct Tox_Options default_options = { 0 };
    92|      8|        *options = default_options;
    93|      8|        tox_options_set_ipv6_enabled(options, true);
@@ -2200,7 +2200,7 @@ tox_options_new:
   103|      8|{
   104|      8|    struct Tox_Options *options = (struct Tox_Options *)calloc(1, sizeof(struct Tox_Options));
   105|       |
-  106|      8|    if (options) {
+  106|      8|    if (options != nullptr) {
   107|      8|        tox_options_default(options);
   108|      8|        SET_ERROR_PARAMETER(error, TOX_ERR_OPTIONS_NEW_OK);
   109|      8|        return options;
