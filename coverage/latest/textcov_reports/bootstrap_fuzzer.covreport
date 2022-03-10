@@ -38,23 +38,23 @@ fuzz_sendto:
    29|    666|    return len;
    30|    666|}
 fuzz_recvfrom:
-   60|  46.2k|{
-   61|  46.2k|    if (src_addr && addr_len && (sizeof(struct sockaddr) <= *addr_len)) {
-   62|  46.2k|        *src_addr  = (struct sockaddr) {
-   63|  46.2k|            0
-   64|  46.2k|        };
+   60|  46.1k|{
+   61|  46.1k|    if (src_addr && addr_len && (sizeof(struct sockaddr) <= *addr_len)) {
+   62|  46.1k|        *src_addr  = (struct sockaddr) {
+   63|  46.1k|            0
+   64|  46.1k|        };
    65|       |        // Dummy Addr
-   66|  46.2k|        src_addr->sa_family = AF_INET;
+   66|  46.1k|        src_addr->sa_family = AF_INET;
    67|       |
    68|       |        // We want an AF_INET address with dummy values
-   69|  46.2k|        struct sockaddr_in *addr_in = (struct sockaddr_in *) src_addr;
-   70|  46.2k|        addr_in->sin_port = 12356;
-   71|  46.2k|        addr_in->sin_addr.s_addr = INADDR_LOOPBACK + 1;
-   72|  46.2k|        *addr_len = sizeof(struct sockaddr);
-   73|  46.2k|    }
+   69|  46.1k|        struct sockaddr_in *addr_in = (struct sockaddr_in *) src_addr;
+   70|  46.1k|        addr_in->sin_port = 12356;
+   71|  46.1k|        addr_in->sin_addr.s_addr = INADDR_LOOPBACK + 1;
+   72|  46.1k|        *addr_len = sizeof(struct sockaddr);
+   73|  46.1k|    }
    74|       |
-   75|  46.2k|    return recv_common(buf, len);
-   76|  46.2k|}
+   75|  46.1k|    return recv_common(buf, len);
+   76|  46.1k|}
 fuzz_random_bytes:
    84|  5.74k|{
    85|       |    // Amount of data is limited
@@ -70,24 +70,24 @@ fuzz_get_count:
    96|  80.8k|    return data.counter++;
    97|  80.8k|}
 fuzz_adapter.c:recv_common:
-   38|  46.2k|{
-   39|  46.2k|    if (data.cur + 2 >= data.end) {
+   38|  46.1k|{
+   39|  46.1k|    if (data.cur + 2 >= data.end) {
    40|  40.2k|        return -1;
    41|  40.2k|    }
    42|       |
-   43|  6.08k|    uint16_t fuzz_len = (data.cur[0] << 8) | data.cur[1];
-   44|  6.08k|    data.cur += 2;
+   43|  5.97k|    uint16_t fuzz_len = (data.cur[0] << 8) | data.cur[1];
+   44|  5.97k|    data.cur += 2;
    45|       |
-   46|  6.08k|    size_t available = data.end - data.cur;
+   46|  5.97k|    size_t available = data.end - data.cur;
    47|       |
-   48|  6.08k|    size_t res = fuzz_len > available ? available : fuzz_len;
-   49|  6.08k|    res = buf_len > res ? res : buf_len;
+   48|  5.97k|    size_t res = fuzz_len > available ? available : fuzz_len;
+   49|  5.97k|    res = buf_len > res ? res : buf_len;
    50|       |
-   51|  6.08k|    memcpy(buf, data.cur, res);
-   52|  6.08k|    data.cur += res;
+   51|  5.97k|    memcpy(buf, data.cur, res);
+   52|  5.97k|    data.cur += res;
    53|       |
-   54|  6.08k|    return res;
-   55|  46.2k|}
+   54|  5.97k|    return res;
+   55|  46.1k|}
 
 dht_get_self_public_key:
   125|    774|{
@@ -128,31 +128,31 @@ get_shared_key:
   259|  1.03k|    uint32_t curr = 0;
   260|       |
   261|  4.51k|    for (uint32_t i = 0; i < MAX_KEYS_PER_SLOT; ++i) {
-  262|  3.68k|        const int index = public_key[30] * MAX_KEYS_PER_SLOT + i;
-  263|  3.68k|        Shared_Key *const key = &shared_keys->keys[index];
+  262|  3.67k|        const int index = public_key[30] * MAX_KEYS_PER_SLOT + i;
+  263|  3.67k|        Shared_Key *const key = &shared_keys->keys[index];
   264|       |
-  265|  3.68k|        if (key->stored) {
-  266|    968|            if (pk_equal(public_key, key->public_key)) {
+  265|  3.67k|        if (key->stored) {
+  266|    962|            if (pk_equal(public_key, key->public_key)) {
   267|    194|                memcpy(shared_key, key->shared_key, CRYPTO_SHARED_KEY_SIZE);
   268|    194|                ++key->times_requested;
   269|    194|                key->time_last_requested = mono_time_get(mono_time);
   270|    194|                return;
   271|    194|            }
   272|       |
-  273|    774|            if (num != 0) {
-  274|    774|                if (mono_time_is_timeout(mono_time, key->time_last_requested, KEYS_TIMEOUT)) {
+  273|    768|            if (num != 0) {
+  274|    768|                if (mono_time_is_timeout(mono_time, key->time_last_requested, KEYS_TIMEOUT)) {
   275|      0|                    num = 0;
   276|      0|                    curr = index;
-  277|    774|                } else if (num > key->times_requested) {
-  278|    431|                    num = key->times_requested;
-  279|    431|                    curr = index;
-  280|    431|                }
-  281|    774|            }
+  277|    768|                } else if (num > key->times_requested) {
+  278|    429|                    num = key->times_requested;
+  279|    429|                    curr = index;
+  280|    429|                }
+  281|    768|            }
   282|  2.71k|        } else if (num != 0) {
   283|    753|            num = 0;
   284|    753|            curr = index;
   285|    753|        }
-  286|  3.68k|    }
+  286|  3.67k|    }
   287|       |
   288|    839|    encrypt_precompute(public_key, secret_key, shared_key);
   289|       |
@@ -230,517 +230,520 @@ handle_request:
   420|      0|    }
   421|       |
   422|     14|    assert(len1 == packet_length - CRYPTO_SIZE - CRYPTO_MAC_SIZE);
-  423|      0|    request_id[0] = temp[0];
-  424|     14|    --len1;
-  425|     14|    memcpy(data, temp + 1, len1);
-  426|     14|    crypto_memzero(temp, MAX_CRYPTO_REQUEST_SIZE);
-  427|     14|    return len1;
-  428|     14|}
+  423|       |    // Because coverity can't figure out this equation:
+  424|      0|    assert(len1 <= MAX_CRYPTO_REQUEST_SIZE - CRYPTO_SIZE - CRYPTO_MAC_SIZE);
+  425|       |
+  426|      0|    request_id[0] = temp[0];
+  427|     14|    --len1;
+  428|     14|    memcpy(data, temp + 1, len1);
+  429|     14|    crypto_memzero(temp, MAX_CRYPTO_REQUEST_SIZE);
+  430|     14|    return len1;
+  431|     14|}
 pack_ip_port:
-  458|    402|{
-  459|    402|    if (data == nullptr) {
-  460|      0|        return -1;
-  461|      0|    }
-  462|       |
-  463|    402|    bool is_ipv4;
-  464|    402|    uint8_t net_family;
+  461|    402|{
+  462|    402|    if (data == nullptr) {
+  463|      0|        return -1;
+  464|      0|    }
   465|       |
-  466|    402|    if (net_family_is_ipv4(ip_port->ip.family)) {
-  467|       |        // TODO(irungentoo): use functions to convert endianness
-  468|    402|        is_ipv4 = true;
-  469|    402|        net_family = TOX_AF_INET;
-  470|    402|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
-  471|      0|        is_ipv4 = true;
-  472|      0|        net_family = TOX_TCP_INET;
-  473|      0|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
-  474|      0|        is_ipv4 = false;
-  475|      0|        net_family = TOX_AF_INET6;
-  476|      0|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
+  466|    402|    bool is_ipv4;
+  467|    402|    uint8_t net_family;
+  468|       |
+  469|    402|    if (net_family_is_ipv4(ip_port->ip.family)) {
+  470|       |        // TODO(irungentoo): use functions to convert endianness
+  471|    402|        is_ipv4 = true;
+  472|    402|        net_family = TOX_AF_INET;
+  473|    402|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
+  474|      0|        is_ipv4 = true;
+  475|      0|        net_family = TOX_TCP_INET;
+  476|      0|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
   477|      0|        is_ipv4 = false;
-  478|      0|        net_family = TOX_TCP_INET6;
-  479|      0|    } else {
-  480|      0|        char ip_str[IP_NTOA_LEN];
-  481|       |        // TODO(iphydf): Find out why we're trying to pack invalid IPs, stop
-  482|       |        // doing that, and turn this into an error.
-  483|      0|        LOGGER_TRACE(logger, "cannot pack invalid IP: %s", ip_ntoa(&ip_port->ip, ip_str, sizeof(ip_str)));
-  484|      0|        return -1;
-  485|      0|    }
-  486|       |
-  487|    402|    if (is_ipv4) {
-  488|    402|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+  478|      0|        net_family = TOX_AF_INET6;
+  479|      0|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
+  480|      0|        is_ipv4 = false;
+  481|      0|        net_family = TOX_TCP_INET6;
+  482|      0|    } else {
+  483|      0|        char ip_str[IP_NTOA_LEN];
+  484|       |        // TODO(iphydf): Find out why we're trying to pack invalid IPs, stop
+  485|       |        // doing that, and turn this into an error.
+  486|      0|        LOGGER_TRACE(logger, "cannot pack invalid IP: %s", ip_ntoa(&ip_port->ip, ip_str, sizeof(ip_str)));
+  487|      0|        return -1;
+  488|      0|    }
   489|       |
-  490|    402|        if (size > length) {
-  491|      0|            return -1;
-  492|      0|        }
-  493|       |
-  494|    402|        data[0] = net_family;
-  495|    402|        memcpy(data + 1, &ip_port->ip.ip.v4, SIZE_IP4);
-  496|    402|        memcpy(data + 1 + SIZE_IP4, &ip_port->port, sizeof(uint16_t));
-  497|    402|        return size;
-  498|    402|    } else {
-  499|      0|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
-  500|       |
-  501|      0|        if (size > length) {
-  502|      0|            return -1;
-  503|      0|        }
-  504|       |
-  505|      0|        data[0] = net_family;
-  506|      0|        memcpy(data + 1, &ip_port->ip.ip.v6, SIZE_IP6);
-  507|      0|        memcpy(data + 1 + SIZE_IP6, &ip_port->port, sizeof(uint16_t));
-  508|      0|        return size;
-  509|      0|    }
-  510|    402|}
+  490|    402|    if (is_ipv4) {
+  491|    402|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+  492|       |
+  493|    402|        if (size > length) {
+  494|      0|            return -1;
+  495|      0|        }
+  496|       |
+  497|    402|        data[0] = net_family;
+  498|    402|        memcpy(data + 1, &ip_port->ip.ip.v4, SIZE_IP4);
+  499|    402|        memcpy(data + 1 + SIZE_IP4, &ip_port->port, sizeof(uint16_t));
+  500|    402|        return size;
+  501|    402|    } else {
+  502|      0|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
+  503|       |
+  504|      0|        if (size > length) {
+  505|      0|            return -1;
+  506|      0|        }
+  507|       |
+  508|      0|        data[0] = net_family;
+  509|      0|        memcpy(data + 1, &ip_port->ip.ip.v6, SIZE_IP6);
+  510|      0|        memcpy(data + 1 + SIZE_IP6, &ip_port->port, sizeof(uint16_t));
+  511|      0|        return size;
+  512|      0|    }
+  513|    402|}
 unpack_ip_port:
-  550|      1|{
-  551|      1|    if (data == nullptr) {
-  552|      0|        return -1;
-  553|      0|    }
-  554|       |
-  555|      1|    bool is_ipv4;
-  556|      1|    Family host_family;
+  553|      1|{
+  554|      1|    if (data == nullptr) {
+  555|      0|        return -1;
+  556|      0|    }
   557|       |
-  558|      1|    if (data[0] == TOX_AF_INET) {
-  559|      1|        is_ipv4 = true;
-  560|      1|        host_family = net_family_ipv4;
-  561|      1|    } else if (data[0] == TOX_TCP_INET) {
-  562|      0|        if (!tcp_enabled) {
-  563|      0|            return -1;
-  564|      0|        }
-  565|       |
-  566|      0|        is_ipv4 = true;
-  567|      0|        host_family = net_family_tcp_ipv4;
-  568|      0|    } else if (data[0] == TOX_AF_INET6) {
-  569|      0|        is_ipv4 = false;
-  570|      0|        host_family = net_family_ipv6;
-  571|      0|    } else if (data[0] == TOX_TCP_INET6) {
-  572|      0|        if (!tcp_enabled) {
-  573|      0|            return -1;
-  574|      0|        }
-  575|       |
-  576|      0|        is_ipv4 = false;
-  577|      0|        host_family = net_family_tcp_ipv6;
-  578|      0|    } else {
-  579|      0|        return -1;
-  580|      0|    }
-  581|       |
-  582|      1|    const IP_Port empty_ip_port = {{{0}}};
-  583|      1|    *ip_port = empty_ip_port;
+  558|      1|    bool is_ipv4;
+  559|      1|    Family host_family;
+  560|       |
+  561|      1|    if (data[0] == TOX_AF_INET) {
+  562|      1|        is_ipv4 = true;
+  563|      1|        host_family = net_family_ipv4;
+  564|      1|    } else if (data[0] == TOX_TCP_INET) {
+  565|      0|        if (!tcp_enabled) {
+  566|      0|            return -1;
+  567|      0|        }
+  568|       |
+  569|      0|        is_ipv4 = true;
+  570|      0|        host_family = net_family_tcp_ipv4;
+  571|      0|    } else if (data[0] == TOX_AF_INET6) {
+  572|      0|        is_ipv4 = false;
+  573|      0|        host_family = net_family_ipv6;
+  574|      0|    } else if (data[0] == TOX_TCP_INET6) {
+  575|      0|        if (!tcp_enabled) {
+  576|      0|            return -1;
+  577|      0|        }
+  578|       |
+  579|      0|        is_ipv4 = false;
+  580|      0|        host_family = net_family_tcp_ipv6;
+  581|      0|    } else {
+  582|      0|        return -1;
+  583|      0|    }
   584|       |
-  585|      1|    if (is_ipv4) {
-  586|      1|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+  585|      1|    const IP_Port empty_ip_port = {{{0}}};
+  586|      1|    *ip_port = empty_ip_port;
   587|       |
-  588|      1|        if (size > length) {
-  589|      0|            return -1;
-  590|      0|        }
-  591|       |
-  592|      1|        ip_port->ip.family = host_family;
-  593|      1|        memcpy(&ip_port->ip.ip.v4, data + 1, SIZE_IP4);
-  594|      1|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
-  595|      1|        return size;
-  596|      1|    } else {
-  597|      0|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
-  598|       |
-  599|      0|        if (size > length) {
-  600|      0|            return -1;
-  601|      0|        }
-  602|       |
-  603|      0|        ip_port->ip.family = host_family;
-  604|      0|        memcpy(&ip_port->ip.ip.v6, data + 1, SIZE_IP6);
-  605|      0|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
-  606|      0|        return size;
-  607|      0|    }
-  608|      1|}
+  588|      1|    if (is_ipv4) {
+  589|      1|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+  590|       |
+  591|      1|        if (size > length) {
+  592|      0|            return -1;
+  593|      0|        }
+  594|       |
+  595|      1|        ip_port->ip.family = host_family;
+  596|      1|        memcpy(&ip_port->ip.ip.v4, data + 1, SIZE_IP4);
+  597|      1|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
+  598|      1|        return size;
+  599|      1|    } else {
+  600|      0|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
+  601|       |
+  602|      0|        if (size > length) {
+  603|      0|            return -1;
+  604|      0|        }
+  605|       |
+  606|      0|        ip_port->ip.family = host_family;
+  607|      0|        memcpy(&ip_port->ip.ip.v6, data + 1, SIZE_IP6);
+  608|      0|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
+  609|      0|        return size;
+  610|      0|    }
+  611|      1|}
 pack_nodes:
-  616|    402|{
-  617|    402|    uint32_t packed_length = 0;
-  618|       |
-  619|    804|    for (uint32_t i = 0; i < number && packed_length < length; ++i) {
-  620|    402|        const int ipp_size = pack_ip_port(logger, data + packed_length, length - packed_length, &nodes[i].ip_port);
+  619|    402|{
+  620|    402|    uint32_t packed_length = 0;
   621|       |
-  622|    402|        if (ipp_size == -1) {
-  623|      0|            return -1;
-  624|      0|        }
-  625|       |
-  626|    402|        packed_length += ipp_size;
-  627|       |
-  628|    402|        if (packed_length + CRYPTO_PUBLIC_KEY_SIZE > length) {
-  629|      0|            return -1;
-  630|      0|        }
-  631|       |
-  632|    402|        memcpy(data + packed_length, nodes[i].public_key, CRYPTO_PUBLIC_KEY_SIZE);
-  633|    402|        packed_length += CRYPTO_PUBLIC_KEY_SIZE;
+  622|    804|    for (uint32_t i = 0; i < number && packed_length < length; ++i) {
+  623|    402|        const int ipp_size = pack_ip_port(logger, data + packed_length, length - packed_length, &nodes[i].ip_port);
+  624|       |
+  625|    402|        if (ipp_size == -1) {
+  626|      0|            return -1;
+  627|      0|        }
+  628|       |
+  629|    402|        packed_length += ipp_size;
+  630|       |
+  631|    402|        if (packed_length + CRYPTO_PUBLIC_KEY_SIZE > length) {
+  632|      0|            return -1;
+  633|      0|        }
   634|       |
-  635|    402|#ifndef NDEBUG
-  636|    402|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
-  637|    402|#endif
-  638|    402|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
-  639|    402|    }
-  640|       |
-  641|    402|    return packed_length;
-  642|    402|}
+  635|    402|        memcpy(data + packed_length, nodes[i].public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  636|    402|        packed_length += CRYPTO_PUBLIC_KEY_SIZE;
+  637|       |
+  638|    402|#ifndef NDEBUG
+  639|    402|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
+  640|    402|#endif
+  641|    402|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
+  642|    402|    }
+  643|       |
+  644|    402|    return packed_length;
+  645|    402|}
 unpack_nodes:
-  653|      1|{
-  654|      1|    uint32_t num = 0;
-  655|      1|    uint32_t len_processed = 0;
-  656|       |
-  657|      2|    while (num < max_num_nodes && len_processed < length) {
-  658|      1|        const int ipp_size = unpack_ip_port(&nodes[num].ip_port, data + len_processed, length - len_processed, tcp_enabled);
+  656|      1|{
+  657|      1|    uint32_t num = 0;
+  658|      1|    uint32_t len_processed = 0;
   659|       |
-  660|      1|        if (ipp_size == -1) {
-  661|      0|            return -1;
-  662|      0|        }
-  663|       |
-  664|      1|        len_processed += ipp_size;
-  665|       |
-  666|      1|        if (len_processed + CRYPTO_PUBLIC_KEY_SIZE > length) {
-  667|      0|            return -1;
-  668|      0|        }
-  669|       |
-  670|      1|        memcpy(nodes[num].public_key, data + len_processed, CRYPTO_PUBLIC_KEY_SIZE);
-  671|      1|        len_processed += CRYPTO_PUBLIC_KEY_SIZE;
-  672|      1|        ++num;
-  673|       |
-  674|      1|#ifndef NDEBUG
-  675|      1|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
-  676|      1|#endif
-  677|      1|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
-  678|      1|    }
-  679|       |
-  680|      1|    if (processed_data_len != nullptr) {
-  681|      0|        *processed_data_len = len_processed;
-  682|      0|    }
-  683|       |
-  684|      1|    return num;
-  685|      1|}
+  660|      2|    while (num < max_num_nodes && len_processed < length) {
+  661|      1|        const int ipp_size = unpack_ip_port(&nodes[num].ip_port, data + len_processed, length - len_processed, tcp_enabled);
+  662|       |
+  663|      1|        if (ipp_size == -1) {
+  664|      0|            return -1;
+  665|      0|        }
+  666|       |
+  667|      1|        len_processed += ipp_size;
+  668|       |
+  669|      1|        if (len_processed + CRYPTO_PUBLIC_KEY_SIZE > length) {
+  670|      0|            return -1;
+  671|      0|        }
+  672|       |
+  673|      1|        memcpy(nodes[num].public_key, data + len_processed, CRYPTO_PUBLIC_KEY_SIZE);
+  674|      1|        len_processed += CRYPTO_PUBLIC_KEY_SIZE;
+  675|      1|        ++num;
+  676|       |
+  677|      1|#ifndef NDEBUG
+  678|      1|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
+  679|      1|#endif
+  680|      1|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
+  681|      1|    }
+  682|       |
+  683|      1|    if (processed_data_len != nullptr) {
+  684|      0|        *processed_data_len = len_processed;
+  685|      0|    }
+  686|       |
+  687|      1|    return num;
+  688|      1|}
 get_close_nodes:
-  944|    709|{
-  945|    709|    memset(nodes_list, 0, MAX_SENT_NODES * sizeof(Node_format));
-  946|    709|    return get_somewhat_close_nodes(dht, public_key, nodes_list, sa_family, is_LAN);
-  947|    709|}
+  947|    707|{
+  948|    707|    memset(nodes_list, 0, MAX_SENT_NODES * sizeof(Node_format));
+  949|    707|    return get_somewhat_close_nodes(dht, public_key, nodes_list, sa_family, is_LAN);
+  950|    707|}
 node_addable_to_close_list:
- 1140|    241|{
- 1141|    241|    return add_to_close(dht, public_key, ip_port, true);
- 1142|    241|}
+ 1143|    241|{
+ 1144|    241|    return add_to_close(dht, public_key, ip_port, true);
+ 1145|    241|}
 dht_getnodes:
- 1353|    402|{
- 1354|       |    /* Check if packet is going to be sent to ourself. */
- 1355|    402|    if (pk_equal(public_key, dht->self_public_key)) {
- 1356|      0|        return false;
- 1357|      0|    }
- 1358|       |
- 1359|    402|    uint8_t plain_message[sizeof(Node_format) * 2] = {0};
- 1360|       |
- 1361|    402|    Node_format receiver;
- 1362|    402|    memcpy(receiver.public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
- 1363|    402|    receiver.ip_port = *ip_port;
- 1364|       |
- 1365|    402|    if (pack_nodes(dht->log, plain_message, sizeof(plain_message), &receiver, 1) == -1) {
- 1366|      0|        return false;
- 1367|      0|    }
- 1368|       |
- 1369|    402|    uint64_t ping_id = 0;
- 1370|       |
- 1371|    402|    ping_id = ping_array_add(dht->dht_ping_array, dht->mono_time, plain_message, sizeof(receiver));
- 1372|       |
- 1373|    402|    if (ping_id == 0) {
- 1374|      0|        LOGGER_ERROR(dht->log, "adding ping id failed");
- 1375|      0|        return false;
- 1376|      0|    }
- 1377|       |
- 1378|    402|    uint8_t plain[CRYPTO_PUBLIC_KEY_SIZE + sizeof(ping_id)];
- 1379|    402|    uint8_t data[1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE + sizeof(plain) + CRYPTO_MAC_SIZE];
+ 1356|    402|{
+ 1357|       |    /* Check if packet is going to be sent to ourself. */
+ 1358|    402|    if (pk_equal(public_key, dht->self_public_key)) {
+ 1359|      0|        return false;
+ 1360|      0|    }
+ 1361|       |
+ 1362|    402|    uint8_t plain_message[sizeof(Node_format) * 2] = {0};
+ 1363|       |
+ 1364|    402|    Node_format receiver;
+ 1365|    402|    memcpy(receiver.public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
+ 1366|    402|    receiver.ip_port = *ip_port;
+ 1367|       |
+ 1368|    402|    if (pack_nodes(dht->log, plain_message, sizeof(plain_message), &receiver, 1) == -1) {
+ 1369|      0|        return false;
+ 1370|      0|    }
+ 1371|       |
+ 1372|    402|    uint64_t ping_id = 0;
+ 1373|       |
+ 1374|    402|    ping_id = ping_array_add(dht->dht_ping_array, dht->mono_time, plain_message, sizeof(receiver));
+ 1375|       |
+ 1376|    402|    if (ping_id == 0) {
+ 1377|      0|        LOGGER_ERROR(dht->log, "adding ping id failed");
+ 1378|      0|        return false;
+ 1379|      0|    }
  1380|       |
- 1381|    402|    memcpy(plain, client_id, CRYPTO_PUBLIC_KEY_SIZE);
- 1382|    402|    memcpy(plain + CRYPTO_PUBLIC_KEY_SIZE, &ping_id, sizeof(ping_id));
+ 1381|    402|    uint8_t plain[CRYPTO_PUBLIC_KEY_SIZE + sizeof(ping_id)];
+ 1382|    402|    uint8_t data[1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE + sizeof(plain) + CRYPTO_MAC_SIZE];
  1383|       |
- 1384|    402|    uint8_t shared_key[CRYPTO_SHARED_KEY_SIZE];
- 1385|    402|    dht_get_shared_key_sent(dht, shared_key, public_key);
+ 1384|    402|    memcpy(plain, client_id, CRYPTO_PUBLIC_KEY_SIZE);
+ 1385|    402|    memcpy(plain + CRYPTO_PUBLIC_KEY_SIZE, &ping_id, sizeof(ping_id));
  1386|       |
- 1387|    402|    const int len = dht_create_packet(dht->self_public_key, shared_key, NET_PACKET_GET_NODES,
- 1388|    402|                                      plain, sizeof(plain), data);
+ 1387|    402|    uint8_t shared_key[CRYPTO_SHARED_KEY_SIZE];
+ 1388|    402|    dht_get_shared_key_sent(dht, shared_key, public_key);
  1389|       |
- 1390|    402|    crypto_memzero(shared_key, sizeof(shared_key));
- 1391|       |
- 1392|    402|    if (len != sizeof(data)) {
- 1393|      0|        LOGGER_ERROR(dht->log, "getnodes packet encryption failed");
- 1394|      0|        return false;
- 1395|      0|    }
- 1396|       |
- 1397|    402|    return sendpacket(dht->net, ip_port, data, len) > 0;
- 1398|    402|}
+ 1390|    402|    const int len = dht_create_packet(dht->self_public_key, shared_key, NET_PACKET_GET_NODES,
+ 1391|    402|                                      plain, sizeof(plain), data);
+ 1392|       |
+ 1393|    402|    crypto_memzero(shared_key, sizeof(shared_key));
+ 1394|       |
+ 1395|    402|    if (len != sizeof(data)) {
+ 1396|      0|        LOGGER_ERROR(dht->log, "getnodes packet encryption failed");
+ 1397|      0|        return false;
+ 1398|      0|    }
+ 1399|       |
+ 1400|    402|    return sendpacket(dht->net, ip_port, data, len) > 0;
+ 1401|    402|}
 dht_addfriend:
- 1629|    804|{
- 1630|    804|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
- 1631|       |
- 1632|    804|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
- 1633|    148|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
+ 1632|    804|{
+ 1633|    804|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
  1634|       |
- 1635|    148|        if (dht_friend->lock_count == DHT_FRIEND_MAX_LOCKS) {
- 1636|      0|            return -1;
- 1637|      0|        }
- 1638|       |
- 1639|    148|        dht_friend_lock(dht_friend, ip_callback, data, number, lock_count);
- 1640|       |
- 1641|    148|        return 0;
- 1642|    148|    }
+ 1635|    804|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
+ 1636|    150|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
+ 1637|       |
+ 1638|    150|        if (dht_friend->lock_count == DHT_FRIEND_MAX_LOCKS) {
+ 1639|      0|            return -1;
+ 1640|      0|        }
+ 1641|       |
+ 1642|    150|        dht_friend_lock(dht_friend, ip_callback, data, number, lock_count);
  1643|       |
- 1644|    656|    DHT_Friend *const temp = (DHT_Friend *)realloc(dht->friends_list, sizeof(DHT_Friend) * (dht->num_friends + 1));
- 1645|       |
- 1646|    656|    if (temp == nullptr) {
- 1647|      0|        return -1;
- 1648|      0|    }
- 1649|       |
- 1650|    656|    dht->friends_list = temp;
- 1651|    656|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
- 1652|    656|    memset(dht_friend, 0, sizeof(DHT_Friend));
- 1653|    656|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
- 1654|       |
- 1655|    656|    dht_friend->nat.nat_ping_id = random_u64();
- 1656|    656|    ++dht->num_friends;
+ 1644|    150|        return 0;
+ 1645|    150|    }
+ 1646|       |
+ 1647|    654|    DHT_Friend *const temp = (DHT_Friend *)realloc(dht->friends_list, sizeof(DHT_Friend) * (dht->num_friends + 1));
+ 1648|       |
+ 1649|    654|    if (temp == nullptr) {
+ 1650|      0|        return -1;
+ 1651|      0|    }
+ 1652|       |
+ 1653|    654|    dht->friends_list = temp;
+ 1654|    654|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
+ 1655|    654|    memset(dht_friend, 0, sizeof(DHT_Friend));
+ 1656|    654|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
  1657|       |
- 1658|    656|    dht_friend_lock(dht_friend, ip_callback, data, number, lock_count);
- 1659|       |
- 1660|    656|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec,
- 1661|    656|                                   true);
+ 1658|    654|    dht_friend->nat.nat_ping_id = random_u64();
+ 1659|    654|    ++dht->num_friends;
+ 1660|       |
+ 1661|    654|    dht_friend_lock(dht_friend, ip_callback, data, number, lock_count);
  1662|       |
- 1663|    656|    return 0;
- 1664|    656|}
+ 1663|    654|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec,
+ 1664|    654|                                   true);
+ 1665|       |
+ 1666|    654|    return 0;
+ 1667|    654|}
 dht_bootstrap:
- 1887|    402|{
- 1888|    402|    if (pk_equal(public_key, dht->self_public_key)) {
- 1889|       |        // Bootstrapping off ourselves is ok (onion paths are still set up).
- 1890|      0|        return true;
- 1891|      0|    }
- 1892|       |
- 1893|    402|    return dht_getnodes(dht, ip_port, public_key, dht->self_public_key);
- 1894|    402|}
+ 1890|    402|{
+ 1891|    402|    if (pk_equal(public_key, dht->self_public_key)) {
+ 1892|       |        // Bootstrapping off ourselves is ok (onion paths are still set up).
+ 1893|      0|        return true;
+ 1894|      0|    }
+ 1895|       |
+ 1896|    402|    return dht_getnodes(dht, ip_port, public_key, dht->self_public_key);
+ 1897|    402|}
 route_packet:
- 1931|     42|{
- 1932|  42.0k|    for (uint32_t i = 0; i < LCLIENT_LIST; ++i) {
- 1933|  41.9k|        if (pk_equal(public_key, dht->close_clientlist[i].public_key)) {
- 1934|      1|            const Client_data *const client = &dht->close_clientlist[i];
- 1935|      1|            const IPPTsPng *const assocs[] = { &client->assoc6, &client->assoc4, nullptr };
- 1936|       |
- 1937|      3|            for (const IPPTsPng * const *it = assocs; *it != nullptr; ++it) {
- 1938|      2|                const IPPTsPng *const assoc = *it;
+ 1934|     42|{
+ 1935|  42.0k|    for (uint32_t i = 0; i < LCLIENT_LIST; ++i) {
+ 1936|  41.9k|        if (pk_equal(public_key, dht->close_clientlist[i].public_key)) {
+ 1937|      1|            const Client_data *const client = &dht->close_clientlist[i];
+ 1938|      1|            const IPPTsPng *const assocs[] = { &client->assoc6, &client->assoc4, nullptr };
  1939|       |
- 1940|      2|                if (ip_isset(&assoc->ip_port.ip)) {
- 1941|      0|                    return sendpacket(dht->net, &assoc->ip_port, packet, length);
- 1942|      0|                }
- 1943|      2|            }
- 1944|       |
- 1945|      1|            break;
- 1946|      1|        }
- 1947|  41.9k|    }
- 1948|       |
- 1949|     42|    return -1;
- 1950|     42|}
+ 1940|      3|            for (const IPPTsPng * const *it = assocs; *it != nullptr; ++it) {
+ 1941|      2|                const IPPTsPng *const assoc = *it;
+ 1942|       |
+ 1943|      2|                if (ip_isset(&assoc->ip_port.ip)) {
+ 1944|      0|                    return sendpacket(dht->net, &assoc->ip_port, packet, length);
+ 1945|      0|                }
+ 1946|      2|            }
+ 1947|       |
+ 1948|      1|            break;
+ 1949|      1|        }
+ 1950|  41.9k|    }
+ 1951|       |
+ 1952|     42|    return -1;
+ 1953|     42|}
 cryptopacket_registerhandler:
- 2489|  1.60k|{
- 2490|  1.60k|    dht->cryptopackethandlers[byte].function = cb;
- 2491|  1.60k|    dht->cryptopackethandlers[byte].object = object;
- 2492|  1.60k|}
+ 2492|  1.60k|{
+ 2493|  1.60k|    dht->cryptopackethandlers[byte].function = cb;
+ 2494|  1.60k|    dht->cryptopackethandlers[byte].object = object;
+ 2495|  1.60k|}
 dht_callback_get_nodes_response:
- 2539|    402|{
- 2540|    402|    dht->get_nodes_response = function;
- 2541|    402|}
+ 2542|    402|{
+ 2543|    402|    dht->get_nodes_response = function;
+ 2544|    402|}
 new_dht:
- 2568|    402|{
- 2569|    402|    if (net == nullptr) {
- 2570|      0|        return nullptr;
- 2571|      0|    }
- 2572|       |
- 2573|    402|    DHT *const dht = (DHT *)calloc(1, sizeof(DHT));
- 2574|       |
- 2575|    402|    if (dht == nullptr) {
- 2576|      0|        return nullptr;
- 2577|      0|    }
- 2578|       |
- 2579|    402|    dht->mono_time = mono_time;
- 2580|    402|    dht->cur_time = mono_time_get(mono_time);
- 2581|    402|    dht->log = log;
- 2582|    402|    dht->net = net;
- 2583|       |
- 2584|    402|    dht->hole_punching_enabled = hole_punching_enabled;
- 2585|    402|    dht->lan_discovery_enabled = lan_discovery_enabled;
+ 2571|    402|{
+ 2572|    402|    if (net == nullptr) {
+ 2573|      0|        return nullptr;
+ 2574|      0|    }
+ 2575|       |
+ 2576|    402|    DHT *const dht = (DHT *)calloc(1, sizeof(DHT));
+ 2577|       |
+ 2578|    402|    if (dht == nullptr) {
+ 2579|      0|        return nullptr;
+ 2580|      0|    }
+ 2581|       |
+ 2582|    402|    dht->mono_time = mono_time;
+ 2583|    402|    dht->cur_time = mono_time_get(mono_time);
+ 2584|    402|    dht->log = log;
+ 2585|    402|    dht->net = net;
  2586|       |
- 2587|    402|    dht->ping = ping_new(mono_time, dht);
- 2588|       |
- 2589|    402|    if (dht->ping == nullptr) {
- 2590|      0|        kill_dht(dht);
- 2591|      0|        return nullptr;
- 2592|      0|    }
- 2593|       |
- 2594|    402|    networking_registerhandler(dht->net, NET_PACKET_GET_NODES, &handle_getnodes, dht);
- 2595|    402|    networking_registerhandler(dht->net, NET_PACKET_SEND_NODES_IPV6, &handle_sendnodes_ipv6, dht);
- 2596|    402|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
- 2597|    402|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_LANdiscovery, dht);
- 2598|    402|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_NATping, dht);
- 2599|       |
- 2600|    402|    crypto_new_keypair(dht->self_public_key, dht->self_secret_key);
- 2601|       |
- 2602|    402|    dht->dht_ping_array = ping_array_new(DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
- 2603|       |
- 2604|    402|    if (dht->dht_ping_array == nullptr) {
- 2605|      0|        kill_dht(dht);
- 2606|      0|        return nullptr;
- 2607|      0|    }
- 2608|       |
- 2609|  1.20k|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
- 2610|    804|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
- 2611|    804|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
- 2612|       |
- 2613|    804|        crypto_new_keypair(random_public_key_bytes, random_secret_key_bytes);
- 2614|       |
- 2615|    804|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, nullptr) != 0) {
- 2616|      0|            kill_dht(dht);
- 2617|      0|            return nullptr;
- 2618|      0|        }
- 2619|    804|    }
- 2620|       |
- 2621|    402|    return dht;
- 2622|    402|}
+ 2587|    402|    dht->hole_punching_enabled = hole_punching_enabled;
+ 2588|    402|    dht->lan_discovery_enabled = lan_discovery_enabled;
+ 2589|       |
+ 2590|    402|    dht->ping = ping_new(mono_time, dht);
+ 2591|       |
+ 2592|    402|    if (dht->ping == nullptr) {
+ 2593|      0|        kill_dht(dht);
+ 2594|      0|        return nullptr;
+ 2595|      0|    }
+ 2596|       |
+ 2597|    402|    networking_registerhandler(dht->net, NET_PACKET_GET_NODES, &handle_getnodes, dht);
+ 2598|    402|    networking_registerhandler(dht->net, NET_PACKET_SEND_NODES_IPV6, &handle_sendnodes_ipv6, dht);
+ 2599|    402|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
+ 2600|    402|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_LANdiscovery, dht);
+ 2601|    402|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_NATping, dht);
+ 2602|       |
+ 2603|    402|    crypto_new_keypair(dht->self_public_key, dht->self_secret_key);
+ 2604|       |
+ 2605|    402|    dht->dht_ping_array = ping_array_new(DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
+ 2606|       |
+ 2607|    402|    if (dht->dht_ping_array == nullptr) {
+ 2608|      0|        kill_dht(dht);
+ 2609|      0|        return nullptr;
+ 2610|      0|    }
+ 2611|       |
+ 2612|  1.20k|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
+ 2613|    804|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
+ 2614|    804|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
+ 2615|       |
+ 2616|    804|        crypto_new_keypair(random_public_key_bytes, random_secret_key_bytes);
+ 2617|       |
+ 2618|    804|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, nullptr) != 0) {
+ 2619|      0|            kill_dht(dht);
+ 2620|      0|            return nullptr;
+ 2621|      0|        }
+ 2622|    804|    }
+ 2623|       |
+ 2624|    402|    return dht;
+ 2625|    402|}
 do_dht:
- 2625|  40.2k|{
- 2626|  40.2k|    const uint64_t cur_time = mono_time_get(dht->mono_time);
- 2627|       |
- 2628|  40.2k|    if (dht->cur_time == cur_time) {
- 2629|  40.2k|        return;
- 2630|  40.2k|    }
- 2631|       |
- 2632|      0|    dht->cur_time = cur_time;
- 2633|       |
- 2634|       |    // Load friends/clients if first call to do_dht
- 2635|      0|    if (dht->loaded_num_nodes > 0) {
- 2636|      0|        dht_connect_after_load(dht);
- 2637|      0|    }
- 2638|       |
- 2639|      0|    do_Close(dht);
- 2640|      0|    do_dht_friends(dht);
- 2641|      0|    do_NAT(dht);
- 2642|      0|    ping_iterate(dht->ping);
- 2643|      0|}
+ 2628|  40.2k|{
+ 2629|  40.2k|    const uint64_t cur_time = mono_time_get(dht->mono_time);
+ 2630|       |
+ 2631|  40.2k|    if (dht->cur_time == cur_time) {
+ 2632|  40.2k|        return;
+ 2633|  40.2k|    }
+ 2634|       |
+ 2635|      0|    dht->cur_time = cur_time;
+ 2636|       |
+ 2637|       |    // Load friends/clients if first call to do_dht
+ 2638|      0|    if (dht->loaded_num_nodes > 0) {
+ 2639|      0|        dht_connect_after_load(dht);
+ 2640|      0|    }
+ 2641|       |
+ 2642|      0|    do_Close(dht);
+ 2643|      0|    do_dht_friends(dht);
+ 2644|      0|    do_NAT(dht);
+ 2645|      0|    ping_iterate(dht->ping);
+ 2646|      0|}
 kill_dht:
- 2646|    402|{
- 2647|    402|    networking_registerhandler(dht->net, NET_PACKET_GET_NODES, nullptr, nullptr);
- 2648|    402|    networking_registerhandler(dht->net, NET_PACKET_SEND_NODES_IPV6, nullptr, nullptr);
- 2649|    402|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
- 2650|    402|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
- 2651|    402|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
- 2652|       |
- 2653|    402|    ping_array_kill(dht->dht_ping_array);
- 2654|    402|    ping_kill(dht->ping);
- 2655|    402|    free(dht->friends_list);
- 2656|    402|    free(dht->loaded_nodes_list);
- 2657|    402|    crypto_memzero(&dht->shared_keys_recv, sizeof(dht->shared_keys_recv));
- 2658|    402|    crypto_memzero(&dht->shared_keys_sent, sizeof(dht->shared_keys_sent));
- 2659|    402|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
- 2660|    402|    free(dht);
- 2661|    402|}
+ 2649|    402|{
+ 2650|    402|    networking_registerhandler(dht->net, NET_PACKET_GET_NODES, nullptr, nullptr);
+ 2651|    402|    networking_registerhandler(dht->net, NET_PACKET_SEND_NODES_IPV6, nullptr, nullptr);
+ 2652|    402|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
+ 2653|    402|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
+ 2654|    402|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
+ 2655|       |
+ 2656|    402|    ping_array_kill(dht->dht_ping_array);
+ 2657|    402|    ping_kill(dht->ping);
+ 2658|    402|    free(dht->friends_list);
+ 2659|    402|    free(dht->loaded_nodes_list);
+ 2660|    402|    crypto_memzero(&dht->shared_keys_recv, sizeof(dht->shared_keys_recv));
+ 2661|    402|    crypto_memzero(&dht->shared_keys_sent, sizeof(dht->shared_keys_sent));
+ 2662|    402|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
+ 2663|    402|    free(dht);
+ 2664|    402|}
 DHT.c:get_somewhat_close_nodes:
-  928|    709|{
-  929|    709|    uint32_t num_nodes = 0;
-  930|    709|    get_close_nodes_inner(dht->cur_time, public_key, nodes_list, sa_family,
-  931|    709|                          dht->close_clientlist, LCLIENT_LIST, &num_nodes, is_LAN);
-  932|       |
-  933|  1.71k|    for (uint32_t i = 0; i < dht->num_friends; ++i) {
-  934|  1.01k|        get_close_nodes_inner(dht->cur_time, public_key, nodes_list, sa_family,
-  935|  1.01k|                              dht->friends_list[i].client_list, MAX_FRIEND_CLIENTS,
-  936|  1.01k|                              &num_nodes, is_LAN);
-  937|  1.01k|    }
-  938|       |
-  939|    709|    return num_nodes;
-  940|    709|}
+  931|    707|{
+  932|    707|    uint32_t num_nodes = 0;
+  933|    707|    get_close_nodes_inner(dht->cur_time, public_key, nodes_list, sa_family,
+  934|    707|                          dht->close_clientlist, LCLIENT_LIST, &num_nodes, is_LAN);
+  935|       |
+  936|  1.71k|    for (uint32_t i = 0; i < dht->num_friends; ++i) {
+  937|  1.00k|        get_close_nodes_inner(dht->cur_time, public_key, nodes_list, sa_family,
+  938|  1.00k|                              dht->friends_list[i].client_list, MAX_FRIEND_CLIENTS,
+  939|  1.00k|                              &num_nodes, is_LAN);
+  940|  1.00k|    }
+  941|       |
+  942|    707|    return num_nodes;
+  943|    707|}
 DHT.c:get_close_nodes_inner:
-  870|  1.71k|{
-  871|  1.71k|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
-  872|      0|        return;
-  873|      0|    }
-  874|       |
-  875|  1.71k|    uint32_t num_nodes = *num_nodes_ptr;
-  876|       |
-  877|   735k|    for (uint32_t i = 0; i < client_list_length; ++i) {
-  878|   734k|        const Client_data *const client = &client_list[i];
+  873|  1.71k|{
+  874|  1.71k|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
+  875|      0|        return;
+  876|      0|    }
+  877|       |
+  878|  1.71k|    uint32_t num_nodes = *num_nodes_ptr;
   879|       |
-  880|       |        /* node already in list? */
-  881|   734k|        if (index_of_node_pk(nodes_list, MAX_SENT_NODES, client->public_key) != UINT32_MAX) {
-  882|   734k|            continue;
-  883|   734k|        }
-  884|       |
-  885|      0|        const IPPTsPng *ipptp;
-  886|       |
-  887|      0|        if (net_family_is_ipv4(sa_family)) {
-  888|      0|            ipptp = &client->assoc4;
-  889|      0|        } else if (net_family_is_ipv6(sa_family)) {
-  890|      0|            ipptp = &client->assoc6;
-  891|      0|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
-  892|      0|            ipptp = &client->assoc4;
-  893|      0|        } else {
-  894|      0|            ipptp = &client->assoc6;
-  895|      0|        }
-  896|       |
-  897|       |        /* node not in a good condition? */
-  898|      0|        if (assoc_timeout(cur_time, ipptp)) {
-  899|      0|            continue;
-  900|      0|        }
-  901|       |
-  902|       |        /* don't send LAN ips to non LAN peers */
-  903|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_LAN) {
-  904|      0|            continue;
-  905|      0|        }
-  906|       |
-  907|      0|        if (num_nodes < MAX_SENT_NODES) {
-  908|      0|            memcpy(nodes_list[num_nodes].public_key, client->public_key, CRYPTO_PUBLIC_KEY_SIZE);
-  909|      0|            nodes_list[num_nodes].ip_port = ipptp->ip_port;
-  910|      0|            ++num_nodes;
-  911|      0|        } else {
-  912|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
-  913|      0|        }
-  914|      0|    }
-  915|       |
-  916|  1.71k|    *num_nodes_ptr = num_nodes;
-  917|  1.71k|}
+  880|   733k|    for (uint32_t i = 0; i < client_list_length; ++i) {
+  881|   732k|        const Client_data *const client = &client_list[i];
+  882|       |
+  883|       |        /* node already in list? */
+  884|   732k|        if (index_of_node_pk(nodes_list, MAX_SENT_NODES, client->public_key) != UINT32_MAX) {
+  885|   732k|            continue;
+  886|   732k|        }
+  887|       |
+  888|      0|        const IPPTsPng *ipptp;
+  889|       |
+  890|      0|        if (net_family_is_ipv4(sa_family)) {
+  891|      0|            ipptp = &client->assoc4;
+  892|      0|        } else if (net_family_is_ipv6(sa_family)) {
+  893|      0|            ipptp = &client->assoc6;
+  894|      0|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
+  895|      0|            ipptp = &client->assoc4;
+  896|      0|        } else {
+  897|      0|            ipptp = &client->assoc6;
+  898|      0|        }
+  899|       |
+  900|       |        /* node not in a good condition? */
+  901|      0|        if (assoc_timeout(cur_time, ipptp)) {
+  902|      0|            continue;
+  903|      0|        }
+  904|       |
+  905|       |        /* don't send LAN ips to non LAN peers */
+  906|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_LAN) {
+  907|      0|            continue;
+  908|      0|        }
+  909|       |
+  910|      0|        if (num_nodes < MAX_SENT_NODES) {
+  911|      0|            memcpy(nodes_list[num_nodes].public_key, client->public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  912|      0|            nodes_list[num_nodes].ip_port = ipptp->ip_port;
+  913|      0|            ++num_nodes;
+  914|      0|        } else {
+  915|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
+  916|      0|        }
+  917|      0|    }
+  918|       |
+  919|  1.71k|    *num_nodes_ptr = num_nodes;
+  920|  1.71k|}
 DHT.c:index_of_node_pk:
-  721|   734k|{
-  722|   734k|    assert(size == 0 || array != nullptr);
-  723|       |
-  724|   734k|    for (uint32_t i = 0; i < size; ++i) {
-  725|   734k|        if (pk_equal(array[i].public_key, pk)) {
-  726|   734k|            return i;
-  727|   734k|        }
-  728|   734k|    }
-  729|       |
-  730|      0|    return UINT32_MAX;
-  731|   734k|}
+  724|   732k|{
+  725|   732k|    assert(size == 0 || array != nullptr);
+  726|       |
+  727|   732k|    for (uint32_t i = 0; i < size; ++i) {
+  728|   732k|        if (pk_equal(array[i].public_key, pk)) {
+  729|   732k|            return i;
+  730|   732k|        }
+  731|   732k|    }
+  732|       |
+  733|      0|    return UINT32_MAX;
+  734|   732k|}
 DHT.c:add_to_close:
- 1109|    241|{
- 1110|    241|    unsigned int index = bit_by_bit_cmp(public_key, dht->self_public_key);
- 1111|       |
- 1112|    241|    if (index >= LCLIENT_LENGTH) {
- 1113|     70|        index = LCLIENT_LENGTH - 1;
- 1114|     70|    }
- 1115|       |
- 1116|  2.16k|    for (uint32_t i = 0; i < LCLIENT_NODES; ++i) {
- 1117|       |        /* TODO(iphydf): write bounds checking test to catch the case that
- 1118|       |         * index is left as >= LCLIENT_LENGTH */
- 1119|  1.92k|        Client_data *const client = &dht->close_clientlist[(index * LCLIENT_NODES) + i];
- 1120|       |
- 1121|  1.92k|        if (!assoc_timeout(dht->cur_time, &client->assoc4) ||
- 1122|  1.92k|                !assoc_timeout(dht->cur_time, &client->assoc6)) {
- 1123|  1.92k|            continue;
- 1124|  1.92k|        }
- 1125|       |
- 1126|      0|        if (simulate) {
- 1127|      0|            return true;
- 1128|      0|        }
- 1129|       |
- 1130|      0|        pk_copy(client->public_key, public_key);
- 1131|      0|        update_client_with_reset(dht->mono_time, client, ip_port);
- 1132|      0|        return true;
- 1133|      0|    }
- 1134|       |
- 1135|    241|    return false;
- 1136|    241|}
+ 1112|    241|{
+ 1113|    241|    unsigned int index = bit_by_bit_cmp(public_key, dht->self_public_key);
+ 1114|       |
+ 1115|    241|    if (index >= LCLIENT_LENGTH) {
+ 1116|     70|        index = LCLIENT_LENGTH - 1;
+ 1117|     70|    }
+ 1118|       |
+ 1119|  2.16k|    for (uint32_t i = 0; i < LCLIENT_NODES; ++i) {
+ 1120|       |        /* TODO(iphydf): write bounds checking test to catch the case that
+ 1121|       |         * index is left as >= LCLIENT_LENGTH */
+ 1122|  1.92k|        Client_data *const client = &dht->close_clientlist[(index * LCLIENT_NODES) + i];
+ 1123|       |
+ 1124|  1.92k|        if (!assoc_timeout(dht->cur_time, &client->assoc4) ||
+ 1125|  1.92k|                !assoc_timeout(dht->cur_time, &client->assoc6)) {
+ 1126|  1.92k|            continue;
+ 1127|  1.92k|        }
+ 1128|       |
+ 1129|      0|        if (simulate) {
+ 1130|      0|            return true;
+ 1131|      0|        }
+ 1132|       |
+ 1133|      0|        pk_copy(client->public_key, public_key);
+ 1134|      0|        update_client_with_reset(dht->mono_time, client, ip_port);
+ 1135|      0|        return true;
+ 1136|      0|    }
+ 1137|       |
+ 1138|    241|    return false;
+ 1139|    241|}
 DHT.c:bit_by_bit_cmp:
   225|    241|{
   226|    241|    unsigned int i;
@@ -765,434 +768,434 @@ DHT.c:bit_by_bit_cmp:
   245|    241|    return i * 8 + j;
   246|    241|}
 DHT.c:dht_create_packet:
-  516|    448|{
-  517|    448|    uint8_t *encrypted = (uint8_t *)malloc(plain_length + CRYPTO_MAC_SIZE);
-  518|    448|    uint8_t nonce[CRYPTO_NONCE_SIZE];
-  519|       |
-  520|    448|    if (encrypted == nullptr) {
-  521|      0|        return -1;
-  522|      0|    }
-  523|       |
-  524|    448|    random_nonce(nonce);
-  525|       |
-  526|    448|    const int encrypted_length = encrypt_data_symmetric(shared_key, nonce, plain, plain_length, encrypted);
-  527|       |
-  528|    448|    if (encrypted_length == -1) {
-  529|      0|        free(encrypted);
-  530|      0|        return -1;
-  531|      0|    }
-  532|       |
-  533|    448|    packet[0] = type;
-  534|    448|    memcpy(packet + 1, public_key, CRYPTO_PUBLIC_KEY_SIZE);
-  535|    448|    memcpy(packet + 1 + CRYPTO_PUBLIC_KEY_SIZE, nonce, CRYPTO_NONCE_SIZE);
-  536|    448|    memcpy(packet + 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE, encrypted, encrypted_length);
-  537|       |
-  538|    448|    free(encrypted);
-  539|    448|    return 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE + encrypted_length;
-  540|    448|}
+  519|    448|{
+  520|    448|    uint8_t *encrypted = (uint8_t *)malloc(plain_length + CRYPTO_MAC_SIZE);
+  521|    448|    uint8_t nonce[CRYPTO_NONCE_SIZE];
+  522|       |
+  523|    448|    if (encrypted == nullptr) {
+  524|      0|        return -1;
+  525|      0|    }
+  526|       |
+  527|    448|    random_nonce(nonce);
+  528|       |
+  529|    448|    const int encrypted_length = encrypt_data_symmetric(shared_key, nonce, plain, plain_length, encrypted);
+  530|       |
+  531|    448|    if (encrypted_length == -1) {
+  532|      0|        free(encrypted);
+  533|      0|        return -1;
+  534|      0|    }
+  535|       |
+  536|    448|    packet[0] = type;
+  537|    448|    memcpy(packet + 1, public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  538|    448|    memcpy(packet + 1 + CRYPTO_PUBLIC_KEY_SIZE, nonce, CRYPTO_NONCE_SIZE);
+  539|    448|    memcpy(packet + 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE, encrypted, encrypted_length);
+  540|       |
+  541|    448|    free(encrypted);
+  542|    448|    return 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE + encrypted_length;
+  543|    448|}
 DHT.c:index_of_friend_pk:
-  707|    812|{
-  708|    812|    assert(size == 0 || array != nullptr);
-  709|       |
-  710|  1.07k|    for (uint32_t i = 0; i < size; ++i) {
-  711|    416|        if (pk_equal(array[i].public_key, pk)) {
-  712|    155|            return i;
-  713|    155|        }
-  714|    416|    }
-  715|       |
-  716|    657|    return UINT32_MAX;
-  717|    812|}
+  710|    812|{
+  711|    812|    assert(size == 0 || array != nullptr);
+  712|       |
+  713|  1.07k|    for (uint32_t i = 0; i < size; ++i) {
+  714|    416|        if (pk_equal(array[i].public_key, pk)) {
+  715|    157|            return i;
+  716|    157|        }
+  717|    416|    }
+  718|       |
+  719|    655|    return UINT32_MAX;
+  720|    812|}
 DHT.c:dht_friend_lock:
- 1615|    804|{
- 1616|    804|    const uint16_t lock_num = dht_friend->lock_count;
- 1617|    804|    ++dht_friend->lock_count;
- 1618|    804|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
- 1619|    804|    dht_friend->callbacks[lock_num].data = data;
- 1620|    804|    dht_friend->callbacks[lock_num].number = number;
- 1621|       |
- 1622|    804|    if (lock_count != nullptr) {
- 1623|      0|        *lock_count = lock_num + 1;
- 1624|      0|    }
- 1625|    804|}
+ 1618|    804|{
+ 1619|    804|    const uint16_t lock_num = dht_friend->lock_count;
+ 1620|    804|    ++dht_friend->lock_count;
+ 1621|    804|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
+ 1622|    804|    dht_friend->callbacks[lock_num].data = data;
+ 1623|    804|    dht_friend->callbacks[lock_num].number = number;
+ 1624|       |
+ 1625|    804|    if (lock_count != nullptr) {
+ 1626|      0|        *lock_count = lock_num + 1;
+ 1627|      0|    }
+ 1628|    804|}
 DHT.c:assoc_timeout:
   177|  1.92k|{
   178|  1.92k|    return (assoc->timestamp + BAD_NODE_TIMEOUT) <= cur_time;
   179|  1.92k|}
 DHT.c:foreach_ip_port:
- 2058|      2|{
- 2059|      2|    uint32_t n = 0;
- 2060|       |
- 2061|       |    /* extra legwork, because having the outside allocating the space for us
- 2062|       |     * is *usually* good(tm) (bites us in the behind in this case though) */
- 2063|     18|    for (uint32_t i = 0; i < MAX_FRIEND_CLIENTS; ++i) {
- 2064|     16|        const Client_data *const client = &dht_friend->client_list[i];
- 2065|     16|        const IPPTsPng *const assocs[] = { &client->assoc4, &client->assoc6, nullptr };
- 2066|       |
- 2067|     48|        for (const IPPTsPng * const *it = assocs; *it != nullptr; ++it) {
- 2068|     32|            const IPPTsPng *const assoc = *it;
+ 2061|      2|{
+ 2062|      2|    uint32_t n = 0;
+ 2063|       |
+ 2064|       |    /* extra legwork, because having the outside allocating the space for us
+ 2065|       |     * is *usually* good(tm) (bites us in the behind in this case though) */
+ 2066|     18|    for (uint32_t i = 0; i < MAX_FRIEND_CLIENTS; ++i) {
+ 2067|     16|        const Client_data *const client = &dht_friend->client_list[i];
+ 2068|     16|        const IPPTsPng *const assocs[] = { &client->assoc4, &client->assoc6, nullptr };
  2069|       |
- 2070|       |            /* If ip is not zero and node is good. */
- 2071|     32|            if (!ip_isset(&assoc->ret_ip_port.ip)
- 2072|     32|                    && !mono_time_is_timeout(dht->mono_time, assoc->ret_timestamp, BAD_NODE_TIMEOUT)) {
- 2073|     32|                continue;
- 2074|     32|            }
- 2075|       |
- 2076|      0|            if (!callback(dht, &assoc->ip_port, &n, userdata)) {
- 2077|       |                /* If the callback is happy with just one of the assocs, we
- 2078|       |                 * don't give it the second one. */
- 2079|      0|                break;
- 2080|      0|            }
- 2081|      0|        }
- 2082|     16|    }
- 2083|       |
- 2084|      2|    return n;
- 2085|      2|}
+ 2070|     48|        for (const IPPTsPng * const *it = assocs; *it != nullptr; ++it) {
+ 2071|     32|            const IPPTsPng *const assoc = *it;
+ 2072|       |
+ 2073|       |            /* If ip is not zero and node is good. */
+ 2074|     32|            if (!ip_isset(&assoc->ret_ip_port.ip)
+ 2075|     32|                    && !mono_time_is_timeout(dht->mono_time, assoc->ret_timestamp, BAD_NODE_TIMEOUT)) {
+ 2076|     32|                continue;
+ 2077|     32|            }
+ 2078|       |
+ 2079|      0|            if (!callback(dht, &assoc->ip_port, &n, userdata)) {
+ 2080|       |                /* If the callback is happy with just one of the assocs, we
+ 2081|       |                 * don't give it the second one. */
+ 2082|      0|                break;
+ 2083|      0|            }
+ 2084|      0|        }
+ 2085|     16|    }
+ 2086|       |
+ 2087|      2|    return n;
+ 2088|      2|}
 DHT.c:handle_getnodes:
- 1452|     65|{
- 1453|     65|    if (length != (CRYPTO_SIZE + CRYPTO_MAC_SIZE + sizeof(uint64_t))) {
- 1454|     18|        return 1;
- 1455|     18|    }
- 1456|       |
- 1457|     47|    DHT *const dht = (DHT *)object;
- 1458|       |
- 1459|       |    /* Check if packet is from ourself. */
- 1460|     47|    if (pk_equal(packet + 1, dht->self_public_key)) {
- 1461|      1|        return 1;
- 1462|      1|    }
- 1463|       |
- 1464|     46|    uint8_t plain[CRYPTO_NODE_SIZE];
- 1465|     46|    uint8_t shared_key[CRYPTO_SHARED_KEY_SIZE];
+ 1455|     65|{
+ 1456|     65|    if (length != (CRYPTO_SIZE + CRYPTO_MAC_SIZE + sizeof(uint64_t))) {
+ 1457|     18|        return 1;
+ 1458|     18|    }
+ 1459|       |
+ 1460|     47|    DHT *const dht = (DHT *)object;
+ 1461|       |
+ 1462|       |    /* Check if packet is from ourself. */
+ 1463|     47|    if (pk_equal(packet + 1, dht->self_public_key)) {
+ 1464|      1|        return 1;
+ 1465|      1|    }
  1466|       |
- 1467|     46|    dht_get_shared_key_recv(dht, shared_key, packet + 1);
- 1468|     46|    const int len = decrypt_data_symmetric(
- 1469|     46|                        shared_key,
- 1470|     46|                        packet + 1 + CRYPTO_PUBLIC_KEY_SIZE,
- 1471|     46|                        packet + 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE,
- 1472|     46|                        CRYPTO_NODE_SIZE + CRYPTO_MAC_SIZE,
- 1473|     46|                        plain);
- 1474|       |
- 1475|     46|    if (len != CRYPTO_NODE_SIZE) {
- 1476|      0|        crypto_memzero(shared_key, sizeof(shared_key));
- 1477|      0|        return 1;
- 1478|      0|    }
- 1479|       |
- 1480|     46|    sendnodes_ipv6(dht, source, packet + 1, plain, plain + CRYPTO_PUBLIC_KEY_SIZE, sizeof(uint64_t), shared_key);
- 1481|       |
- 1482|     46|    ping_add(dht->ping, packet + 1, source);
- 1483|       |
- 1484|     46|    crypto_memzero(shared_key, sizeof(shared_key));
- 1485|       |
- 1486|     46|    return 0;
- 1487|     46|}
+ 1467|     46|    uint8_t plain[CRYPTO_NODE_SIZE];
+ 1468|     46|    uint8_t shared_key[CRYPTO_SHARED_KEY_SIZE];
+ 1469|       |
+ 1470|     46|    dht_get_shared_key_recv(dht, shared_key, packet + 1);
+ 1471|     46|    const int len = decrypt_data_symmetric(
+ 1472|     46|                        shared_key,
+ 1473|     46|                        packet + 1 + CRYPTO_PUBLIC_KEY_SIZE,
+ 1474|     46|                        packet + 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE,
+ 1475|     46|                        CRYPTO_NODE_SIZE + CRYPTO_MAC_SIZE,
+ 1476|     46|                        plain);
+ 1477|       |
+ 1478|     46|    if (len != CRYPTO_NODE_SIZE) {
+ 1479|      0|        crypto_memzero(shared_key, sizeof(shared_key));
+ 1480|      0|        return 1;
+ 1481|      0|    }
+ 1482|       |
+ 1483|     46|    sendnodes_ipv6(dht, source, packet + 1, plain, plain + CRYPTO_PUBLIC_KEY_SIZE, sizeof(uint64_t), shared_key);
+ 1484|       |
+ 1485|     46|    ping_add(dht->ping, packet + 1, source);
+ 1486|       |
+ 1487|     46|    crypto_memzero(shared_key, sizeof(shared_key));
+ 1488|       |
+ 1489|     46|    return 0;
+ 1490|     46|}
 DHT.c:sendnodes_ipv6:
- 1404|     46|{
- 1405|       |    /* Check if packet is going to be sent to ourself. */
- 1406|     46|    if (pk_equal(public_key, dht->self_public_key)) {
- 1407|      0|        return -1;
- 1408|      0|    }
- 1409|       |
- 1410|     46|    if (length != sizeof(uint64_t)) {
- 1411|      0|        return -1;
- 1412|      0|    }
- 1413|       |
- 1414|     46|    const size_t node_format_size = sizeof(Node_format);
- 1415|       |
- 1416|     46|    Node_format nodes_list[MAX_SENT_NODES];
- 1417|     46|    const uint32_t num_nodes =
- 1418|     46|        get_close_nodes(dht, client_id, nodes_list, net_family_unspec, ip_is_lan(&ip_port->ip));
- 1419|       |
- 1420|     46|    VLA(uint8_t, plain, 1 + node_format_size * MAX_SENT_NODES + length);
- 1421|       |
- 1422|     46|    int nodes_length = 0;
- 1423|       |
- 1424|     46|    if (num_nodes > 0) {
- 1425|      0|        nodes_length = pack_nodes(dht->log, plain + 1, node_format_size * MAX_SENT_NODES, nodes_list, num_nodes);
+ 1407|     46|{
+ 1408|       |    /* Check if packet is going to be sent to ourself. */
+ 1409|     46|    if (pk_equal(public_key, dht->self_public_key)) {
+ 1410|      0|        return -1;
+ 1411|      0|    }
+ 1412|       |
+ 1413|     46|    if (length != sizeof(uint64_t)) {
+ 1414|      0|        return -1;
+ 1415|      0|    }
+ 1416|       |
+ 1417|     46|    const size_t node_format_size = sizeof(Node_format);
+ 1418|       |
+ 1419|     46|    Node_format nodes_list[MAX_SENT_NODES];
+ 1420|     46|    const uint32_t num_nodes =
+ 1421|     46|        get_close_nodes(dht, client_id, nodes_list, net_family_unspec, ip_is_lan(&ip_port->ip));
+ 1422|       |
+ 1423|     46|    VLA(uint8_t, plain, 1 + node_format_size * MAX_SENT_NODES + length);
+ 1424|       |
+ 1425|     46|    int nodes_length = 0;
  1426|       |
- 1427|      0|        if (nodes_length <= 0) {
- 1428|      0|            return -1;
- 1429|      0|        }
- 1430|      0|    }
- 1431|       |
- 1432|     46|    plain[0] = num_nodes;
- 1433|     46|    memcpy(plain + 1 + nodes_length, sendback_data, length);
+ 1427|     46|    if (num_nodes > 0) {
+ 1428|      0|        nodes_length = pack_nodes(dht->log, plain + 1, node_format_size * MAX_SENT_NODES, nodes_list, num_nodes);
+ 1429|       |
+ 1430|      0|        if (nodes_length <= 0) {
+ 1431|      0|            return -1;
+ 1432|      0|        }
+ 1433|      0|    }
  1434|       |
- 1435|     46|    const uint32_t crypto_size = 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE + CRYPTO_MAC_SIZE;
- 1436|     46|    VLA(uint8_t, data, 1 + nodes_length + length + crypto_size);
+ 1435|     46|    plain[0] = num_nodes;
+ 1436|     46|    memcpy(plain + 1 + nodes_length, sendback_data, length);
  1437|       |
- 1438|     46|    const int len = dht_create_packet(dht->self_public_key, shared_encryption_key, NET_PACKET_SEND_NODES_IPV6,
- 1439|     46|                                      plain, 1 + nodes_length + length, data);
+ 1438|     46|    const uint32_t crypto_size = 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE + CRYPTO_MAC_SIZE;
+ 1439|     46|    VLA(uint8_t, data, 1 + nodes_length + length + crypto_size);
  1440|       |
- 1441|     46|    if (len != SIZEOF_VLA(data)) {
- 1442|      0|        return -1;
- 1443|      0|    }
- 1444|       |
- 1445|     46|    return sendpacket(dht->net, ip_port, data, len);
- 1446|     46|}
+ 1441|     46|    const int len = dht_create_packet(dht->self_public_key, shared_encryption_key, NET_PACKET_SEND_NODES_IPV6,
+ 1442|     46|                                      plain, 1 + nodes_length + length, data);
+ 1443|       |
+ 1444|     46|    if (len != SIZEOF_VLA(data)) {
+ 1445|      0|        return -1;
+ 1446|      0|    }
+ 1447|       |
+ 1448|     46|    return sendpacket(dht->net, ip_port, data, len);
+ 1449|     46|}
 DHT.c:handle_sendnodes_ipv6:
- 1582|    388|{
- 1583|    388|    DHT *const dht = (DHT *)object;
- 1584|    388|    Node_format plain_nodes[MAX_SENT_NODES];
- 1585|    388|    uint32_t num_nodes;
- 1586|       |
- 1587|    388|    if (!handle_sendnodes_core(object, source, packet, length, plain_nodes, MAX_SENT_NODES, &num_nodes)) {
- 1588|    388|        return 1;
- 1589|    388|    }
- 1590|       |
- 1591|      0|    if (num_nodes == 0) {
- 1592|      0|        return 0;
- 1593|      0|    }
- 1594|       |
- 1595|      0|    for (uint32_t i = 0; i < num_nodes; ++i) {
- 1596|      0|        if (ipport_isset(&plain_nodes[i].ip_port)) {
- 1597|      0|            ping_node_from_getnodes_ok(dht, plain_nodes[i].public_key, &plain_nodes[i].ip_port);
- 1598|      0|            returnedip_ports(dht, &plain_nodes[i].ip_port, plain_nodes[i].public_key, packet + 1);
- 1599|       |
- 1600|      0|            if (dht->get_nodes_response != nullptr) {
- 1601|      0|                dht->get_nodes_response(dht, &plain_nodes[i], userdata);
- 1602|      0|            }
- 1603|      0|        }
- 1604|      0|    }
- 1605|       |
- 1606|      0|    return 0;
- 1607|      0|}
+ 1585|    387|{
+ 1586|    387|    DHT *const dht = (DHT *)object;
+ 1587|    387|    Node_format plain_nodes[MAX_SENT_NODES];
+ 1588|    387|    uint32_t num_nodes;
+ 1589|       |
+ 1590|    387|    if (!handle_sendnodes_core(object, source, packet, length, plain_nodes, MAX_SENT_NODES, &num_nodes)) {
+ 1591|    387|        return 1;
+ 1592|    387|    }
+ 1593|       |
+ 1594|      0|    if (num_nodes == 0) {
+ 1595|      0|        return 0;
+ 1596|      0|    }
+ 1597|       |
+ 1598|      0|    for (uint32_t i = 0; i < num_nodes; ++i) {
+ 1599|      0|        if (ipport_isset(&plain_nodes[i].ip_port)) {
+ 1600|      0|            ping_node_from_getnodes_ok(dht, plain_nodes[i].public_key, &plain_nodes[i].ip_port);
+ 1601|      0|            returnedip_ports(dht, &plain_nodes[i].ip_port, plain_nodes[i].public_key, packet + 1);
+ 1602|       |
+ 1603|      0|            if (dht->get_nodes_response != nullptr) {
+ 1604|      0|                dht->get_nodes_response(dht, &plain_nodes[i], userdata);
+ 1605|      0|            }
+ 1606|      0|        }
+ 1607|      0|    }
+ 1608|       |
+ 1609|      0|    return 0;
+ 1610|      0|}
 DHT.c:handle_sendnodes_core:
- 1511|    388|{
- 1512|    388|    DHT *const dht = (DHT *)object;
- 1513|    388|    const uint32_t cid_size = 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE + 1 + sizeof(uint64_t) + CRYPTO_MAC_SIZE;
- 1514|       |
- 1515|    388|    if (length < cid_size) { /* too short */
- 1516|    140|        return false;
- 1517|    140|    }
- 1518|       |
- 1519|    248|    const uint32_t data_size = length - cid_size;
- 1520|       |
- 1521|    248|    if (data_size == 0) {
- 1522|     66|        return false;
- 1523|     66|    }
- 1524|       |
- 1525|    182|    if (data_size > sizeof(Node_format) * MAX_SENT_NODES) { /* invalid length */
- 1526|     10|        return false;
- 1527|     10|    }
- 1528|       |
- 1529|    172|    VLA(uint8_t, plain, 1 + data_size + sizeof(uint64_t));
- 1530|    172|    uint8_t shared_key[CRYPTO_SHARED_KEY_SIZE];
- 1531|    172|    dht_get_shared_key_sent(dht, shared_key, packet + 1);
- 1532|    172|    const int len = decrypt_data_symmetric(
- 1533|    172|                        shared_key,
- 1534|    172|                        packet + 1 + CRYPTO_PUBLIC_KEY_SIZE,
- 1535|    172|                        packet + 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE,
- 1536|    172|                        1 + data_size + sizeof(uint64_t) + CRYPTO_MAC_SIZE,
- 1537|    172|                        plain);
- 1538|       |
- 1539|    172|    crypto_memzero(shared_key, sizeof(shared_key));
- 1540|       |
- 1541|    172|    if ((unsigned int)len != SIZEOF_VLA(plain)) {
- 1542|      0|        return false;
- 1543|      0|    }
- 1544|       |
- 1545|    172|    if (plain[0] > size_plain_nodes) {
- 1546|     60|        return false;
- 1547|     60|    }
- 1548|       |
- 1549|    112|    uint64_t ping_id;
- 1550|    112|    memcpy(&ping_id, plain + 1 + data_size, sizeof(ping_id));
+ 1514|    387|{
+ 1515|    387|    DHT *const dht = (DHT *)object;
+ 1516|    387|    const uint32_t cid_size = 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE + 1 + sizeof(uint64_t) + CRYPTO_MAC_SIZE;
+ 1517|       |
+ 1518|    387|    if (length < cid_size) { /* too short */
+ 1519|    139|        return false;
+ 1520|    139|    }
+ 1521|       |
+ 1522|    248|    const uint32_t data_size = length - cid_size;
+ 1523|       |
+ 1524|    248|    if (data_size == 0) {
+ 1525|     66|        return false;
+ 1526|     66|    }
+ 1527|       |
+ 1528|    182|    if (data_size > sizeof(Node_format) * MAX_SENT_NODES) { /* invalid length */
+ 1529|     10|        return false;
+ 1530|     10|    }
+ 1531|       |
+ 1532|    172|    VLA(uint8_t, plain, 1 + data_size + sizeof(uint64_t));
+ 1533|    172|    uint8_t shared_key[CRYPTO_SHARED_KEY_SIZE];
+ 1534|    172|    dht_get_shared_key_sent(dht, shared_key, packet + 1);
+ 1535|    172|    const int len = decrypt_data_symmetric(
+ 1536|    172|                        shared_key,
+ 1537|    172|                        packet + 1 + CRYPTO_PUBLIC_KEY_SIZE,
+ 1538|    172|                        packet + 1 + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE,
+ 1539|    172|                        1 + data_size + sizeof(uint64_t) + CRYPTO_MAC_SIZE,
+ 1540|    172|                        plain);
+ 1541|       |
+ 1542|    172|    crypto_memzero(shared_key, sizeof(shared_key));
+ 1543|       |
+ 1544|    172|    if ((unsigned int)len != SIZEOF_VLA(plain)) {
+ 1545|      0|        return false;
+ 1546|      0|    }
+ 1547|       |
+ 1548|    172|    if (plain[0] > size_plain_nodes) {
+ 1549|     60|        return false;
+ 1550|     60|    }
  1551|       |
- 1552|    112|    if (!sent_getnode_to_node(dht, packet + 1, source, ping_id)) {
- 1553|    112|        return false;
- 1554|    112|    }
- 1555|       |
- 1556|      0|    uint16_t length_nodes = 0;
- 1557|      0|    const int num_nodes = unpack_nodes(plain_nodes, plain[0], &length_nodes, plain + 1, data_size, false);
+ 1552|    112|    uint64_t ping_id;
+ 1553|    112|    memcpy(&ping_id, plain + 1 + data_size, sizeof(ping_id));
+ 1554|       |
+ 1555|    112|    if (!sent_getnode_to_node(dht, packet + 1, source, ping_id)) {
+ 1556|    112|        return false;
+ 1557|    112|    }
  1558|       |
- 1559|      0|    if (length_nodes != data_size) {
- 1560|      0|        return false;
- 1561|      0|    }
- 1562|       |
- 1563|      0|    if (num_nodes != plain[0]) {
- 1564|      0|        return false;
- 1565|      0|    }
- 1566|       |
- 1567|      0|    if (num_nodes < 0) {
- 1568|      0|        return false;
- 1569|      0|    }
- 1570|       |
- 1571|       |    /* store the address the *request* was sent to */
- 1572|      0|    addto_lists(dht, source, packet + 1);
+ 1559|      0|    uint16_t length_nodes = 0;
+ 1560|      0|    const int num_nodes = unpack_nodes(plain_nodes, plain[0], &length_nodes, plain + 1, data_size, false);
+ 1561|       |
+ 1562|      0|    if (length_nodes != data_size) {
+ 1563|      0|        return false;
+ 1564|      0|    }
+ 1565|       |
+ 1566|      0|    if (num_nodes != plain[0]) {
+ 1567|      0|        return false;
+ 1568|      0|    }
+ 1569|       |
+ 1570|      0|    if (num_nodes < 0) {
+ 1571|      0|        return false;
+ 1572|      0|    }
  1573|       |
- 1574|      0|    *num_nodes_out = num_nodes;
- 1575|       |
- 1576|      0|    return true;
- 1577|      0|}
+ 1574|       |    /* store the address the *request* was sent to */
+ 1575|      0|    addto_lists(dht, source, packet + 1);
+ 1576|       |
+ 1577|      0|    *num_nodes_out = num_nodes;
+ 1578|       |
+ 1579|      0|    return true;
+ 1580|      0|}
 DHT.c:sent_getnode_to_node:
- 1492|    112|{
- 1493|    112|    uint8_t data[sizeof(Node_format) * 2];
- 1494|       |
- 1495|    112|    if (ping_array_check(dht->dht_ping_array, dht->mono_time, data, sizeof(data), ping_id) != sizeof(Node_format)) {
- 1496|    111|        return false;
- 1497|    111|    }
- 1498|       |
- 1499|      1|    Node_format test;
- 1500|       |
- 1501|      1|    if (unpack_nodes(&test, 1, nullptr, data, sizeof(data), false) != 1) {
- 1502|      0|        return false;
- 1503|      0|    }
- 1504|       |
- 1505|      1|    return ipport_equal(&test.ip_port, node_ip_port) && pk_equal(test.public_key, public_key);
- 1506|      1|}
+ 1495|    112|{
+ 1496|    112|    uint8_t data[sizeof(Node_format) * 2];
+ 1497|       |
+ 1498|    112|    if (ping_array_check(dht->dht_ping_array, dht->mono_time, data, sizeof(data), ping_id) != sizeof(Node_format)) {
+ 1499|    111|        return false;
+ 1500|    111|    }
+ 1501|       |
+ 1502|      1|    Node_format test;
+ 1503|       |
+ 1504|      1|    if (unpack_nodes(&test, 1, nullptr, data, sizeof(data), false) != 1) {
+ 1505|      0|        return false;
+ 1506|      0|    }
+ 1507|       |
+ 1508|      1|    return ipport_equal(&test.ip_port, node_ip_port) && pk_equal(test.public_key, public_key);
+ 1509|      1|}
 DHT.c:cryptopacket_handle:
- 2497|     74|{
- 2498|     74|    DHT *const dht = (DHT *)object;
- 2499|       |
- 2500|     74|    assert(packet[0] == NET_PACKET_CRYPTO);
- 2501|       |
- 2502|     74|    if (length <= CRYPTO_PUBLIC_KEY_SIZE * 2 + CRYPTO_NONCE_SIZE + 1 + CRYPTO_MAC_SIZE ||
- 2503|     74|            length > MAX_CRYPTO_REQUEST_SIZE + CRYPTO_MAC_SIZE) {
- 2504|     17|        return 1;
- 2505|     17|    }
- 2506|       |
- 2507|       |    // Check if request is for us.
- 2508|     57|    if (pk_equal(packet + 1, dht->self_public_key)) {
- 2509|     15|        uint8_t public_key[CRYPTO_PUBLIC_KEY_SIZE];
- 2510|     15|        uint8_t data[MAX_CRYPTO_REQUEST_SIZE];
- 2511|     15|        uint8_t number;
- 2512|     15|        const int len = handle_request(dht->self_public_key, dht->self_secret_key, public_key,
- 2513|     15|                                       data, &number, packet, length);
- 2514|       |
- 2515|     15|        if (len == -1 || len == 0) {
- 2516|      3|            return 1;
- 2517|      3|        }
- 2518|       |
- 2519|     12|        if (dht->cryptopackethandlers[number].function == nullptr) {
- 2520|      1|            return 1;
- 2521|      1|        }
- 2522|       |
- 2523|     11|        return dht->cryptopackethandlers[number].function(
- 2524|     11|                   dht->cryptopackethandlers[number].object, source, public_key,
- 2525|     11|                   data, len, userdata);
- 2526|     12|    }
- 2527|       |
- 2528|       |    /* If request is not for us, try routing it. */
- 2529|     42|    const int retval = route_packet(dht, packet + 1, packet, length);
+ 2500|     74|{
+ 2501|     74|    DHT *const dht = (DHT *)object;
+ 2502|       |
+ 2503|     74|    assert(packet[0] == NET_PACKET_CRYPTO);
+ 2504|       |
+ 2505|     74|    if (length <= CRYPTO_PUBLIC_KEY_SIZE * 2 + CRYPTO_NONCE_SIZE + 1 + CRYPTO_MAC_SIZE ||
+ 2506|     74|            length > MAX_CRYPTO_REQUEST_SIZE + CRYPTO_MAC_SIZE) {
+ 2507|     17|        return 1;
+ 2508|     17|    }
+ 2509|       |
+ 2510|       |    // Check if request is for us.
+ 2511|     57|    if (pk_equal(packet + 1, dht->self_public_key)) {
+ 2512|     15|        uint8_t public_key[CRYPTO_PUBLIC_KEY_SIZE];
+ 2513|     15|        uint8_t data[MAX_CRYPTO_REQUEST_SIZE];
+ 2514|     15|        uint8_t number;
+ 2515|     15|        const int len = handle_request(dht->self_public_key, dht->self_secret_key, public_key,
+ 2516|     15|                                       data, &number, packet, length);
+ 2517|       |
+ 2518|     15|        if (len == -1 || len == 0) {
+ 2519|      3|            return 1;
+ 2520|      3|        }
+ 2521|       |
+ 2522|     12|        if (dht->cryptopackethandlers[number].function == nullptr) {
+ 2523|      1|            return 1;
+ 2524|      1|        }
+ 2525|       |
+ 2526|     11|        return dht->cryptopackethandlers[number].function(
+ 2527|     11|                   dht->cryptopackethandlers[number].object, source, public_key,
+ 2528|     11|                   data, len, userdata);
+ 2529|     12|    }
  2530|       |
- 2531|     42|    if ((unsigned int)retval == length) {
- 2532|      0|        return 0;
- 2533|      0|    }
- 2534|       |
- 2535|     42|    return 1;
- 2536|     42|}
+ 2531|       |    /* If request is not for us, try routing it. */
+ 2532|     42|    const int retval = route_packet(dht, packet + 1, packet, length);
+ 2533|       |
+ 2534|     42|    if ((unsigned int)retval == length) {
+ 2535|      0|        return 0;
+ 2536|      0|    }
+ 2537|       |
+ 2538|     42|    return 1;
+ 2539|     42|}
 DHT.c:handle_LANdiscovery:
- 2546|    141|{
- 2547|    141|    DHT *dht = (DHT *)object;
- 2548|       |
- 2549|    141|    if (!dht->lan_discovery_enabled) {
- 2550|      0|        return 1;
- 2551|      0|    }
- 2552|       |
- 2553|    141|    if (!ip_is_lan(&source->ip)) {
- 2554|    141|        return 1;
- 2555|    141|    }
- 2556|       |
- 2557|      0|    if (length != CRYPTO_PUBLIC_KEY_SIZE + 1) {
- 2558|      0|        return 1;
- 2559|      0|    }
- 2560|       |
- 2561|      0|    dht_bootstrap(dht, source, packet + 1);
- 2562|      0|    return 0;
- 2563|      0|}
+ 2549|    141|{
+ 2550|    141|    DHT *dht = (DHT *)object;
+ 2551|       |
+ 2552|    141|    if (!dht->lan_discovery_enabled) {
+ 2553|      0|        return 1;
+ 2554|      0|    }
+ 2555|       |
+ 2556|    141|    if (!ip_is_lan(&source->ip)) {
+ 2557|    141|        return 1;
+ 2558|    141|    }
+ 2559|       |
+ 2560|      0|    if (length != CRYPTO_PUBLIC_KEY_SIZE + 1) {
+ 2561|      0|        return 1;
+ 2562|      0|    }
+ 2563|       |
+ 2564|      0|    dht_bootstrap(dht, source, packet + 1);
+ 2565|      0|    return 0;
+ 2566|      0|}
 DHT.c:handle_NATping:
- 2213|      7|{
- 2214|      7|    if (length != sizeof(uint64_t) + 1) {
- 2215|      1|        return 1;
- 2216|      1|    }
- 2217|       |
- 2218|      6|    DHT *const dht = (DHT *)object;
- 2219|      6|    uint64_t ping_id;
- 2220|      6|    memcpy(&ping_id, packet + 1, sizeof(uint64_t));
- 2221|       |
- 2222|      6|    const uint32_t friendnumber = index_of_friend_pk(dht->friends_list, dht->num_friends, source_pubkey);
- 2223|       |
- 2224|      6|    if (friendnumber == UINT32_MAX) {
- 2225|      1|        return 1;
- 2226|      1|    }
- 2227|       |
- 2228|      5|    DHT_Friend *const dht_friend = &dht->friends_list[friendnumber];
- 2229|       |
- 2230|      5|    if (packet[0] == NAT_PING_REQUEST) {
- 2231|       |        /* 1 is reply */
- 2232|      2|        send_NATping(dht, source_pubkey, ping_id, NAT_PING_RESPONSE);
- 2233|      2|        dht_friend->nat.recv_nat_ping_timestamp = mono_time_get(dht->mono_time);
- 2234|      2|        return 0;
- 2235|      2|    }
- 2236|       |
- 2237|      3|    if (packet[0] == NAT_PING_RESPONSE) {
- 2238|      2|        if (dht_friend->nat.nat_ping_id == ping_id) {
- 2239|      1|            dht_friend->nat.nat_ping_id = random_u64();
- 2240|      1|            dht_friend->nat.hole_punching = true;
- 2241|      1|            return 0;
- 2242|      1|        }
- 2243|      2|    }
- 2244|       |
- 2245|      2|    return 1;
- 2246|      3|}
+ 2216|      7|{
+ 2217|      7|    if (length != sizeof(uint64_t) + 1) {
+ 2218|      1|        return 1;
+ 2219|      1|    }
+ 2220|       |
+ 2221|      6|    DHT *const dht = (DHT *)object;
+ 2222|      6|    uint64_t ping_id;
+ 2223|      6|    memcpy(&ping_id, packet + 1, sizeof(uint64_t));
+ 2224|       |
+ 2225|      6|    const uint32_t friendnumber = index_of_friend_pk(dht->friends_list, dht->num_friends, source_pubkey);
+ 2226|       |
+ 2227|      6|    if (friendnumber == UINT32_MAX) {
+ 2228|      1|        return 1;
+ 2229|      1|    }
+ 2230|       |
+ 2231|      5|    DHT_Friend *const dht_friend = &dht->friends_list[friendnumber];
+ 2232|       |
+ 2233|      5|    if (packet[0] == NAT_PING_REQUEST) {
+ 2234|       |        /* 1 is reply */
+ 2235|      2|        send_NATping(dht, source_pubkey, ping_id, NAT_PING_RESPONSE);
+ 2236|      2|        dht_friend->nat.recv_nat_ping_timestamp = mono_time_get(dht->mono_time);
+ 2237|      2|        return 0;
+ 2238|      2|    }
+ 2239|       |
+ 2240|      3|    if (packet[0] == NAT_PING_RESPONSE) {
+ 2241|      2|        if (dht_friend->nat.nat_ping_id == ping_id) {
+ 2242|      1|            dht_friend->nat.nat_ping_id = random_u64();
+ 2243|      1|            dht_friend->nat.hole_punching = true;
+ 2244|      1|            return 0;
+ 2245|      1|        }
+ 2246|      2|    }
+ 2247|       |
+ 2248|      2|    return 1;
+ 2249|      3|}
 DHT.c:send_NATping:
- 2177|      2|{
- 2178|      2|    uint8_t data[sizeof(uint64_t) + 1];
- 2179|      2|    uint8_t packet_data[MAX_CRYPTO_REQUEST_SIZE];
- 2180|       |
- 2181|      2|    data[0] = type;
- 2182|      2|    memcpy(data + 1, &ping_id, sizeof(uint64_t));
- 2183|       |    /* 254 is NAT ping request packet id */
- 2184|      2|    const int len = create_request(
- 2185|      2|                        dht->self_public_key, dht->self_secret_key, packet_data, public_key, data,
- 2186|      2|                        sizeof(uint64_t) + 1, CRYPTO_PACKET_NAT_PING);
- 2187|       |
- 2188|      2|    if (len == -1) {
- 2189|      0|        return -1;
- 2190|      0|    }
- 2191|       |
- 2192|      2|    assert(len <= UINT16_MAX);
- 2193|      0|    uint32_t num = 0;
- 2194|      2|    const Packet packet = {packet_data, (uint16_t)len};
- 2195|       |
- 2196|      2|    if (type == 0) { /* If packet is request use many people to route it. */
- 2197|      0|        num = route_to_friend(dht, public_key, &packet);
- 2198|      2|    } else if (type == 1) { /* If packet is response use only one person to route it */
- 2199|      2|        num = routeone_to_friend(dht, public_key, &packet);
- 2200|      2|    }
- 2201|       |
- 2202|      2|    if (num == 0) {
- 2203|      2|        return -1;
- 2204|      2|    }
- 2205|       |
- 2206|      0|    return num;
- 2207|      2|}
+ 2180|      2|{
+ 2181|      2|    uint8_t data[sizeof(uint64_t) + 1];
+ 2182|      2|    uint8_t packet_data[MAX_CRYPTO_REQUEST_SIZE];
+ 2183|       |
+ 2184|      2|    data[0] = type;
+ 2185|      2|    memcpy(data + 1, &ping_id, sizeof(uint64_t));
+ 2186|       |    /* 254 is NAT ping request packet id */
+ 2187|      2|    const int len = create_request(
+ 2188|      2|                        dht->self_public_key, dht->self_secret_key, packet_data, public_key, data,
+ 2189|      2|                        sizeof(uint64_t) + 1, CRYPTO_PACKET_NAT_PING);
+ 2190|       |
+ 2191|      2|    if (len == -1) {
+ 2192|      0|        return -1;
+ 2193|      0|    }
+ 2194|       |
+ 2195|      2|    assert(len <= UINT16_MAX);
+ 2196|      0|    uint32_t num = 0;
+ 2197|      2|    const Packet packet = {packet_data, (uint16_t)len};
+ 2198|       |
+ 2199|      2|    if (type == 0) { /* If packet is request use many people to route it. */
+ 2200|      0|        num = route_to_friend(dht, public_key, &packet);
+ 2201|      2|    } else if (type == 1) { /* If packet is response use only one person to route it */
+ 2202|      2|        num = routeone_to_friend(dht, public_key, &packet);
+ 2203|      2|    }
+ 2204|       |
+ 2205|      2|    if (num == 0) {
+ 2206|      2|        return -1;
+ 2207|      2|    }
+ 2208|       |
+ 2209|      0|    return num;
+ 2210|      2|}
 DHT.c:routeone_to_friend:
- 2145|      2|{
- 2146|      2|    const uint32_t num = index_of_friend_pk(dht->friends_list, dht->num_friends, friend_id);
- 2147|       |
- 2148|      2|    if (num == UINT32_MAX) {
- 2149|      0|        return 0;
- 2150|      0|    }
- 2151|       |
- 2152|      2|    const DHT_Friend *const dht_friend = &dht->friends_list[num];
- 2153|       |
- 2154|      2|    IP_Port ip_list[MAX_FRIEND_CLIENTS * 2];
- 2155|       |
- 2156|      2|    const int n = foreach_ip_port(dht, dht_friend, get_ip_port, ip_list);
- 2157|       |
- 2158|      2|    if (n < 1) {
- 2159|      2|        return 0;
- 2160|      2|    }
- 2161|       |
- 2162|      0|    const uint32_t rand_idx = random_range_u32(n);
- 2163|      0|    const int retval = send_packet(dht->net, &ip_list[rand_idx], *packet);
+ 2148|      2|{
+ 2149|      2|    const uint32_t num = index_of_friend_pk(dht->friends_list, dht->num_friends, friend_id);
+ 2150|       |
+ 2151|      2|    if (num == UINT32_MAX) {
+ 2152|      0|        return 0;
+ 2153|      0|    }
+ 2154|       |
+ 2155|      2|    const DHT_Friend *const dht_friend = &dht->friends_list[num];
+ 2156|       |
+ 2157|      2|    IP_Port ip_list[MAX_FRIEND_CLIENTS * 2];
+ 2158|       |
+ 2159|      2|    const int n = foreach_ip_port(dht, dht_friend, get_ip_port, ip_list);
+ 2160|       |
+ 2161|      2|    if (n < 1) {
+ 2162|      2|        return 0;
+ 2163|      2|    }
  2164|       |
- 2165|      0|    if ((unsigned int)retval == packet->length) {
- 2166|      0|        return 1;
- 2167|      0|    }
- 2168|       |
- 2169|      0|    return 0;
- 2170|      0|}
+ 2165|      0|    const uint32_t rand_idx = random_range_u32(n);
+ 2166|      0|    const int retval = send_packet(dht->net, &ip_list[rand_idx], *packet);
+ 2167|       |
+ 2168|      0|    if ((unsigned int)retval == packet->length) {
+ 2169|      0|        return 1;
+ 2170|      0|    }
+ 2171|       |
+ 2172|      0|    return 0;
+ 2173|      0|}
 
 ip_is_local:
   264|    194|{
@@ -1932,14 +1935,14 @@ crypto_memzero:
    91|       |#endif
    92|  4.39k|}
 public_key_eq:
-  123|   787k|{
-  124|   787k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  123|   785k|{
+  124|   785k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   125|       |    // Hope that this is better for the fuzzer
-  126|   787k|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
+  126|   785k|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
   127|       |#else
   128|       |    return crypto_verify_32(pk1, pk2) == 0;
   129|       |#endif
-  130|   787k|}
+  130|   785k|}
 crypto_sha512_eq:
   133|      1|{
   134|      1|#ifndef VANILLA_NACL
@@ -3355,13 +3358,13 @@ net_family_is_unspec:
   380|  43.9k|    return family.value == net_family_unspec.value;
   381|  43.9k|}
 net_family_is_ipv4:
-  384|  5.87k|{
-  385|  5.87k|    return family.value == net_family_ipv4.value;
-  386|  5.87k|}
+  384|  5.86k|{
+  385|  5.86k|    return family.value == net_family_ipv4.value;
+  386|  5.86k|}
 net_family_is_ipv6:
-  389|  3.91k|{
-  390|  3.91k|    return family.value == net_family_ipv6.value;
-  391|  3.91k|}
+  389|  3.90k|{
+  390|  3.90k|    return family.value == net_family_ipv6.value;
+  391|  3.90k|}
 net_family_is_tox_tcp_ipv4:
   414|     56|{
   415|     56|    return family.value == net_family_tox_tcp_ipv4.value;
@@ -3505,22 +3508,22 @@ networking_poll:
   755|  40.2k|    uint8_t data[MAX_UDP_PACKET_SIZE];
   756|  40.2k|    uint32_t length;
   757|       |
-  758|  46.2k|    while (receivepacket(net->log, net->sock, &ip_port, data, &length) != -1) {
-  759|  6.08k|        if (length < 1) {
-  760|  4.02k|            continue;
-  761|  4.02k|        }
+  758|  46.1k|    while (receivepacket(net->log, net->sock, &ip_port, data, &length) != -1) {
+  759|  5.97k|        if (length < 1) {
+  760|  3.92k|            continue;
+  761|  3.92k|        }
   762|       |
   763|  2.05k|        const Packet_Handler *const handler = &net->packethandlers[data[0]];
   764|       |
   765|  2.05k|        if (handler->function == nullptr) {
   766|       |            // TODO(https://github.com/TokTok/c-toxcore/issues/1115): Make this
   767|       |            // a warning or error again.
-  768|     53|            LOGGER_DEBUG(net->log, "[%02u] -- Packet has no handler", data[0]);
-  769|     53|            continue;
-  770|     53|        }
+  768|     51|            LOGGER_DEBUG(net->log, "[%02u] -- Packet has no handler", data[0]);
+  769|     51|            continue;
+  770|     51|        }
   771|       |
-  772|  2.00k|        handler->function(handler->object, &ip_port, data, length, userdata);
-  773|  2.00k|    }
+  772|  1.99k|        handler->function(handler->object, &ip_port, data, length, userdata);
+  773|  1.99k|    }
   774|  40.2k|}
 networking_at_startup:
   781|    402|{
@@ -4007,10 +4010,10 @@ network.c:fill_addr6:
   336|      0|    memcpy(addr->s6_addr, ip->uint8, sizeof(ip->uint8));
   337|  1.06k|}
 network.c:loglogdata:
-  521|  6.74k|{
-  522|  6.74k|    char ip_str[IP_NTOA_LEN];
+  521|  6.63k|{
+  522|  6.63k|    char ip_str[IP_NTOA_LEN];
   523|       |
-  524|  6.74k|    if (res < 0) { /* Windows doesn't necessarily know `%zu` */
+  524|  6.63k|    if (res < 0) { /* Windows doesn't necessarily know `%zu` */
   525|      0|        const int error = net_error();
   526|      0|        char *strerror = net_new_strerror(error);
   527|      0|        LOGGER_TRACE(log, "[%2u] %s %3u%c %s:%u (%u: %s) | %08x%08x...%02x",
@@ -4018,36 +4021,36 @@ network.c:loglogdata:
   529|      0|                     ip_ntoa(&ip_port->ip, ip_str, sizeof(ip_str)), net_ntohs(ip_port->port), error,
   530|      0|                     strerror, data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
   531|      0|        net_kill_strerror(strerror);
-  532|  6.74k|    } else if ((res > 0) && ((size_t)res <= buflen)) {
-  533|  2.72k|        LOGGER_TRACE(log, "[%2u] %s %3u%c %s:%u (%u: %s) | %08x%08x...%02x",
-  534|  2.72k|                     buffer[0], message, min_u16(res, 999), (size_t)res < buflen ? '<' : '=',
-  535|  2.72k|                     ip_ntoa(&ip_port->ip, ip_str, sizeof(ip_str)), net_ntohs(ip_port->port), 0, "OK",
-  536|  2.72k|                     data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
-  537|  4.02k|    } else { /* empty or overwrite */
-  538|  4.02k|        LOGGER_TRACE(log, "[%2u] %s %lu%c%u %s:%u (%u: %s) | %08x%08x...%02x",
-  539|  4.02k|                     buffer[0], message, res, res == 0 ? '!' : '>', buflen,
-  540|  4.02k|                     ip_ntoa(&ip_port->ip, ip_str, sizeof(ip_str)), net_ntohs(ip_port->port), 0, "OK",
-  541|  4.02k|                     data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
-  542|  4.02k|    }
-  543|  6.74k|}
+  532|  6.63k|    } else if ((res > 0) && ((size_t)res <= buflen)) {
+  533|  2.71k|        LOGGER_TRACE(log, "[%2u] %s %3u%c %s:%u (%u: %s) | %08x%08x...%02x",
+  534|  2.71k|                     buffer[0], message, min_u16(res, 999), (size_t)res < buflen ? '<' : '=',
+  535|  2.71k|                     ip_ntoa(&ip_port->ip, ip_str, sizeof(ip_str)), net_ntohs(ip_port->port), 0, "OK",
+  536|  2.71k|                     data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
+  537|  3.92k|    } else { /* empty or overwrite */
+  538|  3.92k|        LOGGER_TRACE(log, "[%2u] %s %lu%c%u %s:%u (%u: %s) | %08x%08x...%02x",
+  539|  3.92k|                     buffer[0], message, res, res == 0 ? '!' : '>', buflen,
+  540|  3.92k|                     ip_ntoa(&ip_port->ip, ip_str, sizeof(ip_str)), net_ntohs(ip_port->port), 0, "OK",
+  541|  3.92k|                     data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
+  542|  3.92k|    }
+  543|  6.63k|}
 network.c:receivepacket:
-  672|  46.2k|{
-  673|  46.2k|    memset(ip_port, 0, sizeof(IP_Port));
-  674|  46.2k|    struct sockaddr_storage addr;
+  672|  46.1k|{
+  673|  46.1k|    memset(ip_port, 0, sizeof(IP_Port));
+  674|  46.1k|    struct sockaddr_storage addr;
   675|       |#ifdef OS_WIN32
   676|       |    int addrlen = sizeof(addr);
   677|       |#else
-  678|  46.2k|    socklen_t addrlen = sizeof(addr);
-  679|  46.2k|#endif
-  680|  46.2k|    *length = 0;
+  678|  46.1k|    socklen_t addrlen = sizeof(addr);
+  679|  46.1k|#endif
+  680|  46.1k|    *length = 0;
   681|       |
-  682|  46.2k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-  683|  46.2k|    const int fail_or_len = fuzz_recvfrom(sock.sock, (char *) data, MAX_UDP_PACKET_SIZE, 0, (struct sockaddr *)&addr, &addrlen);
+  682|  46.1k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  683|  46.1k|    const int fail_or_len = fuzz_recvfrom(sock.sock, (char *) data, MAX_UDP_PACKET_SIZE, 0, (struct sockaddr *)&addr, &addrlen);
   684|       |#else
   685|       |    int fail_or_len = recvfrom(sock.sock, (char *) data, MAX_UDP_PACKET_SIZE, 0, (struct sockaddr *)&addr, &addrlen);
   686|       |#endif
   687|       |
-  688|  46.2k|    if (fail_or_len < 0) {
+  688|  46.1k|    if (fail_or_len < 0) {
   689|  40.2k|        const int error = net_error();
   690|       |
   691|  40.2k|        if (!should_ignore_recv_error(error)) {
@@ -4059,22 +4062,22 @@ network.c:receivepacket:
   697|  40.2k|        return -1; /* Nothing received. */
   698|  40.2k|    }
   699|       |
-  700|  6.08k|    *length = (uint32_t)fail_or_len;
+  700|  5.97k|    *length = (uint32_t)fail_or_len;
   701|       |
-  702|  6.08k|    if (addr.ss_family == AF_INET) {
-  703|  6.08k|        const struct sockaddr_in *addr_in = (const struct sockaddr_in *)&addr;
+  702|  5.97k|    if (addr.ss_family == AF_INET) {
+  703|  5.97k|        const struct sockaddr_in *addr_in = (const struct sockaddr_in *)&addr;
   704|       |
-  705|  6.08k|        const Family *const family = make_tox_family(addr_in->sin_family);
-  706|  6.08k|        assert(family != nullptr);
+  705|  5.97k|        const Family *const family = make_tox_family(addr_in->sin_family);
+  706|  5.97k|        assert(family != nullptr);
   707|       |
-  708|  6.08k|        if (family == nullptr) {
+  708|  5.97k|        if (family == nullptr) {
   709|      0|            return -1;
   710|      0|        }
   711|       |
-  712|  6.08k|        ip_port->ip.family = *family;
-  713|  6.08k|        get_ip4(&ip_port->ip.ip.v4, &addr_in->sin_addr);
-  714|  6.08k|        ip_port->port = addr_in->sin_port;
-  715|  6.08k|    } else if (addr.ss_family == AF_INET6) {
+  712|  5.97k|        ip_port->ip.family = *family;
+  713|  5.97k|        get_ip4(&ip_port->ip.ip.v4, &addr_in->sin_addr);
+  714|  5.97k|        ip_port->port = addr_in->sin_port;
+  715|  5.97k|    } else if (addr.ss_family == AF_INET6) {
   716|      0|        const struct sockaddr_in6 *addr_in6 = (const struct sockaddr_in6 *)&addr;
   717|      0|        const Family *const family = make_tox_family(addr_in6->sin6_family);
   718|      0|        assert(family != nullptr);
@@ -4095,23 +4098,23 @@ network.c:receivepacket:
   733|      0|        return -1;
   734|      0|    }
   735|       |
-  736|  6.08k|    loglogdata(log, "=>O", data, MAX_UDP_PACKET_SIZE, ip_port, *length);
+  736|  5.97k|    loglogdata(log, "=>O", data, MAX_UDP_PACKET_SIZE, ip_port, *length);
   737|       |
-  738|  6.08k|    return 0;
-  739|  6.08k|}
+  738|  5.97k|    return 0;
+  739|  5.97k|}
 network.c:should_ignore_recv_error:
   126|  40.2k|{
   127|  40.2k|    return err == EWOULDBLOCK;
   128|  40.2k|}
 network.c:get_ip4:
-  315|  6.08k|{
-  316|  6.08k|    result->uint32 = addr->s_addr;
-  317|  6.08k|}
+  315|  5.97k|{
+  316|  5.97k|    result->uint32 = addr->s_addr;
+  317|  5.97k|}
 network.c:make_tox_family:
-  297|  6.48k|{
-  298|  6.48k|    switch (family) {
-  299|  6.48k|        case AF_INET:
-  300|  6.48k|            return &net_family_ipv4;
+  297|  6.37k|{
+  298|  6.37k|    switch (family) {
+  299|  6.37k|        case AF_INET:
+  300|  6.37k|            return &net_family_ipv4;
   301|       |
   302|      0|        case AF_INET6:
   303|      0|            return &net_family_ipv6;
@@ -4121,8 +4124,8 @@ network.c:make_tox_family:
   307|       |
   308|      0|        default:
   309|      0|            return nullptr;
-  310|  6.48k|    }
-  311|  6.48k|}
+  310|  6.37k|    }
+  311|  6.37k|}
 network.c:net_strerror_r:
  1802|  40.2k|{
  1803|  40.2k|    const int fmt_error = strerror_r(error, tmp, tmp_size);
@@ -5325,12 +5328,12 @@ ping_kill:
   383|    402|    free(ping);
   384|    402|}
 ping.c:handle_ping_request:
-  128|    480|{
-  129|    480|    DHT *dht = (DHT *)object;
+  128|    478|{
+  129|    478|    DHT *dht = (DHT *)object;
   130|       |
-  131|    480|    if (length != DHT_PING_SIZE) {
-  132|    184|        return 1;
-  133|    184|    }
+  131|    478|    if (length != DHT_PING_SIZE) {
+  132|    182|        return 1;
+  133|    182|    }
   134|       |
   135|    296|    Ping *ping = dht_get_ping(dht);
   136|       |
@@ -5529,8 +5532,8 @@ ping_array_add:
   130|    402|    ping_id += index;
   131|       |
   132|    402|    if (ping_id == 0) {
-  133|    206|        ping_id += array->total_size;
-  134|    206|    }
+  133|    205|        ping_id += array->total_size;
+  134|    205|    }
   135|       |
   136|    402|    array->entries[index].ping_id = ping_id;
   137|    402|    return ping_id;
@@ -6083,9 +6086,9 @@ tox_options_free:
   119|    402|}
 
 pk_equal:
-   25|   787k|{
-   26|   787k|    return public_key_eq(dest, src);
-   27|   787k|}
+   25|   785k|{
+   26|   785k|    return public_key_eq(dest, src);
+   27|   785k|}
 pk_copy:
    30|    276|{
    31|    276|    memcpy(dest, src, CRYPTO_PUBLIC_KEY_SIZE);
