@@ -146,9 +146,9 @@ toxsave_harness.cc:_ZN12_GLOBAL__N_119TestSaveDataLoadingER9Fuzz_Data:
    42|    331|}
 
 dht_get_self_public_key:
-  130|    831|{
-  131|    831|    return dht->self_public_key;
-  132|    831|}
+  130|    863|{
+  131|    863|    return dht->self_public_key;
+  132|    863|}
 dht_get_self_secret_key:
   134|    662|{
   135|    662|    return dht->self_secret_key;
@@ -170,25 +170,25 @@ packed_node_size:
   451|      0|    return -1;
   452|  2.97k|}
 pack_ip_port:
-  463|    517|{
-  464|    517|    if (data == nullptr) {
+  463|    536|{
+  464|    536|    if (data == nullptr) {
   465|      0|        return -1;
   466|      0|    }
   467|       |
-  468|    517|    bool is_ipv4;
-  469|    517|    uint8_t family;
+  468|    536|    bool is_ipv4;
+  469|    536|    uint8_t family;
   470|       |
-  471|    517|    if (net_family_is_ipv4(ip_port->ip.family)) {
+  471|    536|    if (net_family_is_ipv4(ip_port->ip.family)) {
   472|       |        // TODO(irungentoo): use functions to convert endianness
   473|    374|        is_ipv4 = true;
   474|    374|        family = TOX_AF_INET;
   475|    374|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
-  476|     55|        is_ipv4 = true;
-  477|     55|        family = TOX_TCP_INET;
-  478|     88|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
-  479|     87|        is_ipv4 = false;
-  480|     87|        family = TOX_AF_INET6;
-  481|     87|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
+  476|     60|        is_ipv4 = true;
+  477|     60|        family = TOX_TCP_INET;
+  478|    102|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
+  479|    101|        is_ipv4 = false;
+  480|    101|        family = TOX_AF_INET6;
+  481|    101|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
   482|      1|        is_ipv4 = false;
   483|      1|        family = TOX_TCP_INET6;
   484|      1|    } else {
@@ -199,151 +199,151 @@ pack_ip_port:
   489|      0|        return -1;
   490|      0|    }
   491|       |
-  492|    517|    if (is_ipv4) {
-  493|    429|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+  492|    536|    if (is_ipv4) {
+  493|    434|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
   494|       |
-  495|    429|        if (size > length) {
+  495|    434|        if (size > length) {
   496|      0|            return -1;
   497|      0|        }
   498|       |
-  499|    429|        data[0] = family;
-  500|    429|        memcpy(data + 1, &ip_port->ip.ip.v4, SIZE_IP4);
-  501|    429|        memcpy(data + 1 + SIZE_IP4, &ip_port->port, sizeof(uint16_t));
-  502|    429|        return size;
-  503|    429|    } else {
-  504|     88|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
+  499|    434|        data[0] = family;
+  500|    434|        memcpy(data + 1, &ip_port->ip.ip.v4, SIZE_IP4);
+  501|    434|        memcpy(data + 1 + SIZE_IP4, &ip_port->port, sizeof(uint16_t));
+  502|    434|        return size;
+  503|    434|    } else {
+  504|    102|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
   505|       |
-  506|     88|        if (size > length) {
+  506|    102|        if (size > length) {
   507|      0|            return -1;
   508|      0|        }
   509|       |
-  510|     88|        data[0] = family;
-  511|     88|        memcpy(data + 1, &ip_port->ip.ip.v6, SIZE_IP6);
-  512|     88|        memcpy(data + 1 + SIZE_IP6, &ip_port->port, sizeof(uint16_t));
-  513|     88|        return size;
-  514|     88|    }
-  515|    517|}
+  510|    102|        data[0] = family;
+  511|    102|        memcpy(data + 1, &ip_port->ip.ip.v6, SIZE_IP6);
+  512|    102|        memcpy(data + 1 + SIZE_IP6, &ip_port->port, sizeof(uint16_t));
+  513|    102|        return size;
+  514|    102|    }
+  515|    536|}
 unpack_ip_port:
-  565|  1.90k|{
-  566|  1.90k|    if (data == nullptr) {
+  565|  2.03k|{
+  566|  2.03k|    if (data == nullptr) {
   567|      0|        return -1;
   568|      0|    }
   569|       |
-  570|  1.90k|    bool is_ipv4;
-  571|  1.90k|    Family host_family;
+  570|  2.03k|    bool is_ipv4;
+  571|  2.03k|    Family host_family;
   572|       |
-  573|  1.90k|    if (data[0] == TOX_AF_INET) {
-  574|  1.24k|        is_ipv4 = true;
-  575|  1.24k|        host_family = net_family_ipv4();
-  576|  1.24k|    } else if (data[0] == TOX_TCP_INET) {
-  577|    304|        if (!tcp_enabled) {
-  578|     20|            return -1;
-  579|     20|        }
+  573|  2.03k|    if (data[0] == TOX_AF_INET) {
+  574|  1.25k|        is_ipv4 = true;
+  575|  1.25k|        host_family = net_family_ipv4();
+  576|  1.25k|    } else if (data[0] == TOX_TCP_INET) {
+  577|    392|        if (!tcp_enabled) {
+  578|     22|            return -1;
+  579|     22|        }
   580|       |
-  581|    284|        is_ipv4 = true;
-  582|    284|        host_family = net_family_tcp_ipv4();
-  583|    357|    } else if (data[0] == TOX_AF_INET6) {
-  584|    188|        is_ipv4 = false;
-  585|    188|        host_family = net_family_ipv6();
-  586|    188|    } else if (data[0] == TOX_TCP_INET6) {
+  581|    370|        is_ipv4 = true;
+  582|    370|        host_family = net_family_tcp_ipv4();
+  583|    384|    } else if (data[0] == TOX_AF_INET6) {
+  584|    202|        is_ipv4 = false;
+  585|    202|        host_family = net_family_ipv6();
+  586|    202|    } else if (data[0] == TOX_TCP_INET6) {
   587|     21|        if (!tcp_enabled) {
   588|      6|            return -1;
   589|      6|        }
   590|       |
   591|     15|        is_ipv4 = false;
   592|     15|        host_family = net_family_tcp_ipv6();
-  593|    148|    } else {
-  594|    148|        return -1;
-  595|    148|    }
+  593|    161|    } else {
+  594|    161|        return -1;
+  595|    161|    }
   596|       |
-  597|  1.73k|    *ip_port = empty_ip_port;
+  597|  1.84k|    *ip_port = empty_ip_port;
   598|       |
-  599|  1.73k|    if (is_ipv4) {
-  600|  1.52k|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+  599|  1.84k|    if (is_ipv4) {
+  600|  1.62k|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
   601|       |
-  602|  1.52k|        if (size > length) {
+  602|  1.62k|        if (size > length) {
   603|     10|            return -1;
   604|     10|        }
   605|       |
-  606|  1.51k|        ip_port->ip.family = host_family;
-  607|  1.51k|        memcpy(&ip_port->ip.ip.v4, data + 1, SIZE_IP4);
-  608|  1.51k|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
-  609|  1.51k|        return size;
-  610|  1.52k|    } else {
-  611|    203|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
+  606|  1.61k|        ip_port->ip.family = host_family;
+  607|  1.61k|        memcpy(&ip_port->ip.ip.v4, data + 1, SIZE_IP4);
+  608|  1.61k|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
+  609|  1.61k|        return size;
+  610|  1.62k|    } else {
+  611|    217|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
   612|       |
-  613|    203|        if (size > length) {
+  613|    217|        if (size > length) {
   614|     34|            return -1;
   615|     34|        }
   616|       |
-  617|    169|        ip_port->ip.family = host_family;
-  618|    169|        memcpy(&ip_port->ip.ip.v6, data + 1, SIZE_IP6);
-  619|    169|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
-  620|    169|        return size;
-  621|    203|    }
-  622|  1.73k|}
+  617|    183|        ip_port->ip.family = host_family;
+  618|    183|        memcpy(&ip_port->ip.ip.v6, data + 1, SIZE_IP6);
+  619|    183|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
+  620|    183|        return size;
+  621|    217|    }
+  622|  1.84k|}
 pack_nodes:
   630|    993|{
   631|    993|    uint32_t packed_length = 0;
   632|       |
-  633|  1.51k|    for (uint32_t i = 0; i < number && packed_length < length; ++i) {
-  634|    517|        const int ipp_size = pack_ip_port(logger, data + packed_length, length - packed_length, &nodes[i].ip_port);
+  633|  1.52k|    for (uint32_t i = 0; i < number && packed_length < length; ++i) {
+  634|    536|        const int ipp_size = pack_ip_port(logger, data + packed_length, length - packed_length, &nodes[i].ip_port);
   635|       |
-  636|    517|        if (ipp_size == -1) {
+  636|    536|        if (ipp_size == -1) {
   637|      0|            return -1;
   638|      0|        }
   639|       |
-  640|    517|        packed_length += ipp_size;
+  640|    536|        packed_length += ipp_size;
   641|       |
-  642|    517|        if (packed_length + CRYPTO_PUBLIC_KEY_SIZE > length) {
+  642|    536|        if (packed_length + CRYPTO_PUBLIC_KEY_SIZE > length) {
   643|      0|            return -1;
   644|      0|        }
   645|       |
-  646|    517|        memcpy(data + packed_length, nodes[i].public_key, CRYPTO_PUBLIC_KEY_SIZE);
-  647|    517|        packed_length += CRYPTO_PUBLIC_KEY_SIZE;
+  646|    536|        memcpy(data + packed_length, nodes[i].public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  647|    536|        packed_length += CRYPTO_PUBLIC_KEY_SIZE;
   648|       |
-  649|    517|#ifndef NDEBUG
-  650|    517|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
-  651|    517|#endif
-  652|    517|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
-  653|    517|    }
+  649|    536|#ifndef NDEBUG
+  650|    536|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
+  651|    536|#endif
+  652|    536|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
+  653|    536|    }
   654|       |
   655|    993|    return packed_length;
   656|    993|}
 unpack_nodes:
-  667|    626|{
-  668|    626|    uint32_t num = 0;
-  669|    626|    uint32_t len_processed = 0;
+  667|    726|{
+  668|    726|    uint32_t num = 0;
+  669|    726|    uint32_t len_processed = 0;
   670|       |
-  671|  2.30k|    while (num < max_num_nodes && len_processed < length) {
-  672|  1.90k|        const int ipp_size = unpack_ip_port(&nodes[num].ip_port, data + len_processed, length - len_processed, tcp_enabled);
+  671|  2.51k|    while (num < max_num_nodes && len_processed < length) {
+  672|  2.03k|        const int ipp_size = unpack_ip_port(&nodes[num].ip_port, data + len_processed, length - len_processed, tcp_enabled);
   673|       |
-  674|  1.90k|        if (ipp_size == -1) {
-  675|    218|            return -1;
-  676|    218|        }
+  674|  2.03k|        if (ipp_size == -1) {
+  675|    233|            return -1;
+  676|    233|        }
   677|       |
-  678|  1.68k|        len_processed += ipp_size;
+  678|  1.80k|        len_processed += ipp_size;
   679|       |
-  680|  1.68k|        if (len_processed + CRYPTO_PUBLIC_KEY_SIZE > length) {
+  680|  1.80k|        if (len_processed + CRYPTO_PUBLIC_KEY_SIZE > length) {
   681|     13|            return -1;
   682|     13|        }
   683|       |
-  684|  1.67k|        memcpy(nodes[num].public_key, data + len_processed, CRYPTO_PUBLIC_KEY_SIZE);
-  685|  1.67k|        len_processed += CRYPTO_PUBLIC_KEY_SIZE;
-  686|  1.67k|        ++num;
+  684|  1.78k|        memcpy(nodes[num].public_key, data + len_processed, CRYPTO_PUBLIC_KEY_SIZE);
+  685|  1.78k|        len_processed += CRYPTO_PUBLIC_KEY_SIZE;
+  686|  1.78k|        ++num;
   687|       |
-  688|  1.67k|#ifndef NDEBUG
-  689|  1.67k|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
-  690|  1.67k|#endif
-  691|  1.67k|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
-  692|  1.67k|    }
+  688|  1.78k|#ifndef NDEBUG
+  689|  1.78k|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
+  690|  1.78k|#endif
+  691|  1.78k|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
+  692|  1.78k|    }
   693|       |
-  694|    395|    if (processed_data_len != nullptr) {
+  694|    480|    if (processed_data_len != nullptr) {
   695|      0|        *processed_data_len = len_processed;
   696|      0|    }
   697|       |
-  698|    395|    return num;
-  699|    626|}
+  698|    480|    return num;
+  699|    726|}
 get_close_nodes:
   970|    662|{
   971|    662|    memset(nodes_list, 0, MAX_SENT_NODES * sizeof(Node_format));
@@ -490,10 +490,10 @@ dht_size:
  2838|    993|    uint32_t numv4 = 0;
  2839|    993|    uint32_t numv6 = 0;
  2840|       |
- 2841|  1.61k|    for (uint32_t i = 0; i < dht->loaded_num_nodes; ++i) {
- 2842|    621|        numv4 += net_family_is_ipv4(dht->loaded_nodes_list[i].ip_port.ip.family);
- 2843|    621|        numv6 += net_family_is_ipv6(dht->loaded_nodes_list[i].ip_port.ip.family);
- 2844|    621|    }
+ 2841|  1.65k|    for (uint32_t i = 0; i < dht->loaded_num_nodes; ++i) {
+ 2842|    663|        numv4 += net_family_is_ipv4(dht->loaded_nodes_list[i].ip_port.ip.family);
+ 2843|    663|        numv6 += net_family_is_ipv6(dht->loaded_nodes_list[i].ip_port.ip.family);
+ 2844|    663|    }
  2845|       |
  2846|  1.01M|    for (uint32_t i = 0; i < LCLIENT_LIST; ++i) {
  2847|  1.01M|        numv4 += dht->close_clientlist[i].assoc4.timestamp != 0;
@@ -580,16 +580,16 @@ dht_load:
  3013|    323|    const uint32_t cookie_len = sizeof(uint32_t);
  3014|       |
  3015|    323|    if (length > cookie_len) {
- 3016|    257|        uint32_t data32;
- 3017|    257|        lendian_bytes_to_host32(&data32, data);
+ 3016|    255|        uint32_t data32;
+ 3017|    255|        lendian_bytes_to_host32(&data32, data);
  3018|       |
- 3019|    257|        if (data32 == DHT_STATE_COOKIE_GLOBAL) {
- 3020|    246|            return state_load(dht->log, dht_load_state_callback, dht, data + cookie_len,
- 3021|    246|                              length - cookie_len, DHT_STATE_COOKIE_TYPE);
- 3022|    246|        }
- 3023|    257|    }
+ 3019|    255|        if (data32 == DHT_STATE_COOKIE_GLOBAL) {
+ 3020|    244|            return state_load(dht->log, dht_load_state_callback, dht, data + cookie_len,
+ 3021|    244|                              length - cookie_len, DHT_STATE_COOKIE_TYPE);
+ 3022|    244|        }
+ 3023|    255|    }
  3024|       |
- 3025|     77|    return -1;
+ 3025|     79|    return -1;
  3026|    323|}
 DHT.c:get_somewhat_close_nodes:
   954|    662|{
@@ -701,45 +701,45 @@ DHT.c:dht_friend_lock:
  1760|      0|    }
  1761|    662|}
 DHT.c:dht_load_state_callback:
- 2966|    218|{
- 2967|    218|    DHT *dht = (DHT *)outer;
+ 2966|    216|{
+ 2967|    216|    DHT *dht = (DHT *)outer;
  2968|       |
- 2969|    218|    switch (type) {
- 2970|    180|        case DHT_STATE_TYPE_NODES: {
- 2971|    180|            if (length == 0) {
+ 2969|    216|    switch (type) {
+ 2970|    179|        case DHT_STATE_TYPE_NODES: {
+ 2971|    179|            if (length == 0) {
  2972|     11|                break;
  2973|     11|            }
  2974|       |
- 2975|    169|            free(dht->loaded_nodes_list);
+ 2975|    168|            free(dht->loaded_nodes_list);
  2976|       |            // Copy to loaded_clients_list
- 2977|    169|            dht->loaded_nodes_list = (Node_format *)calloc(MAX_SAVED_DHT_NODES, sizeof(Node_format));
+ 2977|    168|            dht->loaded_nodes_list = (Node_format *)calloc(MAX_SAVED_DHT_NODES, sizeof(Node_format));
  2978|       |
- 2979|    169|            if (dht->loaded_nodes_list == nullptr) {
+ 2979|    168|            if (dht->loaded_nodes_list == nullptr) {
  2980|      0|                LOGGER_ERROR(dht->log, "could not allocate %u nodes", MAX_SAVED_DHT_NODES);
  2981|      0|                dht->loaded_num_nodes = 0;
  2982|      0|                break;
  2983|      0|            }
  2984|       |
- 2985|    169|            const int num = unpack_nodes(dht->loaded_nodes_list, MAX_SAVED_DHT_NODES, nullptr, data, length, false);
+ 2985|    168|            const int num = unpack_nodes(dht->loaded_nodes_list, MAX_SAVED_DHT_NODES, nullptr, data, length, false);
  2986|       |
- 2987|    169|            if (num > 0) {
+ 2987|    168|            if (num > 0) {
  2988|     19|                dht->loaded_num_nodes = num;
- 2989|    150|            } else {
- 2990|    150|                dht->loaded_num_nodes = 0;
- 2991|    150|            }
+ 2989|    149|            } else {
+ 2990|    149|                dht->loaded_num_nodes = 0;
+ 2991|    149|            }
  2992|       |
- 2993|    169|            break;
- 2994|    169|        }
+ 2993|    168|            break;
+ 2994|    168|        }
  2995|       |
- 2996|     38|        default: {
- 2997|     38|            LOGGER_ERROR(dht->log, "Load state (DHT): contains unrecognized part (len %u, type %u)",
- 2998|     38|                         length, type);
- 2999|     38|            break;
- 3000|    169|        }
- 3001|    218|    }
+ 2996|     37|        default: {
+ 2997|     37|            LOGGER_ERROR(dht->log, "Load state (DHT): contains unrecognized part (len %u, type %u)",
+ 2998|     37|                         length, type);
+ 2999|     37|            break;
+ 3000|    168|        }
+ 3001|    216|    }
  3002|       |
- 3003|    218|    return STATE_LOAD_STATUS_CONTINUE;
- 3004|    218|}
+ 3003|    216|    return STATE_LOAD_STATUS_CONTINUE;
+ 3004|    216|}
 
 lan_discovery_init:
   379|    331|{
@@ -755,15 +755,15 @@ LAN_discovery.c:fetch_broadcast_info:
   202|    331|}
 
 getfriend_id:
-   56|    785|{
-   57|    832|    for (uint32_t i = 0; i < m->numfriends; ++i) {
-   58|     58|        if (m->friendlist[i].status > 0 && pk_equal(real_pk, m->friendlist[i].real_pk)) {
-   59|     11|            return i;
-   60|     11|        }
-   61|     58|    }
+   56|    855|{
+   57|    901|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+   58|     56|        if (m->friendlist[i].status > 0 && pk_equal(real_pk, m->friendlist[i].real_pk)) {
+   59|     10|            return i;
+   60|     10|        }
+   61|     56|    }
    62|       |
-   63|    774|    return -1;
-   64|    785|}
+   63|    845|    return -1;
+   64|    855|}
 m_addfriend:
   209|      7|{
   210|      7|    if (length > MAX_FRIEND_REQUEST_DATA_SIZE) {
@@ -825,101 +825,101 @@ m_addfriend:
   266|      3|    return ret;
   267|      3|}
 m_addfriend_norequest:
-  270|     32|{
-  271|     32|    if (getfriend_id(m, real_pk) != -1) {
+  270|     27|{
+  271|     27|    if (getfriend_id(m, real_pk) != -1) {
   272|      0|        return FAERR_ALREADYSENT;
   273|      0|    }
   274|       |
-  275|     32|    if (!public_key_valid(real_pk)) {
+  275|     27|    if (!public_key_valid(real_pk)) {
   276|      1|        return FAERR_BADCHECKSUM;
   277|      1|    }
   278|       |
-  279|     31|    if (pk_equal(real_pk, nc_get_self_public_key(m->net_crypto))) {
+  279|     26|    if (pk_equal(real_pk, nc_get_self_public_key(m->net_crypto))) {
   280|      1|        return FAERR_OWNKEY;
   281|      1|    }
   282|       |
-  283|     30|    return init_new_friend(m, real_pk, FRIEND_CONFIRMED);
-  284|     31|}
+  283|     25|    return init_new_friend(m, real_pk, FRIEND_CONFIRMED);
+  284|     26|}
 m_friend_exists:
-  467|     93|{
-  468|     93|    return (unsigned int)friendnumber < m->numfriends && m->friendlist[friendnumber].status != 0;
-  469|     93|}
+  467|     78|{
+  468|     78|    return (unsigned int)friendnumber < m->numfriends && m->friendlist[friendnumber].status != 0;
+  469|     78|}
 setfriendname:
-  574|     30|{
-  575|     30|    if (!m_friend_exists(m, friendnumber)) {
+  574|     25|{
+  575|     25|    if (!m_friend_exists(m, friendnumber)) {
   576|      0|        return -1;
   577|      0|    }
   578|       |
-  579|     30|    if (length > MAX_NAME_LENGTH || length == 0) {
-  580|     28|        return -1;
-  581|     28|    }
+  579|     25|    if (length > MAX_NAME_LENGTH || length == 0) {
+  580|     23|        return -1;
+  581|     23|    }
   582|       |
   583|      2|    m->friendlist[friendnumber].name_length = length;
   584|      2|    memcpy(m->friendlist[friendnumber].name, name, length);
   585|      2|    return 0;
-  586|     30|}
+  586|     25|}
 setname:
-  598|    358|{
-  599|    358|    if (length > MAX_NAME_LENGTH) {
+  598|    402|{
+  599|    402|    if (length > MAX_NAME_LENGTH) {
   600|      0|        return -1;
   601|      0|    }
   602|       |
-  603|    358|    if (m->name_length == length && (length == 0 || memcmp(name, m->name, length) == 0)) {
-  604|     77|        return 0;
-  605|     77|    }
+  603|    402|    if (m->name_length == length && (length == 0 || memcmp(name, m->name, length) == 0)) {
+  604|     92|        return 0;
+  605|     92|    }
   606|       |
-  607|    281|    if (length > 0) {
-  608|    281|        memcpy(m->name, name, length);
-  609|    281|    }
+  607|    310|    if (length > 0) {
+  608|    310|        memcpy(m->name, name, length);
+  609|    310|    }
   610|       |
-  611|    281|    m->name_length = length;
+  611|    310|    m->name_length = length;
   612|       |
-  613|    372|    for (uint32_t i = 0; i < m->numfriends; ++i) {
-  614|     91|        m->friendlist[i].name_sent = false;
-  615|     91|    }
+  613|    397|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+  614|     87|        m->friendlist[i].name_sent = false;
+  615|     87|    }
   616|       |
-  617|    281|    return 0;
-  618|    358|}
+  617|    310|    return 0;
+  618|    402|}
 m_set_statusmessage:
-  672|    641|{
-  673|    641|    if (length > MAX_STATUSMESSAGE_LENGTH) {
+  672|    668|{
+  673|    668|    if (length > MAX_STATUSMESSAGE_LENGTH) {
   674|      0|        return -1;
   675|      0|    }
   676|       |
-  677|    641|    if (m->statusmessage_length == length && (length == 0 || memcmp(m->statusmessage, status, length) == 0)) {
-  678|     78|        return 0;
-  679|     78|    }
+  677|    668|    if (m->statusmessage_length == length && (length == 0 || memcmp(m->statusmessage, status, length) == 0)) {
+  678|     80|        return 0;
+  679|     80|    }
   680|       |
-  681|    563|    if (length > 0) {
-  682|    563|        memcpy(m->statusmessage, status, length);
-  683|    563|    }
+  681|    588|    if (length > 0) {
+  682|    588|        memcpy(m->statusmessage, status, length);
+  683|    588|    }
   684|       |
-  685|    563|    m->statusmessage_length = length;
+  685|    588|    m->statusmessage_length = length;
   686|       |
-  687|    651|    for (uint32_t i = 0; i < m->numfriends; ++i) {
-  688|     88|        m->friendlist[i].statusmessage_sent = false;
-  689|     88|    }
+  687|    674|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+  688|     86|        m->friendlist[i].statusmessage_sent = false;
+  689|     86|    }
   690|       |
-  691|    563|    return 0;
-  692|    641|}
+  691|    588|    return 0;
+  692|    668|}
 m_set_userstatus:
-  695|    325|{
-  696|    325|    if (status >= USERSTATUS_INVALID) {
-  697|    195|        return -1;
-  698|    195|    }
+  695|    322|{
+  696|    322|    if (status >= USERSTATUS_INVALID) {
+  697|    205|        return -1;
+  698|    205|    }
   699|       |
-  700|    130|    if (m->userstatus == status) {
-  701|     62|        return 0;
-  702|     62|    }
+  700|    117|    if (m->userstatus == status) {
+  701|     65|        return 0;
+  702|     65|    }
   703|       |
-  704|     68|    m->userstatus = (Userstatus)status;
+  704|     52|    m->userstatus = (Userstatus)status;
   705|       |
-  706|     86|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+  706|     70|    for (uint32_t i = 0; i < m->numfriends; ++i) {
   707|     18|        m->friendlist[i].userstatus_sent = false;
   708|     18|    }
   709|       |
-  710|     68|    return 0;
-  711|    130|}
+  710|     52|    return 0;
+  711|    117|}
 m_callback_friendrequest:
   871|    331|{
   872|    331|    m->friend_request = function;
@@ -1018,27 +1018,27 @@ messenger_save:
  2721|    331|    return data;
  2722|    331|}
 messenger_load_state_section:
- 3081|  3.24k|{
- 3082|  16.2k|    for (uint8_t i = 0; i < m->options.state_plugins_length; ++i) {
- 3083|  15.9k|        const Messenger_State_Plugin *const plugin = &m->options.state_plugins[i];
+ 3081|  3.29k|{
+ 3082|  16.6k|    for (uint8_t i = 0; i < m->options.state_plugins_length; ++i) {
+ 3083|  16.3k|        const Messenger_State_Plugin *const plugin = &m->options.state_plugins[i];
  3084|       |
- 3085|  15.9k|        if (plugin->type == type) {
- 3086|  2.88k|            *status = plugin->load(m, data, length);
- 3087|  2.88k|            return true;
- 3088|  2.88k|        }
- 3089|  15.9k|    }
+ 3085|  16.3k|        if (plugin->type == type) {
+ 3086|  2.99k|            *status = plugin->load(m, data, length);
+ 3087|  2.99k|            return true;
+ 3088|  2.99k|        }
+ 3089|  16.3k|    }
  3090|       |
- 3091|    359|    return false;
- 3092|  3.24k|}
+ 3091|    304|    return false;
+ 3092|  3.29k|}
 count_friendlist:
  3100|    993|{
  3101|    993|    uint32_t ret = 0;
  3102|       |
- 3103|  1.09k|    for (uint32_t i = 0; i < m->numfriends; ++i) {
- 3104|     99|        if (m->friendlist[i].status > 0) {
- 3105|     99|            ++ret;
- 3106|     99|        }
- 3107|     99|    }
+ 3103|  1.07k|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+ 3104|     84|        if (m->friendlist[i].status > 0) {
+ 3105|     84|            ++ret;
+ 3106|     84|        }
+ 3107|     84|    }
  3108|       |
  3109|    993|    return ret;
  3110|    993|}
@@ -1221,9 +1221,9 @@ kill_messenger:
  3342|    331|    kill_dht(m->dht);
  3343|    331|    kill_networking(m->net);
  3344|       |
- 3345|    364|    for (uint32_t i = 0; i < m->numfriends; ++i) {
- 3346|     33|        clear_receipts(m, i);
- 3347|     33|    }
+ 3345|    359|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+ 3346|     28|        clear_receipts(m, i);
+ 3347|     28|    }
  3348|       |
  3349|    331|    logger_kill(m->log);
  3350|    331|    free(m->friendlist);
@@ -1233,109 +1233,109 @@ kill_messenger:
  3354|    331|    free(m);
  3355|    331|}
 Messenger.c:init_new_friend:
-  139|     33|{
-  140|     33|    if (m->numfriends == UINT32_MAX) {
+  139|     28|{
+  140|     28|    if (m->numfriends == UINT32_MAX) {
   141|      0|        LOGGER_ERROR(m->log, "Friend list full: we have more than 4 billion friends");
   142|       |        /* This is technically incorrect, but close enough. */
   143|      0|        return FAERR_NOMEM;
   144|      0|    }
   145|       |
   146|       |    /* Resize the friend list if necessary. */
-  147|     33|    if (realloc_friendlist(m, m->numfriends + 1) != 0) {
+  147|     28|    if (realloc_friendlist(m, m->numfriends + 1) != 0) {
   148|      0|        return FAERR_NOMEM;
   149|      0|    }
   150|       |
-  151|     33|    m->friendlist[m->numfriends] = empty_friend;
+  151|     28|    m->friendlist[m->numfriends] = empty_friend;
   152|       |
-  153|     33|    const int friendcon_id = new_friend_connection(m->fr_c, real_pk);
+  153|     28|    const int friendcon_id = new_friend_connection(m->fr_c, real_pk);
   154|       |
-  155|     33|    if (friendcon_id == -1) {
+  155|     28|    if (friendcon_id == -1) {
   156|      0|        return FAERR_NOMEM;
   157|      0|    }
   158|       |
-  159|     33|    for (uint32_t i = 0; i <= m->numfriends; ++i) {
-  160|     33|        if (m->friendlist[i].status == NOFRIEND) {
-  161|     33|            m->friendlist[i].status = status;
-  162|     33|            m->friendlist[i].friendcon_id = friendcon_id;
-  163|     33|            m->friendlist[i].friendrequest_lastsent = 0;
-  164|     33|            pk_copy(m->friendlist[i].real_pk, real_pk);
-  165|     33|            m->friendlist[i].statusmessage_length = 0;
-  166|     33|            m->friendlist[i].userstatus = USERSTATUS_NONE;
-  167|     33|            m->friendlist[i].is_typing = false;
-  168|     33|            m->friendlist[i].message_id = 0;
-  169|     33|            friend_connection_callbacks(m->fr_c, friendcon_id, MESSENGER_CALLBACK_INDEX, &m_handle_status, &m_handle_packet,
-  170|     33|                                        &m_handle_lossy_packet, m, i);
+  159|     28|    for (uint32_t i = 0; i <= m->numfriends; ++i) {
+  160|     28|        if (m->friendlist[i].status == NOFRIEND) {
+  161|     28|            m->friendlist[i].status = status;
+  162|     28|            m->friendlist[i].friendcon_id = friendcon_id;
+  163|     28|            m->friendlist[i].friendrequest_lastsent = 0;
+  164|     28|            pk_copy(m->friendlist[i].real_pk, real_pk);
+  165|     28|            m->friendlist[i].statusmessage_length = 0;
+  166|     28|            m->friendlist[i].userstatus = USERSTATUS_NONE;
+  167|     28|            m->friendlist[i].is_typing = false;
+  168|     28|            m->friendlist[i].message_id = 0;
+  169|     28|            friend_connection_callbacks(m->fr_c, friendcon_id, MESSENGER_CALLBACK_INDEX, &m_handle_status, &m_handle_packet,
+  170|     28|                                        &m_handle_lossy_packet, m, i);
   171|       |
-  172|     33|            if (m->numfriends == i) {
-  173|     33|                ++m->numfriends;
-  174|     33|            }
+  172|     28|            if (m->numfriends == i) {
+  173|     28|                ++m->numfriends;
+  174|     28|            }
   175|       |
-  176|     33|            if (friend_con_connected(m->fr_c, friendcon_id) == FRIENDCONN_STATUS_CONNECTED) {
+  176|     28|            if (friend_con_connected(m->fr_c, friendcon_id) == FRIENDCONN_STATUS_CONNECTED) {
   177|      0|                send_online_packet(m, i);
   178|      0|            }
   179|       |
-  180|     33|            return i;
-  181|     33|        }
-  182|     33|    }
+  180|     28|            return i;
+  181|     28|        }
+  182|     28|    }
   183|       |
   184|      0|    return FAERR_NOMEM;
-  185|     33|}
+  185|     28|}
 Messenger.c:set_friend_statusmessage:
-  840|     30|{
-  841|     30|    if (!m_friend_exists(m, friendnumber)) {
+  840|     25|{
+  841|     25|    if (!m_friend_exists(m, friendnumber)) {
   842|      0|        return -1;
   843|      0|    }
   844|       |
-  845|     30|    if (length > MAX_STATUSMESSAGE_LENGTH) {
-  846|     24|        return -1;
-  847|     24|    }
+  845|     25|    if (length > MAX_STATUSMESSAGE_LENGTH) {
+  846|     21|        return -1;
+  847|     21|    }
   848|       |
-  849|      6|    if (length > 0) {
+  849|      4|    if (length > 0) {
   850|      3|        memcpy(m->friendlist[friendnumber].statusmessage, status, length);
   851|      3|    }
   852|       |
-  853|      6|    m->friendlist[friendnumber].statusmessage_length = length;
-  854|      6|    return 0;
-  855|     30|}
+  853|      4|    m->friendlist[friendnumber].statusmessage_length = length;
+  854|      4|    return 0;
+  855|     25|}
 Messenger.c:set_friend_userstatus:
-  859|     30|{
-  860|     30|    m->friendlist[friendnumber].userstatus = (Userstatus)status;
-  861|     30|}
+  859|     25|{
+  860|     25|    m->friendlist[friendnumber].userstatus = (Userstatus)status;
+  861|     25|}
 Messenger.c:clear_receipts:
-  288|     33|{
-  289|     33|    if (!m_friend_exists(m, friendnumber)) {
+  288|     28|{
+  289|     28|    if (!m_friend_exists(m, friendnumber)) {
   290|      0|        return -1;
   291|      0|    }
   292|       |
-  293|     33|    struct Receipts *receipts = m->friendlist[friendnumber].receipts_start;
+  293|     28|    struct Receipts *receipts = m->friendlist[friendnumber].receipts_start;
   294|       |
-  295|     33|    while (receipts != nullptr) {
+  295|     28|    while (receipts != nullptr) {
   296|      0|        struct Receipts *temp_r = receipts->next;
   297|      0|        free(receipts);
   298|      0|        receipts = temp_r;
   299|      0|    }
   300|       |
-  301|     33|    m->friendlist[friendnumber].receipts_start = nullptr;
-  302|     33|    m->friendlist[friendnumber].receipts_end = nullptr;
-  303|     33|    return 0;
-  304|     33|}
+  301|     28|    m->friendlist[friendnumber].receipts_start = nullptr;
+  302|     28|    m->friendlist[friendnumber].receipts_end = nullptr;
+  303|     28|    return 0;
+  304|     28|}
 Messenger.c:realloc_friendlist:
-   35|     33|{
-   36|     33|    if (num == 0) {
+   35|     28|{
+   36|     28|    if (num == 0) {
    37|      0|        free(m->friendlist);
    38|      0|        m->friendlist = nullptr;
    39|      0|        return 0;
    40|      0|    }
    41|       |
-   42|     33|    Friend *newfriendlist = (Friend *)realloc(m->friendlist, num * sizeof(Friend));
+   42|     28|    Friend *newfriendlist = (Friend *)realloc(m->friendlist, num * sizeof(Friend));
    43|       |
-   44|     33|    if (newfriendlist == nullptr) {
+   44|     28|    if (newfriendlist == nullptr) {
    45|      0|        return -1;
    46|      0|    }
    47|       |
-   48|     33|    m->friendlist = newfriendlist;
-   49|     33|    return 0;
-   50|     33|}
+   48|     28|    m->friendlist = newfriendlist;
+   49|     28|    return 0;
+   50|     28|}
 Messenger.c:m_state_plugins_size:
  2648|    662|{
  2649|    662|    const uint32_t size32 = sizeof(uint32_t);
@@ -1364,40 +1364,40 @@ Messenger.c:m_register_default_plugins:
  3076|    331|    m_register_state_plugin(m, STATE_TYPE_PATH_NODE, path_node_size, load_path_nodes, save_path_nodes);
  3077|    331|}
 Messenger.c:nospam_keys_size:
- 2727|  1.31k|{
- 2728|  1.31k|    return sizeof(uint32_t) + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_SECRET_KEY_SIZE;
- 2729|  1.31k|}
+ 2727|  1.28k|{
+ 2728|  1.28k|    return sizeof(uint32_t) + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_SECRET_KEY_SIZE;
+ 2729|  1.28k|}
 Messenger.c:load_nospam_keys:
- 2733|    318|{
- 2734|    318|    if (length != m_plugin_size(m, STATE_TYPE_NOSPAMKEYS)) {
+ 2733|    288|{
+ 2734|    288|    if (length != m_plugin_size(m, STATE_TYPE_NOSPAMKEYS)) {
  2735|      1|        return STATE_LOAD_STATUS_ERROR;
  2736|      1|    }
  2737|       |
- 2738|    317|    uint32_t nospam;
- 2739|    317|    lendian_bytes_to_host32(&nospam, data);
- 2740|    317|    set_nospam(m->fr, nospam);
- 2741|    317|    load_secret_key(m->net_crypto, data + sizeof(uint32_t) + CRYPTO_PUBLIC_KEY_SIZE);
+ 2738|    287|    uint32_t nospam;
+ 2739|    287|    lendian_bytes_to_host32(&nospam, data);
+ 2740|    287|    set_nospam(m->fr, nospam);
+ 2741|    287|    load_secret_key(m->net_crypto, data + sizeof(uint32_t) + CRYPTO_PUBLIC_KEY_SIZE);
  2742|       |
- 2743|    317|    if (!pk_equal(data + sizeof(uint32_t), nc_get_self_public_key(m->net_crypto))) {
+ 2743|    287|    if (!pk_equal(data + sizeof(uint32_t), nc_get_self_public_key(m->net_crypto))) {
  2744|      4|        return STATE_LOAD_STATUS_ERROR;
  2745|      4|    }
  2746|       |
- 2747|    313|    return STATE_LOAD_STATUS_CONTINUE;
- 2748|    317|}
+ 2747|    283|    return STATE_LOAD_STATUS_CONTINUE;
+ 2748|    287|}
 Messenger.c:m_plugin_size:
- 2693|  2.30k|{
- 2694|  7.26k|    for (uint8_t i = 0; i < m->options.state_plugins_length; ++i) {
- 2695|  7.26k|        const Messenger_State_Plugin plugin = m->options.state_plugins[i];
+ 2693|  2.27k|{
+ 2694|  7.23k|    for (uint8_t i = 0; i < m->options.state_plugins_length; ++i) {
+ 2695|  7.23k|        const Messenger_State_Plugin plugin = m->options.state_plugins[i];
  2696|       |
- 2697|  7.26k|        if (plugin.type == type) {
- 2698|  2.30k|            return plugin.size(m);
- 2699|  2.30k|        }
- 2700|  7.26k|    }
+ 2697|  7.23k|        if (plugin.type == type) {
+ 2698|  2.27k|            return plugin.size(m);
+ 2699|  2.27k|        }
+ 2700|  7.23k|    }
  2701|       |
  2702|      0|    LOGGER_ERROR(m->log, "Unknown type encountered: %u", type);
  2703|       |
  2704|      0|    return UINT32_MAX;
- 2705|  2.30k|}
+ 2705|  2.27k|}
 Messenger.c:save_nospam_keys:
  2752|    331|{
  2753|    331|    const uint32_t len = m_plugin_size(m, STATE_TYPE_NOSPAMKEYS);
@@ -1431,70 +1431,70 @@ Messenger.c:saved_friendslist_size:
  2791|    993|    return count_friendlist(m) * friend_size();
  2792|    993|}
 Messenger.c:friend_size:
- 2535|  1.57k|{
- 2536|  1.57k|    uint32_t data = 0;
- 2537|  1.57k|    const struct Saved_Friend *const temp = nullptr;
+ 2535|  1.54k|{
+ 2536|  1.54k|    uint32_t data = 0;
+ 2537|  1.54k|    const struct Saved_Friend *const temp = nullptr;
  2538|       |
- 2539|  1.57k|#define VALUE_MEMBER(data, name) \
- 2540|  1.57k|    do {                         \
- 2541|  1.57k|        data += sizeof(name);    \
- 2542|  1.57k|    } while (0)
- 2543|  1.57k|#define ARRAY_MEMBER(data, name) \
- 2544|  1.57k|    do {                         \
- 2545|  1.57k|        data += sizeof(name);    \
- 2546|  1.57k|    } while (0)
+ 2539|  1.54k|#define VALUE_MEMBER(data, name) \
+ 2540|  1.54k|    do {                         \
+ 2541|  1.54k|        data += sizeof(name);    \
+ 2542|  1.54k|    } while (0)
+ 2543|  1.54k|#define ARRAY_MEMBER(data, name) \
+ 2544|  1.54k|    do {                         \
+ 2545|  1.54k|        data += sizeof(name);    \
+ 2546|  1.54k|    } while (0)
  2547|       |
  2548|       |    // Exactly the same in friend_load, friend_save, and friend_size
- 2549|  1.57k|    VALUE_MEMBER(data, temp->status);
- 2550|  1.57k|    ARRAY_MEMBER(data, temp->real_pk);
- 2551|  1.57k|    ARRAY_MEMBER(data, temp->info);
- 2552|  1.57k|    ++data; // padding
- 2553|  1.57k|    VALUE_MEMBER(data, temp->info_size);
- 2554|  1.57k|    ARRAY_MEMBER(data, temp->name);
- 2555|  1.57k|    VALUE_MEMBER(data, temp->name_length);
- 2556|  1.57k|    ARRAY_MEMBER(data, temp->statusmessage);
- 2557|  1.57k|    ++data; // padding
- 2558|  1.57k|    VALUE_MEMBER(data, temp->statusmessage_length);
- 2559|  1.57k|    VALUE_MEMBER(data, temp->userstatus);
- 2560|  1.57k|    data += 3; // padding
- 2561|  1.57k|    VALUE_MEMBER(data, temp->friendrequest_nospam);
- 2562|  1.57k|    ARRAY_MEMBER(data, temp->last_seen_time);
+ 2549|  1.54k|    VALUE_MEMBER(data, temp->status);
+ 2550|  1.54k|    ARRAY_MEMBER(data, temp->real_pk);
+ 2551|  1.54k|    ARRAY_MEMBER(data, temp->info);
+ 2552|  1.54k|    ++data; // padding
+ 2553|  1.54k|    VALUE_MEMBER(data, temp->info_size);
+ 2554|  1.54k|    ARRAY_MEMBER(data, temp->name);
+ 2555|  1.54k|    VALUE_MEMBER(data, temp->name_length);
+ 2556|  1.54k|    ARRAY_MEMBER(data, temp->statusmessage);
+ 2557|  1.54k|    ++data; // padding
+ 2558|  1.54k|    VALUE_MEMBER(data, temp->statusmessage_length);
+ 2559|  1.54k|    VALUE_MEMBER(data, temp->userstatus);
+ 2560|  1.54k|    data += 3; // padding
+ 2561|  1.54k|    VALUE_MEMBER(data, temp->friendrequest_nospam);
+ 2562|  1.54k|    ARRAY_MEMBER(data, temp->last_seen_time);
  2563|       |
- 2564|  1.57k|#undef VALUE_MEMBER
- 2565|  1.57k|#undef ARRAY_MEMBER
+ 2564|  1.54k|#undef VALUE_MEMBER
+ 2565|  1.54k|#undef ARRAY_MEMBER
  2566|       |
- 2567|  1.57k|    return data;
- 2568|  1.57k|}
+ 2567|  1.54k|    return data;
+ 2568|  1.54k|}
 Messenger.c:friends_list_load:
- 2847|    185|{
- 2848|    185|    const uint32_t l_friend_size = friend_size();
+ 2847|    163|{
+ 2848|    163|    const uint32_t l_friend_size = friend_size();
  2849|       |
- 2850|    185|    if (length % l_friend_size != 0) {
+ 2850|    163|    if (length % l_friend_size != 0) {
  2851|      1|        return STATE_LOAD_STATUS_ERROR; // TODO(endoffile78): error or continue?
  2852|      1|    }
  2853|       |
- 2854|    184|    const uint32_t num = length / l_friend_size;
- 2855|    184|    const uint8_t *cur_data = data;
+ 2854|    162|    const uint32_t num = length / l_friend_size;
+ 2855|    162|    const uint8_t *cur_data = data;
  2856|       |
- 2857|    224|    for (uint32_t i = 0; i < num; ++i) {
- 2858|     40|        struct Saved_Friend temp = { 0 };
- 2859|     40|        const uint8_t *next_data = friend_load(&temp, cur_data);
- 2860|     40|        assert(next_data - cur_data == l_friend_size);
+ 2857|    197|    for (uint32_t i = 0; i < num; ++i) {
+ 2858|     35|        struct Saved_Friend temp = { 0 };
+ 2859|     35|        const uint8_t *next_data = friend_load(&temp, cur_data);
+ 2860|     35|        assert(next_data - cur_data == l_friend_size);
  2861|       |
  2862|      0|        cur_data = next_data;
  2863|       |
- 2864|     40|        if (temp.status >= 3) {
- 2865|     32|            const int fnum = m_addfriend_norequest(m, temp.real_pk);
+ 2864|     35|        if (temp.status >= 3) {
+ 2865|     27|            const int fnum = m_addfriend_norequest(m, temp.real_pk);
  2866|       |
- 2867|     32|            if (fnum < 0) {
+ 2867|     27|            if (fnum < 0) {
  2868|      2|                continue;
  2869|      2|            }
  2870|       |
- 2871|     30|            setfriendname(m, fnum, temp.name, net_ntohs(temp.name_length));
- 2872|     30|            set_friend_statusmessage(m, fnum, temp.statusmessage, net_ntohs(temp.statusmessage_length));
- 2873|     30|            set_friend_userstatus(m, fnum, temp.userstatus);
- 2874|     30|            net_unpack_u64(temp.last_seen_time, &m->friendlist[fnum].last_seen_time);
- 2875|     30|        } else if (temp.status != 0) {
+ 2871|     25|            setfriendname(m, fnum, temp.name, net_ntohs(temp.name_length));
+ 2872|     25|            set_friend_statusmessage(m, fnum, temp.statusmessage, net_ntohs(temp.statusmessage_length));
+ 2873|     25|            set_friend_userstatus(m, fnum, temp.userstatus);
+ 2874|     25|            net_unpack_u64(temp.last_seen_time, &m->friendlist[fnum].last_seen_time);
+ 2875|     25|        } else if (temp.status != 0) {
  2876|       |            /* TODO(irungentoo): This is not a good way to do this. */
  2877|      7|            uint8_t address[FRIEND_ADDRESS_SIZE];
  2878|      7|            pk_copy(address, temp.real_pk);
@@ -1503,45 +1503,45 @@ Messenger.c:friends_list_load:
  2881|      7|            memcpy(address + CRYPTO_PUBLIC_KEY_SIZE + sizeof(uint32_t), &checksum, sizeof(checksum));
  2882|      7|            m_addfriend(m, address, temp.info, net_ntohs(temp.info_size));
  2883|      7|        }
- 2884|     40|    }
+ 2884|     35|    }
  2885|       |
- 2886|    184|    return STATE_LOAD_STATUS_CONTINUE;
- 2887|    185|}
+ 2886|    162|    return STATE_LOAD_STATUS_CONTINUE;
+ 2887|    163|}
 Messenger.c:friend_load:
- 2610|     40|{
- 2611|     40|#define VALUE_MEMBER(data, name)           \
- 2612|     40|    do {                                   \
- 2613|     40|        memcpy(&name, data, sizeof(name)); \
- 2614|     40|        data += sizeof(name);              \
- 2615|     40|    } while (0)
+ 2610|     35|{
+ 2611|     35|#define VALUE_MEMBER(data, name)           \
+ 2612|     35|    do {                                   \
+ 2613|     35|        memcpy(&name, data, sizeof(name)); \
+ 2614|     35|        data += sizeof(name);              \
+ 2615|     35|    } while (0)
  2616|       |
- 2617|     40|#define ARRAY_MEMBER(data, name)          \
- 2618|     40|    do {                                  \
- 2619|     40|        memcpy(name, data, sizeof(name)); \
- 2620|     40|        data += sizeof(name);             \
- 2621|     40|    } while (0)
+ 2617|     35|#define ARRAY_MEMBER(data, name)          \
+ 2618|     35|    do {                                  \
+ 2619|     35|        memcpy(name, data, sizeof(name)); \
+ 2620|     35|        data += sizeof(name);             \
+ 2621|     35|    } while (0)
  2622|       |
  2623|       |    // Exactly the same in friend_load, friend_save, and friend_size
- 2624|     40|    VALUE_MEMBER(data, temp->status);
- 2625|     40|    ARRAY_MEMBER(data, temp->real_pk);
- 2626|     40|    ARRAY_MEMBER(data, temp->info);
- 2627|     40|    ++data; // padding
- 2628|     40|    VALUE_MEMBER(data, temp->info_size);
- 2629|     40|    ARRAY_MEMBER(data, temp->name);
- 2630|     40|    VALUE_MEMBER(data, temp->name_length);
- 2631|     40|    ARRAY_MEMBER(data, temp->statusmessage);
- 2632|     40|    ++data; // padding
- 2633|     40|    VALUE_MEMBER(data, temp->statusmessage_length);
- 2634|     40|    VALUE_MEMBER(data, temp->userstatus);
- 2635|     40|    data += 3; // padding
- 2636|     40|    VALUE_MEMBER(data, temp->friendrequest_nospam);
- 2637|     40|    ARRAY_MEMBER(data, temp->last_seen_time);
+ 2624|     35|    VALUE_MEMBER(data, temp->status);
+ 2625|     35|    ARRAY_MEMBER(data, temp->real_pk);
+ 2626|     35|    ARRAY_MEMBER(data, temp->info);
+ 2627|     35|    ++data; // padding
+ 2628|     35|    VALUE_MEMBER(data, temp->info_size);
+ 2629|     35|    ARRAY_MEMBER(data, temp->name);
+ 2630|     35|    VALUE_MEMBER(data, temp->name_length);
+ 2631|     35|    ARRAY_MEMBER(data, temp->statusmessage);
+ 2632|     35|    ++data; // padding
+ 2633|     35|    VALUE_MEMBER(data, temp->statusmessage_length);
+ 2634|     35|    VALUE_MEMBER(data, temp->userstatus);
+ 2635|     35|    data += 3; // padding
+ 2636|     35|    VALUE_MEMBER(data, temp->friendrequest_nospam);
+ 2637|     35|    ARRAY_MEMBER(data, temp->last_seen_time);
  2638|       |
- 2639|     40|#undef VALUE_MEMBER
- 2640|     40|#undef ARRAY_MEMBER
+ 2639|     35|#undef VALUE_MEMBER
+ 2640|     35|#undef ARRAY_MEMBER
  2641|       |
- 2642|     40|    return data;
- 2643|     40|}
+ 2642|     35|    return data;
+ 2643|     35|}
 Messenger.c:friends_list_save:
  2796|    331|{
  2797|    331|    const uint32_t len = m_plugin_size(m, STATE_TYPE_FRIENDS);
@@ -1550,13 +1550,13 @@ Messenger.c:friends_list_save:
  2800|    331|    uint32_t num = 0;
  2801|    331|    uint8_t *cur_data = data;
  2802|       |
- 2803|    364|    for (uint32_t i = 0; i < m->numfriends; ++i) {
- 2804|     33|        if (m->friendlist[i].status > 0) {
- 2805|     33|            struct Saved_Friend temp = { 0 };
- 2806|     33|            temp.status = m->friendlist[i].status;
- 2807|     33|            memcpy(temp.real_pk, m->friendlist[i].real_pk, CRYPTO_PUBLIC_KEY_SIZE);
+ 2803|    359|    for (uint32_t i = 0; i < m->numfriends; ++i) {
+ 2804|     28|        if (m->friendlist[i].status > 0) {
+ 2805|     28|            struct Saved_Friend temp = { 0 };
+ 2806|     28|            temp.status = m->friendlist[i].status;
+ 2807|     28|            memcpy(temp.real_pk, m->friendlist[i].real_pk, CRYPTO_PUBLIC_KEY_SIZE);
  2808|       |
- 2809|     33|            if (temp.status < 3) {
+ 2809|     28|            if (temp.status < 3) {
  2810|       |                // TODO(iphydf): Use uint16_t and min_u16 here.
  2811|      3|                const size_t friendrequest_length =
  2812|      3|                    min_u32(m->friendlist[i].info_size,
@@ -1565,26 +1565,26 @@ Messenger.c:friends_list_save:
  2815|       |
  2816|      3|                temp.info_size = net_htons(m->friendlist[i].info_size);
  2817|      3|                temp.friendrequest_nospam = m->friendlist[i].friendrequest_nospam;
- 2818|     30|            } else {
- 2819|     30|                temp.status = 3;
- 2820|     30|                memcpy(temp.name, m->friendlist[i].name, m->friendlist[i].name_length);
- 2821|     30|                temp.name_length = net_htons(m->friendlist[i].name_length);
- 2822|     30|                memcpy(temp.statusmessage, m->friendlist[i].statusmessage, m->friendlist[i].statusmessage_length);
- 2823|     30|                temp.statusmessage_length = net_htons(m->friendlist[i].statusmessage_length);
- 2824|     30|                temp.userstatus = m->friendlist[i].userstatus;
+ 2818|     25|            } else {
+ 2819|     25|                temp.status = 3;
+ 2820|     25|                memcpy(temp.name, m->friendlist[i].name, m->friendlist[i].name_length);
+ 2821|     25|                temp.name_length = net_htons(m->friendlist[i].name_length);
+ 2822|     25|                memcpy(temp.statusmessage, m->friendlist[i].statusmessage, m->friendlist[i].statusmessage_length);
+ 2823|     25|                temp.statusmessage_length = net_htons(m->friendlist[i].statusmessage_length);
+ 2824|     25|                temp.userstatus = m->friendlist[i].userstatus;
  2825|       |
- 2826|     30|                net_pack_u64(temp.last_seen_time, m->friendlist[i].last_seen_time);
- 2827|     30|            }
+ 2826|     25|                net_pack_u64(temp.last_seen_time, m->friendlist[i].last_seen_time);
+ 2827|     25|            }
  2828|       |
- 2829|     33|            uint8_t *next_data = friend_save(&temp, cur_data);
- 2830|     33|            assert(next_data - cur_data == friend_size());
+ 2829|     28|            uint8_t *next_data = friend_save(&temp, cur_data);
+ 2830|     28|            assert(next_data - cur_data == friend_size());
  2831|      0|#ifdef __LP64__
  2832|      0|            assert(memcmp(cur_data, &temp, friend_size()) == 0);
  2833|      0|#endif
  2834|      0|            cur_data = next_data;
- 2835|     33|            ++num;
- 2836|     33|        }
- 2837|     33|    }
+ 2835|     28|            ++num;
+ 2836|     28|        }
+ 2837|     28|    }
  2838|       |
  2839|    331|    assert(cur_data - data == num * friend_size());
  2840|      0|    data += len;
@@ -1592,52 +1592,52 @@ Messenger.c:friends_list_save:
  2842|    331|    return data;
  2843|    331|}
 Messenger.c:friend_save:
- 2572|     33|{
- 2573|     33|#define VALUE_MEMBER(data, name)           \
- 2574|     33|    do {                                   \
- 2575|     33|        memcpy(data, &name, sizeof(name)); \
- 2576|     33|        data += sizeof(name);              \
- 2577|     33|    } while (0)
+ 2572|     28|{
+ 2573|     28|#define VALUE_MEMBER(data, name)           \
+ 2574|     28|    do {                                   \
+ 2575|     28|        memcpy(data, &name, sizeof(name)); \
+ 2576|     28|        data += sizeof(name);              \
+ 2577|     28|    } while (0)
  2578|       |
- 2579|     33|#define ARRAY_MEMBER(data, name)          \
- 2580|     33|    do {                                  \
- 2581|     33|        memcpy(data, name, sizeof(name)); \
- 2582|     33|        data += sizeof(name);             \
- 2583|     33|    } while (0)
+ 2579|     28|#define ARRAY_MEMBER(data, name)          \
+ 2580|     28|    do {                                  \
+ 2581|     28|        memcpy(data, name, sizeof(name)); \
+ 2582|     28|        data += sizeof(name);             \
+ 2583|     28|    } while (0)
  2584|       |
  2585|       |    // Exactly the same in friend_load, friend_save, and friend_size
- 2586|     33|    VALUE_MEMBER(data, temp->status);
- 2587|     33|    ARRAY_MEMBER(data, temp->real_pk);
- 2588|     33|    ARRAY_MEMBER(data, temp->info);
- 2589|     33|    ++data; // padding
- 2590|     33|    VALUE_MEMBER(data, temp->info_size);
- 2591|     33|    ARRAY_MEMBER(data, temp->name);
- 2592|     33|    VALUE_MEMBER(data, temp->name_length);
- 2593|     33|    ARRAY_MEMBER(data, temp->statusmessage);
- 2594|     33|    ++data; // padding
- 2595|     33|    VALUE_MEMBER(data, temp->statusmessage_length);
- 2596|     33|    VALUE_MEMBER(data, temp->userstatus);
- 2597|     33|    data += 3; // padding
- 2598|     33|    VALUE_MEMBER(data, temp->friendrequest_nospam);
- 2599|     33|    ARRAY_MEMBER(data, temp->last_seen_time);
+ 2586|     28|    VALUE_MEMBER(data, temp->status);
+ 2587|     28|    ARRAY_MEMBER(data, temp->real_pk);
+ 2588|     28|    ARRAY_MEMBER(data, temp->info);
+ 2589|     28|    ++data; // padding
+ 2590|     28|    VALUE_MEMBER(data, temp->info_size);
+ 2591|     28|    ARRAY_MEMBER(data, temp->name);
+ 2592|     28|    VALUE_MEMBER(data, temp->name_length);
+ 2593|     28|    ARRAY_MEMBER(data, temp->statusmessage);
+ 2594|     28|    ++data; // padding
+ 2595|     28|    VALUE_MEMBER(data, temp->statusmessage_length);
+ 2596|     28|    VALUE_MEMBER(data, temp->userstatus);
+ 2597|     28|    data += 3; // padding
+ 2598|     28|    VALUE_MEMBER(data, temp->friendrequest_nospam);
+ 2599|     28|    ARRAY_MEMBER(data, temp->last_seen_time);
  2600|       |
- 2601|     33|#undef VALUE_MEMBER
- 2602|     33|#undef ARRAY_MEMBER
+ 2601|     28|#undef VALUE_MEMBER
+ 2602|     28|#undef ARRAY_MEMBER
  2603|       |
- 2604|     33|    return data;
- 2605|     33|}
+ 2604|     28|    return data;
+ 2605|     28|}
 Messenger.c:name_size:
  2892|    993|{
  2893|    993|    return m->name_length;
  2894|    993|}
 Messenger.c:load_name:
- 2908|    426|{
- 2909|    426|    if (length > 0 && length <= MAX_NAME_LENGTH) {
- 2910|    358|        setname(m, data, length);
- 2911|    358|    }
+ 2908|    470|{
+ 2909|    470|    if (length > 0 && length <= MAX_NAME_LENGTH) {
+ 2910|    402|        setname(m, data, length);
+ 2911|    402|    }
  2912|       |
- 2913|    426|    return STATE_LOAD_STATUS_CONTINUE;
- 2914|    426|}
+ 2913|    470|    return STATE_LOAD_STATUS_CONTINUE;
+ 2914|    470|}
 Messenger.c:save_name:
  2898|    331|{
  2899|    331|    const uint32_t len = m_plugin_size(m, STATE_TYPE_NAME);
@@ -1651,13 +1651,13 @@ Messenger.c:status_message_size:
  2920|    993|    return m->statusmessage_length;
  2921|    993|}
 Messenger.c:load_status_message:
- 2935|    717|{
- 2936|    717|    if (length > 0 && length <= MAX_STATUSMESSAGE_LENGTH) {
- 2937|    641|        m_set_statusmessage(m, data, length);
- 2938|    641|    }
+ 2935|    744|{
+ 2936|    744|    if (length > 0 && length <= MAX_STATUSMESSAGE_LENGTH) {
+ 2937|    668|        m_set_statusmessage(m, data, length);
+ 2938|    668|    }
  2939|       |
- 2940|    717|    return STATE_LOAD_STATUS_CONTINUE;
- 2941|    717|}
+ 2940|    744|    return STATE_LOAD_STATUS_CONTINUE;
+ 2941|    744|}
 Messenger.c:save_status_message:
  2925|    331|{
  2926|    331|    const uint32_t len = m_plugin_size(m, STATE_TYPE_STATUSMESSAGE);
@@ -1671,13 +1671,13 @@ Messenger.c:status_size:
  2947|    993|    return 1;
  2948|    993|}
 Messenger.c:load_status:
- 2962|    346|{
- 2963|    346|    if (length == 1) {
- 2964|    325|        m_set_userstatus(m, *data);
- 2965|    325|    }
+ 2962|    343|{
+ 2963|    343|    if (length == 1) {
+ 2964|    322|        m_set_userstatus(m, *data);
+ 2965|    322|    }
  2966|       |
- 2967|    346|    return STATE_LOAD_STATUS_CONTINUE;
- 2968|    346|}
+ 2967|    343|    return STATE_LOAD_STATUS_CONTINUE;
+ 2968|    343|}
 Messenger.c:save_status:
  2952|    331|{
  2953|    331|    const uint32_t len = m_plugin_size(m, STATE_TYPE_STATUS);
@@ -1691,21 +1691,21 @@ Messenger.c:tcp_relay_size:
  2974|    662|    return NUM_SAVED_TCP_RELAYS * packed_node_size(net_family_tcp_ipv6());
  2975|    662|}
 Messenger.c:load_tcp_relays:
- 3004|    382|{
- 3005|    382|    if (length > 0) {
- 3006|    316|        const int num = unpack_nodes(m->loaded_relays, NUM_SAVED_TCP_RELAYS, nullptr, data, length, true);
+ 3004|    468|{
+ 3005|    468|    if (length > 0) {
+ 3006|    402|        const int num = unpack_nodes(m->loaded_relays, NUM_SAVED_TCP_RELAYS, nullptr, data, length, true);
  3007|       |
- 3008|    316|        if (num == -1) {
+ 3008|    402|        if (num == -1) {
  3009|     37|            m->num_loaded_relays = 0;
  3010|     37|            return STATE_LOAD_STATUS_CONTINUE;
  3011|     37|        }
  3012|       |
- 3013|    279|        m->num_loaded_relays = num;
- 3014|    279|        m->has_added_relays = false;
- 3015|    279|    }
+ 3013|    365|        m->num_loaded_relays = num;
+ 3014|    365|        m->has_added_relays = false;
+ 3015|    365|    }
  3016|       |
- 3017|    345|    return STATE_LOAD_STATUS_CONTINUE;
- 3018|    382|}
+ 3017|    431|    return STATE_LOAD_STATUS_CONTINUE;
+ 3018|    468|}
 Messenger.c:save_tcp_relays:
  2979|    331|{
  2980|    331|    Node_format relays[NUM_SAVED_TCP_RELAYS] = {{{0}}};
@@ -1713,8 +1713,8 @@ Messenger.c:save_tcp_relays:
  2982|    331|    data = state_write_section_header(temp_data, STATE_COOKIE_TYPE, 0, STATE_TYPE_TCP_RELAY);
  2983|       |
  2984|    331|    if (m->num_loaded_relays > 0) {
- 2985|     51|        memcpy(relays, m->loaded_relays, sizeof(Node_format) * m->num_loaded_relays);
- 2986|     51|    }
+ 2985|     56|        memcpy(relays, m->loaded_relays, sizeof(Node_format) * m->num_loaded_relays);
+ 2986|     56|    }
  2987|       |
  2988|    331|    uint32_t num = m->num_loaded_relays;
  2989|    331|    num += copy_connected_tcp_relays(m->net_crypto, relays + num, NUM_SAVED_TCP_RELAYS - num);
@@ -1722,10 +1722,10 @@ Messenger.c:save_tcp_relays:
  2991|    331|    const int l = pack_nodes(m->log, data, NUM_SAVED_TCP_RELAYS * packed_node_size(net_family_tcp_ipv6()), relays, num);
  2992|       |
  2993|    331|    if (l > 0) {
- 2994|     51|        const uint32_t len = l;
- 2995|     51|        data = state_write_section_header(temp_data, STATE_COOKIE_TYPE, len, STATE_TYPE_TCP_RELAY);
- 2996|     51|        data += len;
- 2997|     51|    }
+ 2994|     56|        const uint32_t len = l;
+ 2995|     56|        data = state_write_section_header(temp_data, STATE_COOKIE_TYPE, len, STATE_TYPE_TCP_RELAY);
+ 2996|     56|        data += len;
+ 2997|     56|    }
  2998|       |
  2999|    331|    return data;
  3000|    331|}
@@ -1734,22 +1734,22 @@ Messenger.c:path_node_size:
  3024|    662|    return NUM_SAVED_PATH_NODES * packed_node_size(net_family_tcp_ipv6());
  3025|    662|}
 Messenger.c:load_path_nodes:
- 3048|    185|{
- 3049|    185|    if (length > 0) {
- 3050|    141|        Node_format nodes[NUM_SAVED_PATH_NODES];
- 3051|    141|        const int num = unpack_nodes(nodes, NUM_SAVED_PATH_NODES, nullptr, data, length, false);
+ 3048|    194|{
+ 3049|    194|    if (length > 0) {
+ 3050|    156|        Node_format nodes[NUM_SAVED_PATH_NODES];
+ 3051|    156|        const int num = unpack_nodes(nodes, NUM_SAVED_PATH_NODES, nullptr, data, length, false);
  3052|       |
- 3053|    141|        if (num == -1) {
- 3054|     44|            return STATE_LOAD_STATUS_CONTINUE;
- 3055|     44|        }
+ 3053|    156|        if (num == -1) {
+ 3054|     60|            return STATE_LOAD_STATUS_CONTINUE;
+ 3055|     60|        }
  3056|       |
- 3057|    814|        for (int i = 0; i < num; ++i) {
- 3058|    717|            onion_add_bs_path_node(m->onion_c, &nodes[i].ip_port, nodes[i].public_key);
- 3059|    717|        }
- 3060|     97|    }
+ 3057|    805|        for (int i = 0; i < num; ++i) {
+ 3058|    709|            onion_add_bs_path_node(m->onion_c, &nodes[i].ip_port, nodes[i].public_key);
+ 3059|    709|        }
+ 3060|     96|    }
  3061|       |
- 3062|    141|    return STATE_LOAD_STATUS_CONTINUE;
- 3063|    185|}
+ 3062|    134|    return STATE_LOAD_STATUS_CONTINUE;
+ 3063|    194|}
 Messenger.c:save_path_nodes:
  3029|    331|{
  3030|    331|    Node_format nodes[NUM_SAVED_PATH_NODES];
@@ -1895,26 +1895,26 @@ kill_announcements:
   689|    331|}
 
 crypto_memzero:
-  143|  4.20k|{
-  144|  4.20k|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION) || defined(VANILLA_NACL)
-  145|  4.20k|    memset(data, 0, length);
+  143|  4.22k|{
+  144|  4.22k|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION) || defined(VANILLA_NACL)
+  145|  4.22k|    memset(data, 0, length);
   146|       |#else
   147|       |    sodium_memzero(data, length);
   148|       |#endif
-  149|  4.20k|}
+  149|  4.22k|}
 pk_equal:
-  180|   704k|{
-  181|   704k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  180|   703k|{
+  181|   703k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   182|       |    // Hope that this is better for the fuzzer
-  183|   704k|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
+  183|   703k|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
   184|       |#else
   185|       |    return crypto_verify_32(pk1, pk2) == 0;
   186|       |#endif
-  187|   704k|}
+  187|   703k|}
 pk_copy:
-  190|  2.06k|{
-  191|  2.06k|    memcpy(dest, src, CRYPTO_PUBLIC_KEY_SIZE);
-  192|  2.06k|}
+  190|  2.23k|{
+  191|  2.23k|    memcpy(dest, src, CRYPTO_PUBLIC_KEY_SIZE);
+  192|  2.23k|}
 random_u32:
   233|    659|{
   234|    659|    uint32_t randnum;
@@ -1928,10 +1928,10 @@ random_u64:
   243|    662|    return randnum;
   244|    662|}
 public_key_valid:
-  272|     38|{
+  272|     33|{
   273|       |    /* Last bit of key is always zero. */
-  274|     38|    return public_key[31] < 128;
-  275|     38|}
+  274|     33|    return public_key[31] < 128;
+  275|     33|}
 new_symmetric_key:
   466|    993|{
   467|    993|    random_bytes(rng, key, CRYPTO_SYMMETRIC_KEY_SIZE);
@@ -1948,9 +1948,9 @@ crypto_new_keypair:
   479|       |#endif
   480|  1.68k|}
 crypto_derive_public_key:
-  483|  2.33k|{
-  484|  2.33k|    crypto_scalarmult_curve25519_base(public_key, secret_key);
-  485|  2.33k|}
+  483|  2.30k|{
+  484|  2.30k|    crypto_scalarmult_curve25519_base(public_key, secret_key);
+  485|  2.30k|}
 new_hmac_key:
   488|    993|{
   489|    993|    random_bytes(rng, key, CRYPTO_HMAC_KEY_SIZE);
@@ -2027,16 +2027,16 @@ kill_forwarding:
   395|    331|}
 
 get_conn:
-  192|     99|{
-  193|     99|    if (!friendconn_id_valid(fr_c, friendcon_id)) {
+  192|     84|{
+  193|     84|    if (!friendconn_id_valid(fr_c, friendcon_id)) {
   194|      0|        return nullptr;
   195|      0|    }
   196|       |
-  197|     99|    return &fr_c->conns[friendcon_id];
-  198|     99|}
+  197|     84|    return &fr_c->conns[friendcon_id];
+  198|     84|}
 getfriend_conn_id_pk:
-  205|     33|{
-  206|     33|    for (uint32_t i = 0; i < fr_c->num_cons; ++i) {
+  205|     28|{
+  206|     28|    for (uint32_t i = 0; i < fr_c->num_cons; ++i) {
   207|      0|        const Friend_Conn *friend_con = get_conn(fr_c, i);
   208|       |
   209|      0|        if (friend_con != nullptr) {
@@ -2046,44 +2046,44 @@ getfriend_conn_id_pk:
   213|      0|        }
   214|      0|    }
   215|       |
-  216|     33|    return -1;
-  217|     33|}
+  216|     28|    return -1;
+  217|     28|}
 friend_con_connected:
-  674|     33|{
-  675|     33|    const Friend_Conn *const friend_con = get_conn(fr_c, friendcon_id);
+  674|     28|{
+  675|     28|    const Friend_Conn *const friend_con = get_conn(fr_c, friendcon_id);
   676|       |
-  677|     33|    if (friend_con == nullptr) {
+  677|     28|    if (friend_con == nullptr) {
   678|      0|        return 0;
   679|      0|    }
   680|       |
-  681|     33|    return friend_con->status;
-  682|     33|}
+  681|     28|    return friend_con->status;
+  682|     28|}
 friend_connection_callbacks:
-  726|     33|{
-  727|     33|    Friend_Conn *const friend_con = get_conn(fr_c, friendcon_id);
+  726|     28|{
+  727|     28|    Friend_Conn *const friend_con = get_conn(fr_c, friendcon_id);
   728|       |
-  729|     33|    if (friend_con == nullptr) {
+  729|     28|    if (friend_con == nullptr) {
   730|      0|        return -1;
   731|      0|    }
   732|       |
-  733|     33|    if (index >= MAX_FRIEND_CONNECTION_CALLBACKS) {
+  733|     28|    if (index >= MAX_FRIEND_CONNECTION_CALLBACKS) {
   734|      0|        return -1;
   735|      0|    }
   736|       |
-  737|     33|    if (object != nullptr && (status_callback == nullptr || data_callback == nullptr || lossy_data_callback == nullptr)) {
+  737|     28|    if (object != nullptr && (status_callback == nullptr || data_callback == nullptr || lossy_data_callback == nullptr)) {
   738|      0|        LOGGER_ERROR(fr_c->logger, "non-null user data object but null callbacks");
   739|      0|        return -1;
   740|      0|    }
   741|       |
-  742|     33|    friend_con->callbacks[index].status_callback = status_callback;
-  743|     33|    friend_con->callbacks[index].data_callback = data_callback;
-  744|     33|    friend_con->callbacks[index].lossy_data_callback = lossy_data_callback;
+  742|     28|    friend_con->callbacks[index].status_callback = status_callback;
+  743|     28|    friend_con->callbacks[index].data_callback = data_callback;
+  744|     28|    friend_con->callbacks[index].lossy_data_callback = lossy_data_callback;
   745|       |
-  746|     33|    friend_con->callbacks[index].callback_object = object;
-  747|     33|    friend_con->callbacks[index].callback_id = number;
+  746|     28|    friend_con->callbacks[index].callback_object = object;
+  747|     28|    friend_con->callbacks[index].callback_id = number;
   748|       |
-  749|     33|    return 0;
-  750|     33|}
+  749|     28|    return 0;
+  750|     28|}
 set_global_status_callback:
   754|    662|{
   755|    662|    if (object != nullptr && global_status_callback == nullptr) {
@@ -2095,60 +2095,60 @@ set_global_status_callback:
   761|    662|    fr_c->global_status_callback_object = object;
   762|    662|}
 new_friend_connection:
-  787|     33|{
-  788|     33|    int friendcon_id = getfriend_conn_id_pk(fr_c, real_public_key);
+  787|     28|{
+  788|     28|    int friendcon_id = getfriend_conn_id_pk(fr_c, real_public_key);
   789|       |
-  790|     33|    if (friendcon_id != -1) {
+  790|     28|    if (friendcon_id != -1) {
   791|      0|        ++fr_c->conns[friendcon_id].lock_count;
   792|      0|        return friendcon_id;
   793|      0|    }
   794|       |
-  795|     33|    friendcon_id = create_friend_conn(fr_c);
+  795|     28|    friendcon_id = create_friend_conn(fr_c);
   796|       |
-  797|     33|    if (friendcon_id == -1) {
+  797|     28|    if (friendcon_id == -1) {
   798|      0|        return -1;
   799|      0|    }
   800|       |
-  801|     33|    const int32_t onion_friendnum = onion_addfriend(fr_c->onion_c, real_public_key);
+  801|     28|    const int32_t onion_friendnum = onion_addfriend(fr_c->onion_c, real_public_key);
   802|       |
-  803|     33|    if (onion_friendnum == -1) {
+  803|     28|    if (onion_friendnum == -1) {
   804|      0|        return -1;
   805|      0|    }
   806|       |
-  807|     33|    Friend_Conn *const friend_con = &fr_c->conns[friendcon_id];
+  807|     28|    Friend_Conn *const friend_con = &fr_c->conns[friendcon_id];
   808|       |
-  809|     33|    friend_con->crypt_connection_id = -1;
-  810|     33|    friend_con->status = FRIENDCONN_STATUS_CONNECTING;
-  811|     33|    memcpy(friend_con->real_public_key, real_public_key, CRYPTO_PUBLIC_KEY_SIZE);
-  812|     33|    friend_con->onion_friendnum = onion_friendnum;
+  809|     28|    friend_con->crypt_connection_id = -1;
+  810|     28|    friend_con->status = FRIENDCONN_STATUS_CONNECTING;
+  811|     28|    memcpy(friend_con->real_public_key, real_public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  812|     28|    friend_con->onion_friendnum = onion_friendnum;
   813|       |
-  814|     33|    recv_tcp_relay_handler(fr_c->onion_c, onion_friendnum, &tcp_relay_node_callback, fr_c, friendcon_id);
-  815|     33|    onion_dht_pk_callback(fr_c->onion_c, onion_friendnum, &dht_pk_callback, fr_c, friendcon_id);
+  814|     28|    recv_tcp_relay_handler(fr_c->onion_c, onion_friendnum, &tcp_relay_node_callback, fr_c, friendcon_id);
+  815|     28|    onion_dht_pk_callback(fr_c->onion_c, onion_friendnum, &dht_pk_callback, fr_c, friendcon_id);
   816|       |
-  817|     33|    return friendcon_id;
-  818|     33|}
+  817|     28|    return friendcon_id;
+  818|     28|}
 kill_friend_connection:
-  826|     33|{
-  827|     33|    Friend_Conn *const friend_con = get_conn(fr_c, friendcon_id);
+  826|     28|{
+  827|     28|    Friend_Conn *const friend_con = get_conn(fr_c, friendcon_id);
   828|       |
-  829|     33|    if (friend_con == nullptr) {
+  829|     28|    if (friend_con == nullptr) {
   830|      0|        return -1;
   831|      0|    }
   832|       |
-  833|     33|    if (friend_con->lock_count > 0) {
+  833|     28|    if (friend_con->lock_count > 0) {
   834|      0|        --friend_con->lock_count;
   835|      0|        return 0;
   836|      0|    }
   837|       |
-  838|     33|    onion_delfriend(fr_c->onion_c, friend_con->onion_friendnum);
-  839|     33|    crypto_kill(fr_c->net_crypto, friend_con->crypt_connection_id);
+  838|     28|    onion_delfriend(fr_c->onion_c, friend_con->onion_friendnum);
+  839|     28|    crypto_kill(fr_c->net_crypto, friend_con->crypt_connection_id);
   840|       |
-  841|     33|    if (friend_con->dht_lock > 0) {
+  841|     28|    if (friend_con->dht_lock > 0) {
   842|      0|        dht_delfriend(fr_c->dht, friend_con->dht_temp_pk, friend_con->dht_lock);
   843|      0|    }
   844|       |
-  845|     33|    return wipe_friend_conn(fr_c, friendcon_id);
-  846|     33|}
+  845|     28|    return wipe_friend_conn(fr_c, friendcon_id);
+  846|     28|}
 set_friend_request_callback:
   854|    331|{
   855|    331|    fr_c->fr_request_callback = fr_request_callback;
@@ -2194,82 +2194,82 @@ kill_friend_connections:
  1015|      0|        return;
  1016|      0|    }
  1017|       |
- 1018|    364|    for (uint32_t i = 0; i < fr_c->num_cons; ++i) {
- 1019|     33|        kill_friend_connection(fr_c, i);
- 1020|     33|    }
+ 1018|    359|    for (uint32_t i = 0; i < fr_c->num_cons; ++i) {
+ 1019|     28|        kill_friend_connection(fr_c, i);
+ 1020|     28|    }
  1021|       |
  1022|    331|    lan_discovery_kill(fr_c->broadcast);
  1023|    331|    free(fr_c);
  1024|    331|}
 friend_connection.c:friendconn_id_valid:
-  105|    132|{
-  106|    132|    return (unsigned int)friendcon_id < fr_c->num_cons &&
-  107|    132|           fr_c->conns != nullptr &&
-  108|    132|           fr_c->conns[friendcon_id].status != FRIENDCONN_STATUS_NONE;
-  109|    132|}
+  105|    112|{
+  106|    112|    return (unsigned int)friendcon_id < fr_c->num_cons &&
+  107|    112|           fr_c->conns != nullptr &&
+  108|    112|           fr_c->conns[friendcon_id].status != FRIENDCONN_STATUS_NONE;
+  109|    112|}
 friend_connection.c:create_friend_conn:
-  143|     33|{
-  144|     33|    for (uint32_t i = 0; i < fr_c->num_cons; ++i) {
+  143|     28|{
+  144|     28|    for (uint32_t i = 0; i < fr_c->num_cons; ++i) {
   145|      0|        if (fr_c->conns[i].status == FRIENDCONN_STATUS_NONE) {
   146|      0|            return i;
   147|      0|        }
   148|      0|    }
   149|       |
-  150|     33|    if (!realloc_friendconns(fr_c, fr_c->num_cons + 1)) {
+  150|     28|    if (!realloc_friendconns(fr_c, fr_c->num_cons + 1)) {
   151|      0|        return -1;
   152|      0|    }
   153|       |
-  154|     33|    const int id = fr_c->num_cons;
-  155|     33|    ++fr_c->num_cons;
-  156|     33|    fr_c->conns[id] = empty_friend_conn;
+  154|     28|    const int id = fr_c->num_cons;
+  155|     28|    ++fr_c->num_cons;
+  156|     28|    fr_c->conns[id] = empty_friend_conn;
   157|       |
-  158|     33|    return id;
-  159|     33|}
+  158|     28|    return id;
+  159|     28|}
 friend_connection.c:realloc_friendconns:
-  119|     66|{
-  120|     66|    if (num == 0) {
-  121|     33|        free(fr_c->conns);
-  122|     33|        fr_c->conns = nullptr;
-  123|     33|        return true;
-  124|     33|    }
+  119|     56|{
+  120|     56|    if (num == 0) {
+  121|     28|        free(fr_c->conns);
+  122|     28|        fr_c->conns = nullptr;
+  123|     28|        return true;
+  124|     28|    }
   125|       |
-  126|     33|    Friend_Conn *newgroup_cons = (Friend_Conn *)realloc(fr_c->conns, num * sizeof(Friend_Conn));
+  126|     28|    Friend_Conn *newgroup_cons = (Friend_Conn *)realloc(fr_c->conns, num * sizeof(Friend_Conn));
   127|       |
-  128|     33|    if (newgroup_cons == nullptr) {
+  128|     28|    if (newgroup_cons == nullptr) {
   129|      0|        return false;
   130|      0|    }
   131|       |
-  132|     33|    fr_c->conns = newgroup_cons;
-  133|     33|    return true;
-  134|     33|}
+  132|     28|    fr_c->conns = newgroup_cons;
+  133|     28|    return true;
+  134|     28|}
 friend_connection.c:wipe_friend_conn:
-  168|     33|{
-  169|     33|    if (!friendconn_id_valid(fr_c, friendcon_id)) {
+  168|     28|{
+  169|     28|    if (!friendconn_id_valid(fr_c, friendcon_id)) {
   170|      0|        return -1;
   171|      0|    }
   172|       |
-  173|     33|    fr_c->conns[friendcon_id] = empty_friend_conn;
+  173|     28|    fr_c->conns[friendcon_id] = empty_friend_conn;
   174|       |
-  175|     33|    uint32_t i;
+  175|     28|    uint32_t i;
   176|       |
-  177|     66|    for (i = fr_c->num_cons; i != 0; --i) {
-  178|     33|        if (fr_c->conns[i - 1].status != FRIENDCONN_STATUS_NONE) {
+  177|     56|    for (i = fr_c->num_cons; i != 0; --i) {
+  178|     28|        if (fr_c->conns[i - 1].status != FRIENDCONN_STATUS_NONE) {
   179|      0|            break;
   180|      0|        }
-  181|     33|    }
+  181|     28|    }
   182|       |
-  183|     33|    if (fr_c->num_cons != i) {
-  184|     33|        fr_c->num_cons = i;
-  185|     33|        realloc_friendconns(fr_c, fr_c->num_cons);
-  186|     33|    }
+  183|     28|    if (fr_c->num_cons != i) {
+  184|     28|        fr_c->num_cons = i;
+  185|     28|        realloc_friendconns(fr_c, fr_c->num_cons);
+  186|     28|    }
   187|       |
-  188|     33|    return 0;
-  189|     33|}
+  188|     28|    return 0;
+  189|     28|}
 
 set_nospam:
-   42|    648|{
-   43|    648|    fr->nospam = num;
-   44|    648|}
+   42|    618|{
+   43|    618|    fr->nospam = num;
+   44|    618|}
 get_nospam:
    47|    331|{
    48|    331|    return fr->nospam;
@@ -2299,36 +2299,36 @@ friendreq_kill:
   171|    331|}
 
 del_groupchat:
- 1355|    347|{
- 1356|    347|    Group_c *g = get_group_c(g_c, groupnumber);
+ 1355|    377|{
+ 1356|    377|    Group_c *g = get_group_c(g_c, groupnumber);
  1357|       |
- 1358|    347|    if (g == nullptr) {
+ 1358|    377|    if (g == nullptr) {
  1359|      0|        return false;
  1360|      0|    }
  1361|       |
- 1362|    347|    group_leave(g_c, groupnumber, leave_permanently);
+ 1362|    377|    group_leave(g_c, groupnumber, leave_permanently);
  1363|       |
- 1364|  5.89k|    for (uint32_t i = 0; i < MAX_GROUP_CONNECTIONS; ++i) {
- 1365|  5.55k|        if (g->connections[i].type == GROUPCHAT_CONNECTION_NONE) {
- 1366|  5.55k|            continue;
- 1367|  5.55k|        }
+ 1364|  6.40k|    for (uint32_t i = 0; i < MAX_GROUP_CONNECTIONS; ++i) {
+ 1365|  6.03k|        if (g->connections[i].type == GROUPCHAT_CONNECTION_NONE) {
+ 1366|  6.03k|            continue;
+ 1367|  6.03k|        }
  1368|       |
  1369|      0|        g->connections[i].type = GROUPCHAT_CONNECTION_NONE;
  1370|      0|        kill_friend_connection(g_c->fr_c, g->connections[i].number);
  1371|      0|    }
  1372|       |
- 1373|    694|    for (uint32_t i = 0; i < g->numpeers; ++i) {
- 1374|    347|        if (g->peer_on_leave != nullptr) {
+ 1373|    754|    for (uint32_t i = 0; i < g->numpeers; ++i) {
+ 1374|    377|        if (g->peer_on_leave != nullptr) {
  1375|      0|            g->peer_on_leave(g->object, groupnumber, g->group[i].object);
  1376|      0|        }
- 1377|    347|    }
+ 1377|    377|    }
  1378|       |
- 1379|    347|    if (g->group_on_delete != nullptr) {
+ 1379|    377|    if (g->group_on_delete != nullptr) {
  1380|      0|        g->group_on_delete(g->object, groupnumber);
  1381|      0|    }
  1382|       |
- 1383|    347|    return wipe_group_chat(g_c, groupnumber);
- 1384|    347|}
+ 1383|    377|    return wipe_group_chat(g_c, groupnumber);
+ 1384|    377|}
 g_callback_group_invite:
  1827|    331|{
  1828|    331|    g_c->invite_callback = function;
@@ -2362,27 +2362,27 @@ conferences_save:
  3537|    331|    const uint32_t len = conferences_section_size(g_c);
  3538|    331|    data = state_write_section_header(data, STATE_COOKIE_TYPE, len, STATE_TYPE_CONFERENCES);
  3539|       |
- 3540|    678|    for (uint16_t i = 0; i < g_c->num_chats; ++i) {
- 3541|    347|        const Group_c *g = get_group_c(g_c, i);
+ 3540|    708|    for (uint16_t i = 0; i < g_c->num_chats; ++i) {
+ 3541|    377|        const Group_c *g = get_group_c(g_c, i);
  3542|       |
- 3543|    347|        if (g == nullptr || g->status != GROUPCHAT_STATUS_CONNECTED) {
+ 3543|    377|        if (g == nullptr || g->status != GROUPCHAT_STATUS_CONNECTED) {
  3544|      0|            continue;
  3545|      0|        }
  3546|       |
- 3547|    347|        data = save_conf(g, data);
- 3548|    347|    }
+ 3547|    377|        data = save_conf(g, data);
+ 3548|    377|    }
  3549|       |
  3550|    331|    return data;
  3551|    331|}
 conferences_load_state_section:
- 3740|    359|{
- 3741|    359|    if (type != STATE_TYPE_CONFERENCES) {
- 3742|    180|        return false;
- 3743|    180|    }
+ 3740|    304|{
+ 3741|    304|    if (type != STATE_TYPE_CONFERENCES) {
+ 3742|    146|        return false;
+ 3743|    146|    }
  3744|       |
- 3745|    179|    *status = load_conferences(g_c, data, length);
- 3746|    179|    return true;
- 3747|    359|}
+ 3745|    158|    *status = load_conferences(g_c, data, length);
+ 3746|    158|    return true;
+ 3747|    304|}
 new_groupchats:
  3752|    331|{
  3753|    331|    if (m == nullptr) {
@@ -2411,9 +2411,9 @@ kill_groupchats:
  3804|      0|        return;
  3805|      0|    }
  3806|       |
- 3807|    678|    for (uint16_t i = 0; i < g_c->num_chats; ++i) {
- 3808|    347|        del_groupchat(g_c, i, false);
- 3809|    347|    }
+ 3807|    708|    for (uint16_t i = 0; i < g_c->num_chats; ++i) {
+ 3808|    377|        del_groupchat(g_c, i, false);
+ 3809|    377|    }
  3810|       |
  3811|    331|    m_callback_conference_invite(g_c->m, nullptr);
  3812|    331|    set_global_status_callback(g_c->m->fr_c, nullptr, nullptr);
@@ -2421,60 +2421,60 @@ kill_groupchats:
  3814|    331|    free(g_c);
  3815|    331|}
 group.c:create_group_chat:
-  277|    528|{
-  278|  8.22k|    for (uint16_t i = 0; i < g_c->num_chats; ++i) {
-  279|  7.69k|        if (g_c->chats[i].status == GROUPCHAT_STATUS_NONE) {
+  277|    559|{
+  278|  8.40k|    for (uint16_t i = 0; i < g_c->num_chats; ++i) {
+  279|  7.84k|        if (g_c->chats[i].status == GROUPCHAT_STATUS_NONE) {
   280|      0|            return i;
   281|      0|        }
-  282|  7.69k|    }
+  282|  7.84k|    }
   283|       |
-  284|    528|    if (realloc_conferences(g_c, g_c->num_chats + 1)) {
-  285|    528|        const uint16_t id = g_c->num_chats;
-  286|    528|        ++g_c->num_chats;
-  287|    528|        setup_conference(&g_c->chats[id]);
-  288|    528|        return id;
-  289|    528|    }
+  284|    559|    if (realloc_conferences(g_c, g_c->num_chats + 1)) {
+  285|    559|        const uint16_t id = g_c->num_chats;
+  286|    559|        ++g_c->num_chats;
+  287|    559|        setup_conference(&g_c->chats[id]);
+  288|    559|        return id;
+  289|    559|    }
   290|       |
   291|      0|    return -1;
-  292|    528|}
+  292|    559|}
 group.c:realloc_conferences:
-  246|    607|{
-  247|    607|    if (num == 0) {
-  248|     62|        free(g_c->chats);
-  249|     62|        g_c->chats = nullptr;
-  250|     62|        return true;
-  251|     62|    }
+  246|    641|{
+  247|    641|    if (num == 0) {
+  248|     65|        free(g_c->chats);
+  249|     65|        g_c->chats = nullptr;
+  250|     65|        return true;
+  251|     65|    }
   252|       |
-  253|    545|    Group_c *newgroup_chats = (Group_c *)realloc(g_c->chats, num * sizeof(Group_c));
+  253|    576|    Group_c *newgroup_chats = (Group_c *)realloc(g_c->chats, num * sizeof(Group_c));
   254|       |
-  255|    545|    if (newgroup_chats == nullptr) {
+  255|    576|    if (newgroup_chats == nullptr) {
   256|      0|        return false;
   257|      0|    }
   258|       |
-  259|    545|    g_c->chats = newgroup_chats;
-  260|    545|    return true;
-  261|    545|}
+  259|    576|    g_c->chats = newgroup_chats;
+  260|    576|    return true;
+  261|    576|}
 group.c:setup_conference:
-  265|  1.05k|{
-  266|  1.05k|    *g = empty_group_c;
-  267|  1.05k|    g->maxfrozen = MAX_FROZEN_DEFAULT;
-  268|  1.05k|}
+  265|  1.11k|{
+  266|  1.11k|    *g = empty_group_c;
+  267|  1.11k|    g->maxfrozen = MAX_FROZEN_DEFAULT;
+  268|  1.11k|}
 group.c:addpeer:
-  792|    500|{
-  793|    500|    Group_c *g = get_group_c(g_c, groupnumber);
+  792|    532|{
+  793|    532|    Group_c *g = get_group_c(g_c, groupnumber);
   794|       |
-  795|    500|    if (g == nullptr) {
+  795|    532|    if (g == nullptr) {
   796|      0|        return -1;
   797|      0|    }
   798|       |
-  799|    500|    const int peer_index = fresh ?
-  800|    500|                           note_peer_active(g_c, groupnumber, peer_number, userdata) :
-  801|    500|                           get_peer_index(g, peer_number);
+  799|    532|    const int peer_index = fresh ?
+  800|    532|                           note_peer_active(g_c, groupnumber, peer_number, userdata) :
+  801|    532|                           get_peer_index(g, peer_number);
   802|       |
-  803|    500|    if (peer_index != -1) {
-  804|      7|        if (!pk_equal(g->group[peer_index].real_pk, real_pk)) {
-  805|      3|            return -1;
-  806|      3|        }
+  803|    532|    if (peer_index != -1) {
+  804|      8|        if (!pk_equal(g->group[peer_index].real_pk, real_pk)) {
+  805|      4|            return -1;
+  806|      4|        }
   807|       |
   808|      4|        if (fresh || !g->group[peer_index].temp_pk_updated) {
   809|      4|            pk_copy(g->group[peer_index].temp_pk, temp_pk);
@@ -2482,9 +2482,9 @@ group.c:addpeer:
   811|      4|        }
   812|       |
   813|      4|        return peer_index;
-  814|      7|    }
+  814|      8|    }
   815|       |
-  816|    493|    if (!fresh) {
+  816|    524|    if (!fresh) {
   817|      0|        const int frozen_index = get_frozen_index(g, peer_number);
   818|       |
   819|      0|        if (frozen_index != -1) {
@@ -2498,202 +2498,202 @@ group.c:addpeer:
   827|      0|        }
   828|      0|    }
   829|       |
-  830|    493|    delete_any_peer_with_pk(g_c, groupnumber, real_pk, userdata);
+  830|    524|    delete_any_peer_with_pk(g_c, groupnumber, real_pk, userdata);
   831|       |
-  832|    493|    Group_Peer *temp = (Group_Peer *)realloc(g->group, sizeof(Group_Peer) * (g->numpeers + 1));
+  832|    524|    Group_Peer *temp = (Group_Peer *)realloc(g->group, sizeof(Group_Peer) * (g->numpeers + 1));
   833|       |
-  834|    493|    if (temp == nullptr) {
+  834|    524|    if (temp == nullptr) {
   835|      0|        return -1;
   836|      0|    }
   837|       |
-  838|    493|    temp[g->numpeers] = empty_group_peer;
-  839|    493|    g->group = temp;
+  838|    524|    temp[g->numpeers] = empty_group_peer;
+  839|    524|    g->group = temp;
   840|       |
-  841|    493|    const uint32_t new_index = g->numpeers;
+  841|    524|    const uint32_t new_index = g->numpeers;
   842|       |
-  843|    493|    pk_copy(g->group[new_index].real_pk, real_pk);
-  844|    493|    pk_copy(g->group[new_index].temp_pk, temp_pk);
-  845|    493|    g->group[new_index].temp_pk_updated = true;
-  846|    493|    g->group[new_index].peer_number = peer_number;
-  847|    493|    g->group[new_index].last_active = mono_time_get(g_c->mono_time);
-  848|    493|    g->group[new_index].is_friend = getfriend_id(g_c->m, real_pk) != -1;
-  849|    493|    ++g->numpeers;
+  843|    524|    pk_copy(g->group[new_index].real_pk, real_pk);
+  844|    524|    pk_copy(g->group[new_index].temp_pk, temp_pk);
+  845|    524|    g->group[new_index].temp_pk_updated = true;
+  846|    524|    g->group[new_index].peer_number = peer_number;
+  847|    524|    g->group[new_index].last_active = mono_time_get(g_c->mono_time);
+  848|    524|    g->group[new_index].is_friend = getfriend_id(g_c->m, real_pk) != -1;
+  849|    524|    ++g->numpeers;
   850|       |
-  851|    493|    add_to_closest(g, real_pk, temp_pk);
+  851|    524|    add_to_closest(g, real_pk, temp_pk);
   852|       |
-  853|    493|    if (do_gc_callback && g_c->peer_list_changed_callback != nullptr) {
+  853|    524|    if (do_gc_callback && g_c->peer_list_changed_callback != nullptr) {
   854|      0|        g_c->peer_list_changed_callback(g_c->m, groupnumber, userdata);
   855|      0|    }
   856|       |
-  857|    493|    if (g->peer_on_join != nullptr) {
+  857|    524|    if (g->peer_on_join != nullptr) {
   858|      0|        g->peer_on_join(g->object, groupnumber, new_index);
   859|      0|    }
   860|       |
-  861|    493|    return new_index;
-  862|    493|}
+  861|    524|    return new_index;
+  862|    524|}
 group.c:note_peer_active:
-  698|    500|{
-  699|    500|    Group_c *g = get_group_c(g_c, groupnumber);
+  698|    532|{
+  699|    532|    Group_c *g = get_group_c(g_c, groupnumber);
   700|       |
-  701|    500|    if (g == nullptr) {
+  701|    532|    if (g == nullptr) {
   702|      0|        return -1;
   703|      0|    }
   704|       |
-  705|    500|    const int peer_index = get_peer_index(g, peer_number);
+  705|    532|    const int peer_index = get_peer_index(g, peer_number);
   706|       |
-  707|    500|    if (peer_index != -1) {
+  707|    532|    if (peer_index != -1) {
   708|      0|        g->group[peer_index].last_active = mono_time_get(g_c->mono_time);
   709|      0|        return peer_index;
   710|      0|    }
   711|       |
-  712|    500|    const int frozen_index = get_frozen_index(g, peer_number);
+  712|    532|    const int frozen_index = get_frozen_index(g, peer_number);
   713|       |
-  714|    500|    if (frozen_index == -1) {
-  715|    493|        return -1;
-  716|    493|    }
+  714|    532|    if (frozen_index == -1) {
+  715|    524|        return -1;
+  716|    524|    }
   717|       |
   718|       |    /* Now thaw the peer */
   719|       |
-  720|      7|    Group_Peer *temp = (Group_Peer *)realloc(g->group, sizeof(Group_Peer) * (g->numpeers + 1));
+  720|      8|    Group_Peer *temp = (Group_Peer *)realloc(g->group, sizeof(Group_Peer) * (g->numpeers + 1));
   721|       |
-  722|      7|    if (temp == nullptr) {
+  722|      8|    if (temp == nullptr) {
   723|      0|        return -1;
   724|      0|    }
   725|       |
-  726|      7|    const uint32_t thawed_index = g->numpeers;
+  726|      8|    const uint32_t thawed_index = g->numpeers;
   727|       |
-  728|      7|    g->group = temp;
-  729|      7|    g->group[thawed_index] = g->frozen[frozen_index];
-  730|      7|    g->group[thawed_index].temp_pk_updated = false;
-  731|      7|    g->group[thawed_index].last_active = mono_time_get(g_c->mono_time);
+  728|      8|    g->group = temp;
+  729|      8|    g->group[thawed_index] = g->frozen[frozen_index];
+  730|      8|    g->group[thawed_index].temp_pk_updated = false;
+  731|      8|    g->group[thawed_index].last_active = mono_time_get(g_c->mono_time);
   732|       |
-  733|      7|    add_to_closest(g, g->group[thawed_index].real_pk, g->group[thawed_index].temp_pk);
+  733|      8|    add_to_closest(g, g->group[thawed_index].real_pk, g->group[thawed_index].temp_pk);
   734|       |
-  735|      7|    ++g->numpeers;
+  735|      8|    ++g->numpeers;
   736|       |
-  737|      7|    delete_frozen(g, frozen_index);
+  737|      8|    delete_frozen(g, frozen_index);
   738|       |
-  739|      7|    if (g_c->peer_list_changed_callback != nullptr) {
+  739|      8|    if (g_c->peer_list_changed_callback != nullptr) {
   740|      0|        g_c->peer_list_changed_callback(g_c->m, groupnumber, userdata);
   741|      0|    }
   742|       |
-  743|      7|    if (g->peer_on_join != nullptr) {
+  743|      8|    if (g->peer_on_join != nullptr) {
   744|      0|        g->peer_on_join(g->object, groupnumber, thawed_index);
   745|      0|    }
   746|       |
-  747|      7|    g->need_send_name = true;
+  747|      8|    g->need_send_name = true;
   748|       |
-  749|      7|    return thawed_index;
-  750|      7|}
+  749|      8|    return thawed_index;
+  750|      8|}
 group.c:delete_frozen:
-  664|     24|{
-  665|     24|    if (frozen_index >= g->numfrozen) {
+  664|     36|{
+  665|     36|    if (frozen_index >= g->numfrozen) {
   666|      0|        return false;
   667|      0|    }
   668|       |
-  669|     24|    --g->numfrozen;
+  669|     36|    --g->numfrozen;
   670|       |
-  671|     24|    if (g->numfrozen == 0) {
-  672|     15|        free(g->frozen);
-  673|     15|        g->frozen = nullptr;
-  674|     15|    } else {
-  675|      9|        if (g->numfrozen != frozen_index) {
-  676|      7|            g->frozen[frozen_index] = g->frozen[g->numfrozen];
-  677|      7|        }
+  671|     36|    if (g->numfrozen == 0) {
+  672|     23|        free(g->frozen);
+  673|     23|        g->frozen = nullptr;
+  674|     23|    } else {
+  675|     13|        if (g->numfrozen != frozen_index) {
+  676|     10|            g->frozen[frozen_index] = g->frozen[g->numfrozen];
+  677|     10|        }
   678|       |
-  679|      9|        Group_Peer *const frozen_temp = (Group_Peer *)realloc(g->frozen, sizeof(Group_Peer) * g->numfrozen);
+  679|     13|        Group_Peer *const frozen_temp = (Group_Peer *)realloc(g->frozen, sizeof(Group_Peer) * g->numfrozen);
   680|       |
-  681|      9|        if (frozen_temp == nullptr) {
+  681|     13|        if (frozen_temp == nullptr) {
   682|      0|            return false;
   683|      0|        }
   684|       |
-  685|      9|        g->frozen = frozen_temp;
-  686|      9|    }
+  685|     13|        g->frozen = frozen_temp;
+  686|     13|    }
   687|       |
-  688|     24|    return true;
-  689|     24|}
+  688|     36|    return true;
+  689|     36|}
 group.c:get_peer_index:
-  414|    500|{
-  415|    500|    for (uint32_t i = 0; i < g->numpeers; ++i) {
+  414|    532|{
+  415|    532|    for (uint32_t i = 0; i < g->numpeers; ++i) {
   416|      0|        if (g->group[i].peer_number == peer_number) {
   417|      0|            return i;
   418|      0|        }
   419|      0|    }
   420|       |
-  421|    500|    return -1;
-  422|    500|}
+  421|    532|    return -1;
+  422|    532|}
 group.c:get_frozen_index:
-  652|    500|{
-  653|    703|    for (uint32_t i = 0; i < g->numfrozen; ++i) {
-  654|    210|        if (g->frozen[i].peer_number == peer_number) {
-  655|      7|            return i;
-  656|      7|        }
-  657|    210|    }
+  652|    532|{
+  653|    780|    for (uint32_t i = 0; i < g->numfrozen; ++i) {
+  654|    256|        if (g->frozen[i].peer_number == peer_number) {
+  655|      8|            return i;
+  656|      8|        }
+  657|    256|    }
   658|       |
-  659|    493|    return -1;
-  660|    500|}
+  659|    524|    return -1;
+  660|    532|}
 group.c:delete_any_peer_with_pk:
-  757|    493|{
-  758|    493|    Group_c *g = get_group_c(g_c, groupnumber);
+  757|    524|{
+  758|    524|    Group_c *g = get_group_c(g_c, groupnumber);
   759|       |
-  760|    493|    if (g == nullptr) {
+  760|    524|    if (g == nullptr) {
   761|      0|        return;
   762|      0|    }
   763|       |
-  764|    493|    const int peer_index = peer_in_group(g, real_pk);
+  764|    524|    const int peer_index = peer_in_group(g, real_pk);
   765|       |
-  766|    493|    if (peer_index >= 0) {
+  766|    524|    if (peer_index >= 0) {
   767|      0|        delpeer(g_c, groupnumber, peer_index, userdata);
   768|      0|    }
   769|       |
-  770|    493|    const int frozen_index = frozen_in_group(g, real_pk);
+  770|    524|    const int frozen_index = frozen_in_group(g, real_pk);
   771|       |
-  772|    493|    if (frozen_index >= 0) {
-  773|     17|        delete_frozen(g, frozen_index);
-  774|     17|    }
-  775|    493|}
+  772|    524|    if (frozen_index >= 0) {
+  773|     28|        delete_frozen(g, frozen_index);
+  774|     28|    }
+  775|    524|}
 group.c:peer_in_group:
-  351|    493|{
-  352|    493|    for (uint32_t i = 0; i < g->numpeers; ++i) {
+  351|    524|{
+  352|    524|    for (uint32_t i = 0; i < g->numpeers; ++i) {
   353|      0|        if (pk_equal(g->group[i].real_pk, real_pk)) {
   354|      0|            return i;
   355|      0|        }
   356|      0|    }
   357|       |
-  358|    493|    return -1;
-  359|    493|}
+  358|    524|    return -1;
+  359|    524|}
 group.c:frozen_in_group:
-  363|    493|{
-  364|    622|    for (uint32_t i = 0; i < g->numfrozen; ++i) {
-  365|    146|        if (pk_equal(g->frozen[i].real_pk, real_pk)) {
-  366|     17|            return i;
-  367|     17|        }
-  368|    146|    }
+  363|    524|{
+  364|    653|    for (uint32_t i = 0; i < g->numfrozen; ++i) {
+  365|    157|        if (pk_equal(g->frozen[i].real_pk, real_pk)) {
+  366|     28|            return i;
+  367|     28|        }
+  368|    157|    }
   369|       |
-  370|    476|    return -1;
-  371|    493|}
+  370|    496|    return -1;
+  371|    524|}
 group.c:add_to_closest:
-  447|    500|{
-  448|    500|    if (pk_equal(g->real_pk, real_pk)) {
-  449|    497|        return false;
-  450|    497|    }
+  447|    532|{
+  448|    532|    if (pk_equal(g->real_pk, real_pk)) {
+  449|    528|        return false;
+  450|    528|    }
   451|       |
-  452|      3|    unsigned int index = DESIRED_CLOSEST;
+  452|      4|    unsigned int index = DESIRED_CLOSEST;
   453|       |
-  454|     15|    for (unsigned int i = 0; i < DESIRED_CLOSEST; ++i) {
-  455|     12|        if (g->closest_peers[i].active && pk_equal(real_pk, g->closest_peers[i].real_pk)) {
+  454|     20|    for (unsigned int i = 0; i < DESIRED_CLOSEST; ++i) {
+  455|     16|        if (g->closest_peers[i].active && pk_equal(real_pk, g->closest_peers[i].real_pk)) {
   456|      0|            return true;
   457|      0|        }
-  458|     12|    }
+  458|     16|    }
   459|       |
-  460|      3|    for (unsigned int i = 0; i < DESIRED_CLOSEST; ++i) {
-  461|      3|        if (!g->closest_peers[i].active) {
-  462|      3|            index = i;
-  463|      3|            break;
-  464|      3|        }
-  465|      3|    }
+  460|      4|    for (unsigned int i = 0; i < DESIRED_CLOSEST; ++i) {
+  461|      4|        if (!g->closest_peers[i].active) {
+  462|      4|            index = i;
+  463|      4|            break;
+  464|      4|        }
+  465|      4|    }
   466|       |
-  467|      3|    if (index == DESIRED_CLOSEST) {
+  467|      4|    if (index == DESIRED_CLOSEST) {
   468|      0|        uint64_t comp_val = calculate_comp_value(g->real_pk, real_pk);
   469|      0|        uint64_t comp_d = 0;
   470|       |
@@ -2718,163 +2718,163 @@ group.c:add_to_closest:
   489|      0|        }
   490|      0|    }
   491|       |
-  492|      3|    if (index == DESIRED_CLOSEST) {
+  492|      4|    if (index == DESIRED_CLOSEST) {
   493|      0|        return false;
   494|      0|    }
   495|       |
-  496|      3|    uint8_t old_real_pk[CRYPTO_PUBLIC_KEY_SIZE];
-  497|      3|    uint8_t old_temp_pk[CRYPTO_PUBLIC_KEY_SIZE];
-  498|      3|    bool old = false;
+  496|      4|    uint8_t old_real_pk[CRYPTO_PUBLIC_KEY_SIZE];
+  497|      4|    uint8_t old_temp_pk[CRYPTO_PUBLIC_KEY_SIZE];
+  498|      4|    bool old = false;
   499|       |
-  500|      3|    if (g->closest_peers[index].active) {
+  500|      4|    if (g->closest_peers[index].active) {
   501|      0|        memcpy(old_real_pk, g->closest_peers[index].real_pk, CRYPTO_PUBLIC_KEY_SIZE);
   502|      0|        memcpy(old_temp_pk, g->closest_peers[index].temp_pk, CRYPTO_PUBLIC_KEY_SIZE);
   503|      0|        old = true;
   504|      0|    }
   505|       |
-  506|      3|    g->closest_peers[index].active = true;
-  507|      3|    memcpy(g->closest_peers[index].real_pk, real_pk, CRYPTO_PUBLIC_KEY_SIZE);
-  508|      3|    memcpy(g->closest_peers[index].temp_pk, temp_pk, CRYPTO_PUBLIC_KEY_SIZE);
+  506|      4|    g->closest_peers[index].active = true;
+  507|      4|    memcpy(g->closest_peers[index].real_pk, real_pk, CRYPTO_PUBLIC_KEY_SIZE);
+  508|      4|    memcpy(g->closest_peers[index].temp_pk, temp_pk, CRYPTO_PUBLIC_KEY_SIZE);
   509|       |
-  510|      3|    if (old) {
+  510|      4|    if (old) {
   511|      0|        add_to_closest(g, old_real_pk, old_temp_pk);
   512|      0|    }
   513|       |
-  514|      3|    if (g->changed == GROUPCHAT_CLOSEST_CHANGE_NONE) {
-  515|      3|        g->changed = GROUPCHAT_CLOSEST_CHANGE_ADDED;
-  516|      3|    }
+  514|      4|    if (g->changed == GROUPCHAT_CLOSEST_CHANGE_NONE) {
+  515|      4|        g->changed = GROUPCHAT_CLOSEST_CHANGE_ADDED;
+  516|      4|    }
   517|       |
-  518|      3|    return true;
-  519|      3|}
+  518|      4|    return true;
+  519|      4|}
 group.c:setnick:
- 1049|    497|{
- 1050|    497|    if (nick_len > MAX_NAME_LENGTH) {
+ 1049|    528|{
+ 1050|    528|    if (nick_len > MAX_NAME_LENGTH) {
  1051|      0|        return false;
  1052|      0|    }
  1053|       |
- 1054|    497|    Group_c *g = get_group_c(g_c, groupnumber);
+ 1054|    528|    Group_c *g = get_group_c(g_c, groupnumber);
  1055|       |
- 1056|    497|    if (g == nullptr) {
+ 1056|    528|    if (g == nullptr) {
  1057|      0|        return false;
  1058|      0|    }
  1059|       |
- 1060|    497|    g->group[peer_index].nick_updated = true;
+ 1060|    528|    g->group[peer_index].nick_updated = true;
  1061|       |
- 1062|    497|    if (g_peer_nick_eq(&g->group[peer_index], nick, nick_len)) {
+ 1062|    528|    if (g_peer_nick_eq(&g->group[peer_index], nick, nick_len)) {
  1063|       |        /* same name as already stored */
- 1064|    322|        return true;
- 1065|    322|    }
+ 1064|    347|        return true;
+ 1065|    347|    }
  1066|       |
- 1067|    175|    if (nick_len > 0) {
- 1068|    172|        memcpy(g->group[peer_index].nick, nick, nick_len);
- 1069|    172|    }
+ 1067|    181|    if (nick_len > 0) {
+ 1068|    178|        memcpy(g->group[peer_index].nick, nick, nick_len);
+ 1069|    178|    }
  1070|       |
- 1071|    175|    g->group[peer_index].nick_len = nick_len;
+ 1071|    181|    g->group[peer_index].nick_len = nick_len;
  1072|       |
- 1073|    175|    if (do_gc_callback && g_c->peer_name_callback != nullptr) {
+ 1073|    181|    if (do_gc_callback && g_c->peer_name_callback != nullptr) {
  1074|      0|        g_c->peer_name_callback(g_c->m, groupnumber, peer_index, nick, nick_len, userdata);
  1075|      0|    }
  1076|       |
- 1077|    175|    return true;
- 1078|    497|}
+ 1077|    181|    return true;
+ 1078|    528|}
 group.c:g_peer_nick_eq:
-  222|    497|{
-  223|    497|    return memeq(peer->nick, peer->nick_len, nick, nick_len);
-  224|    497|}
+  222|    528|{
+  223|    528|    return memeq(peer->nick, peer->nick_len, nick, nick_len);
+  224|    528|}
 group.c:get_group_c:
-  333|  4.41k|{
-  334|  4.41k|    if (!is_groupnumber_valid(g_c, groupnumber)) {
+  333|  4.75k|{
+  334|  4.75k|    if (!is_groupnumber_valid(g_c, groupnumber)) {
   335|      0|        return nullptr;
   336|      0|    }
   337|       |
-  338|  4.41k|    return &g_c->chats[groupnumber];
-  339|  4.41k|}
+  338|  4.75k|    return &g_c->chats[groupnumber];
+  339|  4.75k|}
 group.c:is_groupnumber_valid:
-  232|  4.41k|{
-  233|  4.41k|    return groupnumber < g_c->num_chats
-  234|  4.41k|           && g_c->chats != nullptr
-  235|  4.41k|           && g_c->chats[groupnumber].status != GROUPCHAT_STATUS_NONE;
-  236|  4.41k|}
+  232|  4.75k|{
+  233|  4.75k|    return groupnumber < g_c->num_chats
+  234|  4.75k|           && g_c->chats != nullptr
+  235|  4.75k|           && g_c->chats[groupnumber].status != GROUPCHAT_STATUS_NONE;
+  236|  4.75k|}
 group.c:wipe_group_chat:
-  308|    528|{
-  309|    528|    if (groupnumber >= g_c->num_chats || g_c->chats == nullptr) {
+  308|    559|{
+  309|    559|    if (groupnumber >= g_c->num_chats || g_c->chats == nullptr) {
   310|      0|        return false;
   311|      0|    }
   312|       |
-  313|    528|    wipe_group_c(&g_c->chats[groupnumber]);
+  313|    559|    wipe_group_c(&g_c->chats[groupnumber]);
   314|       |
-  315|    528|    uint16_t i;
+  315|    559|    uint16_t i;
   316|       |
-  317|  1.05k|    for (i = g_c->num_chats; i != 0; --i) {
-  318|    994|        if (g_c->chats[i - 1].status != GROUPCHAT_STATUS_NONE) {
-  319|    466|            break;
-  320|    466|        }
-  321|    994|    }
+  317|  1.11k|    for (i = g_c->num_chats; i != 0; --i) {
+  318|  1.05k|        if (g_c->chats[i - 1].status != GROUPCHAT_STATUS_NONE) {
+  319|    494|            break;
+  320|    494|        }
+  321|  1.05k|    }
   322|       |
-  323|    528|    if (g_c->num_chats != i) {
-  324|     79|        g_c->num_chats = i;
-  325|     79|        realloc_conferences(g_c, g_c->num_chats);
-  326|     79|    }
+  323|    559|    if (g_c->num_chats != i) {
+  324|     82|        g_c->num_chats = i;
+  325|     82|        realloc_conferences(g_c, g_c->num_chats);
+  326|     82|    }
   327|       |
-  328|    528|    return true;
-  329|    528|}
+  328|    559|    return true;
+  329|    559|}
 group.c:wipe_group_c:
-  296|    528|{
-  297|    528|    free(g->frozen);
-  298|    528|    free(g->group);
-  299|    528|    crypto_memzero(g, sizeof(Group_c));
-  300|    528|}
+  296|    559|{
+  297|    559|    free(g->frozen);
+  298|    559|    free(g->group);
+  299|    559|    crypto_memzero(g, sizeof(Group_c));
+  300|    559|}
 group.c:count_connected:
- 2255|    347|{
- 2256|    347|    unsigned int count = 0;
+ 2255|    377|{
+ 2256|    377|    unsigned int count = 0;
  2257|       |
- 2258|  5.89k|    for (unsigned int i = 0; i < MAX_GROUP_CONNECTIONS; ++i) {
- 2259|  5.55k|        if (g->connections[i].type == GROUPCHAT_CONNECTION_ONLINE) {
+ 2258|  6.40k|    for (unsigned int i = 0; i < MAX_GROUP_CONNECTIONS; ++i) {
+ 2259|  6.03k|        if (g->connections[i].type == GROUPCHAT_CONNECTION_ONLINE) {
  2260|      0|            ++count;
  2261|      0|        }
- 2262|  5.55k|    }
+ 2262|  6.03k|    }
  2263|       |
- 2264|    347|    return count;
- 2265|    347|}
+ 2264|    377|    return count;
+ 2265|    377|}
 group.c:group_leave:
- 1993|    347|{
- 1994|    347|    const Group_c *g = get_group_c(g_c, groupnumber);
+ 1993|    377|{
+ 1994|    377|    const Group_c *g = get_group_c(g_c, groupnumber);
  1995|       |
- 1996|    347|    if (g == nullptr) {
+ 1996|    377|    if (g == nullptr) {
  1997|      0|        return false;
  1998|      0|    }
  1999|       |
- 2000|    347|    if (permanent) {
+ 2000|    377|    if (permanent) {
  2001|      0|        return group_kill_peer_send(g_c, groupnumber, g->peer_number);
- 2002|    347|    } else {
- 2003|    347|        return group_freeze_peer_send(g_c, groupnumber, g->peer_number);
- 2004|    347|    }
- 2005|    347|}
+ 2002|    377|    } else {
+ 2003|    377|        return group_freeze_peer_send(g_c, groupnumber, g->peer_number);
+ 2004|    377|    }
+ 2005|    377|}
 group.c:group_freeze_peer_send:
- 1967|    347|{
- 1968|    347|    uint8_t packet[GROUP_MESSAGE_KILL_PEER_LENGTH];
+ 1967|    377|{
+ 1968|    377|    uint8_t packet[GROUP_MESSAGE_KILL_PEER_LENGTH];
  1969|       |
- 1970|    347|    peer_num = net_htons(peer_num);
- 1971|    347|    memcpy(packet, &peer_num, sizeof(uint16_t));
+ 1970|    377|    peer_num = net_htons(peer_num);
+ 1971|    377|    memcpy(packet, &peer_num, sizeof(uint16_t));
  1972|       |
- 1973|    347|    return send_message_group(g_c, groupnumber, GROUP_MESSAGE_FREEZE_PEER_ID, packet, sizeof(packet)) > 0;
- 1974|    347|}
+ 1973|    377|    return send_message_group(g_c, groupnumber, GROUP_MESSAGE_FREEZE_PEER_ID, packet, sizeof(packet)) > 0;
+ 1974|    377|}
 group.c:send_message_group:
- 2674|    347|{
- 2675|    347|    assert(len == 0 || data != nullptr);
+ 2674|    377|{
+ 2675|    377|    assert(len == 0 || data != nullptr);
  2676|      0|    Group_c *g = get_group_c(g_c, groupnumber);
  2677|       |
- 2678|    347|    if (g == nullptr) {
+ 2678|    377|    if (g == nullptr) {
  2679|      0|        return -1;
  2680|      0|    }
  2681|       |
- 2682|    347|    if (len > MAX_GROUP_MESSAGE_DATA_LEN) {
+ 2682|    377|    if (len > MAX_GROUP_MESSAGE_DATA_LEN) {
  2683|      0|        return -2;
  2684|      0|    }
  2685|       |
- 2686|    347|    if (g->status != GROUPCHAT_STATUS_CONNECTED || count_connected(g) == 0) {
- 2687|    347|        return -3;
- 2688|    347|    }
+ 2686|    377|    if (g->status != GROUPCHAT_STATUS_CONNECTED || count_connected(g) == 0) {
+ 2687|    377|        return -3;
+ 2688|    377|    }
  2689|       |
  2690|      0|    VLA(uint8_t, packet, sizeof(uint16_t) + sizeof(uint32_t) + 1 + len);
  2691|      0|    const uint16_t peer_num = net_htons(g->peer_number);
@@ -2907,275 +2907,275 @@ group.c:conferences_section_size:
  3514|    993|{
  3515|    993|    uint32_t len = 0;
  3516|       |
- 3517|  2.03k|    for (uint16_t i = 0; i < g_c->num_chats; ++i) {
- 3518|  1.04k|        const Group_c *g = get_group_c(g_c, i);
+ 3517|  2.12k|    for (uint16_t i = 0; i < g_c->num_chats; ++i) {
+ 3518|  1.13k|        const Group_c *g = get_group_c(g_c, i);
  3519|       |
- 3520|  1.04k|        if (g == nullptr || g->status != GROUPCHAT_STATUS_CONNECTED) {
+ 3520|  1.13k|        if (g == nullptr || g->status != GROUPCHAT_STATUS_CONNECTED) {
  3521|      0|            continue;
  3522|      0|        }
  3523|       |
- 3524|  1.04k|        len += saved_conf_size(g);
- 3525|  1.04k|    }
+ 3524|  1.13k|        len += saved_conf_size(g);
+ 3525|  1.13k|    }
  3526|       |
  3527|    993|    return len;
  3528|    993|}
 group.c:saved_conf_size:
- 3444|  1.04k|{
- 3445|  1.04k|    uint32_t len = SAVED_CONF_SIZE_CONSTANT + g->title_len;
+ 3444|  1.13k|{
+ 3445|  1.13k|    uint32_t len = SAVED_CONF_SIZE_CONSTANT + g->title_len;
  3446|       |
- 3447|  2.54k|    for (uint32_t j = 0; j < g->numpeers + g->numfrozen; ++j) {
- 3448|  1.50k|        const Group_Peer *peer = (j < g->numpeers) ? &g->group[j] : &g->frozen[j - g->numpeers];
+ 3447|  2.82k|    for (uint32_t j = 0; j < g->numpeers + g->numfrozen; ++j) {
+ 3448|  1.68k|        const Group_Peer *peer = (j < g->numpeers) ? &g->group[j] : &g->frozen[j - g->numpeers];
  3449|       |
- 3450|  1.50k|        if (pk_equal(peer->real_pk, g->real_pk)) {
- 3451|  1.04k|            continue;
- 3452|  1.04k|        }
+ 3450|  1.68k|        if (pk_equal(peer->real_pk, g->real_pk)) {
+ 3451|  1.13k|            continue;
+ 3452|  1.13k|        }
  3453|       |
- 3454|    459|        len += saved_peer_size(peer);
- 3455|    459|    }
+ 3454|    558|        len += saved_peer_size(peer);
+ 3455|    558|    }
  3456|       |
- 3457|  1.04k|    return len;
- 3458|  1.04k|}
+ 3457|  1.13k|    return len;
+ 3458|  1.13k|}
 group.c:saved_peer_size:
- 3410|    459|{
- 3411|    459|    return SAVED_PEER_SIZE_CONSTANT + peer->nick_len;
- 3412|    459|}
+ 3410|    558|{
+ 3411|    558|    return SAVED_PEER_SIZE_CONSTANT + peer->nick_len;
+ 3412|    558|}
 group.c:save_conf:
- 3469|    347|{
- 3470|    347|    *data = g->type;
- 3471|    347|    ++data;
+ 3469|    377|{
+ 3470|    377|    *data = g->type;
+ 3471|    377|    ++data;
  3472|       |
- 3473|    347|    memcpy(data, g->id, GROUP_ID_LENGTH);
- 3474|    347|    data += GROUP_ID_LENGTH;
+ 3473|    377|    memcpy(data, g->id, GROUP_ID_LENGTH);
+ 3474|    377|    data += GROUP_ID_LENGTH;
  3475|       |
- 3476|    347|    host_to_lendian_bytes32(data, g->message_number + SAVE_OFFSET_MESSAGE_NUMBER);
- 3477|    347|    data += sizeof(uint32_t);
+ 3476|    377|    host_to_lendian_bytes32(data, g->message_number + SAVE_OFFSET_MESSAGE_NUMBER);
+ 3477|    377|    data += sizeof(uint32_t);
  3478|       |
- 3479|    347|    host_to_lendian_bytes16(data, g->lossy_message_number + SAVE_OFFSET_LOSSY_MESSAGE_NUMBER);
- 3480|    347|    data += sizeof(uint16_t);
+ 3479|    377|    host_to_lendian_bytes16(data, g->lossy_message_number + SAVE_OFFSET_LOSSY_MESSAGE_NUMBER);
+ 3480|    377|    data += sizeof(uint16_t);
  3481|       |
- 3482|    347|    host_to_lendian_bytes16(data, g->peer_number);
- 3483|    347|    data += sizeof(uint16_t);
+ 3482|    377|    host_to_lendian_bytes16(data, g->peer_number);
+ 3483|    377|    data += sizeof(uint16_t);
  3484|       |
- 3485|    347|    uint8_t *const numsaved_location = data;
- 3486|    347|    data += sizeof(uint32_t);
+ 3485|    377|    uint8_t *const numsaved_location = data;
+ 3486|    377|    data += sizeof(uint32_t);
  3487|       |
- 3488|    347|    *data = g->title_len;
- 3489|    347|    ++data;
+ 3488|    377|    *data = g->title_len;
+ 3489|    377|    ++data;
  3490|       |
- 3491|    347|    memcpy(data, g->title, g->title_len);
- 3492|    347|    data += g->title_len;
+ 3491|    377|    memcpy(data, g->title, g->title_len);
+ 3492|    377|    data += g->title_len;
  3493|       |
- 3494|    347|    uint32_t numsaved = 0;
+ 3494|    377|    uint32_t numsaved = 0;
  3495|       |
- 3496|    847|    for (uint32_t j = 0; j < g->numpeers + g->numfrozen; ++j) {
- 3497|    500|        const Group_Peer *peer = (j < g->numpeers) ? &g->group[j] : &g->frozen[j - g->numpeers];
+ 3496|    940|    for (uint32_t j = 0; j < g->numpeers + g->numfrozen; ++j) {
+ 3497|    563|        const Group_Peer *peer = (j < g->numpeers) ? &g->group[j] : &g->frozen[j - g->numpeers];
  3498|       |
- 3499|    500|        if (pk_equal(peer->real_pk, g->real_pk)) {
- 3500|    347|            continue;
- 3501|    347|        }
+ 3499|    563|        if (pk_equal(peer->real_pk, g->real_pk)) {
+ 3500|    377|            continue;
+ 3501|    377|        }
  3502|       |
- 3503|    153|        data = save_peer(peer, data);
- 3504|    153|        ++numsaved;
- 3505|    153|    }
+ 3503|    186|        data = save_peer(peer, data);
+ 3504|    186|        ++numsaved;
+ 3505|    186|    }
  3506|       |
- 3507|    347|    host_to_lendian_bytes32(numsaved_location, numsaved);
+ 3507|    377|    host_to_lendian_bytes32(numsaved_location, numsaved);
  3508|       |
- 3509|    347|    return data;
- 3510|    347|}
+ 3509|    377|    return data;
+ 3510|    377|}
 group.c:save_peer:
- 3416|    153|{
- 3417|    153|    memcpy(data, peer->real_pk, CRYPTO_PUBLIC_KEY_SIZE);
- 3418|    153|    data += CRYPTO_PUBLIC_KEY_SIZE;
+ 3416|    186|{
+ 3417|    186|    memcpy(data, peer->real_pk, CRYPTO_PUBLIC_KEY_SIZE);
+ 3418|    186|    data += CRYPTO_PUBLIC_KEY_SIZE;
  3419|       |
- 3420|    153|    memcpy(data, peer->temp_pk, CRYPTO_PUBLIC_KEY_SIZE);
- 3421|    153|    data += CRYPTO_PUBLIC_KEY_SIZE;
+ 3420|    186|    memcpy(data, peer->temp_pk, CRYPTO_PUBLIC_KEY_SIZE);
+ 3421|    186|    data += CRYPTO_PUBLIC_KEY_SIZE;
  3422|       |
- 3423|    153|    host_to_lendian_bytes16(data, peer->peer_number);
- 3424|    153|    data += sizeof(uint16_t);
+ 3423|    186|    host_to_lendian_bytes16(data, peer->peer_number);
+ 3424|    186|    data += sizeof(uint16_t);
  3425|       |
- 3426|    153|    host_to_lendian_bytes64(data, peer->last_active);
- 3427|    153|    data += sizeof(uint64_t);
+ 3426|    186|    host_to_lendian_bytes64(data, peer->last_active);
+ 3427|    186|    data += sizeof(uint64_t);
  3428|       |
  3429|       |    // TODO(iphydf): This looks broken: nick_len can be > 255.
- 3430|    153|    *data = peer->nick_len;
- 3431|    153|    ++data;
+ 3430|    186|    *data = peer->nick_len;
+ 3431|    186|    ++data;
  3432|       |
- 3433|    153|    memcpy(data, peer->nick, peer->nick_len);
- 3434|    153|    data += peer->nick_len;
+ 3433|    186|    memcpy(data, peer->nick, peer->nick_len);
+ 3434|    186|    data += peer->nick_len;
  3435|       |
- 3436|    153|    return data;
- 3437|    153|}
+ 3436|    186|    return data;
+ 3437|    186|}
 group.c:load_conferences:
- 3719|    179|{
- 3720|    179|    const State_Load_Status res = load_conferences_helper(g_c, data, length);
+ 3719|    158|{
+ 3720|    158|    const State_Load_Status res = load_conferences_helper(g_c, data, length);
  3721|       |
- 3722|    179|    if (res == STATE_LOAD_STATUS_CONTINUE) {
- 3723|    148|        return res;
- 3724|    148|    }
+ 3722|    158|    if (res == STATE_LOAD_STATUS_CONTINUE) {
+ 3723|    127|        return res;
+ 3724|    127|    }
  3725|       |
  3726|       |    // Loading failed, cleanup all Group_c
  3727|       |
  3728|       |    // save locally, because wipe_group_chat(...) modifies it
  3729|     31|    const uint16_t num_groups = g_c->num_chats;
  3730|       |
- 3731|    184|    for (uint16_t i = 0; i < num_groups; ++i) {
- 3732|    153|        wipe_group_chat(g_c, i);
- 3733|    153|    }
+ 3731|    186|    for (uint16_t i = 0; i < num_groups; ++i) {
+ 3732|    155|        wipe_group_chat(g_c, i);
+ 3733|    155|    }
  3734|       |
  3735|     31|    return res;
- 3736|    179|}
+ 3736|    158|}
 group.c:load_conferences_helper:
- 3671|    179|{
- 3672|    179|    const uint8_t *init_data = data;
+ 3671|    158|{
+ 3672|    158|    const uint8_t *init_data = data;
  3673|       |
- 3674|    676|    while (length >= (uint32_t)(data - init_data) + SAVED_CONF_SIZE_CONSTANT) {
- 3675|    528|        const int groupnumber = create_group_chat(g_c);
+ 3674|    686|    while (length >= (uint32_t)(data - init_data) + SAVED_CONF_SIZE_CONSTANT) {
+ 3675|    559|        const int groupnumber = create_group_chat(g_c);
  3676|       |
  3677|       |        // Helpful for testing
- 3678|    528|        assert(groupnumber != -1);
+ 3678|    559|        assert(groupnumber != -1);
  3679|       |
- 3680|    528|        if (groupnumber == -1) {
+ 3680|    559|        if (groupnumber == -1) {
  3681|       |            // If this fails there's a serious problem, don't bother with cleanup
  3682|      0|            return STATE_LOAD_STATUS_ERROR;
  3683|      0|        }
  3684|       |
- 3685|    528|        Group_c *g = &g_c->chats[groupnumber];
+ 3685|    559|        Group_c *g = &g_c->chats[groupnumber];
  3686|       |
- 3687|    528|        const uint32_t consumed = load_group(g, g_c, data, length - (uint32_t)(data - init_data));
+ 3687|    559|        const uint32_t consumed = load_group(g, g_c, data, length - (uint32_t)(data - init_data));
  3688|       |
- 3689|    528|        if (consumed == 0) {
+ 3689|    559|        if (consumed == 0) {
  3690|       |            // remove partially loaded stuff, wipe_group_chat must be able to wipe a partially loaded group
- 3691|     28|            const bool ret = wipe_group_chat(g_c, groupnumber);
+ 3691|     27|            const bool ret = wipe_group_chat(g_c, groupnumber);
  3692|       |
  3693|       |            // HACK: suppress unused variable warning
- 3694|     28|            if (!ret) {
+ 3694|     27|            if (!ret) {
  3695|       |                // wipe_group_chat(...) must be able to wipe partially allocated groups
  3696|      0|                assert(ret);
  3697|      0|            }
  3698|       |
  3699|      0|            return STATE_LOAD_STATUS_ERROR;
- 3700|     28|        }
+ 3700|     27|        }
  3701|       |
- 3702|    500|        data += consumed;
+ 3702|    532|        data += consumed;
  3703|       |
- 3704|    500|        const int peer_index = addpeer(g_c, groupnumber, g->real_pk, dht_get_self_public_key(g_c->m->dht), g->peer_number,
- 3705|    500|                                       nullptr, true, false);
+ 3704|    532|        const int peer_index = addpeer(g_c, groupnumber, g->real_pk, dht_get_self_public_key(g_c->m->dht), g->peer_number,
+ 3705|    532|                                       nullptr, true, false);
  3706|       |
- 3707|    500|        if (peer_index == -1) {
- 3708|      3|            return STATE_LOAD_STATUS_ERROR;
- 3709|      3|        }
+ 3707|    532|        if (peer_index == -1) {
+ 3708|      4|            return STATE_LOAD_STATUS_ERROR;
+ 3709|      4|        }
  3710|       |
- 3711|    497|        setnick(g_c, groupnumber, peer_index, g_c->m->name, g_c->m->name_length, nullptr, false);
- 3712|    497|    }
+ 3711|    528|        setnick(g_c, groupnumber, peer_index, g_c->m->name, g_c->m->name_length, nullptr, false);
+ 3712|    528|    }
  3713|       |
- 3714|    148|    return STATE_LOAD_STATUS_CONTINUE;
- 3715|    179|}
+ 3714|    127|    return STATE_LOAD_STATUS_CONTINUE;
+ 3715|    158|}
 group.c:load_group:
- 3563|    528|{
- 3564|    528|    const uint8_t *init_data = data;
+ 3563|    559|{
+ 3564|    559|    const uint8_t *init_data = data;
  3565|       |
  3566|       |    // Initialize to default values so we can unconditionally free in case of an error
- 3567|    528|    setup_conference(g);
+ 3567|    559|    setup_conference(g);
  3568|       |
- 3569|    528|    g->type = *data;
- 3570|    528|    ++data;
+ 3569|    559|    g->type = *data;
+ 3570|    559|    ++data;
  3571|       |
- 3572|    528|    memcpy(g->id, data, GROUP_ID_LENGTH);
- 3573|    528|    data += GROUP_ID_LENGTH;
+ 3572|    559|    memcpy(g->id, data, GROUP_ID_LENGTH);
+ 3573|    559|    data += GROUP_ID_LENGTH;
  3574|       |
- 3575|    528|    lendian_bytes_to_host32(&g->message_number, data);
- 3576|    528|    data += sizeof(uint32_t);
+ 3575|    559|    lendian_bytes_to_host32(&g->message_number, data);
+ 3576|    559|    data += sizeof(uint32_t);
  3577|       |
- 3578|    528|    lendian_bytes_to_host16(&g->lossy_message_number, data);
- 3579|    528|    data += sizeof(uint16_t);
+ 3578|    559|    lendian_bytes_to_host16(&g->lossy_message_number, data);
+ 3579|    559|    data += sizeof(uint16_t);
  3580|       |
- 3581|    528|    lendian_bytes_to_host16(&g->peer_number, data);
- 3582|    528|    data += sizeof(uint16_t);
+ 3581|    559|    lendian_bytes_to_host16(&g->peer_number, data);
+ 3582|    559|    data += sizeof(uint16_t);
  3583|       |
- 3584|    528|    lendian_bytes_to_host32(&g->numfrozen, data);
- 3585|    528|    data += sizeof(uint32_t);
+ 3584|    559|    lendian_bytes_to_host32(&g->numfrozen, data);
+ 3585|    559|    data += sizeof(uint32_t);
  3586|       |
- 3587|    528|    g->title_len = *data;
+ 3587|    559|    g->title_len = *data;
  3588|       |
- 3589|    528|    if (g->title_len > MAX_NAME_LENGTH) {
+ 3589|    559|    if (g->title_len > MAX_NAME_LENGTH) {
  3590|      4|        return 0;
  3591|      4|    }
  3592|       |
- 3593|    524|    ++data;
+ 3593|    555|    ++data;
  3594|       |
- 3595|    524|    assert((data - init_data) < UINT32_MAX);
+ 3595|    555|    assert((data - init_data) < UINT32_MAX);
  3596|       |
- 3597|    524|    if (length < (uint32_t)(data - init_data) + g->title_len) {
+ 3597|    555|    if (length < (uint32_t)(data - init_data) + g->title_len) {
  3598|      1|        return 0;
  3599|      1|    }
  3600|       |
- 3601|    523|    memcpy(g->title, data, g->title_len);
- 3602|    523|    data += g->title_len;
+ 3601|    554|    memcpy(g->title, data, g->title_len);
+ 3602|    554|    data += g->title_len;
  3603|       |
- 3604|    780|    for (uint32_t j = 0; j < g->numfrozen; ++j) {
+ 3604|    855|    for (uint32_t j = 0; j < g->numfrozen; ++j) {
  3605|       |
- 3606|    280|        assert((data - init_data) < UINT32_MAX);
+ 3606|    323|        assert((data - init_data) < UINT32_MAX);
  3607|       |
- 3608|    280|        if (length < (uint32_t)(data - init_data) + SAVED_PEER_SIZE_CONSTANT) {
- 3609|     18|            return 0;
- 3610|     18|        }
+ 3608|    323|        if (length < (uint32_t)(data - init_data) + SAVED_PEER_SIZE_CONSTANT) {
+ 3609|     17|            return 0;
+ 3610|     17|        }
  3611|       |
  3612|       |        // This is inefficient, but allows us to check data consistency before allocating memory
- 3613|    262|        Group_Peer *tmp_frozen = (Group_Peer *)realloc(g->frozen, (j + 1) * sizeof(Group_Peer));
+ 3613|    306|        Group_Peer *tmp_frozen = (Group_Peer *)realloc(g->frozen, (j + 1) * sizeof(Group_Peer));
  3614|       |
- 3615|    262|        if (tmp_frozen == nullptr) {
+ 3615|    306|        if (tmp_frozen == nullptr) {
  3616|       |            // Memory allocation failure
  3617|      0|            return 0;
  3618|      0|        }
  3619|       |
- 3620|    262|        g->frozen = tmp_frozen;
+ 3620|    306|        g->frozen = tmp_frozen;
  3621|       |
- 3622|    262|        Group_Peer *peer = &g->frozen[j];
- 3623|    262|        *peer = empty_group_peer;
+ 3622|    306|        Group_Peer *peer = &g->frozen[j];
+ 3623|    306|        *peer = empty_group_peer;
  3624|       |
- 3625|    262|        pk_copy(peer->real_pk, data);
- 3626|    262|        data += CRYPTO_PUBLIC_KEY_SIZE;
- 3627|    262|        pk_copy(peer->temp_pk, data);
- 3628|    262|        data += CRYPTO_PUBLIC_KEY_SIZE;
+ 3625|    306|        pk_copy(peer->real_pk, data);
+ 3626|    306|        data += CRYPTO_PUBLIC_KEY_SIZE;
+ 3627|    306|        pk_copy(peer->temp_pk, data);
+ 3628|    306|        data += CRYPTO_PUBLIC_KEY_SIZE;
  3629|       |
- 3630|    262|        lendian_bytes_to_host16(&peer->peer_number, data);
- 3631|    262|        data += sizeof(uint16_t);
+ 3630|    306|        lendian_bytes_to_host16(&peer->peer_number, data);
+ 3631|    306|        data += sizeof(uint16_t);
  3632|       |
- 3633|    262|        lendian_bytes_to_host64(&peer->last_active, data);
- 3634|    262|        data += sizeof(uint64_t);
+ 3633|    306|        lendian_bytes_to_host64(&peer->last_active, data);
+ 3634|    306|        data += sizeof(uint64_t);
  3635|       |
- 3636|    262|        peer->nick_len = *data;
+ 3636|    306|        peer->nick_len = *data;
  3637|       |
- 3638|    262|        if (peer->nick_len > MAX_NAME_LENGTH) {
+ 3638|    306|        if (peer->nick_len > MAX_NAME_LENGTH) {
  3639|      2|            return 0;
  3640|      2|        }
  3641|       |
- 3642|    260|        ++data;
- 3643|    260|        assert((data - init_data) < UINT32_MAX);
+ 3642|    304|        ++data;
+ 3643|    304|        assert((data - init_data) < UINT32_MAX);
  3644|       |
- 3645|    260|        if (length < (uint32_t)(data - init_data) + peer->nick_len) {
+ 3645|    304|        if (length < (uint32_t)(data - init_data) + peer->nick_len) {
  3646|      3|            return 0;
  3647|      3|        }
  3648|       |
- 3649|    257|        memcpy(peer->nick, data, peer->nick_len);
- 3650|    257|        data += peer->nick_len;
+ 3649|    301|        memcpy(peer->nick, data, peer->nick_len);
+ 3650|    301|        data += peer->nick_len;
  3651|       |
  3652|       |        // NOTE: this relies on friends being loaded before conferences.
- 3653|    257|        peer->is_friend = getfriend_id(g_c->m, peer->real_pk) != -1;
- 3654|    257|    }
+ 3653|    301|        peer->is_friend = getfriend_id(g_c->m, peer->real_pk) != -1;
+ 3654|    301|    }
  3655|       |
- 3656|    500|    if (g->numfrozen > g->maxfrozen) {
+ 3656|    532|    if (g->numfrozen > g->maxfrozen) {
  3657|      0|        g->maxfrozen = g->numfrozen;
  3658|      0|    }
  3659|       |
- 3660|    500|    g->status = GROUPCHAT_STATUS_CONNECTED;
+ 3660|    532|    g->status = GROUPCHAT_STATUS_CONNECTED;
  3661|       |
- 3662|    500|    pk_copy(g->real_pk, nc_get_self_public_key(g_c->m->net_crypto));
+ 3662|    532|    pk_copy(g->real_pk, nc_get_self_public_key(g_c->m->net_crypto));
  3663|       |
- 3664|    500|    assert((data - init_data) < UINT32_MAX);
+ 3664|    532|    assert((data - init_data) < UINT32_MAX);
  3665|       |
  3666|      0|    return (uint32_t)(data - init_data);
- 3667|    523|}
+ 3667|    554|}
 
 bs_list_init:
   138|    331|{
@@ -3250,20 +3250,20 @@ logger_callback_log:
    85|    331|    log->userdata = userdata;
    86|    331|}
 logger_write:
-   90|    520|{
-   91|    520|    if (log == nullptr) {
+   90|    480|{
+   91|    480|    if (log == nullptr) {
    92|      0|        log = &logger_stderr;
    93|      0|    }
    94|       |
-   95|    520|    if (log->callback == nullptr) {
+   95|    480|    if (log->callback == nullptr) {
    96|      0|        return;
    97|      0|    }
    98|       |
    99|       |    // Only pass the file name, not the entire file path, for privacy reasons.
   100|       |    // The full path may contain PII of the person compiling toxcore (their
   101|       |    // username and directory layout).
-  102|    520|    const char *filename = strrchr(file, '/');
-  103|    520|    file = filename != nullptr ? filename + 1 : file;
+  102|    480|    const char *filename = strrchr(file, '/');
+  103|    480|    file = filename != nullptr ? filename + 1 : file;
   104|       |#if defined(_WIN32) || defined(__CYGWIN__)
   105|       |    // On Windows, the path separator *may* be a backslash, so we look for that
   106|       |    // one too.
@@ -3272,14 +3272,14 @@ logger_write:
   109|       |#endif
   110|       |
   111|       |    // Format message
-  112|    520|    char msg[1024];
-  113|    520|    va_list args;
-  114|    520|    va_start(args, format);
-  115|    520|    vsnprintf(msg, sizeof(msg), format, args);
-  116|    520|    va_end(args);
+  112|    480|    char msg[1024];
+  113|    480|    va_list args;
+  114|    480|    va_start(args, format);
+  115|    480|    vsnprintf(msg, sizeof(msg), format, args);
+  116|    480|    va_end(args);
   117|       |
-  118|    520|    log->callback(log->context, level, file, line, func, msg, log->userdata);
-  119|    520|}
+  118|    480|    log->callback(log->context, level, file, line, func, msg, log->userdata);
+  119|    480|}
 
 mono_time_new:
   126|    331|{
@@ -3368,10 +3368,10 @@ mono_time_update:
   211|    331|#endif
   212|    331|}
 mono_time_get:
-  215|  1.49k|{
-  216|  1.49k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  215|  1.52k|{
+  216|  1.52k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   217|       |    // Fuzzing is only single thread for now, no locking needed */
-  218|  1.49k|    return mono_time->cur_time;
+  218|  1.52k|    return mono_time->cur_time;
   219|       |#else
   220|       |#ifndef ESP_PLATFORM
   221|       |    pthread_rwlock_rdlock(mono_time->time_update_lock);
@@ -3382,7 +3382,7 @@ mono_time_get:
   226|       |#endif
   227|       |    return cur_time;
   228|       |#endif
-  229|  1.49k|}
+  229|  1.52k|}
 mono_time_set_current_time_callback:
   238|    331|{
   239|    331|    if (current_time_callback == nullptr) {
@@ -3395,9 +3395,9 @@ mono_time_set_current_time_callback:
   246|    331|}
 
 nc_get_self_public_key:
-  162|    852|{
-  163|    852|    return c->self_public_key;
-  164|    852|}
+  162|    849|{
+  163|    849|    return c->self_public_key;
+  164|    849|}
 nc_get_tcp_c:
   172|    662|{
   173|    662|    return c->tcp_c;
@@ -3424,12 +3424,12 @@ copy_connected_tcp_relays:
  2399|    328|    return ret;
  2400|    331|}
 crypto_kill:
- 3030|     33|{
- 3031|     33|    Crypto_Connection *conn = get_crypto_connection(c, crypt_connection_id);
+ 3030|     28|{
+ 3031|     28|    Crypto_Connection *conn = get_crypto_connection(c, crypt_connection_id);
  3032|       |
- 3033|     33|    int ret = -1;
+ 3033|     28|    int ret = -1;
  3034|       |
- 3035|     33|    if (conn != nullptr) {
+ 3035|     28|    if (conn != nullptr) {
  3036|      0|        if (conn->status == CRYPTO_CONN_ESTABLISHED) {
  3037|      0|            send_kill_packet(c, crypt_connection_id);
  3038|      0|        }
@@ -3446,8 +3446,8 @@ crypto_kill:
  3049|      0|        ret = wipe_crypto_connection(c, crypt_connection_id);
  3050|      0|    }
  3051|       |
- 3052|     33|    return ret;
- 3053|     33|}
+ 3052|     28|    return ret;
+ 3053|     28|}
 new_keys:
  3084|    331|{
  3085|    331|    crypto_new_keypair(c->rng, c->self_public_key, c->self_secret_key);
@@ -3458,10 +3458,10 @@ save_keys:
  3096|    331|    memcpy(keys + CRYPTO_PUBLIC_KEY_SIZE, c->self_secret_key, CRYPTO_SECRET_KEY_SIZE);
  3097|    331|}
 load_secret_key:
- 3103|    317|{
- 3104|    317|    memcpy(c->self_secret_key, sk, CRYPTO_SECRET_KEY_SIZE);
- 3105|    317|    crypto_derive_public_key(c->self_public_key, c->self_secret_key);
- 3106|    317|}
+ 3103|    287|{
+ 3104|    287|    memcpy(c->self_secret_key, sk, CRYPTO_SECRET_KEY_SIZE);
+ 3105|    287|    crypto_derive_public_key(c->self_public_key, c->self_secret_key);
+ 3106|    287|}
 new_net_crypto:
  3112|    331|{
  3113|    331|    if (dht == nullptr) {
@@ -3535,10 +3535,10 @@ kill_net_crypto:
  3226|    331|    free(c);
  3227|    331|}
 net_crypto.c:crypt_connection_id_is_valid:
-  183|     33|{
-  184|     33|    if ((uint32_t)crypt_connection_id >= c->crypto_connections_length) {
-  185|     33|        return false;
-  186|     33|    }
+  183|     28|{
+  184|     28|    if ((uint32_t)crypt_connection_id >= c->crypto_connections_length) {
+  185|     28|        return false;
+  186|     28|    }
   187|       |
   188|      0|    if (c->crypto_connections == nullptr) {
   189|      0|        return false;
@@ -3549,30 +3549,30 @@ net_crypto.c:crypt_connection_id_is_valid:
   194|      0|    return status != CRYPTO_CONN_NO_CONNECTION && status != CRYPTO_CONN_FREE;
   195|      0|}
 net_crypto.c:get_crypto_connection:
-  566|     33|{
-  567|     33|    if (!crypt_connection_id_is_valid(c, crypt_connection_id)) {
-  568|     33|        return nullptr;
-  569|     33|    }
+  566|     28|{
+  567|     28|    if (!crypt_connection_id_is_valid(c, crypt_connection_id)) {
+  568|     28|        return nullptr;
+  569|     28|    }
   570|       |
   571|      0|    return &c->crypto_connections[crypt_connection_id];
-  572|     33|}
+  572|     28|}
 
 net_family_unspec:
   381|    662|{
   382|    662|    return family_unspec;
   383|    662|}
 net_family_ipv4:
-  386|  2.23k|{
-  387|  2.23k|    return family_ipv4;
-  388|  2.23k|}
+  386|  2.25k|{
+  387|  2.25k|    return family_ipv4;
+  388|  2.25k|}
 net_family_ipv6:
-  391|  1.51k|{
-  392|  1.51k|    return family_ipv6;
-  393|  1.51k|}
+  391|  1.52k|{
+  392|  1.52k|    return family_ipv6;
+  393|  1.52k|}
 net_family_tcp_ipv4:
-  406|    284|{
-  407|    284|    return family_tcp_ipv4;
-  408|    284|}
+  406|    370|{
+  407|    370|    return family_tcp_ipv4;
+  408|    370|}
 net_family_tcp_ipv6:
   411|  2.00k|{
   412|  2.00k|    return family_tcp_ipv6;
@@ -3582,17 +3582,17 @@ net_family_is_unspec:
   427|  1.98k|    return family.value == family_unspec.value;
   428|  1.98k|}
 net_family_is_ipv4:
-  431|  8.14k|{
-  432|  8.14k|    return family.value == family_ipv4.value;
-  433|  8.14k|}
+  431|  8.19k|{
+  432|  8.19k|    return family.value == family_ipv4.value;
+  433|  8.19k|}
 net_family_is_ipv6:
-  436|  6.37k|{
-  437|  6.37k|    return family.value == family_ipv6.value;
-  438|  6.37k|}
+  436|  6.42k|{
+  437|  6.42k|    return family.value == family_ipv6.value;
+  438|  6.42k|}
 net_family_is_tcp_ipv4:
-  451|  3.12k|{
-  452|  3.12k|    return family.value == family_tcp_ipv4.value;
-  453|  3.12k|}
+  451|  3.14k|{
+  452|  3.14k|    return family.value == family_tcp_ipv4.value;
+  453|  3.14k|}
 net_family_is_tcp_ipv6:
   456|  1.98k|{
   457|  1.98k|    return family.value == family_tcp_ipv6.value;
@@ -3914,60 +3914,60 @@ net_socket:
  1907|    331|    return sock;
  1908|    331|}
 net_htons:
- 1922|    741|{
- 1923|    741|    return htons(hostshort);
- 1924|    741|}
+ 1922|    761|{
+ 1923|    761|    return htons(hostshort);
+ 1924|    761|}
 net_ntohs:
- 1932|     67|{
- 1933|     67|    return ntohs(hostshort);
- 1934|     67|}
+ 1932|     57|{
+ 1933|     57|    return ntohs(hostshort);
+ 1934|     57|}
 net_pack_u16:
- 1937|    120|{
- 1938|    120|    bytes[0] = (v >> 8) & 0xff;
- 1939|    120|    bytes[1] = v & 0xff;
- 1940|    120|    return sizeof(v);
- 1941|    120|}
+ 1937|    100|{
+ 1938|    100|    bytes[0] = (v >> 8) & 0xff;
+ 1939|    100|    bytes[1] = v & 0xff;
+ 1940|    100|    return sizeof(v);
+ 1941|    100|}
 net_pack_u32:
- 1944|     60|{
- 1945|     60|    uint8_t *p = bytes;
- 1946|     60|    p += net_pack_u16(p, (v >> 16) & 0xffff);
- 1947|     60|    p += net_pack_u16(p, v & 0xffff);
- 1948|     60|    return p - bytes;
- 1949|     60|}
+ 1944|     50|{
+ 1945|     50|    uint8_t *p = bytes;
+ 1946|     50|    p += net_pack_u16(p, (v >> 16) & 0xffff);
+ 1947|     50|    p += net_pack_u16(p, v & 0xffff);
+ 1948|     50|    return p - bytes;
+ 1949|     50|}
 net_pack_u64:
- 1952|     30|{
- 1953|     30|    uint8_t *p = bytes;
- 1954|     30|    p += net_pack_u32(p, (v >> 32) & 0xffffffff);
- 1955|     30|    p += net_pack_u32(p, v & 0xffffffff);
- 1956|     30|    return p - bytes;
- 1957|     30|}
+ 1952|     25|{
+ 1953|     25|    uint8_t *p = bytes;
+ 1954|     25|    p += net_pack_u32(p, (v >> 32) & 0xffffffff);
+ 1955|     25|    p += net_pack_u32(p, v & 0xffffffff);
+ 1956|     25|    return p - bytes;
+ 1957|     25|}
 net_unpack_u16:
- 1960|    120|{
- 1961|    120|    const uint8_t hi = bytes[0];
- 1962|    120|    const uint8_t lo = bytes[1];
- 1963|    120|    *v = ((uint16_t)hi << 8) | lo;
- 1964|    120|    return sizeof(*v);
- 1965|    120|}
+ 1960|    100|{
+ 1961|    100|    const uint8_t hi = bytes[0];
+ 1962|    100|    const uint8_t lo = bytes[1];
+ 1963|    100|    *v = ((uint16_t)hi << 8) | lo;
+ 1964|    100|    return sizeof(*v);
+ 1965|    100|}
 net_unpack_u32:
- 1968|     60|{
- 1969|     60|    const uint8_t *p = bytes;
- 1970|     60|    uint16_t hi;
- 1971|     60|    uint16_t lo;
- 1972|     60|    p += net_unpack_u16(p, &hi);
- 1973|     60|    p += net_unpack_u16(p, &lo);
- 1974|     60|    *v = ((uint32_t)hi << 16) | lo;
- 1975|     60|    return p - bytes;
- 1976|     60|}
+ 1968|     50|{
+ 1969|     50|    const uint8_t *p = bytes;
+ 1970|     50|    uint16_t hi;
+ 1971|     50|    uint16_t lo;
+ 1972|     50|    p += net_unpack_u16(p, &hi);
+ 1973|     50|    p += net_unpack_u16(p, &lo);
+ 1974|     50|    *v = ((uint32_t)hi << 16) | lo;
+ 1975|     50|    return p - bytes;
+ 1976|     50|}
 net_unpack_u64:
- 1979|     30|{
- 1980|     30|    const uint8_t *p = bytes;
- 1981|     30|    uint32_t hi;
- 1982|     30|    uint32_t lo;
- 1983|     30|    p += net_unpack_u32(p, &hi);
- 1984|     30|    p += net_unpack_u32(p, &lo);
- 1985|     30|    *v = ((uint64_t)hi << 32) | lo;
- 1986|     30|    return p - bytes;
- 1987|     30|}
+ 1979|     25|{
+ 1980|     25|    const uint8_t *p = bytes;
+ 1981|     25|    uint32_t hi;
+ 1982|     25|    uint32_t lo;
+ 1983|     25|    p += net_unpack_u32(p, &hi);
+ 1984|     25|    p += net_unpack_u32(p, &lo);
+ 1985|     25|    *v = ((uint64_t)hi << 32) | lo;
+ 1986|     25|    return p - bytes;
+ 1987|     25|}
 net_error:
  1995|    331|{
  1996|       |#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
@@ -4182,30 +4182,30 @@ onion_get_net_crypto:
   150|    331|    return onion_c->c;
   151|    331|}
 onion_add_bs_path_node:
-  167|    717|{
-  168|    717|    if (!net_family_is_ipv4(ip_port->ip.family) && !net_family_is_ipv6(ip_port->ip.family)) {
+  167|    709|{
+  168|    709|    if (!net_family_is_ipv4(ip_port->ip.family) && !net_family_is_ipv6(ip_port->ip.family)) {
   169|      0|        return false;
   170|      0|    }
   171|       |
-  172|  15.3k|    for (unsigned int i = 0; i < MAX_PATH_NODES; ++i) {
-  173|  14.9k|        if (pk_equal(public_key, onion_c->path_nodes_bs[i].public_key)) {
-  174|    300|            return true;
-  175|    300|        }
-  176|  14.9k|    }
+  172|  14.8k|    for (unsigned int i = 0; i < MAX_PATH_NODES; ++i) {
+  173|  14.4k|        if (pk_equal(public_key, onion_c->path_nodes_bs[i].public_key)) {
+  174|    310|            return true;
+  175|    310|        }
+  176|  14.4k|    }
   177|       |
-  178|    417|    onion_c->path_nodes_bs[onion_c->path_nodes_index_bs % MAX_PATH_NODES].ip_port = *ip_port;
-  179|    417|    memcpy(onion_c->path_nodes_bs[onion_c->path_nodes_index_bs % MAX_PATH_NODES].public_key, public_key,
-  180|    417|           CRYPTO_PUBLIC_KEY_SIZE);
+  178|    399|    onion_c->path_nodes_bs[onion_c->path_nodes_index_bs % MAX_PATH_NODES].ip_port = *ip_port;
+  179|    399|    memcpy(onion_c->path_nodes_bs[onion_c->path_nodes_index_bs % MAX_PATH_NODES].public_key, public_key,
+  180|    399|           CRYPTO_PUBLIC_KEY_SIZE);
   181|       |
-  182|    417|    const uint16_t last = onion_c->path_nodes_index_bs;
-  183|    417|    ++onion_c->path_nodes_index_bs;
+  182|    399|    const uint16_t last = onion_c->path_nodes_index_bs;
+  183|    399|    ++onion_c->path_nodes_index_bs;
   184|       |
-  185|    417|    if (onion_c->path_nodes_index_bs < last) {
+  185|    399|    if (onion_c->path_nodes_index_bs < last) {
   186|      0|        onion_c->path_nodes_index_bs = MAX_PATH_NODES + 1;
   187|      0|    }
   188|       |
-  189|    417|    return true;
-  190|    717|}
+  189|    399|    return true;
+  190|    709|}
 onion_backup_nodes:
   229|    331|{
   230|    331|    if (max_num == 0) {
@@ -4239,8 +4239,8 @@ onion_backup_nodes:
   258|    331|    return i;
   259|    331|}
 onion_friend_num:
- 1275|     33|{
- 1276|     33|    for (unsigned int i = 0; i < onion_c->num_friends; ++i) {
+ 1275|     28|{
+ 1276|     28|    for (unsigned int i = 0; i < onion_c->num_friends; ++i) {
  1277|      0|        if (!onion_c->friends_list[i].is_valid) {
  1278|      0|            continue;
  1279|      0|        }
@@ -4250,43 +4250,43 @@ onion_friend_num:
  1283|      0|        }
  1284|      0|    }
  1285|       |
- 1286|     33|    return -1;
- 1287|     33|}
+ 1286|     28|    return -1;
+ 1287|     28|}
 onion_addfriend:
- 1319|     33|{
- 1320|     33|    const int num = onion_friend_num(onion_c, public_key);
+ 1319|     28|{
+ 1320|     28|    const int num = onion_friend_num(onion_c, public_key);
  1321|       |
- 1322|     33|    if (num != -1) {
+ 1322|     28|    if (num != -1) {
  1323|      0|        return num;
  1324|      0|    }
  1325|       |
- 1326|     33|    unsigned int index = -1;
+ 1326|     28|    unsigned int index = -1;
  1327|       |
- 1328|     33|    for (unsigned int i = 0; i < onion_c->num_friends; ++i) {
+ 1328|     28|    for (unsigned int i = 0; i < onion_c->num_friends; ++i) {
  1329|      0|        if (!onion_c->friends_list[i].is_valid) {
  1330|      0|            index = i;
  1331|      0|            break;
  1332|      0|        }
  1333|      0|    }
  1334|       |
- 1335|     33|    if (index == (uint32_t) -1) {
- 1336|     33|        if (realloc_onion_friends(onion_c, onion_c->num_friends + 1) == -1) {
+ 1335|     28|    if (index == (uint32_t) -1) {
+ 1336|     28|        if (realloc_onion_friends(onion_c, onion_c->num_friends + 1) == -1) {
  1337|      0|            return -1;
  1338|      0|        }
  1339|       |
- 1340|     33|        index = onion_c->num_friends;
- 1341|     33|        onion_c->friends_list[onion_c->num_friends] = empty_onion_friend;
- 1342|     33|        ++onion_c->num_friends;
- 1343|     33|    }
+ 1340|     28|        index = onion_c->num_friends;
+ 1341|     28|        onion_c->friends_list[onion_c->num_friends] = empty_onion_friend;
+ 1342|     28|        ++onion_c->num_friends;
+ 1343|     28|    }
  1344|       |
- 1345|     33|    onion_c->friends_list[index].is_valid = true;
- 1346|     33|    memcpy(onion_c->friends_list[index].real_public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
- 1347|     33|    crypto_new_keypair(onion_c->rng, onion_c->friends_list[index].temp_public_key, onion_c->friends_list[index].temp_secret_key);
- 1348|     33|    return index;
- 1349|     33|}
+ 1345|     28|    onion_c->friends_list[index].is_valid = true;
+ 1346|     28|    memcpy(onion_c->friends_list[index].real_public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
+ 1347|     28|    crypto_new_keypair(onion_c->rng, onion_c->friends_list[index].temp_public_key, onion_c->friends_list[index].temp_secret_key);
+ 1348|     28|    return index;
+ 1349|     28|}
 onion_delfriend:
- 1357|     33|{
- 1358|     33|    if ((uint32_t)friend_num >= onion_c->num_friends) {
+ 1357|     28|{
+ 1358|     28|    if ((uint32_t)friend_num >= onion_c->num_friends) {
  1359|      0|        return -1;
  1360|      0|    }
  1361|       |
@@ -4298,44 +4298,44 @@ onion_delfriend:
  1367|       |
  1368|       |#endif
  1369|       |
- 1370|     33|    crypto_memzero(&onion_c->friends_list[friend_num], sizeof(Onion_Friend));
- 1371|     33|    unsigned int i;
+ 1370|     28|    crypto_memzero(&onion_c->friends_list[friend_num], sizeof(Onion_Friend));
+ 1371|     28|    unsigned int i;
  1372|       |
- 1373|     66|    for (i = onion_c->num_friends; i != 0; --i) {
- 1374|     33|        if (onion_c->friends_list[i - 1].is_valid) {
+ 1373|     56|    for (i = onion_c->num_friends; i != 0; --i) {
+ 1374|     28|        if (onion_c->friends_list[i - 1].is_valid) {
  1375|      0|            break;
  1376|      0|        }
- 1377|     33|    }
+ 1377|     28|    }
  1378|       |
- 1379|     33|    if (onion_c->num_friends != i) {
- 1380|     33|        onion_c->num_friends = i;
- 1381|     33|        realloc_onion_friends(onion_c, onion_c->num_friends);
- 1382|     33|    }
+ 1379|     28|    if (onion_c->num_friends != i) {
+ 1380|     28|        onion_c->num_friends = i;
+ 1381|     28|        realloc_onion_friends(onion_c, onion_c->num_friends);
+ 1382|     28|    }
  1383|       |
- 1384|     33|    return friend_num;
- 1385|     33|}
+ 1384|     28|    return friend_num;
+ 1385|     28|}
 recv_tcp_relay_handler:
- 1397|     33|{
- 1398|     33|    if ((uint32_t)friend_num >= onion_c->num_friends) {
+ 1397|     28|{
+ 1398|     28|    if ((uint32_t)friend_num >= onion_c->num_friends) {
  1399|      0|        return -1;
  1400|      0|    }
  1401|       |
- 1402|     33|    onion_c->friends_list[friend_num].tcp_relay_node_callback = callback;
- 1403|     33|    onion_c->friends_list[friend_num].tcp_relay_node_callback_object = object;
- 1404|     33|    onion_c->friends_list[friend_num].tcp_relay_node_callback_number = number;
- 1405|     33|    return 0;
- 1406|     33|}
+ 1402|     28|    onion_c->friends_list[friend_num].tcp_relay_node_callback = callback;
+ 1403|     28|    onion_c->friends_list[friend_num].tcp_relay_node_callback_object = object;
+ 1404|     28|    onion_c->friends_list[friend_num].tcp_relay_node_callback_number = number;
+ 1405|     28|    return 0;
+ 1406|     28|}
 onion_dht_pk_callback:
- 1418|     33|{
- 1419|     33|    if ((uint32_t)friend_num >= onion_c->num_friends) {
+ 1418|     28|{
+ 1419|     28|    if ((uint32_t)friend_num >= onion_c->num_friends) {
  1420|      0|        return -1;
  1421|      0|    }
  1422|       |
- 1423|     33|    onion_c->friends_list[friend_num].dht_pk_callback = function;
- 1424|     33|    onion_c->friends_list[friend_num].dht_pk_callback_object = object;
- 1425|     33|    onion_c->friends_list[friend_num].dht_pk_callback_number = number;
- 1426|     33|    return 0;
- 1427|     33|}
+ 1423|     28|    onion_c->friends_list[friend_num].dht_pk_callback = function;
+ 1424|     28|    onion_c->friends_list[friend_num].dht_pk_callback_object = object;
+ 1425|     28|    onion_c->friends_list[friend_num].dht_pk_callback_number = number;
+ 1426|     28|    return 0;
+ 1427|     28|}
 oniondata_registerhandler:
  1672|    993|{
  1673|    993|    onion_c->onion_data_handlers[byte].function = cb;
@@ -4393,22 +4393,22 @@ kill_onion_client:
  1951|    331|    free(onion_c);
  1952|    331|}
 onion_client.c:realloc_onion_friends:
- 1296|    397|{
- 1297|    397|    if (num == 0) {
- 1298|    364|        free(onion_c->friends_list);
- 1299|    364|        onion_c->friends_list = nullptr;
- 1300|    364|        return 0;
- 1301|    364|    }
+ 1296|    387|{
+ 1297|    387|    if (num == 0) {
+ 1298|    359|        free(onion_c->friends_list);
+ 1299|    359|        onion_c->friends_list = nullptr;
+ 1300|    359|        return 0;
+ 1301|    359|    }
  1302|       |
- 1303|     33|    Onion_Friend *newonion_friends = (Onion_Friend *)realloc(onion_c->friends_list, num * sizeof(Onion_Friend));
+ 1303|     28|    Onion_Friend *newonion_friends = (Onion_Friend *)realloc(onion_c->friends_list, num * sizeof(Onion_Friend));
  1304|       |
- 1305|     33|    if (newonion_friends == nullptr) {
+ 1305|     28|    if (newonion_friends == nullptr) {
  1306|      0|        return -1;
  1307|      0|    }
  1308|       |
- 1309|     33|    onion_c->friends_list = newonion_friends;
- 1310|     33|    return 0;
- 1311|     33|}
+ 1309|     28|    onion_c->friends_list = newonion_friends;
+ 1310|     28|    return 0;
+ 1311|     28|}
 
 ping_new:
   352|    331|{
@@ -4493,44 +4493,44 @@ ping_array_kill:
    88|    993|}
 
 state_load:
-   14|    575|{
-   15|    575|    if (state_load_callback == nullptr || data == nullptr) {
+   14|    573|{
+   15|    573|    if (state_load_callback == nullptr || data == nullptr) {
    16|      0|        LOGGER_ERROR(log, "state_load() called with invalid args.");
    17|      0|        return -1;
    18|      0|    }
    19|       |
    20|       |
-   21|    575|    const uint32_t size_head = sizeof(uint32_t) * 2;
+   21|    573|    const uint32_t size_head = sizeof(uint32_t) * 2;
    22|       |
-   23|  3.99k|    while (length >= size_head) {
-   24|  3.53k|        uint32_t length_sub;
-   25|  3.53k|        lendian_bytes_to_host32(&length_sub, data);
+   23|  4.04k|    while (length >= size_head) {
+   24|  3.58k|        uint32_t length_sub;
+   25|  3.58k|        lendian_bytes_to_host32(&length_sub, data);
    26|       |
-   27|  3.53k|        uint32_t cookie_type;
-   28|  3.53k|        lendian_bytes_to_host32(&cookie_type, data + sizeof(uint32_t));
+   27|  3.58k|        uint32_t cookie_type;
+   28|  3.58k|        lendian_bytes_to_host32(&cookie_type, data + sizeof(uint32_t));
    29|       |
-   30|  3.53k|        data += size_head;
-   31|  3.53k|        length -= size_head;
+   30|  3.58k|        data += size_head;
+   31|  3.58k|        length -= size_head;
    32|       |
-   33|  3.53k|        if (length < length_sub) {
+   33|  3.58k|        if (length < length_sub) {
    34|       |            /* file truncated */
-   35|     60|            LOGGER_ERROR(log, "state file too short: %u < %u", length, length_sub);
-   36|     60|            return -1;
-   37|     60|        }
+   35|     54|            LOGGER_ERROR(log, "state file too short: %u < %u", length, length_sub);
+   36|     54|            return -1;
+   37|     54|        }
    38|       |
-   39|  3.47k|        if (lendian_to_host16(cookie_type >> 16) != cookie_inner) {
+   39|  3.53k|        if (lendian_to_host16(cookie_type >> 16) != cookie_inner) {
    40|       |            /* something is not matching up in a bad way, give up */
-   41|     18|            LOGGER_ERROR(log, "state file garbled: %04x != %04x", cookie_type >> 16, cookie_inner);
-   42|     18|            return -1;
-   43|     18|        }
+   41|     19|            LOGGER_ERROR(log, "state file garbled: %04x != %04x", cookie_type >> 16, cookie_inner);
+   42|     19|            return -1;
+   43|     19|        }
    44|       |
-   45|  3.45k|        const uint16_t type = lendian_to_host16(cookie_type & 0xFFFF);
+   45|  3.51k|        const uint16_t type = lendian_to_host16(cookie_type & 0xFFFF);
    46|       |
-   47|  3.45k|        switch (state_load_callback(outer, data, length_sub, type)) {
-   48|  3.42k|            case STATE_LOAD_STATUS_CONTINUE: {
-   49|  3.42k|                data += length_sub;
-   50|  3.42k|                length -= length_sub;
-   51|  3.42k|                break;
+   47|  3.51k|        switch (state_load_callback(outer, data, length_sub, type)) {
+   48|  3.47k|            case STATE_LOAD_STATUS_CONTINUE: {
+   49|  3.47k|                data += length_sub;
+   50|  3.47k|                length -= length_sub;
+   51|  3.47k|                break;
    52|      0|            }
    53|       |
    54|     38|            case STATE_LOAD_STATUS_ERROR: {
@@ -4541,90 +4541,90 @@ state_load:
    59|      1|            case STATE_LOAD_STATUS_END: {
    60|      1|                return 0;
    61|      0|            }
-   62|  3.45k|        }
-   63|  3.45k|    }
+   62|  3.51k|        }
+   63|  3.51k|    }
    64|       |
-   65|    458|    if (length != 0) {
+   65|    461|    if (length != 0) {
    66|    188|        LOGGER_ERROR(log, "unparsed data in state file of length %u", length);
    67|    188|        return -1;
    68|    188|    }
    69|       |
-   70|    270|    return 0;
-   71|    458|}
+   70|    273|    return 0;
+   71|    461|}
 state_write_section_header:
-   74|  4.05k|{
-   75|  4.05k|    host_to_lendian_bytes32(data, len);
-   76|  4.05k|    data += sizeof(uint32_t);
-   77|  4.05k|    host_to_lendian_bytes32(data, (host_to_lendian16(cookie_type) << 16) | host_to_lendian16(section_type));
-   78|  4.05k|    data += sizeof(uint32_t);
-   79|  4.05k|    return data;
-   80|  4.05k|}
+   74|  4.06k|{
+   75|  4.06k|    host_to_lendian_bytes32(data, len);
+   76|  4.06k|    data += sizeof(uint32_t);
+   77|  4.06k|    host_to_lendian_bytes32(data, (host_to_lendian16(cookie_type) << 16) | host_to_lendian16(section_type));
+   78|  4.06k|    data += sizeof(uint32_t);
+   79|  4.06k|    return data;
+   80|  4.06k|}
 lendian_to_host16:
-   83|  15.0k|{
+   83|  15.1k|{
    84|       |#ifdef WORDS_BIGENDIAN
    85|       |    return (lendian << 8) | (lendian >> 8);
    86|       |#else
-   87|  15.0k|    return lendian;
-   88|  15.0k|#endif
-   89|  15.0k|}
+   87|  15.1k|    return lendian;
+   88|  15.1k|#endif
+   89|  15.1k|}
 host_to_lendian16:
-   92|  8.11k|{
-   93|  8.11k|    return lendian_to_host16(host);
-   94|  8.11k|}
+   92|  8.12k|{
+   93|  8.12k|    return lendian_to_host16(host);
+   94|  8.12k|}
 host_to_lendian_bytes64:
-   97|    153|{
+   97|    186|{
    98|       |#ifdef WORDS_BIGENDIAN
    99|       |    num = ((num << 8) & 0xFF00FF00FF00FF00) | ((num >> 8) & 0xFF00FF00FF00FF);
   100|       |    num = ((num << 16) & 0xFFFF0000FFFF0000) | ((num >> 16) & 0xFFFF0000FFFF);
   101|       |    num = (num << 32) | (num >> 32);
   102|       |#endif
-  103|    153|    memcpy(dest, &num, sizeof(uint64_t));
-  104|    153|}
+  103|    186|    memcpy(dest, &num, sizeof(uint64_t));
+  104|    186|}
 lendian_bytes_to_host64:
-  107|    262|{
-  108|    262|    uint64_t d;
-  109|    262|    memcpy(&d, lendian, sizeof(uint64_t));
+  107|    306|{
+  108|    306|    uint64_t d;
+  109|    306|    memcpy(&d, lendian, sizeof(uint64_t));
   110|       |#ifdef WORDS_BIGENDIAN
   111|       |    d = ((d << 8) & 0xFF00FF00FF00FF00) | ((d >> 8) & 0xFF00FF00FF00FF);
   112|       |    d = ((d << 16) & 0xFFFF0000FFFF0000) | ((d >> 16) & 0xFFFF0000FFFF);
   113|       |    d = (d << 32) | (d >> 32);
   114|       |#endif
-  115|    262|    *dest = d;
-  116|    262|}
+  115|    306|    *dest = d;
+  116|    306|}
 host_to_lendian_bytes32:
-  119|  9.79k|{
+  119|  9.86k|{
   120|       |#ifdef WORDS_BIGENDIAN
   121|       |    num = ((num << 8) & 0xFF00FF00) | ((num >> 8) & 0xFF00FF);
   122|       |    num = (num << 16) | (num >> 16);
   123|       |#endif
-  124|  9.79k|    memcpy(dest, &num, sizeof(uint32_t));
-  125|  9.79k|}
+  124|  9.86k|    memcpy(dest, &num, sizeof(uint32_t));
+  125|  9.86k|}
 lendian_bytes_to_host32:
-  128|  9.03k|{
-  129|  9.03k|    uint32_t d;
-  130|  9.03k|    memcpy(&d, lendian, sizeof(uint32_t));
+  128|  9.16k|{
+  129|  9.16k|    uint32_t d;
+  130|  9.16k|    memcpy(&d, lendian, sizeof(uint32_t));
   131|       |#ifdef WORDS_BIGENDIAN
   132|       |    d = ((d << 8) & 0xFF00FF00) | ((d >> 8) & 0xFF00FF);
   133|       |    d = (d << 16) | (d >> 16);
   134|       |#endif
-  135|  9.03k|    *dest = d;
-  136|  9.03k|}
+  135|  9.16k|    *dest = d;
+  136|  9.16k|}
 host_to_lendian_bytes16:
-  139|    847|{
+  139|    940|{
   140|       |#ifdef WORDS_BIGENDIAN
   141|       |    num = (num << 8) | (num >> 8);
   142|       |#endif
-  143|    847|    memcpy(dest, &num, sizeof(uint16_t));
-  144|    847|}
+  143|    940|    memcpy(dest, &num, sizeof(uint16_t));
+  144|    940|}
 lendian_bytes_to_host16:
-  147|  1.31k|{
-  148|  1.31k|    uint16_t d;
-  149|  1.31k|    memcpy(&d, lendian, sizeof(uint16_t));
+  147|  1.42k|{
+  148|  1.42k|    uint16_t d;
+  149|  1.42k|    memcpy(&d, lendian, sizeof(uint16_t));
   150|       |#ifdef WORDS_BIGENDIAN
   151|       |    d = (d << 8) | (d >> 8);
   152|       |#endif
-  153|  1.31k|    *dest = d;
-  154|  1.31k|}
+  153|  1.42k|    *dest = d;
+  154|  1.42k|}
 
 tox_new:
   410|    333|{
@@ -4860,13 +4860,13 @@ tox_new:
   640|       |
   641|    331|    if (load_savedata_tox
   642|    331|            && tox_load(tox, tox_options_get_savedata_data(opts), tox_options_get_savedata_length(opts)) == -1) {
-  643|    112|        SET_ERROR_PARAMETER(error, TOX_ERR_NEW_LOAD_BAD_FORMAT);
-  644|    219|    } else if (load_savedata_sk) {
+  643|    107|        SET_ERROR_PARAMETER(error, TOX_ERR_NEW_LOAD_BAD_FORMAT);
+  644|    224|    } else if (load_savedata_sk) {
   645|      0|        load_secret_key(tox->m->net_crypto, tox_options_get_savedata_data(opts));
   646|      0|        SET_ERROR_PARAMETER(error, TOX_ERR_NEW_OK);
-  647|    219|    } else {
-  648|    219|        SET_ERROR_PARAMETER(error, TOX_ERR_NEW_OK);
-  649|    219|    }
+  647|    224|    } else {
+  648|    224|        SET_ERROR_PARAMETER(error, TOX_ERR_NEW_OK);
+  649|    224|    }
   650|       |
   651|    331|    m_callback_namechange(tox->m, tox_friend_name_handler);
   652|    331|    m_callback_core_connection(tox->m, tox_self_connection_status_handler);
@@ -4954,14 +4954,14 @@ tox_get_savedata:
   748|    331|    tox_unlock(tox);
   749|    331|}
 tox.c:tox_log_handler:
-   67|    520|{
-   68|    520|    Tox *tox = (Tox *)context;
-   69|    520|    assert(tox != nullptr);
+   67|    480|{
+   68|    480|    Tox *tox = (Tox *)context;
+   69|    480|    assert(tox != nullptr);
    70|       |
-   71|    520|    if (tox->log_callback != nullptr) {
+   71|    480|    if (tox->log_callback != nullptr) {
    72|      0|        tox->log_callback(tox, (Tox_Log_Level)level, file, line, func, message, userdata);
    73|      0|    }
-   74|    520|}
+   74|    480|}
 tox.c:tox_load:
   390|    331|{
   391|    331|    uint32_t data32[2];
@@ -4982,16 +4982,16 @@ tox.c:tox_load:
   406|    329|                      length - cookie_len, STATE_COOKIE_TYPE);
   407|    331|}
 tox.c:state_load_callback:
-  364|  3.24k|{
-  365|  3.24k|    const Tox *tox = (const Tox *)outer;
-  366|  3.24k|    State_Load_Status status = STATE_LOAD_STATUS_CONTINUE;
+  364|  3.29k|{
+  365|  3.29k|    const Tox *tox = (const Tox *)outer;
+  366|  3.29k|    State_Load_Status status = STATE_LOAD_STATUS_CONTINUE;
   367|       |
-  368|  3.24k|    if (messenger_load_state_section(tox->m, data, length, type, &status)
-  369|  3.24k|            || conferences_load_state_section(tox->m->conferences_object, data, length, type, &status)) {
-  370|  3.06k|        return status;
-  371|  3.06k|    }
+  368|  3.29k|    if (messenger_load_state_section(tox->m, data, length, type, &status)
+  369|  3.29k|            || conferences_load_state_section(tox->m->conferences_object, data, length, type, &status)) {
+  370|  3.15k|        return status;
+  371|  3.15k|    }
   372|       |
-  373|    180|    if (type == STATE_TYPE_END) {
+  373|    146|    if (type == STATE_TYPE_END) {
   374|      2|        if (length != 0) {
   375|      1|            return STATE_LOAD_STATUS_ERROR;
   376|      1|        }
@@ -4999,11 +4999,11 @@ tox.c:state_load_callback:
   378|      1|        return STATE_LOAD_STATUS_END;
   379|      2|    }
   380|       |
-  381|    178|    LOGGER_ERROR(tox->m->log, "Load state: contains unrecognized part (len %u, type %u)",
-  382|    178|                 length, type);
+  381|    144|    LOGGER_ERROR(tox->m->log, "Load state: contains unrecognized part (len %u, type %u)",
+  382|    144|                 length, type);
   383|       |
-  384|    178|    return STATE_LOAD_STATUS_CONTINUE;
-  385|    180|}
+  384|    144|    return STATE_LOAD_STATUS_CONTINUE;
+  385|    146|}
 tox.c:end_size:
   702|    662|{
   703|    662|    return 2 * sizeof(uint32_t);
@@ -5233,9 +5233,9 @@ create_recursive_mutex:
    76|    331|    return 0;
    77|    331|}
 memeq:
-   80|    497|{
-   81|    497|    return a_size == b_size && memcmp(a, b, a_size) == 0;
-   82|    497|}
+   80|    528|{
+   81|    528|    return a_size == b_size && memcmp(a, b, a_size) == 0;
+   82|    528|}
 min_u16:
   124|    331|{
   125|    331|    return a < b ? a : b;
