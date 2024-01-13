@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+WORKSPACE_ROOT=$(bazel info workspace)
+
+cd "$WORKSPACE_ROOT"
+
+MAX_TOTAL_TIME="${1:-15}"
+shift
+
+FUZZ_TARGETS=(
+    c-toxcore/toxcore:DHT_fuzz_test
+    c-toxcore/toxcore:forwarding_fuzz_test
+    c-toxcore/toxcore:group_announce_fuzz_test
+    c-toxcore/toxcore:group_moderation_fuzz_test
+    c-toxcore/toxcore:net_crypto_fuzz_test
+    c-toxcore/toxcore:tox_events_fuzz_test
+    c-toxcore/testing/fuzzing:bootstrap_fuzz_test
+    c-toxcore/testing/fuzzing:e2e_fuzz_test
+    c-toxcore/testing/fuzzing:toxsave_fuzz_test
+    qtox/test:exiftransform_fuzz_test
+    qtox/test:serialize_fuzz_test
+    third_party/kimageformats:qimage_fuzz_test
+)
+
+for target in "${FUZZ_TARGETS[@]}"; do
+  RUN="//${target}_run"
+  BIN="bazel-bin/${target/:/\/}_bin"
+  CORPUS="tools/toktok-fuzzer/corpus/$(echo "$target" | cut -d: -f2)"
+
+  # Run the fuzzer for a bit to copy the current corpus and maybe update it a bit.
+  bazel run --config=asan-libfuzzer "$RUN" -- -- -timeout=1 -max_total_time="$MAX_TOTAL_TIME" "$@"
+
+  # Merge the new corpus with the old one.
+  mv "$CORPUS"/* /tmp/fuzzing/corpus/
+  "$BIN" -merge=1 "$CORPUS" /tmp/fuzzing/corpus/
+  rm -rf /tmp/fuzzing/corpus/
+done
