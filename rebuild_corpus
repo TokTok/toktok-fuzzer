@@ -4,6 +4,9 @@ WORKSPACE_ROOT=$(bazel info workspace)
 
 cd "$WORKSPACE_ROOT"
 
+MAX_TOTAL_TIME="${1:-15}"
+shift
+
 FUZZ_TARGETS=(
     c-toxcore/toxcore:DHT_fuzz_test
     c-toxcore/toxcore:forwarding_fuzz_test
@@ -25,7 +28,7 @@ for target in "${FUZZ_TARGETS[@]}"; do
   CORPUS="tools/toktok-fuzzer/corpus/$(echo "$target" | cut -d: -f2)"
 
   # Run the fuzzer for a bit to copy the current corpus and maybe update it a bit.
-  bazel run --config=asan-libfuzzer "$RUN" -- -- -timeout=1 -max_total_time=15
+  bazel run --config=asan-libfuzzer "$RUN" -- -- -timeout=1 -max_total_time="$MAX_TOTAL_TIME" "$@"
 
   # Merge the new corpus with the old one.
   mv "$CORPUS"/* /tmp/fuzzing/corpus/
