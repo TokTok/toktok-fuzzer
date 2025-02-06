@@ -1,18 +1,18 @@
 _ZNK9Fuzz_Data4sizeEv:
-   69|     70|    std::size_t size() const { return size_; }
+   69|     97|    std::size_t size() const { return size_; }
 _ZN9Fuzz_Data8consume1EPKc:
-   68|     41|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   68|     59|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN9Fuzz_Data8ConsumercvT_ItEEv:
-   60|     11|        {
-   61|     11|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|     11|            T val;
-   63|     11|            std::memcpy(&val, bytes, sizeof(T));
-   64|     11|            return val;
-   65|     11|        }
+   60|     20|        {
+   61|     20|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   62|     20|            T val;
+   63|     20|            std::memcpy(&val, bytes, sizeof(T));
+   64|     20|            return val;
+   65|     20|        }
 _ZN9Fuzz_Data7consumeEPKcm:
-   75|     42|    {
-   76|     42|        const uint8_t *val = data_;
-   77|     42|        if (FUZZ_DEBUG) {
+   75|     60|    {
+   76|     60|        const uint8_t *val = data_;
+   77|     60|        if (FUZZ_DEBUG) {
   ------------------
   |  Branch (77:13): [Folded - Ignored]
   ------------------
@@ -35,51 +35,51 @@ _ZN9Fuzz_Data7consumeEPKcm:
    85|      0|                    val[count - 1], count);
    86|      0|            }
    87|      0|        }
-   88|     42|        data_ += count;
-   89|     42|        size_ -= count;
-   90|     42|        return val;
-   91|     42|    }
+   88|     60|        data_ += count;
+   89|     60|        size_ -= count;
+   90|     60|        return val;
+   91|     60|    }
 _ZNK9Fuzz_Data4dataEv:
-   71|     26|    const uint8_t *data() const { return data_; }
+   71|     35|    const uint8_t *data() const { return data_; }
 group_moderation_fuzz_test.cc:_Z18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionsListUnpackES2_EEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEEvPKhm:
-  183|     30|{
-  184|     30|    Fuzz_Data input{data, size};
+  183|     39|{
+  184|     39|    Fuzz_Data input{data, size};
   185|       |
-  186|     30|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  186|     39|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
   ------------------
-  |  |  105|     30|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|     39|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 0, False: 30]
+  |  |  |  Branch (105:9): [True: 0, False: 39]
   |  |  ------------------
   |  |  106|      0|        return;                               \
   |  |  107|      0|    }                                         \
-  |  |  108|     30|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|     39|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-  187|     30|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  188|     30|}
+  187|     39|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  188|     39|}
 _ZN9Fuzz_DataC2EPKhm:
-   32|     30|        : data_(input_data)
-   33|     30|        , base_(input_data)
-   34|     30|        , size_(input_size)
-   35|     30|    {
-   36|     30|    }
+   32|     39|        : data_(input_data)
+   33|     39|        , base_(input_data)
+   34|     39|        , size_(input_size)
+   35|     39|    {
+   36|     39|    }
 _ZN9Fuzz_Data8ConsumercvT_IhEEv:
-   60|     30|        {
-   61|     30|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|     30|            T val;
-   63|     30|            std::memcpy(&val, bytes, sizeof(T));
-   64|     30|            return val;
-   65|     30|        }
+   60|     39|        {
+   61|     39|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   62|     39|            T val;
+   63|     39|            std::memcpy(&val, bytes, sizeof(T));
+   64|     39|            return val;
+   65|     39|        }
 group_moderation_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionsListUnpackES2_EEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEE6selectEhS2_:
-  164|     30|    {
-  165|     30|        if (selector == sizeof...(Args)) {
+  164|     39|    {
+  165|     39|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (165:13): [True: 12, False: 18]
+  |  Branch (165:13): [True: 21, False: 18]
   ------------------
-  166|     12|            return Arg(input);
-  167|     12|        }
+  166|     21|            return Arg(input);
+  167|     21|        }
   168|     18|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|     30|    }
+  169|     39|    }
 group_moderation_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_123TestSanctionsListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEE6selectEhS2_:
   164|     18|    {
   165|     18|        if (selector == sizeof...(Args)) {
@@ -107,117 +107,117 @@ _ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
   178|      1|    }
 
 mod_list_unpack:
-   43|     11|{
-   44|     11|    if (length < num_mods * MOD_LIST_ENTRY_SIZE) {
+   43|     20|{
+   44|     20|    if (length < num_mods * MOD_LIST_ENTRY_SIZE) {
   ------------------
-  |  |   27|     11|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|     20|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|     11|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|     20|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|     11|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|     20|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (44:9): [True: 1, False: 10]
+  |  Branch (44:9): [True: 1, False: 19]
   ------------------
    45|      1|        return -1;
    46|      1|    }
    47|       |
-   48|     10|    mod_list_cleanup(moderation);
+   48|     19|    mod_list_cleanup(moderation);
    49|       |
-   50|     10|    if (num_mods == 0) {
+   50|     19|    if (num_mods == 0) {
   ------------------
-  |  Branch (50:9): [True: 1, False: 9]
+  |  Branch (50:9): [True: 1, False: 18]
   ------------------
    51|      1|        return 0;
    52|      1|    }
    53|       |
-   54|      9|    uint8_t **tmp_list = (uint8_t **)mem_valloc(moderation->mem, num_mods, sizeof(uint8_t *));
+   54|     18|    uint8_t **tmp_list = (uint8_t **)mem_valloc(moderation->mem, num_mods, sizeof(uint8_t *));
    55|       |
-   56|      9|    if (tmp_list == nullptr) {
+   56|     18|    if (tmp_list == nullptr) {
   ------------------
-  |  |   63|      9|#define nullptr NULL
+  |  |   63|     18|#define nullptr NULL
   ------------------
-  |  Branch (56:9): [True: 0, False: 9]
+  |  Branch (56:9): [True: 0, False: 18]
   ------------------
    57|      0|        return -1;
    58|      0|    }
    59|       |
-   60|      9|    uint16_t unpacked_len = 0;
+   60|     18|    uint16_t unpacked_len = 0;
    61|       |
-   62|    116|    for (uint16_t i = 0; i < num_mods; ++i) {
+   62|    422|    for (uint16_t i = 0; i < num_mods; ++i) {
   ------------------
-  |  Branch (62:26): [True: 107, False: 9]
+  |  Branch (62:26): [True: 404, False: 18]
   ------------------
-   63|    107|        uint8_t *entry = (uint8_t *)mem_balloc(moderation->mem, MOD_LIST_ENTRY_SIZE);
+   63|    404|        uint8_t *entry = (uint8_t *)mem_balloc(moderation->mem, MOD_LIST_ENTRY_SIZE);
   ------------------
-  |  |   27|    107|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|    404|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|    107|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|    404|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|    107|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|    404|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
    64|       |
-   65|    107|        if (entry == nullptr) {
+   65|    404|        if (entry == nullptr) {
   ------------------
-  |  |   63|    107|#define nullptr NULL
+  |  |   63|    404|#define nullptr NULL
   ------------------
-  |  Branch (65:13): [True: 0, False: 107]
+  |  Branch (65:13): [True: 0, False: 404]
   ------------------
    66|      0|            free_uint8_t_pointer_array(moderation->mem, tmp_list, i);
    67|      0|            return -1;
    68|      0|        }
    69|       |
-   70|    107|        memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
+   70|    404|        memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
   ------------------
-  |  |   27|    107|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|    404|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|    107|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|    404|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|    107|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|    404|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
                       memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
   ------------------
-  |  |   27|    107|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|    404|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|    107|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|    404|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|    107|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|    404|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-   71|    107|        tmp_list[i] = entry;
+   71|    404|        tmp_list[i] = entry;
    72|       |
-   73|    107|        unpacked_len += MOD_LIST_ENTRY_SIZE;
+   73|    404|        unpacked_len += MOD_LIST_ENTRY_SIZE;
   ------------------
-  |  |   27|    107|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|    404|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|    107|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|    404|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|    107|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|    404|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-   74|    107|    }
+   74|    404|    }
    75|       |
-   76|      9|    moderation->mod_list = tmp_list;
-   77|      9|    moderation->num_mods = num_mods;
+   76|     18|    moderation->mod_list = tmp_list;
+   77|     18|    moderation->num_mods = num_mods;
    78|       |
-   79|      9|    return unpacked_len;
-   80|      9|}
+   79|     18|    return unpacked_len;
+   80|     18|}
 mod_list_cleanup:
-  229|     21|{
-  230|     21|    free_uint8_t_pointer_array(moderation->mem, moderation->mod_list, moderation->num_mods);
-  231|     21|    moderation->num_mods = 0;
-  232|     21|    moderation->mod_list = nullptr;
+  229|     39|{
+  230|     39|    free_uint8_t_pointer_array(moderation->mem, moderation->mod_list, moderation->num_mods);
+  231|     39|    moderation->num_mods = 0;
+  232|     39|    moderation->mod_list = nullptr;
   ------------------
-  |  |   63|     21|#define nullptr NULL
+  |  |   63|     39|#define nullptr NULL
   ------------------
-  233|     21|}
+  233|     39|}
 sanctions_creds_unpack:
   318|      2|{
   319|      2|    uint16_t len_processed = 0;
@@ -534,28 +534,28 @@ sanctions_list_unpack:
   397|      1|}
 
 LLVMFuzzerTestOneInput:
-   36|     30|{
-   37|     30|    fuzz_select_target<TestModListUnpack, TestSanctionsListUnpack, TestSanctionCredsUnpack>(
-   38|     30|        data, size);
-   39|     30|    return 0;
-   40|     30|}
+   36|     39|{
+   37|     39|    fuzz_select_target<TestModListUnpack, TestSanctionsListUnpack, TestSanctionCredsUnpack>(
+   38|     39|        data, size);
+   39|     39|    return 0;
+   40|     39|}
 group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_Data:
-    9|     12|{
-   10|     12|    CONSUME1_OR_RETURN(const uint16_t, num_mods, input);
+    9|     21|{
+   10|     21|    CONSUME1_OR_RETURN(const uint16_t, num_mods, input);
   ------------------
-  |  |  105|     12|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|     21|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 11]
+  |  |  |  Branch (105:9): [True: 1, False: 20]
   |  |  ------------------
   |  |  106|      1|        return;                               \
   |  |  107|      1|    }                                         \
-  |  |  108|     12|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|     21|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-   11|     11|    Test_Memory mem;
-   12|     11|    Moderation mods{mem};
-   13|     11|    mod_list_unpack(&mods, input.data(), input.size(), num_mods);
-   14|     11|    mod_list_cleanup(&mods);
-   15|     11|}
+   11|     20|    Test_Memory mem;
+   12|     20|    Moderation mods{mem};
+   13|     20|    mod_list_unpack(&mods, input.data(), input.size(), num_mods);
+   14|     20|    mod_list_cleanup(&mods);
+   15|     20|}
 group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionsListUnpackER9Fuzz_Data:
    18|     15|{
    19|     15|    Mod_Sanction sanctions[10];
@@ -580,22 +580,22 @@ group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionCredsUnpackER9Fuzz_
    30|      1|}
 
 os_memory:
-   46|     11|{
-   47|     11|    return &os_memory_obj;
-   48|     11|}
+   46|     20|{
+   47|     20|    return &os_memory_obj;
+   48|     20|}
 mem_balloc:
-   51|    107|{
-   52|    107|    void *const ptr = mem->funcs->malloc(mem->obj, size);
-   53|    107|    return ptr;
-   54|    107|}
+   51|    404|{
+   52|    404|    void *const ptr = mem->funcs->malloc(mem->obj, size);
+   53|    404|    return ptr;
+   54|    404|}
 mem_valloc:
-   69|      9|{
-   70|      9|    const uint32_t bytes = nmemb * size;
+   69|     18|{
+   70|     18|    const uint32_t bytes = nmemb * size;
    71|       |
-   72|      9|    if (size != 0 && bytes / size != nmemb) {
+   72|     18|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (72:9): [True: 9, False: 0]
-  |  Branch (72:22): [True: 0, False: 9]
+  |  Branch (72:9): [True: 18, False: 0]
+  |  Branch (72:22): [True: 0, False: 18]
   ------------------
    73|      0|        return nullptr;
   ------------------
@@ -603,43 +603,43 @@ mem_valloc:
   ------------------
    74|      0|    }
    75|       |
-   76|      9|    void *const ptr = mem->funcs->calloc(mem->obj, nmemb, size);
-   77|      9|    return ptr;
-   78|      9|}
+   76|     18|    void *const ptr = mem->funcs->calloc(mem->obj, nmemb, size);
+   77|     18|    return ptr;
+   78|     18|}
 mem_delete:
-   93|    116|{
-   94|    116|    mem->funcs->free(mem->obj, ptr);
-   95|    116|}
+   93|    422|{
+   94|    422|    mem->funcs->free(mem->obj, ptr);
+   95|    422|}
 mem.c:sys_malloc:
-   15|    107|{
-   16|    107|    return malloc(size);
-   17|    107|}
+   15|    404|{
+   16|    404|    return malloc(size);
+   17|    404|}
 mem.c:sys_calloc:
-   21|      9|{
-   22|      9|    return calloc(nmemb, size);
-   23|      9|}
+   21|     18|{
+   22|     18|    return calloc(nmemb, size);
+   23|     18|}
 mem.c:sys_free:
-   33|    116|{
-   34|    116|    free(ptr);
-   35|    116|}
+   33|    422|{
+   34|    422|    free(ptr);
+   35|    422|}
 
 _ZN12Memory_ClassD2Ev:
-   15|     11|Memory_Class::~Memory_Class() = default;
+   15|     20|Memory_Class::~Memory_Class() = default;
 _ZN11Test_Memory6mallocEPvj:
-   17|    107|void *Test_Memory::malloc(void *obj, uint32_t size) { return mem->funcs->malloc(mem->obj, size); }
+   17|    404|void *Test_Memory::malloc(void *obj, uint32_t size) { return mem->funcs->malloc(mem->obj, size); }
 _ZN11Test_Memory6callocEPvjj:
-   20|      9|{
-   21|      9|    return mem->funcs->calloc(mem->obj, nmemb, size);
-   22|      9|}
+   20|     18|{
+   21|     18|    return mem->funcs->calloc(mem->obj, nmemb, size);
+   22|     18|}
 _ZN11Test_Memory4freeEPvS0_:
-   29|    116|void Test_Memory::free(void *obj, void *ptr) { return mem->funcs->free(mem->obj, ptr); }
+   29|    422|void Test_Memory::free(void *obj, void *ptr) { return mem->funcs->free(mem->obj, ptr); }
 
 _ZN12Memory_ClassC2Ev:
-   15|     11|        : self{&vtable, this}
-   16|     11|    {
-   17|     11|    }
+   15|     20|        : self{&vtable, this}
+   16|     20|    {
+   17|     20|    }
 _ZNK12Memory_ClasscvPK6MemoryEv:
-   11|     11|    operator Memory const *() const { return &self; }
+   11|     20|    operator Memory const *() const { return &self; }
 
 net_unpack_u16:
  2321|    230|{
@@ -670,54 +670,54 @@ net_unpack_u64:
  2348|     56|}
 
 _Z16require_not_nullIK6MemoryEPT_PKciS3_:
-   73|     11|{
-   74|     11|    if (ptr == nullptr) {
+   73|     20|{
+   74|     20|    if (ptr == nullptr) {
   ------------------
-  |  Branch (74:9): [True: 0, False: 11]
+  |  Branch (74:9): [True: 0, False: 20]
   ------------------
    75|      0|        std::fprintf(stderr, "unexpected null pointer at %s:%d\n", file, line);
    76|      0|        std::exit(7);
    77|      0|    }
-   78|     11|    return ptr;
-   79|     11|}
+   78|     20|    return ptr;
+   79|     20|}
 _ZN6MethodIFPvS0_jE12Memory_ClassE6invokeIXadL_ZNS2_6mallocES0_jEEEES0_S0_j:
-   31|    107|    {
-   32|    107|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|    107|    }
+   31|    404|    {
+   32|    404|        return (static_cast<Class *>(self)->*M)(self, args...);
+   33|    404|    }
 _ZN6MethodIFPvS0_jjE12Memory_ClassE6invokeIXadL_ZNS2_6callocES0_jjEEEES0_S0_jj:
-   31|      9|    {
-   32|      9|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|      9|    }
+   31|     18|    {
+   32|     18|        return (static_cast<Class *>(self)->*M)(self, args...);
+   33|     18|    }
 _ZN6MethodIFvPvS0_E12Memory_ClassE6invokeIXadL_ZNS2_4freeES0_S0_EEEEvS0_S0_:
-   31|    116|    {
-   32|    116|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|    116|    }
+   31|    422|    {
+   32|    422|        return (static_cast<Class *>(self)->*M)(self, args...);
+   33|    422|    }
 
 free_uint8_t_pointer_array:
-   27|     21|{
-   28|     21|    if (ary == nullptr) {
+   27|     39|{
+   28|     39|    if (ary == nullptr) {
   ------------------
-  |  |   63|     21|#define nullptr NULL
+  |  |   63|     39|#define nullptr NULL
   ------------------
-  |  Branch (28:9): [True: 12, False: 9]
+  |  Branch (28:9): [True: 21, False: 18]
   ------------------
-   29|     12|        return;
-   30|     12|    }
+   29|     21|        return;
+   30|     21|    }
    31|       |
-   32|    116|    for (size_t i = 0; i < n_items; ++i) {
+   32|    422|    for (size_t i = 0; i < n_items; ++i) {
   ------------------
-  |  Branch (32:24): [True: 107, False: 9]
+  |  Branch (32:24): [True: 404, False: 18]
   ------------------
-   33|    107|        if (ary[i] != nullptr) {
+   33|    404|        if (ary[i] != nullptr) {
   ------------------
-  |  |   63|    107|#define nullptr NULL
+  |  |   63|    404|#define nullptr NULL
   ------------------
-  |  Branch (33:13): [True: 107, False: 0]
+  |  Branch (33:13): [True: 404, False: 0]
   ------------------
-   34|    107|            mem_delete(mem, ary[i]);
-   35|    107|        }
-   36|    107|    }
+   34|    404|            mem_delete(mem, ary[i]);
+   35|    404|        }
+   36|    404|    }
    37|       |
-   38|      9|    mem_delete(mem, ary);
-   39|      9|}
+   38|     18|    mem_delete(mem, ary);
+   39|     18|}
 
