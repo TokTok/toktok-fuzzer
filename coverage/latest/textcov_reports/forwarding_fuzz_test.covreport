@@ -95,21 +95,21 @@ fuzz_support.cc:_ZL12alloc_commonIDoFPvmmETnT_XadL_Z6callocEEJjjEES0_PKcmR9Fuzz_
   ------------------
   |  |  122|    171|    if (INPUT.size() < sizeof(TYPE)) {                 \
   |  |  ------------------
-  |  |  |  Branch (122:9): [True: 112, False: 59]
+  |  |  |  Branch (122:9): [True: 115, False: 56]
   |  |  ------------------
-  |  |  123|    112|        return VAL;                                    \
-  |  |  124|    112|    }                                                  \
+  |  |  123|    115|        return VAL;                                    \
+  |  |  124|    115|    }                                                  \
   |  |  125|    171|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-   90|     59|        const bool, want_alloc, data, report_alloc("tox1", func, size, Func(args...)));
-   91|     59|    if (!want_alloc) {
+   90|     56|        const bool, want_alloc, data, report_alloc("tox1", func, size, Func(args...)));
+   91|     56|    if (!want_alloc) {
   ------------------
-  |  Branch (91:9): [True: 4, False: 55]
+  |  Branch (91:9): [True: 4, False: 52]
   ------------------
    92|      4|        return nullptr;
    93|      4|    }
-   94|     55|    return report_alloc("tox1", func, size, Func(args...));
-   95|     59|}
+   94|     52|    return report_alloc("tox1", func, size, Func(args...));
+   95|     56|}
 fuzz_support.cc:_ZNK3$_3clEP11Fuzz_SystemPv:
   113|    166|    ![](Fuzz_System *self, void *ptr) { std::free(ptr); },
 fuzz_support.cc:_ZNK3$_4clEP11Fuzz_System6Socket:
@@ -134,7 +134,7 @@ fuzz_support.cc:_ZNK4$_17clEP11Fuzz_System6SocketiiPKvm:
 _ZNK9Fuzz_Data4sizeEv:
    69|    685|    std::size_t size() const { return size_; }
 _ZN9Fuzz_Data8consume1EPKc:
-   68|    216|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   68|    213|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN9Fuzz_Data8ConsumercvT_ItEEv:
    60|     77|        {
    61|     77|            const uint8_t *bytes = fd.consume(func, sizeof(T));
@@ -227,11 +227,11 @@ _ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
   177|       |        // fuzzer to come up with a better selector.
   178|      1|    }
 _ZN9Fuzz_Data8ConsumercvbEv:
-   46|     59|        {
+   46|     56|        {
    47|       |            // Special case because memcpy causes UB for bool (which can't be
    48|       |            // anything other than 0 or 1).
-   49|     59|            const bool val = fd.data_[0];
-   50|     59|            if (FUZZ_DEBUG) {
+   49|     56|            const bool val = fd.data_[0];
+   50|     56|            if (FUZZ_DEBUG) {
   ------------------
   |  Branch (50:17): [Folded - Ignored]
   ------------------
@@ -240,10 +240,10 @@ _ZN9Fuzz_Data8ConsumercvbEv:
   |  Branch (51:75): [True: 0, False: 0]
   ------------------
    52|      0|            }
-   53|     59|            ++fd.data_;
-   54|     59|            --fd.size_;
-   55|     59|            return val;
-   56|     59|        }
+   53|     56|            ++fd.data_;
+   54|     56|            --fd.size_;
+   55|     56|            return val;
+   56|     56|        }
 
 send_forward_request:
    50|     45|{
@@ -322,25 +322,25 @@ create_forward_chain_packet:
    76|       |
    77|     42|    uint16_t offset = 0;
    78|       |
-   79|     93|    for (uint16_t j = 0; j < chain_length; ++j) {
+   79|     90|    for (uint16_t j = 0; j < chain_length; ++j) {
   ------------------
-  |  Branch (79:26): [True: 51, False: 42]
+  |  Branch (79:26): [True: 48, False: 42]
   ------------------
-   80|     51|        packet[offset] = NET_PACKET_FORWARD_REQUEST;
-   81|     51|        ++offset;
-   82|     51|        memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
+   80|     48|        packet[offset] = NET_PACKET_FORWARD_REQUEST;
+   81|     48|        ++offset;
+   82|     48|        memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   43|     51|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|     48|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
                       memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   43|     51|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|     48|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-   83|     51|        offset += CRYPTO_PUBLIC_KEY_SIZE;
+   83|     48|        offset += CRYPTO_PUBLIC_KEY_SIZE;
   ------------------
-  |  |   43|     51|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|     48|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-   84|     51|    }
+   84|     48|    }
    85|       |
    86|     42|    memcpy(packet + offset, data, data_length);
    87|     42|    return true;
