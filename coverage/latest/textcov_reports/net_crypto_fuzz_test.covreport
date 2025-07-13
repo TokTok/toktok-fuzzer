@@ -354,177 +354,177 @@ dht_get_net:
   166|     36|    return dht->net;
   167|     36|}
 get_close_nodes:
-  755|      8|{
-  756|      8|    return get_somewhat_close_nodes(
-  757|      8|               dht->cur_time, public_key, nodes_list,
-  758|      8|               sa_family, dht->close_clientlist,
-  759|      8|               dht->friends_list, dht->num_friends,
-  760|      8|               is_lan, want_announce);
-  761|      8|}
+  733|      8|{
+  734|      8|    return get_somewhat_close_nodes(
+  735|      8|               dht->cur_time, public_key, nodes_list,
+  736|      8|               sa_family, dht->close_clientlist,
+  737|      8|               dht->friends_list, dht->num_friends,
+  738|      8|               is_lan, want_announce);
+  739|      8|}
 dht_addfriend:
- 1630|     16|{
- 1631|     16|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
- 1632|       |
- 1633|     16|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
+ 1571|     16|{
+ 1572|     16|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
+ 1573|       |
+ 1574|     16|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
   ------------------
-  |  Branch (1633:9): [True: 8, False: 8]
+  |  Branch (1574:9): [True: 8, False: 8]
   ------------------
- 1634|      8|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
- 1635|      8|        const uint32_t tmp_lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
- 1636|       |
- 1637|      8|        if (tmp_lock_token == 0) {
+ 1575|      8|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
+ 1576|      8|        const uint32_t tmp_lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
+ 1577|       |
+ 1578|      8|        if (tmp_lock_token == 0) {
   ------------------
-  |  Branch (1637:13): [True: 0, False: 8]
+  |  Branch (1578:13): [True: 0, False: 8]
   ------------------
- 1638|      0|            return -1;
- 1639|      0|        }
- 1640|       |
- 1641|      8|        return 0;
- 1642|      8|    }
- 1643|       |
- 1644|      8|    DHT_Friend *const temp = (DHT_Friend *)mem_vrealloc(dht->mem, dht->friends_list, dht->num_friends + 1, sizeof(DHT_Friend));
- 1645|       |
- 1646|      8|    if (temp == nullptr) {
+ 1579|      0|            return -1;
+ 1580|      0|        }
+ 1581|       |
+ 1582|      8|        return 0;
+ 1583|      8|    }
+ 1584|       |
+ 1585|      8|    DHT_Friend *const temp = (DHT_Friend *)mem_vrealloc(dht->mem, dht->friends_list, dht->num_friends + 1, sizeof(DHT_Friend));
+ 1586|       |
+ 1587|      8|    if (temp == nullptr) {
   ------------------
   |  |   63|      8|#define nullptr NULL
   ------------------
-  |  Branch (1646:9): [True: 0, False: 8]
+  |  Branch (1587:9): [True: 0, False: 8]
   ------------------
- 1647|      0|        return -1;
- 1648|      0|    }
- 1649|       |
- 1650|      8|    dht->friends_list = temp;
- 1651|      8|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
- 1652|      8|    *dht_friend = empty_dht_friend;
- 1653|      8|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
+ 1588|      0|        return -1;
+ 1589|      0|    }
+ 1590|       |
+ 1591|      8|    dht->friends_list = temp;
+ 1592|      8|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
+ 1593|      8|    *dht_friend = empty_dht_friend;
+ 1594|      8|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
   |  |   43|      8|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
- 1654|       |
- 1655|      8|    dht_friend->nat.nat_ping_id = random_u64(dht->rng);
- 1656|      8|    ++dht->num_friends;
- 1657|       |
- 1658|      8|    *lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
- 1659|      8|    assert(*lock_token != 0); // Friend was newly allocated
- 1660|       |
- 1661|      8|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec(),
- 1662|      8|                                   true, false);
- 1663|       |
- 1664|      8|    return 0;
- 1665|      8|}
+ 1595|       |
+ 1596|      8|    dht_friend->nat.nat_ping_id = random_u64(dht->rng);
+ 1597|      8|    ++dht->num_friends;
+ 1598|       |
+ 1599|      8|    *lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
+ 1600|      8|    assert(*lock_token != 0); // Friend was newly allocated
+ 1601|       |
+ 1602|      8|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec(),
+ 1603|      8|                                   true, false);
+ 1604|       |
+ 1605|      8|    return 0;
+ 1606|      8|}
 cryptopacket_registerhandler:
- 2488|     21|{
- 2489|     21|    dht->cryptopackethandlers[byte].function = cb;
- 2490|     21|    dht->cryptopackethandlers[byte].object = object;
- 2491|     21|}
+ 2412|     21|{
+ 2413|     21|    dht->cryptopackethandlers[byte].function = cb;
+ 2414|     21|    dht->cryptopackethandlers[byte].object = object;
+ 2415|     21|}
 new_dht:
- 2569|     13|{
- 2570|     13|    if (net == nullptr) {
+ 2489|     13|{
+ 2490|     13|    if (net == nullptr) {
   ------------------
   |  |   63|     13|#define nullptr NULL
   ------------------
-  |  Branch (2570:9): [True: 0, False: 13]
+  |  Branch (2490:9): [True: 0, False: 13]
   ------------------
- 2571|      0|        return nullptr;
+ 2491|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 2572|      0|    }
- 2573|       |
- 2574|     13|    DHT *const dht = (DHT *)mem_alloc(mem, sizeof(DHT));
- 2575|       |
- 2576|     13|    if (dht == nullptr) {
+ 2492|      0|    }
+ 2493|       |
+ 2494|     13|    DHT *const dht = (DHT *)mem_alloc(mem, sizeof(DHT));
+ 2495|       |
+ 2496|     13|    if (dht == nullptr) {
   ------------------
   |  |   63|     13|#define nullptr NULL
   ------------------
-  |  Branch (2576:9): [True: 1, False: 12]
+  |  Branch (2496:9): [True: 1, False: 12]
   ------------------
- 2577|      1|        LOGGER_ERROR(log, "failed to allocate DHT struct (%ld bytes)", (unsigned long)sizeof(DHT));
+ 2497|      1|        LOGGER_ERROR(log, "failed to allocate DHT struct (%ld bytes)", (unsigned long)sizeof(DHT));
   ------------------
-  |  |   87|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      1|    do {                                                                         \
-  |  |  |  |   77|      1|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      1|    do {                                                                         \
+  |  |  |  |   70|      1|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|      2|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      1|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      1|        }                                                                        \
-  |  |  |  |   80|      1|    } while (0)
+  |  |  |  |   71|      1|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      1|        }                                                                        \
+  |  |  |  |   73|      1|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2578|      1|        return nullptr;
+ 2498|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
- 2579|      1|    }
- 2580|       |
- 2581|     12|    dht->ns = ns;
- 2582|     12|    dht->mono_time = mono_time;
- 2583|     12|    dht->cur_time = mono_time_get(mono_time);
- 2584|     12|    dht->log = log;
- 2585|     12|    dht->net = net;
- 2586|     12|    dht->rng = rng;
- 2587|     12|    dht->mem = mem;
- 2588|       |
- 2589|     12|    dht->hole_punching_enabled = hole_punching_enabled;
- 2590|     12|    dht->lan_discovery_enabled = lan_discovery_enabled;
- 2591|       |
- 2592|     12|    dht->ping = ping_new(mem, mono_time, rng, dht);
- 2593|       |
- 2594|     12|    if (dht->ping == nullptr) {
+ 2499|      1|    }
+ 2500|       |
+ 2501|     12|    dht->ns = ns;
+ 2502|     12|    dht->mono_time = mono_time;
+ 2503|     12|    dht->cur_time = mono_time_get(mono_time);
+ 2504|     12|    dht->log = log;
+ 2505|     12|    dht->net = net;
+ 2506|     12|    dht->rng = rng;
+ 2507|     12|    dht->mem = mem;
+ 2508|       |
+ 2509|     12|    dht->hole_punching_enabled = hole_punching_enabled;
+ 2510|     12|    dht->lan_discovery_enabled = lan_discovery_enabled;
+ 2511|       |
+ 2512|     12|    dht->ping = ping_new(mem, mono_time, rng, dht);
+ 2513|       |
+ 2514|     12|    if (dht->ping == nullptr) {
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
-  |  Branch (2594:9): [True: 3, False: 9]
+  |  Branch (2514:9): [True: 3, False: 9]
   ------------------
- 2595|      3|        LOGGER_ERROR(log, "failed to initialise ping");
+ 2515|      3|        LOGGER_ERROR(log, "failed to initialise ping");
   ------------------
-  |  |   87|      3|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      3|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      3|    do {                                                                         \
-  |  |  |  |   77|      3|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      3|    do {                                                                         \
+  |  |  |  |   70|      3|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|      6|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      3|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      3|        }                                                                        \
-  |  |  |  |   80|      3|    } while (0)
+  |  |  |  |   71|      3|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      3|        }                                                                        \
+  |  |  |  |   73|      3|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2596|      3|        kill_dht(dht);
- 2597|      3|        return nullptr;
+ 2516|      3|        kill_dht(dht);
+ 2517|      3|        return nullptr;
   ------------------
   |  |   63|      3|#define nullptr NULL
   ------------------
- 2598|      3|    }
- 2599|       |
- 2600|      9|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, &handle_nodes_request, dht);
- 2601|      9|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, &handle_nodes_response, dht);
- 2602|      9|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
- 2603|      9|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_lan_discovery, dht);
- 2604|      9|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_nat_ping, dht);
+ 2518|      3|    }
+ 2519|       |
+ 2520|      9|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, &handle_nodes_request, dht);
+ 2521|      9|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, &handle_nodes_response, dht);
+ 2522|      9|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
+ 2523|      9|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_lan_discovery, dht);
+ 2524|      9|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_nat_ping, dht);
   ------------------
   |  |   68|      9|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
   ------------------
- 2605|       |
- 2606|      9|#ifdef CHECK_ANNOUNCE_NODE
- 2607|      9|    networking_registerhandler(dht->net, NET_PACKET_DATA_SEARCH_RESPONSE, &handle_data_search_response, dht);
- 2608|      9|#endif /* CHECK_ANNOUNCE_NODE */
- 2609|       |
- 2610|      9|    crypto_new_keypair(rng, dht->self_public_key, dht->self_secret_key);
- 2611|       |
- 2612|      9|    dht->shared_keys_recv = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
+ 2525|       |
+ 2526|      9|#ifdef CHECK_ANNOUNCE_NODE
+ 2527|      9|    networking_registerhandler(dht->net, NET_PACKET_DATA_SEARCH_RESPONSE, &handle_data_search_response, dht);
+ 2528|      9|#endif /* CHECK_ANNOUNCE_NODE */
+ 2529|       |
+ 2530|      9|    crypto_new_keypair(rng, dht->self_public_key, dht->self_secret_key);
+ 2531|       |
+ 2532|      9|    dht->shared_keys_recv = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
   ------------------
   |  |   57|      9|#define KEYS_TIMEOUT 600
   ------------------
@@ -532,7 +532,7 @@ new_dht:
   ------------------
   |  |   56|      9|#define MAX_KEYS_PER_SLOT 4
   ------------------
- 2613|      9|    dht->shared_keys_sent = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
+ 2533|      9|    dht->shared_keys_sent = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
   ------------------
   |  |   57|      9|#define KEYS_TIMEOUT 600
   ------------------
@@ -540,8 +540,8 @@ new_dht:
   ------------------
   |  |   56|      9|#define MAX_KEYS_PER_SLOT 4
   ------------------
- 2614|       |
- 2615|      9|    if (dht->shared_keys_recv == nullptr || dht->shared_keys_sent == nullptr) {
+ 2534|       |
+ 2535|      9|    if (dht->shared_keys_recv == nullptr || dht->shared_keys_sent == nullptr) {
   ------------------
   |  |   63|     18|#define nullptr NULL
   ------------------
@@ -549,36 +549,36 @@ new_dht:
   ------------------
   |  |   63|      8|#define nullptr NULL
   ------------------
-  |  Branch (2615:9): [True: 1, False: 8]
-  |  Branch (2615:45): [True: 0, False: 8]
+  |  Branch (2535:9): [True: 1, False: 8]
+  |  Branch (2535:45): [True: 0, False: 8]
   ------------------
- 2616|      1|        LOGGER_ERROR(log, "failed to initialise shared key cache");
+ 2536|      1|        LOGGER_ERROR(log, "failed to initialise shared key cache");
   ------------------
-  |  |   87|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      1|    do {                                                                         \
-  |  |  |  |   77|      1|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      1|    do {                                                                         \
+  |  |  |  |   70|      1|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|      2|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      1|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      1|        }                                                                        \
-  |  |  |  |   80|      1|    } while (0)
+  |  |  |  |   71|      1|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      1|        }                                                                        \
+  |  |  |  |   73|      1|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2617|      1|        kill_dht(dht);
- 2618|      1|        return nullptr;
+ 2537|      1|        kill_dht(dht);
+ 2538|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
- 2619|      1|    }
- 2620|       |
- 2621|      8|    dht->dht_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
+ 2539|      1|    }
+ 2540|       |
+ 2541|      8|    dht->dht_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
   ------------------
   |  |   46|      8|#define DHT_PING_ARRAY_SIZE 512
   ------------------
@@ -586,52 +586,52 @@ new_dht:
   ------------------
   |  |   43|      8|#define PING_TIMEOUT 5
   ------------------
- 2622|       |
- 2623|      8|    if (dht->dht_ping_array == nullptr) {
+ 2542|       |
+ 2543|      8|    if (dht->dht_ping_array == nullptr) {
   ------------------
   |  |   63|      8|#define nullptr NULL
   ------------------
-  |  Branch (2623:9): [True: 0, False: 8]
+  |  Branch (2543:9): [True: 0, False: 8]
   ------------------
- 2624|      0|        LOGGER_ERROR(log, "failed to initialise ping array");
+ 2544|      0|        LOGGER_ERROR(log, "failed to initialise ping array");
   ------------------
-  |  |   87|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2625|      0|        kill_dht(dht);
- 2626|      0|        return nullptr;
+ 2545|      0|        kill_dht(dht);
+ 2546|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 2627|      0|    }
- 2628|       |
- 2629|     24|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
+ 2547|      0|    }
+ 2548|       |
+ 2549|     24|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
   ------------------
   |  |   61|     24|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
-  |  Branch (2629:26): [True: 16, False: 8]
+  |  Branch (2549:26): [True: 16, False: 8]
   ------------------
- 2630|     16|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
- 2631|     16|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
- 2632|       |
- 2633|     16|        crypto_new_keypair(rng, random_public_key_bytes, random_secret_key_bytes);
- 2634|       |
- 2635|     16|        uint32_t token; // We don't intend to delete these ever, but need to pass the token
- 2636|     16|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, &token) != 0) {
+ 2550|     16|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
+ 2551|     16|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
+ 2552|       |
+ 2553|     16|        crypto_new_keypair(rng, random_public_key_bytes, random_secret_key_bytes);
+ 2554|       |
+ 2555|     16|        uint32_t token; // We don't intend to delete these ever, but need to pass the token
+ 2556|     16|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, &token) != 0) {
   ------------------
   |  |   63|     16|#define nullptr NULL
   ------------------
@@ -639,81 +639,81 @@ new_dht:
   ------------------
   |  |   63|     16|#define nullptr NULL
   ------------------
-  |  Branch (2636:13): [True: 0, False: 16]
+  |  Branch (2556:13): [True: 0, False: 16]
   ------------------
- 2637|      0|            LOGGER_ERROR(log, "failed to add initial random seed DHT friends");
+ 2557|      0|            LOGGER_ERROR(log, "failed to add initial random seed DHT friends");
   ------------------
-  |  |   87|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2638|      0|            kill_dht(dht);
- 2639|      0|            return nullptr;
+ 2558|      0|            kill_dht(dht);
+ 2559|      0|            return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 2640|      0|        }
- 2641|     16|    }
- 2642|       |
- 2643|      8|    if (dht->num_friends != DHT_FAKE_FRIEND_NUMBER) {
+ 2560|      0|        }
+ 2561|     16|    }
+ 2562|       |
+ 2563|      8|    if (dht->num_friends != DHT_FAKE_FRIEND_NUMBER) {
   ------------------
   |  |   61|      8|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
-  |  Branch (2643:9): [True: 8, False: 0]
+  |  Branch (2563:9): [True: 8, False: 0]
   ------------------
- 2644|      8|        LOGGER_ERROR(log, "the RNG provided seems to be broken: it generated the same keypair twice");
+ 2564|      8|        LOGGER_ERROR(log, "the RNG provided seems to be broken: it generated the same keypair twice");
   ------------------
-  |  |   87|      8|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      8|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      8|    do {                                                                         \
-  |  |  |  |   77|      8|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      8|    do {                                                                         \
+  |  |  |  |   70|      8|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|     16|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      8|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      8|        }                                                                        \
-  |  |  |  |   80|      8|    } while (0)
+  |  |  |  |   71|      8|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      8|        }                                                                        \
+  |  |  |  |   73|      8|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2645|      8|        kill_dht(dht);
- 2646|      8|        return nullptr;
+ 2565|      8|        kill_dht(dht);
+ 2566|      8|        return nullptr;
   ------------------
   |  |   63|      8|#define nullptr NULL
   ------------------
- 2647|      8|    }
- 2648|       |
- 2649|      0|    return dht;
- 2650|      8|}
+ 2567|      8|    }
+ 2568|       |
+ 2569|      0|    return dht;
+ 2570|      8|}
 kill_dht:
- 2674|     12|{
- 2675|     12|    if (dht == nullptr) {
+ 2594|     12|{
+ 2595|     12|    if (dht == nullptr) {
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
-  |  Branch (2675:9): [True: 0, False: 12]
+  |  Branch (2595:9): [True: 0, False: 12]
   ------------------
- 2676|      0|        return;
- 2677|      0|    }
- 2678|       |
- 2679|     12|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, nullptr, nullptr);
+ 2596|      0|        return;
+ 2597|      0|    }
+ 2598|       |
+ 2599|     12|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, nullptr, nullptr);
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
@@ -721,7 +721,7 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2680|     12|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, nullptr, nullptr);
+ 2600|     12|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, nullptr, nullptr);
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
@@ -729,7 +729,7 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2681|     12|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
+ 2601|     12|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
@@ -737,7 +737,7 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2682|     12|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
+ 2602|     12|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
@@ -745,7 +745,7 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2683|     12|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
+ 2603|     12|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
   ------------------
   |  |   68|     12|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
   ------------------
@@ -757,32 +757,32 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2684|       |
- 2685|     12|    shared_key_cache_free(dht->shared_keys_recv);
- 2686|     12|    shared_key_cache_free(dht->shared_keys_sent);
- 2687|     12|    ping_array_kill(dht->dht_ping_array);
- 2688|     12|    ping_kill(dht->mem, dht->ping);
- 2689|     12|    mem_delete(dht->mem, dht->friends_list);
- 2690|     12|    mem_delete(dht->mem, dht->loaded_nodes_list);
- 2691|     12|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
- 2692|     12|    mem_delete(dht->mem, dht);
- 2693|     12|}
+ 2604|       |
+ 2605|     12|    shared_key_cache_free(dht->shared_keys_recv);
+ 2606|     12|    shared_key_cache_free(dht->shared_keys_sent);
+ 2607|     12|    ping_array_kill(dht->dht_ping_array);
+ 2608|     12|    ping_kill(dht->mem, dht->ping);
+ 2609|     12|    mem_delete(dht->mem, dht->friends_list);
+ 2610|     12|    mem_delete(dht->mem, dht->loaded_nodes_list);
+ 2611|     12|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
+ 2612|     12|    mem_delete(dht->mem, dht);
+ 2613|     12|}
 DHT.c:get_somewhat_close_nodes:
-  726|      8|{
-  727|     40|    for (uint16_t i = 0; i < MAX_SENT_NODES; ++i) {
+  704|      8|{
+  705|     40|    for (uint16_t i = 0; i < MAX_SENT_NODES; ++i) {
   ------------------
   |  |   40|     40|#define MAX_SENT_NODES 4
   ------------------
-  |  Branch (727:26): [True: 32, False: 8]
+  |  Branch (705:26): [True: 32, False: 8]
   ------------------
-  728|     32|        nodes_list[i] = empty_node_format;
-  729|     32|    }
-  730|       |
-  731|      8|    uint32_t num_nodes = 0;
-  732|      8|    get_close_nodes_inner(
-  733|      8|        cur_time, public_key,
-  734|      8|        nodes_list, &num_nodes,
-  735|      8|        sa_family, close_clientlist, LCLIENT_LIST,
+  706|     32|        nodes_list[i] = empty_node_format;
+  707|     32|    }
+  708|       |
+  709|      8|    uint32_t num_nodes = 0;
+  710|      8|    get_close_nodes_inner(
+  711|      8|        cur_time, public_key,
+  712|      8|        nodes_list, &num_nodes,
+  713|      8|        sa_family, close_clientlist, LCLIENT_LIST,
   ------------------
   |  |   35|      8|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
@@ -796,271 +796,269 @@ DHT.c:get_somewhat_close_nodes:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  736|      8|        is_lan, want_announce);
-  737|       |
-  738|     16|    for (uint16_t i = 0; i < friends_list_size; ++i) {
+  714|      8|        is_lan, want_announce);
+  715|       |
+  716|     16|    for (uint16_t i = 0; i < friends_list_size; ++i) {
   ------------------
-  |  Branch (738:26): [True: 8, False: 8]
+  |  Branch (716:26): [True: 8, False: 8]
   ------------------
-  739|      8|        const DHT_Friend *dht_friend = &friends_list[i];
-  740|       |
-  741|      8|        get_close_nodes_inner(
-  742|      8|            cur_time, public_key,
-  743|      8|            nodes_list, &num_nodes,
-  744|      8|            sa_family, dht_friend->client_list, MAX_FRIEND_CLIENTS,
+  717|      8|        const DHT_Friend *dht_friend = &friends_list[i];
+  718|       |
+  719|      8|        get_close_nodes_inner(
+  720|      8|            cur_time, public_key,
+  721|      8|            nodes_list, &num_nodes,
+  722|      8|            sa_family, dht_friend->client_list, MAX_FRIEND_CLIENTS,
   ------------------
   |  |   29|      8|#define MAX_FRIEND_CLIENTS 8
   ------------------
-  745|      8|            is_lan, want_announce);
-  746|      8|    }
-  747|       |
-  748|      8|    return num_nodes;
-  749|      8|}
+  723|      8|            is_lan, want_announce);
+  724|      8|    }
+  725|       |
+  726|      8|    return num_nodes;
+  727|      8|}
 DHT.c:get_close_nodes_inner:
-  655|     16|{
-  656|     16|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
+  637|     16|{
+  638|     16|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
   ------------------
-  |  Branch (656:9): [True: 16, False: 0]
-  |  Branch (656:43): [True: 16, False: 0]
-  |  Branch (656:77): [True: 0, False: 16]
+  |  Branch (638:9): [True: 16, False: 0]
+  |  Branch (638:43): [True: 16, False: 0]
+  |  Branch (638:77): [True: 0, False: 16]
   ------------------
-  657|      0|        return;
-  658|      0|    }
-  659|       |
-  660|     16|    uint32_t num_nodes = *num_nodes_ptr;
-  661|       |
-  662|  8.27k|    for (uint32_t i = 0; i < client_list_length; ++i) {
+  639|      0|        return;
+  640|      0|    }
+  641|       |
+  642|     16|    uint32_t num_nodes = *num_nodes_ptr;
+  643|       |
+  644|  8.27k|    for (uint32_t i = 0; i < client_list_length; ++i) {
   ------------------
-  |  Branch (662:26): [True: 8.25k, False: 16]
+  |  Branch (644:26): [True: 8.25k, False: 16]
   ------------------
-  663|  8.25k|        const Client_data *const client = &client_list[i];
-  664|       |
-  665|       |        /* node already in list? */
-  666|  8.25k|        if (index_of_node_pk(nodes_list, MAX_SENT_NODES, client->public_key) != UINT32_MAX) {
+  645|  8.25k|        const Client_data *const client = &client_list[i];
+  646|       |
+  647|       |        /* node already in list? */
+  648|  8.25k|        if (index_of_node_pk(nodes_list, MAX_SENT_NODES, client->public_key) != UINT32_MAX) {
   ------------------
   |  |   40|  8.25k|#define MAX_SENT_NODES 4
   ------------------
-  |  Branch (666:13): [True: 8.25k, False: 0]
+  |  Branch (648:13): [True: 8.25k, False: 0]
   ------------------
-  667|  8.25k|            continue;
-  668|  8.25k|        }
-  669|       |
-  670|      0|        const IPPTsPng *ipptp;
-  671|       |
-  672|      0|        if (net_family_is_ipv4(sa_family)) {
+  649|  8.25k|            continue;
+  650|  8.25k|        }
+  651|       |
+  652|      0|        const IPPTsPng *ipptp;
+  653|       |
+  654|      0|        if (net_family_is_ipv4(sa_family)) {
   ------------------
-  |  Branch (672:13): [True: 0, False: 0]
+  |  Branch (654:13): [True: 0, False: 0]
   ------------------
-  673|      0|            ipptp = &client->assoc4;
-  674|      0|        } else if (net_family_is_ipv6(sa_family)) {
+  655|      0|            ipptp = &client->assoc4;
+  656|      0|        } else if (net_family_is_ipv6(sa_family)) {
   ------------------
-  |  Branch (674:20): [True: 0, False: 0]
+  |  Branch (656:20): [True: 0, False: 0]
   ------------------
-  675|      0|            ipptp = &client->assoc6;
-  676|      0|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
+  657|      0|            ipptp = &client->assoc6;
+  658|      0|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
   ------------------
-  |  Branch (676:20): [True: 0, False: 0]
+  |  Branch (658:20): [True: 0, False: 0]
   ------------------
-  677|      0|            ipptp = &client->assoc4;
-  678|      0|        } else {
-  679|      0|            ipptp = &client->assoc6;
-  680|      0|        }
+  659|      0|            ipptp = &client->assoc4;
+  660|      0|        } else {
+  661|      0|            ipptp = &client->assoc6;
+  662|      0|        }
+  663|       |
+  664|       |        /* node not in a good condition? */
+  665|      0|        if (assoc_timeout(cur_time, ipptp)) {
+  ------------------
+  |  Branch (665:13): [True: 0, False: 0]
+  ------------------
+  666|      0|            continue;
+  667|      0|        }
+  668|       |
+  669|       |        /* don't send LAN ips to non LAN peers */
+  670|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_lan) {
+  ------------------
+  |  Branch (670:13): [True: 0, False: 0]
+  |  Branch (670:46): [True: 0, False: 0]
+  ------------------
+  671|      0|            continue;
+  672|      0|        }
+  673|       |
+  674|      0|#ifdef CHECK_ANNOUNCE_NODE
+  675|       |
+  676|      0|        if (want_announce && !client->announce_node) {
+  ------------------
+  |  Branch (676:13): [True: 0, False: 0]
+  |  Branch (676:30): [True: 0, False: 0]
+  ------------------
+  677|      0|            continue;
+  678|      0|        }
+  679|       |
+  680|      0|#endif /* CHECK_ANNOUNCE_NODE */
   681|       |
-  682|       |        /* node not in a good condition? */
-  683|      0|        if (assoc_timeout(cur_time, ipptp)) {
-  ------------------
-  |  Branch (683:13): [True: 0, False: 0]
-  ------------------
-  684|      0|            continue;
-  685|      0|        }
-  686|       |
-  687|       |        /* don't send LAN ips to non LAN peers */
-  688|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_lan) {
-  ------------------
-  |  Branch (688:13): [True: 0, False: 0]
-  |  Branch (688:46): [True: 0, False: 0]
-  ------------------
-  689|      0|            continue;
-  690|      0|        }
-  691|       |
-  692|      0|#ifdef CHECK_ANNOUNCE_NODE
-  693|       |
-  694|      0|        if (want_announce && !client->announce_node) {
-  ------------------
-  |  Branch (694:13): [True: 0, False: 0]
-  |  Branch (694:30): [True: 0, False: 0]
-  ------------------
-  695|      0|            continue;
-  696|      0|        }
-  697|       |
-  698|      0|#endif /* CHECK_ANNOUNCE_NODE */
-  699|       |
-  700|      0|        if (num_nodes < MAX_SENT_NODES) {
+  682|      0|        if (num_nodes < MAX_SENT_NODES) {
   ------------------
   |  |   40|      0|#define MAX_SENT_NODES 4
   ------------------
-  |  Branch (700:13): [True: 0, False: 0]
+  |  Branch (682:13): [True: 0, False: 0]
   ------------------
-  701|      0|            memcpy(nodes_list[num_nodes].public_key, client->public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  683|      0|            memcpy(nodes_list[num_nodes].public_key, client->public_key, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
   |  |   43|      0|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  702|      0|            nodes_list[num_nodes].ip_port = ipptp->ip_port;
-  703|      0|            ++num_nodes;
-  704|      0|        } else {
-  705|       |            // TODO(zugz): this could be made significantly more efficient by
-  706|       |            // using a version of add_to_list which works with a sorted list.
-  707|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
+  684|      0|            nodes_list[num_nodes].ip_port = ipptp->ip_port;
+  685|      0|            ++num_nodes;
+  686|      0|        } else {
+  687|       |            // TODO(zugz): this could be made significantly more efficient by
+  688|       |            // using a version of add_to_list which works with a sorted list.
+  689|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
   ------------------
   |  |   40|      0|#define MAX_SENT_NODES 4
   ------------------
-  708|      0|        }
-  709|      0|    }
-  710|       |
-  711|     16|    *num_nodes_ptr = num_nodes;
-  712|     16|}
+  690|      0|        }
+  691|      0|    }
+  692|       |
+  693|     16|    *num_nodes_ptr = num_nodes;
+  694|     16|}
 DHT.c:index_of_node_pk:
-  498|  8.25k|{
-  499|  8.25k|    assert(size == 0 || array != nullptr);
-  500|       |
-  501|  8.25k|    for (uint32_t i = 0; i < size; ++i) {
+  490|  8.25k|{
+  491|  8.25k|    assert(size == 0 || array != nullptr);
+  492|  8.25k|    for (uint32_t i = 0; i < size; ++i) {
   ------------------
-  |  Branch (501:26): [True: 8.25k, False: 0]
+  |  Branch (492:26): [True: 8.25k, False: 0]
   ------------------
-  502|  8.25k|        if (pk_equal(array[i].public_key, pk)) {
+  493|  8.25k|        if (pk_equal(array[i].public_key, pk)) {
   ------------------
-  |  Branch (502:13): [True: 8.25k, False: 0]
+  |  Branch (493:13): [True: 8.25k, False: 0]
   ------------------
-  503|  8.25k|            return i;
-  504|  8.25k|        }
-  505|  8.25k|    }
-  506|       |
-  507|      0|    return UINT32_MAX;
-  508|  8.25k|}
+  494|  8.25k|            return i;
+  495|  8.25k|        }
+  496|  8.25k|    }
+  497|       |
+  498|      0|    return UINT32_MAX;
+  499|  8.25k|}
 DHT.c:index_of_friend_pk:
-  484|     16|{
-  485|     16|    assert(size == 0 || array != nullptr);
-  486|       |
-  487|     16|    for (uint32_t i = 0; i < size; ++i) {
+  478|     16|{
+  479|     16|    assert(size == 0 || array != nullptr);
+  480|     16|    for (uint32_t i = 0; i < size; ++i) {
   ------------------
-  |  Branch (487:26): [True: 8, False: 8]
+  |  Branch (480:26): [True: 8, False: 8]
   ------------------
-  488|      8|        if (pk_equal(array[i].public_key, pk)) {
+  481|      8|        if (pk_equal(array[i].public_key, pk)) {
   ------------------
-  |  Branch (488:13): [True: 8, False: 0]
+  |  Branch (481:13): [True: 8, False: 0]
   ------------------
-  489|      8|            return i;
-  490|      8|        }
-  491|      8|    }
-  492|       |
-  493|      8|    return UINT32_MAX;
-  494|     16|}
+  482|      8|            return i;
+  483|      8|        }
+  484|      8|    }
+  485|       |
+  486|      8|    return UINT32_MAX;
+  487|     16|}
 DHT.c:dht_friend_lock:
- 1575|     16|{
- 1576|       |    // find first free slot
- 1577|     16|    uint8_t lock_num;
- 1578|     16|    uint32_t lock_token = 0;
- 1579|     24|    for (lock_num = 0; lock_num < DHT_FRIEND_MAX_LOCKS; ++lock_num) {
+ 1517|     16|{
+ 1518|       |    // find first free slot
+ 1519|     16|    uint8_t lock_num;
+ 1520|     16|    uint32_t lock_token = 0;
+ 1521|     24|    for (lock_num = 0; lock_num < DHT_FRIEND_MAX_LOCKS; ++lock_num) {
   ------------------
   |  |   53|     24|#define DHT_FRIEND_MAX_LOCKS 32
   ------------------
-  |  Branch (1579:24): [True: 24, False: 0]
+  |  Branch (1521:24): [True: 24, False: 0]
   ------------------
- 1580|     24|        lock_token = UINT32_C(1) << lock_num;
- 1581|     24|        if ((dht_friend->lock_flags & lock_token) == 0) {
+ 1522|     24|        lock_token = UINT32_C(1) << lock_num;
+ 1523|     24|        if ((dht_friend->lock_flags & lock_token) == 0) {
   ------------------
-  |  Branch (1581:13): [True: 16, False: 8]
+  |  Branch (1523:13): [True: 16, False: 8]
   ------------------
- 1582|     16|            break;
- 1583|     16|        }
- 1584|     24|    }
- 1585|       |
- 1586|       |    // One of the conditions would be enough, but static analyzers don't get that
- 1587|     16|    if (lock_token == 0 || lock_num == DHT_FRIEND_MAX_LOCKS) {
+ 1524|     16|            break;
+ 1525|     16|        }
+ 1526|     24|    }
+ 1527|       |
+ 1528|       |    // One of the conditions would be enough, but static analyzers don't get that
+ 1529|     16|    if (lock_token == 0 || lock_num == DHT_FRIEND_MAX_LOCKS) {
   ------------------
   |  |   53|     16|#define DHT_FRIEND_MAX_LOCKS 32
   ------------------
-  |  Branch (1587:9): [True: 0, False: 16]
-  |  Branch (1587:28): [True: 0, False: 16]
+  |  Branch (1529:9): [True: 0, False: 16]
+  |  Branch (1529:28): [True: 0, False: 16]
   ------------------
- 1588|      0|        return 0;
- 1589|      0|    }
- 1590|       |
- 1591|       |    // Claim that slot
- 1592|     16|    dht_friend->lock_flags |= lock_token;
- 1593|       |
- 1594|     16|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
- 1595|     16|    dht_friend->callbacks[lock_num].data = data;
- 1596|     16|    dht_friend->callbacks[lock_num].number = number;
- 1597|       |
- 1598|     16|    return lock_token;
- 1599|     16|}
+ 1530|      0|        return 0;
+ 1531|      0|    }
+ 1532|       |
+ 1533|       |    // Claim that slot
+ 1534|     16|    dht_friend->lock_flags |= lock_token;
+ 1535|       |
+ 1536|     16|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
+ 1537|     16|    dht_friend->callbacks[lock_num].data = data;
+ 1538|     16|    dht_friend->callbacks[lock_num].number = number;
+ 1539|       |
+ 1540|     16|    return lock_token;
+ 1541|     16|}
 
 crypto_memzero:
-  116|     29|{
-  117|     29|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
-  118|     29|    memzero((uint8_t *)data, length);
-  119|       |#else
-  120|       |    sodium_memzero(data, length);
-  121|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  122|     29|}
+  114|     29|{
+  115|     29|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+  116|     29|    memzero((uint8_t *)data, length);
+  117|       |#else
+  118|       |    sodium_memzero(data, length);
+  119|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+  120|     29|}
 crypto_memlock:
-  125|     17|{
-  126|     17|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
-  127|     17|    return false;
-  128|       |#else
-  129|       |
-  130|       |    return sodium_mlock(data, length) == 0;
-  131|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  132|     17|}
+  123|     17|{
+  124|     17|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+  125|     17|    return false;
+  126|       |#else
+  127|       |
+  128|       |    return sodium_mlock(data, length) == 0;
+  129|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+  130|     17|}
 crypto_memunlock:
-  135|     17|{
-  136|     17|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
-  137|     17|    return false;
-  138|       |#else
-  139|       |
-  140|       |    return sodium_munlock(data, length) == 0;
-  141|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  142|     17|}
+  133|     17|{
+  134|     17|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+  135|     17|    return false;
+  136|       |#else
+  137|       |
+  138|       |    return sodium_munlock(data, length) == 0;
+  139|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+  140|     17|}
 pk_equal:
-  145|  8.26k|{
-  146|  8.26k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-  147|       |    // Hope that this is better for the fuzzer
-  148|  8.26k|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
+  143|  8.26k|{
+  144|  8.26k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  145|       |    // Hope that this is better for the fuzzer
+  146|  8.26k|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
   ------------------
   |  |   43|  8.26k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  149|       |#else
-  150|       |    return crypto_verify_32(pk1, pk2) == 0;
-  151|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  152|  8.26k|}
+  147|       |#else
+  148|       |    return crypto_verify_32(pk1, pk2) == 0;
+  149|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+  150|  8.26k|}
 random_u64:
-  201|      8|{
-  202|      8|    uint64_t randnum;
-  203|      8|    random_bytes(rng, (uint8_t *)&randnum, sizeof(randnum));
-  204|      8|    return randnum;
-  205|      8|}
+  199|      8|{
+  200|      8|    uint64_t randnum;
+  201|      8|    random_bytes(rng, (uint8_t *)&randnum, sizeof(randnum));
+  202|      8|    return randnum;
+  203|      8|}
 crypto_new_keypair:
-  439|     25|{
-  440|     25|    random_bytes(rng, secret_key, CRYPTO_SECRET_KEY_SIZE);
+  437|     25|{
+  438|     25|    random_bytes(rng, secret_key, CRYPTO_SECRET_KEY_SIZE);
   ------------------
   |  |   48|     25|#define CRYPTO_SECRET_KEY_SIZE         32
   ------------------
-  441|     25|    memzero(public_key, CRYPTO_PUBLIC_KEY_SIZE);  // Make MSAN happy
+  439|     25|    memzero(public_key, CRYPTO_PUBLIC_KEY_SIZE);  // Make MSAN happy
   ------------------
   |  |   43|     25|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  442|     25|    crypto_derive_public_key(public_key, secret_key);
-  443|     25|    return 0;
-  444|     25|}
+  440|     25|    crypto_derive_public_key(public_key, secret_key);
+  441|     25|    return 0;
+  442|     25|}
 crypto_derive_public_key:
-  448|     25|{
-  449|     25|    crypto_scalarmult_curve25519_base(public_key, secret_key);
-  450|     25|}
+  446|     25|{
+  447|     25|    crypto_scalarmult_curve25519_base(public_key, secret_key);
+  448|     25|}
 random_bytes:
-  533|     33|{
-  534|     33|    rng->funcs->random_bytes(rng->obj, bytes, length);
-  535|     33|}
+  529|     33|{
+  530|     33|    rng->funcs->random_bytes(rng->obj, bytes, length);
+  531|     33|}
 
 logger_new:
    33|     18|{
@@ -1143,176 +1141,176 @@ logger_write:
    93|      0|}
 
 mem_alloc:
-   63|    142|{
-   64|    142|    void *const ptr = mem->funcs->calloc(mem->obj, 1, size);
-   65|    142|    return ptr;
-   66|    142|}
+   59|    142|{
+   60|    142|    void *const ptr = mem->funcs->calloc(mem->obj, 1, size);
+   61|    142|    return ptr;
+   62|    142|}
 mem_valloc:
-   69|     35|{
-   70|     35|    const uint32_t bytes = nmemb * size;
+   65|     35|{
+   66|     35|    const uint32_t bytes = nmemb * size;
+   67|       |
+   68|     35|    if (size != 0 && bytes / size != nmemb) {
+  ------------------
+  |  Branch (68:9): [True: 35, False: 0]
+  |  Branch (68:22): [True: 0, False: 35]
+  ------------------
+   69|      0|        return nullptr;
+  ------------------
+  |  |   63|      0|#define nullptr NULL
+  ------------------
+   70|      0|    }
    71|       |
-   72|     35|    if (size != 0 && bytes / size != nmemb) {
-  ------------------
-  |  Branch (72:9): [True: 35, False: 0]
-  |  Branch (72:22): [True: 0, False: 35]
-  ------------------
-   73|      0|        return nullptr;
-  ------------------
-  |  |   63|      0|#define nullptr NULL
-  ------------------
-   74|      0|    }
-   75|       |
-   76|     35|    void *const ptr = mem->funcs->calloc(mem->obj, nmemb, size);
-   77|     35|    return ptr;
-   78|     35|}
+   72|     35|    void *const ptr = mem->funcs->calloc(mem->obj, nmemb, size);
+   73|     35|    return ptr;
+   74|     35|}
 mem_vrealloc:
-   81|      8|{
-   82|      8|    const uint32_t bytes = nmemb * size;
-   83|       |
-   84|      8|    if (size != 0 && bytes / size != nmemb) {
+   77|      8|{
+   78|      8|    const uint32_t bytes = nmemb * size;
+   79|       |
+   80|      8|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (84:9): [True: 8, False: 0]
-  |  Branch (84:22): [True: 0, False: 8]
+  |  Branch (80:9): [True: 8, False: 0]
+  |  Branch (80:22): [True: 0, False: 8]
   ------------------
-   85|      0|        return nullptr;
+   81|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-   86|      0|    }
-   87|       |
-   88|      8|    void *const new_ptr = mem->funcs->realloc(mem->obj, ptr, bytes);
-   89|      8|    return new_ptr;
-   90|      8|}
+   82|      0|    }
+   83|       |
+   84|      8|    void *const new_ptr = mem->funcs->realloc(mem->obj, ptr, bytes);
+   85|      8|    return new_ptr;
+   86|      8|}
 mem_delete:
-   93|    190|{
-   94|    190|    mem->funcs->free(mem->obj, ptr);
-   95|    190|}
+   89|    190|{
+   90|    190|    mem->funcs->free(mem->obj, ptr);
+   91|    190|}
 
 mono_time_new:
-  114|     15|{
-  115|     15|    Mono_Time *mono_time = (Mono_Time *)mem_alloc(mem, sizeof(Mono_Time));
-  116|       |
-  117|     15|    if (mono_time == nullptr) {
+  111|     15|{
+  112|     15|    Mono_Time *mono_time = (Mono_Time *)mem_alloc(mem, sizeof(Mono_Time));
+  113|       |
+  114|     15|    if (mono_time == nullptr) {
   ------------------
   |  |   63|     15|#define nullptr NULL
   ------------------
-  |  Branch (117:9): [True: 1, False: 14]
+  |  Branch (114:9): [True: 1, False: 14]
   ------------------
-  118|      1|        return nullptr;
+  115|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-  119|      1|    }
+  116|      1|    }
+  117|       |
+  118|     14|#ifndef ESP_PLATFORM
+  119|     14|    pthread_rwlock_t *rwlock = (pthread_rwlock_t *)mem_alloc(mem, sizeof(pthread_rwlock_t));
   120|       |
-  121|     14|#ifndef ESP_PLATFORM
-  122|     14|    pthread_rwlock_t *rwlock = (pthread_rwlock_t *)mem_alloc(mem, sizeof(pthread_rwlock_t));
-  123|       |
-  124|     14|    if (rwlock == nullptr) {
+  121|     14|    if (rwlock == nullptr) {
   ------------------
   |  |   63|     14|#define nullptr NULL
   ------------------
-  |  Branch (124:9): [True: 1, False: 13]
+  |  Branch (121:9): [True: 1, False: 13]
   ------------------
-  125|      1|        mem_delete(mem, mono_time);
-  126|      1|        return nullptr;
+  122|      1|        mem_delete(mem, mono_time);
+  123|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-  127|      1|    }
-  128|       |
-  129|     13|    if (pthread_rwlock_init(rwlock, nullptr) != 0) {
+  124|      1|    }
+  125|       |
+  126|     13|    if (pthread_rwlock_init(rwlock, nullptr) != 0) {
   ------------------
   |  |   63|     13|#define nullptr NULL
   ------------------
-  |  Branch (129:9): [True: 0, False: 13]
+  |  Branch (126:9): [True: 0, False: 13]
   ------------------
-  130|      0|        mem_delete(mem, rwlock);
-  131|      0|        mem_delete(mem, mono_time);
-  132|      0|        return nullptr;
+  127|      0|        mem_delete(mem, rwlock);
+  128|      0|        mem_delete(mem, mono_time);
+  129|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-  133|      0|    }
+  130|      0|    }
+  131|       |
+  132|     13|    mono_time->time_update_lock = rwlock;
+  133|     13|#endif /* ESP_PLATFORM */
   134|       |
-  135|     13|    mono_time->time_update_lock = rwlock;
-  136|     13|#endif /* ESP_PLATFORM */
-  137|       |
-  138|     13|    mono_time_set_current_time_callback(mono_time, current_time_callback, user_data);
-  139|       |
-  140|     13|    mono_time->cur_time = 0;
-  141|     13|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-  142|       |    // Maximum reproducibility. Never return time = 0.
-  143|     13|    mono_time->base_time = 1000000000;
-  144|       |#else
-  145|       |    // Never return time = 0 in case time() returns 0 (e.g. on microcontrollers
-  146|       |    // without battery-powered RTC or ones where NTP didn't initialise it yet).
-  147|       |    mono_time->base_time = max_u64(1, (uint64_t)time(nullptr)) * UINT64_C(1000) - current_time_monotonic(mono_time);
-  148|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  149|       |
-  150|     13|    mono_time_update(mono_time);
-  151|       |
-  152|     13|    return mono_time;
-  153|     13|}
+  135|     13|    mono_time_set_current_time_callback(mono_time, current_time_callback, user_data);
+  136|       |
+  137|     13|    mono_time->cur_time = 0;
+  138|     13|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  139|       |    // Maximum reproducibility. Never return time = 0.
+  140|     13|    mono_time->base_time = 1000000000;
+  141|       |#else
+  142|       |    // Never return time = 0 in case time() returns 0 (e.g. on microcontrollers
+  143|       |    // without battery-powered RTC or ones where NTP didn't initialise it yet).
+  144|       |    mono_time->base_time = max_u64(1, (uint64_t)time(nullptr)) * UINT64_C(1000) - current_time_monotonic(mono_time);
+  145|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+  146|       |
+  147|     13|    mono_time_update(mono_time);
+  148|       |
+  149|     13|    return mono_time;
+  150|     13|}
 mono_time_free:
-  156|     13|{
-  157|     13|    if (mono_time == nullptr) {
+  153|     13|{
+  154|     13|    if (mono_time == nullptr) {
   ------------------
   |  |   63|     13|#define nullptr NULL
   ------------------
-  |  Branch (157:9): [True: 0, False: 13]
+  |  Branch (154:9): [True: 0, False: 13]
   ------------------
-  158|      0|        return;
-  159|      0|    }
-  160|     13|#ifndef ESP_PLATFORM
-  161|     13|    pthread_rwlock_destroy(mono_time->time_update_lock);
-  162|     13|    mem_delete(mem, mono_time->time_update_lock);
-  163|     13|#endif /* ESP_PLATFORM */
-  164|     13|    mem_delete(mem, mono_time);
-  165|     13|}
+  155|      0|        return;
+  156|      0|    }
+  157|     13|#ifndef ESP_PLATFORM
+  158|     13|    pthread_rwlock_destroy(mono_time->time_update_lock);
+  159|     13|    mem_delete(mem, mono_time->time_update_lock);
+  160|     13|#endif /* ESP_PLATFORM */
+  161|     13|    mem_delete(mem, mono_time);
+  162|     13|}
 mono_time_update:
-  168|     13|{
-  169|     13|    const uint64_t cur_time =
-  170|     13|        mono_time->base_time + mono_time->current_time_callback(mono_time->user_data);
-  171|       |
-  172|     13|#ifndef ESP_PLATFORM
-  173|     13|    pthread_rwlock_wrlock(mono_time->time_update_lock);
-  174|     13|#endif /* ESP_PLATFORM */
-  175|     13|    mono_time->cur_time = cur_time;
-  176|     13|#ifndef ESP_PLATFORM
-  177|     13|    pthread_rwlock_unlock(mono_time->time_update_lock);
-  178|     13|#endif /* ESP_PLATFORM */
-  179|     13|}
+  165|     13|{
+  166|     13|    const uint64_t cur_time =
+  167|     13|        mono_time->base_time + mono_time->current_time_callback(mono_time->user_data);
+  168|       |
+  169|     13|#ifndef ESP_PLATFORM
+  170|     13|    pthread_rwlock_wrlock(mono_time->time_update_lock);
+  171|     13|#endif /* ESP_PLATFORM */
+  172|     13|    mono_time->cur_time = cur_time;
+  173|     13|#ifndef ESP_PLATFORM
+  174|     13|    pthread_rwlock_unlock(mono_time->time_update_lock);
+  175|     13|#endif /* ESP_PLATFORM */
+  176|     13|}
 mono_time_get_ms:
-  182|     30|{
-  183|       |#if !defined(ESP_PLATFORM) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
-  184|       |    // Fuzzing is only single thread for now, no locking needed */
-  185|       |    pthread_rwlock_rdlock(mono_time->time_update_lock);
-  186|       |#endif /* !ESP_PLATFORM */
-  187|     30|    const uint64_t cur_time = mono_time->cur_time;
-  188|       |#if !defined(ESP_PLATFORM) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
-  189|       |    pthread_rwlock_unlock(mono_time->time_update_lock);
-  190|       |#endif /* !ESP_PLATFORM */
-  191|     30|    return cur_time;
-  192|     30|}
+  179|     30|{
+  180|       |#if !defined(ESP_PLATFORM) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+  181|       |    // Fuzzing is only single thread for now, no locking needed */
+  182|       |    pthread_rwlock_rdlock(mono_time->time_update_lock);
+  183|       |#endif /* !ESP_PLATFORM */
+  184|     30|    const uint64_t cur_time = mono_time->cur_time;
+  185|       |#if !defined(ESP_PLATFORM) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+  186|       |    pthread_rwlock_unlock(mono_time->time_update_lock);
+  187|       |#endif /* !ESP_PLATFORM */
+  188|     30|    return cur_time;
+  189|     30|}
 mono_time_get:
-  195|     30|{
-  196|     30|    return mono_time_get_ms(mono_time) / UINT64_C(1000);
-  197|     30|}
+  192|     30|{
+  193|     30|    return mono_time_get_ms(mono_time) / UINT64_C(1000);
+  194|     30|}
 mono_time_set_current_time_callback:
-  206|     13|{
-  207|     13|    if (current_time_callback == nullptr) {
+  203|     13|{
+  204|     13|    if (current_time_callback == nullptr) {
   ------------------
   |  |   63|     13|#define nullptr NULL
   ------------------
-  |  Branch (207:9): [True: 0, False: 13]
+  |  Branch (204:9): [True: 0, False: 13]
   ------------------
-  208|      0|        mono_time->current_time_callback = current_time_monotonic_default;
-  209|      0|        mono_time->user_data = mono_time;
-  210|     13|    } else {
-  211|     13|        mono_time->current_time_callback = current_time_callback;
-  212|     13|        mono_time->user_data = user_data;
-  213|     13|    }
-  214|     13|}
+  205|      0|        mono_time->current_time_callback = current_time_monotonic_default;
+  206|      0|        mono_time->user_data = mono_time;
+  207|     13|    } else {
+  208|     13|        mono_time->current_time_callback = current_time_callback;
+  209|     13|        mono_time->user_data = user_data;
+  210|     13|    }
+  211|     13|}
 
 LLVMFuzzerTestOneInput:
   101|     20|{
@@ -1435,249 +1433,249 @@ net_crypto_fuzz_test.cc:_ZZN12_GLOBAL__N_113TestNetCryptoER9Fuzz_DataENK3$_0clEP
    57|     13|        [mem = sys.mem.get()](Mono_Time *ptr) { mono_time_free(mem, ptr); });
 
 netprof_new:
-  141|     16|{
-  142|     16|    Net_Profile *np = (Net_Profile *)mem_alloc(mem, sizeof(Net_Profile));
-  143|       |
-  144|     16|    if (np == nullptr) {
+  139|     16|{
+  140|     16|    Net_Profile *np = (Net_Profile *)mem_alloc(mem, sizeof(Net_Profile));
+  141|       |
+  142|     16|    if (np == nullptr) {
   ------------------
   |  |   63|     16|#define nullptr NULL
   ------------------
-  |  Branch (144:9): [True: 1, False: 15]
+  |  Branch (142:9): [True: 1, False: 15]
   ------------------
-  145|      1|        LOGGER_ERROR(log, "failed to allocate memory for net profiler");
+  143|      1|        LOGGER_ERROR(log, "failed to allocate memory for net profiler");
   ------------------
-  |  |   87|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      1|    do {                                                                         \
-  |  |  |  |   77|      1|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      1|    do {                                                                         \
+  |  |  |  |   70|      1|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|      2|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      1|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      1|        }                                                                        \
-  |  |  |  |   80|      1|    } while (0)
+  |  |  |  |   71|      1|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      1|        }                                                                        \
+  |  |  |  |   73|      1|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  146|      1|        return nullptr;
+  144|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-  147|      1|    }
-  148|       |
-  149|     15|    return np;
-  150|     16|}
+  145|      1|    }
+  146|       |
+  147|     15|    return np;
+  148|     16|}
 netprof_kill:
-  153|     15|{
-  154|     15|    if (net_profile != nullptr) {
+  151|     15|{
+  152|     15|    if (net_profile != nullptr) {
   ------------------
   |  |   63|     15|#define nullptr NULL
   ------------------
-  |  Branch (154:9): [True: 15, False: 0]
+  |  Branch (152:9): [True: 15, False: 0]
   ------------------
-  155|     15|        mem_delete(mem, net_profile);
-  156|     15|    }
-  157|     15|}
+  153|     15|        mem_delete(mem, net_profile);
+  154|     15|    }
+  155|     15|}
 
 net_socket_from_native:
-  380|     15|{
-  381|     15|    const Socket res = {(force Socket_Value)sock};
-  382|     15|    return res;
-  383|     15|}
+  368|     15|{
+  369|     15|    const Socket res = {(force Socket_Value)sock};
+  370|     15|    return res;
+  371|     15|}
 net_invalid_socket:
-  386|     15|{
-  387|     15|    return net_socket_from_native(INVALID_SOCKET);
+  374|     15|{
+  375|     15|    return net_socket_from_native(INVALID_SOCKET);
   ------------------
-  |  |  371|     15|#define INVALID_SOCKET (-1)
+  |  |  359|     15|#define INVALID_SOCKET (-1)
   ------------------
-  388|     15|}
+  376|     15|}
 net_family_unspec:
-  391|      8|{
-  392|      8|    return family_unspec;
-  393|      8|}
+  379|      8|{
+  380|      8|    return family_unspec;
+  381|      8|}
 net_family_ipv6:
-  401|     19|{
-  402|     19|    return family_ipv6;
-  403|     19|}
+  389|     19|{
+  390|     19|    return family_ipv6;
+  391|     19|}
 net_family_is_unspec:
-  436|     31|{
-  437|     31|    return family.value == family_unspec.value;
-  438|     31|}
+  424|     31|{
+  425|     31|    return family.value == family_unspec.value;
+  426|     31|}
 net_family_is_ipv4:
-  441|     48|{
-  442|     48|    return family.value == family_ipv4.value;
-  443|     48|}
+  429|     48|{
+  430|     48|    return family.value == family_ipv4.value;
+  431|     48|}
 net_family_is_ipv6:
-  446|     63|{
-  447|     63|    return family.value == family_ipv6.value;
-  448|     63|}
+  434|     63|{
+  435|     63|    return family.value == family_ipv6.value;
+  436|     63|}
 sock_valid:
-  481|     15|{
-  482|     15|    const Socket invalid_socket = net_invalid_socket();
-  483|     15|    return sock.value != invalid_socket.value;
-  484|     15|}
+  469|     15|{
+  470|     15|    const Socket invalid_socket = net_invalid_socket();
+  471|     15|    return sock.value != invalid_socket.value;
+  472|     15|}
 kill_sock:
-  969|     15|{
-  970|     15|    ns->funcs->close(ns->obj, sock);
-  971|     15|}
+  929|     15|{
+  930|     15|    ns->funcs->close(ns->obj, sock);
+  931|     15|}
 set_socket_nonblock:
-  974|     15|{
-  975|     15|    return ns->funcs->socket_nonblock(ns->obj, sock, true) == 0;
-  976|     15|}
+  934|     15|{
+  935|     15|    return ns->funcs->socket_nonblock(ns->obj, sock, true) == 0;
+  936|     15|}
 set_socket_nosigpipe:
-  979|     15|{
-  980|       |#if defined(__APPLE__)
-  981|       |    int set = 1;
-  982|       |    return net_setsockopt(ns, sock, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int)) == 0;
-  983|       |#else
-  984|     15|    return true;
-  985|     15|#endif /* __APPLE__ */
-  986|     15|}
+  939|     15|{
+  940|       |#if defined(__APPLE__)
+  941|       |    int set = 1;
+  942|       |    return net_setsockopt(ns, sock, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int)) == 0;
+  943|       |#else
+  944|     15|    return true;
+  945|     15|#endif /* __APPLE__ */
+  946|     15|}
 set_socket_dualstack:
-  999|     15|{
- 1000|     15|    int ipv6only = 0;
- 1001|     15|    size_t optsize = sizeof(ipv6only);
- 1002|     15|    const int res = net_getsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, &optsize);
- 1003|       |
- 1004|     15|    if ((res == 0) && (ipv6only == 0)) {
+  959|     15|{
+  960|     15|    int ipv6only = 0;
+  961|     15|    size_t optsize = sizeof(ipv6only);
+  962|     15|    const int res = net_getsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, &optsize);
+  963|       |
+  964|     15|    if ((res == 0) && (ipv6only == 0)) {
   ------------------
-  |  Branch (1004:9): [True: 15, False: 0]
-  |  Branch (1004:23): [True: 15, False: 0]
+  |  Branch (964:9): [True: 15, False: 0]
+  |  Branch (964:23): [True: 15, False: 0]
   ------------------
- 1005|     15|        return true;
- 1006|     15|    }
- 1007|       |
- 1008|      0|    ipv6only = 0;
- 1009|      0|    return net_setsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, sizeof(ipv6only)) == 0;
- 1010|     15|}
+  965|     15|        return true;
+  966|     15|    }
+  967|       |
+  968|      0|    ipv6only = 0;
+  969|      0|    return net_setsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, sizeof(ipv6only)) == 0;
+  970|     15|}
 networking_registerhandler:
- 1201|    129|{
- 1202|    129|    net->packethandlers[byte].function = cb;
- 1203|    129|    net->packethandlers[byte].object = object;
- 1204|    129|}
+ 1160|    129|{
+ 1161|    129|    net->packethandlers[byte].function = cb;
+ 1162|    129|    net->packethandlers[byte].object = object;
+ 1163|    129|}
 new_networking_ex:
- 1250|     17|{
- 1251|       |    /* If both from and to are 0, use default port range
- 1252|       |     * If one is 0 and the other is non-0, use the non-0 value as only port
- 1253|       |     * If from > to, swap
- 1254|       |     */
- 1255|     17|    if (port_from == 0 && port_to == 0) {
+ 1209|     17|{
+ 1210|       |    /* If both from and to are 0, use default port range
+ 1211|       |     * If one is 0 and the other is non-0, use the non-0 value as only port
+ 1212|       |     * If from > to, swap
+ 1213|       |     */
+ 1214|     17|    if (port_from == 0 && port_to == 0) {
   ------------------
-  |  Branch (1255:9): [True: 0, False: 17]
-  |  Branch (1255:27): [True: 0, False: 0]
+  |  Branch (1214:9): [True: 0, False: 17]
+  |  Branch (1214:27): [True: 0, False: 0]
   ------------------
- 1256|      0|        port_from = TOX_PORTRANGE_FROM;
+ 1215|      0|        port_from = TOX_PORTRANGE_FROM;
   ------------------
   |  |  162|      0|#define TOX_PORTRANGE_FROM 33445
   ------------------
- 1257|      0|        port_to = TOX_PORTRANGE_TO;
+ 1216|      0|        port_to = TOX_PORTRANGE_TO;
   ------------------
   |  |  163|      0|#define TOX_PORTRANGE_TO   33545
   ------------------
- 1258|     17|    } else if (port_from == 0 && port_to != 0) {
+ 1217|     17|    } else if (port_from == 0 && port_to != 0) {
   ------------------
-  |  Branch (1258:16): [True: 0, False: 17]
-  |  Branch (1258:34): [True: 0, False: 0]
+  |  Branch (1217:16): [True: 0, False: 17]
+  |  Branch (1217:34): [True: 0, False: 0]
   ------------------
- 1259|      0|        port_from = port_to;
- 1260|     17|    } else if (port_from != 0 && port_to == 0) {
+ 1218|      0|        port_from = port_to;
+ 1219|     17|    } else if (port_from != 0 && port_to == 0) {
   ------------------
-  |  Branch (1260:16): [True: 17, False: 0]
-  |  Branch (1260:34): [True: 0, False: 17]
+  |  Branch (1219:16): [True: 17, False: 0]
+  |  Branch (1219:34): [True: 0, False: 17]
   ------------------
- 1261|      0|        port_to = port_from;
- 1262|     17|    } else if (port_from > port_to) {
+ 1220|      0|        port_to = port_from;
+ 1221|     17|    } else if (port_from > port_to) {
   ------------------
-  |  Branch (1262:16): [True: 0, False: 17]
+  |  Branch (1221:16): [True: 0, False: 17]
   ------------------
- 1263|      0|        const uint16_t temp_port = port_from;
- 1264|      0|        port_from = port_to;
- 1265|      0|        port_to = temp_port;
- 1266|      0|    }
- 1267|       |
- 1268|     17|    if (error != nullptr) {
+ 1222|      0|        const uint16_t temp_port = port_from;
+ 1223|      0|        port_from = port_to;
+ 1224|      0|        port_to = temp_port;
+ 1225|      0|    }
+ 1226|       |
+ 1227|     17|    if (error != nullptr) {
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-  |  Branch (1268:9): [True: 0, False: 17]
+  |  Branch (1227:9): [True: 0, False: 17]
   ------------------
- 1269|      0|        *error = 2;
- 1270|      0|    }
- 1271|       |
- 1272|       |    /* maybe check for invalid IPs like 224+.x.y.z? if there is any IP set ever */
- 1273|     17|    if (!net_family_is_ipv4(ip->family) && !net_family_is_ipv6(ip->family)) {
+ 1228|      0|        *error = 2;
+ 1229|      0|    }
+ 1230|       |
+ 1231|       |    /* maybe check for invalid IPs like 224+.x.y.z? if there is any IP set ever */
+ 1232|     17|    if (!net_family_is_ipv4(ip->family) && !net_family_is_ipv6(ip->family)) {
   ------------------
-  |  Branch (1273:9): [True: 17, False: 0]
-  |  Branch (1273:44): [True: 0, False: 17]
+  |  Branch (1232:9): [True: 17, False: 0]
+  |  Branch (1232:44): [True: 0, False: 17]
   ------------------
- 1274|      0|        LOGGER_ERROR(log, "invalid address family: %u", ip->family.value);
+ 1233|      0|        LOGGER_ERROR(log, "invalid address family: %u", ip->family.value);
   ------------------
-  |  |   87|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1275|      0|        return nullptr;
+ 1234|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 1276|      0|    }
- 1277|       |
- 1278|     17|    Networking_Core *temp = (Networking_Core *)mem_alloc(mem, sizeof(Networking_Core));
- 1279|       |
- 1280|     17|    if (temp == nullptr) {
+ 1235|      0|    }
+ 1236|       |
+ 1237|     17|    Networking_Core *temp = (Networking_Core *)mem_alloc(mem, sizeof(Networking_Core));
+ 1238|       |
+ 1239|     17|    if (temp == nullptr) {
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-  |  Branch (1280:9): [True: 1, False: 16]
+  |  Branch (1239:9): [True: 1, False: 16]
   ------------------
- 1281|      1|        return nullptr;
+ 1240|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
- 1282|      1|    }
- 1283|       |
- 1284|     16|    Net_Profile *np = netprof_new(log, mem);
- 1285|       |
- 1286|     16|    if (np == nullptr) {
+ 1241|      1|    }
+ 1242|       |
+ 1243|     16|    Net_Profile *np = netprof_new(log, mem);
+ 1244|       |
+ 1245|     16|    if (np == nullptr) {
   ------------------
   |  |   63|     16|#define nullptr NULL
   ------------------
-  |  Branch (1286:9): [True: 1, False: 15]
+  |  Branch (1245:9): [True: 1, False: 15]
   ------------------
- 1287|      1|        free(temp);
- 1288|      1|        return nullptr;
+ 1246|      1|        free(temp);
+ 1247|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
- 1289|      1|    }
- 1290|       |
- 1291|     15|    temp->udp_net_profile = np;
- 1292|     15|    temp->ns = ns;
- 1293|     15|    temp->log = log;
- 1294|     15|    temp->mem = mem;
- 1295|     15|    temp->family = ip->family;
- 1296|     15|    temp->port = 0;
- 1297|       |
- 1298|       |    /* Initialize our socket. */
- 1299|       |    /* add log message what we're creating */
- 1300|     15|    temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
+ 1248|      1|    }
+ 1249|       |
+ 1250|     15|    temp->udp_net_profile = np;
+ 1251|     15|    temp->ns = ns;
+ 1252|     15|    temp->log = log;
+ 1253|     15|    temp->mem = mem;
+ 1254|     15|    temp->family = ip->family;
+ 1255|     15|    temp->port = 0;
+ 1256|       |
+ 1257|       |    /* Initialize our socket. */
+ 1258|       |    /* add log message what we're creating */
+ 1259|     15|    temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
   ------------------
   |  |  174|     15|#define TOX_SOCK_DGRAM 2
   ------------------
@@ -1685,35 +1683,161 @@ new_networking_ex:
   ------------------
   |  |  177|     15|#define TOX_PROTO_UDP 2
   ------------------
- 1301|       |
- 1302|       |    /* Check for socket error. */
- 1303|     15|    if (!sock_valid(temp->sock)) {
+ 1260|       |
+ 1261|       |    /* Check for socket error. */
+ 1262|     15|    if (!sock_valid(temp->sock)) {
   ------------------
-  |  Branch (1303:9): [True: 0, False: 15]
+  |  Branch (1262:9): [True: 0, False: 15]
   ------------------
- 1304|      0|        const int neterror = net_error();
- 1305|      0|        Net_Strerror error_str;
- 1306|      0|        LOGGER_ERROR(log, "failed to get a socket?! %d, %s", neterror, net_strerror(neterror, &error_str));
+ 1263|      0|        const int neterror = net_error();
+ 1264|      0|        Net_Strerror error_str;
+ 1265|      0|        LOGGER_ERROR(log, "failed to get a socket?! %d, %s", neterror, net_strerror(neterror, &error_str));
   ------------------
-  |  |   87|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
   |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1307|      0|        netprof_kill(mem, temp->udp_net_profile);
- 1308|      0|        mem_delete(mem, temp);
+ 1266|      0|        netprof_kill(mem, temp->udp_net_profile);
+ 1267|      0|        mem_delete(mem, temp);
+ 1268|       |
+ 1269|      0|        if (error != nullptr) {
+  ------------------
+  |  |   63|      0|#define nullptr NULL
+  ------------------
+  |  Branch (1269:13): [True: 0, False: 0]
+  ------------------
+ 1270|      0|            *error = 1;
+ 1271|      0|        }
+ 1272|       |
+ 1273|      0|        return nullptr;
+  ------------------
+  |  |   63|      0|#define nullptr NULL
+  ------------------
+ 1274|      0|    }
+ 1275|       |
+ 1276|       |    /* Functions to increase the size of the send and receive UDP buffers.
+ 1277|       |     */
+ 1278|     15|    int n = 1024 * 1024 * 2;
+ 1279|       |
+ 1280|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n)) != 0) {
+  ------------------
+  |  Branch (1280:9): [True: 0, False: 15]
+  ------------------
+ 1281|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_RCVBUF);
+  ------------------
+  |  |   79|      0|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1282|      0|    }
+ 1283|       |
+ 1284|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_SNDBUF, &n, sizeof(n)) != 0) {
+  ------------------
+  |  Branch (1284:9): [True: 0, False: 15]
+  ------------------
+ 1285|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_SNDBUF);
+  ------------------
+  |  |   79|      0|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1286|      0|    }
+ 1287|       |
+ 1288|       |    /* Enable broadcast on socket */
+ 1289|     15|    int broadcast = 1;
+ 1290|       |
+ 1291|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0) {
+  ------------------
+  |  Branch (1291:9): [True: 0, False: 15]
+  ------------------
+ 1292|      0|        LOGGER_ERROR(log, "failed to set socket option %d", SO_BROADCAST);
+  ------------------
+  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1293|      0|    }
+ 1294|       |
+ 1295|       |    /* iOS UDP sockets are weird and apparently can SIGPIPE */
+ 1296|     15|    if (!set_socket_nosigpipe(ns, temp->sock)) {
+  ------------------
+  |  Branch (1296:9): [True: 0, False: 15]
+  ------------------
+ 1297|      0|        kill_networking(temp);
+ 1298|       |
+ 1299|      0|        if (error != nullptr) {
+  ------------------
+  |  |   63|      0|#define nullptr NULL
+  ------------------
+  |  Branch (1299:13): [True: 0, False: 0]
+  ------------------
+ 1300|      0|            *error = 1;
+ 1301|      0|        }
+ 1302|       |
+ 1303|      0|        return nullptr;
+  ------------------
+  |  |   63|      0|#define nullptr NULL
+  ------------------
+ 1304|      0|    }
+ 1305|       |
+ 1306|       |    /* Set socket nonblocking. */
+ 1307|     15|    if (!set_socket_nonblock(ns, temp->sock)) {
+  ------------------
+  |  Branch (1307:9): [True: 0, False: 15]
+  ------------------
+ 1308|      0|        kill_networking(temp);
  1309|       |
  1310|      0|        if (error != nullptr) {
   ------------------
@@ -1730,620 +1854,494 @@ new_networking_ex:
   ------------------
  1315|      0|    }
  1316|       |
- 1317|       |    /* Functions to increase the size of the send and receive UDP buffers.
- 1318|       |     */
- 1319|     15|    int n = 1024 * 1024 * 2;
+ 1317|       |    /* Bind our socket to port PORT and the given IP address (usually 0.0.0.0 or ::) */
+ 1318|     15|    uint16_t *portptr = nullptr;
+  ------------------
+  |  |   63|     15|#define nullptr NULL
+  ------------------
+ 1319|     15|    Network_Addr addr = {{0}};
  1320|       |
- 1321|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n)) != 0) {
+ 1321|     15|    if (net_family_is_ipv4(temp->family)) {
   ------------------
   |  Branch (1321:9): [True: 0, False: 15]
   ------------------
- 1322|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_RCVBUF);
-  ------------------
-  |  |   86|      0|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1323|      0|    }
- 1324|       |
- 1325|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_SNDBUF, &n, sizeof(n)) != 0) {
-  ------------------
-  |  Branch (1325:9): [True: 0, False: 15]
-  ------------------
- 1326|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_SNDBUF);
-  ------------------
-  |  |   86|      0|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1327|      0|    }
+ 1322|      0|        struct sockaddr_in *addr4 = (struct sockaddr_in *)&addr.addr;
+ 1323|       |
+ 1324|      0|        addr.size = sizeof(struct sockaddr_in);
+ 1325|      0|        addr4->sin_family = AF_INET;
+ 1326|      0|        addr4->sin_port = 0;
+ 1327|      0|        fill_addr4(&ip->ip.v4, &addr4->sin_addr);
  1328|       |
- 1329|       |    /* Enable broadcast on socket */
- 1330|     15|    int broadcast = 1;
- 1331|       |
- 1332|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0) {
+ 1329|      0|        portptr = &addr4->sin_port;
+ 1330|     15|    } else if (net_family_is_ipv6(temp->family)) {
   ------------------
-  |  Branch (1332:9): [True: 0, False: 15]
+  |  Branch (1330:16): [True: 15, False: 0]
   ------------------
- 1333|      0|        LOGGER_ERROR(log, "failed to set socket option %d", SO_BROADCAST);
-  ------------------
-  |  |   87|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1334|      0|    }
- 1335|       |
- 1336|       |    /* iOS UDP sockets are weird and apparently can SIGPIPE */
- 1337|     15|    if (!set_socket_nosigpipe(ns, temp->sock)) {
-  ------------------
-  |  Branch (1337:9): [True: 0, False: 15]
-  ------------------
- 1338|      0|        kill_networking(temp);
- 1339|       |
- 1340|      0|        if (error != nullptr) {
-  ------------------
-  |  |   63|      0|#define nullptr NULL
-  ------------------
-  |  Branch (1340:13): [True: 0, False: 0]
-  ------------------
- 1341|      0|            *error = 1;
- 1342|      0|        }
- 1343|       |
+ 1331|     15|        struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *)&addr.addr;
+ 1332|       |
+ 1333|     15|        addr.size = sizeof(struct sockaddr_in6);
+ 1334|     15|        addr6->sin6_family = AF_INET6;
+ 1335|     15|        addr6->sin6_port = 0;
+ 1336|     15|        fill_addr6(&ip->ip.v6, &addr6->sin6_addr);
+ 1337|       |
+ 1338|     15|        addr6->sin6_flowinfo = 0;
+ 1339|     15|        addr6->sin6_scope_id = 0;
+ 1340|       |
+ 1341|     15|        portptr = &addr6->sin6_port;
+ 1342|     15|    } else {
+ 1343|      0|        mem_delete(mem, temp);
  1344|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
  1345|      0|    }
  1346|       |
- 1347|       |    /* Set socket nonblocking. */
- 1348|     15|    if (!set_socket_nonblock(ns, temp->sock)) {
+ 1347|     15|    if (net_family_is_ipv6(ip->family)) {
   ------------------
-  |  Branch (1348:9): [True: 0, False: 15]
+  |  Branch (1347:9): [True: 15, False: 0]
   ------------------
- 1349|      0|        kill_networking(temp);
- 1350|       |
- 1351|      0|        if (error != nullptr) {
+ 1348|     15|        const bool is_dualstack = set_socket_dualstack(ns, temp->sock);
+ 1349|       |
+ 1350|     15|        if (is_dualstack) {
   ------------------
-  |  |   63|      0|#define nullptr NULL
+  |  Branch (1350:13): [True: 15, False: 0]
   ------------------
-  |  Branch (1351:13): [True: 0, False: 0]
+ 1351|     15|            LOGGER_TRACE(log, "Dual-stack socket: enabled");
   ------------------
- 1352|      0|            *error = 1;
- 1353|      0|        }
- 1354|       |
- 1355|      0|        return nullptr;
+  |  |   76|     15|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|     15|    do {                                                                         \
+  |  |  |  |   70|     15|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|     30|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|     15|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
   ------------------
-  |  |   63|      0|#define nullptr NULL
+ 1352|     15|        } else {
+ 1353|      0|            LOGGER_ERROR(log, "Dual-stack socket failed to enable, won't be able to receive from/send to IPv4 addresses");
   ------------------
- 1356|      0|    }
- 1357|       |
- 1358|       |    /* Bind our socket to port PORT and the given IP address (usually 0.0.0.0 or ::) */
- 1359|     15|    uint16_t *portptr = nullptr;
+  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1354|      0|        }
+ 1355|       |
+ 1356|     15|#ifndef ESP_PLATFORM
+ 1357|       |        /* multicast local nodes */
+ 1358|     15|        struct ipv6_mreq mreq = {{{{0}}}};
+ 1359|     15|        mreq.ipv6mr_multiaddr.s6_addr[0] = 0xFF;
+ 1360|     15|        mreq.ipv6mr_multiaddr.s6_addr[1] = 0x02;
+ 1361|     15|        mreq.ipv6mr_multiaddr.s6_addr[15] = 0x01;
+ 1362|     15|        mreq.ipv6mr_interface = 0;
+ 1363|       |
+ 1364|     15|        const int res = net_setsockopt(ns, temp->sock, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, &mreq, sizeof(mreq));
+ 1365|       |
+ 1366|     15|        const int neterror = net_error();
+ 1367|     15|        Net_Strerror error_str;
+ 1368|       |
+ 1369|     15|        if (res < 0) {
+  ------------------
+  |  Branch (1369:13): [True: 0, False: 15]
+  ------------------
+ 1370|      0|            LOGGER_INFO(log, "Failed to activate local multicast membership in FF02::1. (%d, %s)", neterror, net_strerror(neterror, &error_str));
+  ------------------
+  |  |   78|      0|#define LOGGER_INFO(log, ...)    LOGGER_WRITE(log, LOGGER_LEVEL_INFO, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1371|     15|        } else {
+ 1372|     15|            LOGGER_TRACE(log, "Local multicast group joined successfully. (%d, %s)", neterror, net_strerror(neterror, &error_str));
+  ------------------
+  |  |   76|     15|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|     15|    do {                                                                         \
+  |  |  |  |   70|     15|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|     30|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|     15|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1373|     15|        }
+ 1374|     15|#endif /* ESP_PLATFORM */
+ 1375|     15|    }
+ 1376|       |
+ 1377|       |    /* A hanging program or a different user might block the standard port.
+ 1378|       |     * As long as it isn't a parameter coming from the commandline,
+ 1379|       |     * try a few ports after it, to see if we can find a "free" one.
+ 1380|       |     *
+ 1381|       |     * If we go on without binding, the first sendto() automatically binds to
+ 1382|       |     * a free port chosen by the system (i.e. anything from 1024 to 65535).
+ 1383|       |     *
+ 1384|       |     * Returning NULL after bind fails has both advantages and disadvantages:
+ 1385|       |     * advantage:
+ 1386|       |     *   we can rely on getting the port in the range 33445..33450, which
+ 1387|       |     *   enables us to tell joe user to open their firewall to a small range
+ 1388|       |     *
+ 1389|       |     * disadvantage:
+ 1390|       |     *   some clients might not test return of tox_new(), blindly assuming that
+ 1391|       |     *   it worked ok (which it did previously without a successful bind)
+ 1392|       |     */
+ 1393|     15|    uint16_t port_to_try = port_from;
+ 1394|     15|    *portptr = net_htons(port_to_try);
+ 1395|       |
+ 1396|     15|    for (uint16_t tries = port_from; tries <= port_to; ++tries) {
+  ------------------
+  |  Branch (1396:38): [True: 15, False: 0]
+  ------------------
+ 1397|     15|        const int res = net_bind(ns, temp->sock, &addr);
+ 1398|       |
+ 1399|     15|        if (res == 0) {
+  ------------------
+  |  Branch (1399:13): [True: 15, False: 0]
+  ------------------
+ 1400|     15|            temp->port = *portptr;
+ 1401|       |
+ 1402|     15|            Ip_Ntoa ip_str;
+ 1403|     15|            LOGGER_DEBUG(log, "Bound successfully to %s:%u", net_ip_ntoa(ip, &ip_str),
+  ------------------
+  |  |   77|     15|#define LOGGER_DEBUG(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_DEBUG, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|     15|    do {                                                                         \
+  |  |  |  |   70|     15|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|     30|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|     15|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1404|     15|                         net_ntohs(temp->port));
+ 1405|       |
+ 1406|       |            /* errno isn't reset on success, only set on failure, the failed
+ 1407|       |             * binds with parallel clients yield a -EPERM to the outside if
+ 1408|       |             * errno isn't cleared here */
+ 1409|     15|            if (tries > 0) {
+  ------------------
+  |  Branch (1409:17): [True: 15, False: 0]
+  ------------------
+ 1410|     15|                errno = 0;
+ 1411|     15|            }
+ 1412|       |
+ 1413|     15|            if (error != nullptr) {
   ------------------
   |  |   63|     15|#define nullptr NULL
   ------------------
- 1360|     15|    Network_Addr addr = {{0}};
- 1361|       |
- 1362|     15|    if (net_family_is_ipv4(temp->family)) {
+  |  Branch (1413:17): [True: 0, False: 15]
   ------------------
-  |  Branch (1362:9): [True: 0, False: 15]
+ 1414|      0|                *error = 0;
+ 1415|      0|            }
+ 1416|       |
+ 1417|     15|            return temp;
+ 1418|     15|        }
+ 1419|       |
+ 1420|      0|        ++port_to_try;
+ 1421|       |
+ 1422|      0|        if (port_to_try > port_to) {
   ------------------
- 1363|      0|        struct sockaddr_in *addr4 = (struct sockaddr_in *)&addr.addr;
- 1364|       |
- 1365|      0|        addr.size = sizeof(struct sockaddr_in);
- 1366|      0|        addr4->sin_family = AF_INET;
- 1367|      0|        addr4->sin_port = 0;
- 1368|      0|        fill_addr4(&ip->ip.v4, &addr4->sin_addr);
- 1369|       |
- 1370|      0|        portptr = &addr4->sin_port;
- 1371|     15|    } else if (net_family_is_ipv6(temp->family)) {
+  |  Branch (1422:13): [True: 0, False: 0]
   ------------------
-  |  Branch (1371:16): [True: 15, False: 0]
+ 1423|      0|            port_to_try = port_from;
+ 1424|      0|        }
+ 1425|       |
+ 1426|      0|        *portptr = net_htons(port_to_try);
+ 1427|      0|    }
+ 1428|       |
+ 1429|      0|    Ip_Ntoa ip_str;
+ 1430|      0|    const int neterror = net_error();
+ 1431|      0|    Net_Strerror error_str;
+ 1432|      0|    LOGGER_ERROR(log, "failed to bind socket: %d, %s IP: %s port_from: %u port_to: %u",
   ------------------
- 1372|     15|        struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *)&addr.addr;
- 1373|       |
- 1374|     15|        addr.size = sizeof(struct sockaddr_in6);
- 1375|     15|        addr6->sin6_family = AF_INET6;
- 1376|     15|        addr6->sin6_port = 0;
- 1377|     15|        fill_addr6(&ip->ip.v6, &addr6->sin6_addr);
- 1378|       |
- 1379|     15|        addr6->sin6_flowinfo = 0;
- 1380|     15|        addr6->sin6_scope_id = 0;
- 1381|       |
- 1382|     15|        portptr = &addr6->sin6_port;
- 1383|     15|    } else {
- 1384|      0|        mem_delete(mem, temp);
- 1385|      0|        return nullptr;
+  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1433|      0|                 neterror, net_strerror(neterror, &error_str), net_ip_ntoa(ip, &ip_str), port_from, port_to);
+ 1434|      0|    kill_networking(temp);
+ 1435|       |
+ 1436|      0|    if (error != nullptr) {
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 1386|      0|    }
- 1387|       |
- 1388|     15|    if (net_family_is_ipv6(ip->family)) {
+  |  Branch (1436:9): [True: 0, False: 0]
   ------------------
-  |  Branch (1388:9): [True: 15, False: 0]
-  ------------------
- 1389|     15|        const bool is_dualstack = set_socket_dualstack(ns, temp->sock);
- 1390|       |
- 1391|     15|        if (is_dualstack) {
-  ------------------
-  |  Branch (1391:13): [True: 15, False: 0]
-  ------------------
- 1392|     15|            LOGGER_TRACE(log, "Dual-stack socket: enabled");
-  ------------------
-  |  |   83|     15|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|     15|    do {                                                                         \
-  |  |  |  |   77|     15|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     30|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|     15|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1393|     15|        } else {
- 1394|      0|            LOGGER_ERROR(log, "Dual-stack socket failed to enable, won't be able to receive from/send to IPv4 addresses");
-  ------------------
-  |  |   87|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1395|      0|        }
- 1396|       |
- 1397|     15|#ifndef ESP_PLATFORM
- 1398|       |        /* multicast local nodes */
- 1399|     15|        struct ipv6_mreq mreq = {{{{0}}}};
- 1400|     15|        mreq.ipv6mr_multiaddr.s6_addr[0] = 0xFF;
- 1401|     15|        mreq.ipv6mr_multiaddr.s6_addr[1] = 0x02;
- 1402|     15|        mreq.ipv6mr_multiaddr.s6_addr[15] = 0x01;
- 1403|     15|        mreq.ipv6mr_interface = 0;
- 1404|       |
- 1405|     15|        const int res = net_setsockopt(ns, temp->sock, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, &mreq, sizeof(mreq));
- 1406|       |
- 1407|     15|        const int neterror = net_error();
- 1408|     15|        Net_Strerror error_str;
- 1409|       |
- 1410|     15|        if (res < 0) {
-  ------------------
-  |  Branch (1410:13): [True: 0, False: 15]
-  ------------------
- 1411|      0|            LOGGER_INFO(log, "Failed to activate local multicast membership in FF02::1. (%d, %s)", neterror, net_strerror(neterror, &error_str));
-  ------------------
-  |  |   85|      0|#define LOGGER_INFO(log, ...)    LOGGER_WRITE(log, LOGGER_LEVEL_INFO, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1412|     15|        } else {
- 1413|     15|            LOGGER_TRACE(log, "Local multicast group joined successfully. (%d, %s)", neterror, net_strerror(neterror, &error_str));
-  ------------------
-  |  |   83|     15|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|     15|    do {                                                                         \
-  |  |  |  |   77|     15|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     30|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|     15|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1414|     15|        }
- 1415|     15|#endif /* ESP_PLATFORM */
- 1416|     15|    }
- 1417|       |
- 1418|       |    /* A hanging program or a different user might block the standard port.
- 1419|       |     * As long as it isn't a parameter coming from the commandline,
- 1420|       |     * try a few ports after it, to see if we can find a "free" one.
- 1421|       |     *
- 1422|       |     * If we go on without binding, the first sendto() automatically binds to
- 1423|       |     * a free port chosen by the system (i.e. anything from 1024 to 65535).
- 1424|       |     *
- 1425|       |     * Returning NULL after bind fails has both advantages and disadvantages:
- 1426|       |     * advantage:
- 1427|       |     *   we can rely on getting the port in the range 33445..33450, which
- 1428|       |     *   enables us to tell joe user to open their firewall to a small range
- 1429|       |     *
- 1430|       |     * disadvantage:
- 1431|       |     *   some clients might not test return of tox_new(), blindly assuming that
- 1432|       |     *   it worked ok (which it did previously without a successful bind)
- 1433|       |     */
- 1434|     15|    uint16_t port_to_try = port_from;
- 1435|     15|    *portptr = net_htons(port_to_try);
- 1436|       |
- 1437|     15|    for (uint16_t tries = port_from; tries <= port_to; ++tries) {
-  ------------------
-  |  Branch (1437:38): [True: 15, False: 0]
-  ------------------
- 1438|     15|        const int res = net_bind(ns, temp->sock, &addr);
+ 1437|      0|        *error = 1;
+ 1438|      0|    }
  1439|       |
- 1440|     15|        if (res == 0) {
-  ------------------
-  |  Branch (1440:13): [True: 15, False: 0]
-  ------------------
- 1441|     15|            temp->port = *portptr;
- 1442|       |
- 1443|     15|            Ip_Ntoa ip_str;
- 1444|     15|            LOGGER_DEBUG(log, "Bound successfully to %s:%u", net_ip_ntoa(ip, &ip_str),
-  ------------------
-  |  |   84|     15|#define LOGGER_DEBUG(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_DEBUG, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|     15|    do {                                                                         \
-  |  |  |  |   77|     15|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     30|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|     15|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1445|     15|                         net_ntohs(temp->port));
- 1446|       |
- 1447|       |            /* errno isn't reset on success, only set on failure, the failed
- 1448|       |             * binds with parallel clients yield a -EPERM to the outside if
- 1449|       |             * errno isn't cleared here */
- 1450|     15|            if (tries > 0) {
-  ------------------
-  |  Branch (1450:17): [True: 15, False: 0]
-  ------------------
- 1451|     15|                errno = 0;
- 1452|     15|            }
- 1453|       |
- 1454|     15|            if (error != nullptr) {
-  ------------------
-  |  |   63|     15|#define nullptr NULL
-  ------------------
-  |  Branch (1454:17): [True: 0, False: 15]
-  ------------------
- 1455|      0|                *error = 0;
- 1456|      0|            }
- 1457|       |
- 1458|     15|            return temp;
- 1459|     15|        }
- 1460|       |
- 1461|      0|        ++port_to_try;
- 1462|       |
- 1463|      0|        if (port_to_try > port_to) {
-  ------------------
-  |  Branch (1463:13): [True: 0, False: 0]
-  ------------------
- 1464|      0|            port_to_try = port_from;
- 1465|      0|        }
- 1466|       |
- 1467|      0|        *portptr = net_htons(port_to_try);
- 1468|      0|    }
- 1469|       |
- 1470|      0|    Ip_Ntoa ip_str;
- 1471|      0|    const int neterror = net_error();
- 1472|      0|    Net_Strerror error_str;
- 1473|      0|    LOGGER_ERROR(log, "failed to bind socket: %d, %s IP: %s port_from: %u port_to: %u",
-  ------------------
-  |  |   87|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |   80|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1474|      0|                 neterror, net_strerror(neterror, &error_str), net_ip_ntoa(ip, &ip_str), port_from, port_to);
- 1475|      0|    kill_networking(temp);
- 1476|       |
- 1477|      0|    if (error != nullptr) {
+ 1440|      0|    return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-  |  Branch (1477:9): [True: 0, False: 0]
-  ------------------
- 1478|      0|        *error = 1;
- 1479|      0|    }
- 1480|       |
- 1481|      0|    return nullptr;
-  ------------------
-  |  |   63|      0|#define nullptr NULL
-  ------------------
- 1482|     15|}
+ 1441|     15|}
 kill_networking:
- 1502|     15|{
- 1503|     15|    if (net == nullptr) {
+ 1461|     15|{
+ 1462|     15|    if (net == nullptr) {
   ------------------
   |  |   63|     15|#define nullptr NULL
   ------------------
-  |  Branch (1503:9): [True: 0, False: 15]
+  |  Branch (1462:9): [True: 0, False: 15]
   ------------------
- 1504|      0|        return;
- 1505|      0|    }
- 1506|       |
- 1507|     15|    if (!net_family_is_unspec(net->family)) {
+ 1463|      0|        return;
+ 1464|      0|    }
+ 1465|       |
+ 1466|     15|    if (!net_family_is_unspec(net->family)) {
   ------------------
-  |  Branch (1507:9): [True: 15, False: 0]
+  |  Branch (1466:9): [True: 15, False: 0]
   ------------------
- 1508|       |        /* Socket is initialized, so we close it. */
- 1509|     15|        kill_sock(net->ns, net->sock);
- 1510|     15|    }
- 1511|       |
- 1512|     15|    netprof_kill(net->mem, net->udp_net_profile);
- 1513|     15|    mem_delete(net->mem, net);
- 1514|     15|}
+ 1467|       |        /* Socket is initialized, so we close it. */
+ 1468|     15|        kill_sock(net->ns, net->sock);
+ 1469|     15|    }
+ 1470|       |
+ 1471|     15|    netprof_kill(net->mem, net->udp_net_profile);
+ 1472|     15|    mem_delete(net->mem, net);
+ 1473|     15|}
 ip_reset:
- 1630|     19|{
- 1631|     19|    if (ip == nullptr) {
+ 1586|     19|{
+ 1587|     19|    if (ip == nullptr) {
   ------------------
   |  |   63|     19|#define nullptr NULL
   ------------------
-  |  Branch (1631:9): [True: 0, False: 19]
+  |  Branch (1587:9): [True: 0, False: 19]
   ------------------
- 1632|      0|        return;
- 1633|      0|    }
- 1634|       |
- 1635|     19|    *ip = empty_ip;
- 1636|     19|}
+ 1588|      0|        return;
+ 1589|      0|    }
+ 1590|       |
+ 1591|     19|    *ip = empty_ip;
+ 1592|     19|}
 ip_init:
- 1652|     19|{
- 1653|     19|    if (ip == nullptr) {
+ 1608|     19|{
+ 1609|     19|    if (ip == nullptr) {
   ------------------
   |  |   63|     19|#define nullptr NULL
   ------------------
-  |  Branch (1653:9): [True: 0, False: 19]
+  |  Branch (1609:9): [True: 0, False: 19]
   ------------------
- 1654|      0|        return;
- 1655|      0|    }
- 1656|       |
- 1657|     19|    ip_reset(ip);
- 1658|     19|    ip->family = ipv6enabled ? net_family_ipv6() : net_family_ipv4();
+ 1610|      0|        return;
+ 1611|      0|    }
+ 1612|       |
+ 1613|     19|    ip_reset(ip);
+ 1614|     19|    ip->family = ipv6enabled ? net_family_ipv6() : net_family_ipv4();
   ------------------
-  |  Branch (1658:18): [True: 19, False: 0]
+  |  Branch (1614:18): [True: 19, False: 0]
   ------------------
- 1659|     19|}
+ 1615|     19|}
 net_socket:
- 2256|     15|{
- 2257|     15|    const int platform_domain = make_family(domain);
- 2258|     15|    const int platform_type = make_socktype(type);
- 2259|     15|    const int platform_prot = make_proto(protocol);
- 2260|     15|    return ns->funcs->socket(ns->obj, platform_domain, platform_type, platform_prot);
- 2261|     15|}
+ 2209|     15|{
+ 2210|     15|    const int platform_domain = make_family(domain);
+ 2211|     15|    const int platform_type = make_socktype(type);
+ 2212|     15|    const int platform_prot = make_proto(protocol);
+ 2213|     15|    return ns->funcs->socket(ns->obj, platform_domain, platform_type, platform_prot);
+ 2214|     15|}
 net_htons:
- 2275|     15|{
- 2276|     15|    return htons(hostshort);
- 2277|     15|}
+ 2228|     15|{
+ 2229|     15|    return htons(hostshort);
+ 2230|     15|}
 net_error:
- 2360|     15|{
- 2361|       |#ifdef OS_WIN32
- 2362|       |    return WSAGetLastError();
- 2363|       |#else
- 2364|     15|    return errno;
- 2365|     15|#endif /* OS_WIN32 */
- 2366|     15|}
+ 2313|     15|{
+ 2314|       |#ifdef OS_WIN32
+ 2315|       |    return WSAGetLastError();
+ 2316|       |#else
+ 2317|     15|    return errno;
+ 2318|     15|#endif /* OS_WIN32 */
+ 2319|     15|}
 network.c:net_setsockopt:
-  737|     60|{
-  738|     60|    return ns->funcs->setsockopt(ns->obj, sock, level, optname, optval, optlen);
-  739|     60|}
+  708|     60|{
+  709|     60|    return ns->funcs->setsockopt(ns->obj, sock, level, optname, optval, optlen);
+  710|     60|}
 network.c:net_getsockopt:
-  743|     15|{
-  744|     15|    return ns->funcs->getsockopt(ns->obj, sock, level, optname, optval, optlen);
-  745|     15|}
+  713|     15|{
+  714|     15|    return ns->funcs->getsockopt(ns->obj, sock, level, optname, optval, optlen);
+  715|     15|}
 network.c:fill_addr6:
-  333|     15|{
-  334|     15|    memcpy(addr->s6_addr, ip->uint8, sizeof(ip->uint8));
-  335|     15|}
+  321|     15|{
+  322|     15|    memcpy(addr->s6_addr, ip->uint8, sizeof(ip->uint8));
+  323|     15|}
 network.c:net_bind:
-  958|     15|{
-  959|     15|    return ns->funcs->bind(ns->obj, sock, addr);
-  960|     15|}
+  918|     15|{
+  919|     15|    return ns->funcs->bind(ns->obj, sock, addr);
+  920|     15|}
 network.c:make_family:
-  264|     15|{
-  265|     15|    switch (tox_family.value) {
-  266|      0|        case TOX_AF_INET:
+  256|     15|{
+  257|     15|    switch (tox_family.value) {
+  258|      0|        case TOX_AF_INET:
   ------------------
   |  |  168|      0|#define TOX_AF_INET 2
   ------------------
-  |  Branch (266:9): [True: 0, False: 15]
+  |  Branch (258:9): [True: 0, False: 15]
   ------------------
-  267|      0|        case TCP_INET:
+  259|      0|        case TCP_INET:
   ------------------
   |  |  181|      0|#define TCP_INET (TOX_AF_INET6 + 2)
   |  |  ------------------
   |  |  |  |  169|      0|#define TOX_AF_INET6 10
   |  |  ------------------
   ------------------
-  |  Branch (267:9): [True: 0, False: 15]
+  |  Branch (259:9): [True: 0, False: 15]
   ------------------
-  268|      0|            return AF_INET;
-  269|       |
-  270|     15|        case TOX_AF_INET6:
+  260|      0|            return AF_INET;
+  261|       |
+  262|     15|        case TOX_AF_INET6:
   ------------------
   |  |  169|     15|#define TOX_AF_INET6 10
   ------------------
-  |  Branch (270:9): [True: 15, False: 0]
+  |  Branch (262:9): [True: 15, False: 0]
   ------------------
-  271|     15|        case TCP_INET6:
+  263|     15|        case TCP_INET6:
   ------------------
   |  |  182|     15|#define TCP_INET6 (TOX_AF_INET6 + 3)
   |  |  ------------------
   |  |  |  |  169|     15|#define TOX_AF_INET6 10
   |  |  ------------------
   ------------------
-  |  Branch (271:9): [True: 0, False: 15]
+  |  Branch (263:9): [True: 0, False: 15]
   ------------------
-  272|     15|            return AF_INET6;
-  273|       |
-  274|      0|        case TOX_AF_UNSPEC:
+  264|     15|            return AF_INET6;
+  265|       |
+  266|      0|        case TOX_AF_UNSPEC:
   ------------------
   |  |  167|      0|#define TOX_AF_UNSPEC 0
   ------------------
-  |  Branch (274:9): [True: 0, False: 15]
+  |  Branch (266:9): [True: 0, False: 15]
   ------------------
-  275|      0|            return AF_UNSPEC;
-  276|       |
-  277|      0|        default:
+  267|      0|            return AF_UNSPEC;
+  268|       |
+  269|      0|        default:
   ------------------
-  |  Branch (277:9): [True: 0, False: 15]
+  |  Branch (269:9): [True: 0, False: 15]
   ------------------
-  278|      0|            return tox_family.value;
-  279|     15|    }
-  280|     15|}
+  270|      0|            return tox_family.value;
+  271|     15|    }
+  272|     15|}
 network.c:make_socktype:
-  250|     15|{
-  251|     15|    switch (type) {
-  252|      0|        case TOX_SOCK_STREAM:
+  242|     15|{
+  243|     15|    switch (type) {
+  244|      0|        case TOX_SOCK_STREAM:
   ------------------
   |  |  173|      0|#define TOX_SOCK_STREAM 1
   ------------------
-  |  Branch (252:9): [True: 0, False: 15]
+  |  Branch (244:9): [True: 0, False: 15]
   ------------------
-  253|      0|            return SOCK_STREAM;
-  254|       |
-  255|     15|        case TOX_SOCK_DGRAM:
+  245|      0|            return SOCK_STREAM;
+  246|       |
+  247|     15|        case TOX_SOCK_DGRAM:
   ------------------
   |  |  174|     15|#define TOX_SOCK_DGRAM 2
   ------------------
-  |  Branch (255:9): [True: 15, False: 0]
+  |  Branch (247:9): [True: 15, False: 0]
   ------------------
-  256|     15|            return SOCK_DGRAM;
-  257|       |
-  258|      0|        default:
+  248|     15|            return SOCK_DGRAM;
+  249|       |
+  250|      0|        default:
   ------------------
-  |  Branch (258:9): [True: 0, False: 15]
+  |  Branch (250:9): [True: 0, False: 15]
   ------------------
-  259|      0|            return type;
-  260|     15|    }
-  261|     15|}
+  251|      0|            return type;
+  252|     15|    }
+  253|     15|}
 network.c:make_proto:
-  236|     15|{
-  237|     15|    switch (proto) {
-  238|      0|        case TOX_PROTO_TCP:
+  228|     15|{
+  229|     15|    switch (proto) {
+  230|      0|        case TOX_PROTO_TCP:
   ------------------
   |  |  176|      0|#define TOX_PROTO_TCP 1
   ------------------
-  |  Branch (238:9): [True: 0, False: 15]
+  |  Branch (230:9): [True: 0, False: 15]
   ------------------
-  239|      0|            return IPPROTO_TCP;
-  240|       |
-  241|     15|        case TOX_PROTO_UDP:
+  231|      0|            return IPPROTO_TCP;
+  232|       |
+  233|     15|        case TOX_PROTO_UDP:
   ------------------
   |  |  177|     15|#define TOX_PROTO_UDP 2
   ------------------
-  |  Branch (241:9): [True: 15, False: 0]
+  |  Branch (233:9): [True: 15, False: 0]
   ------------------
-  242|     15|            return IPPROTO_UDP;
-  243|       |
-  244|      0|        default:
+  234|     15|            return IPPROTO_UDP;
+  235|       |
+  236|      0|        default:
   ------------------
-  |  Branch (244:9): [True: 0, False: 15]
+  |  Branch (236:9): [True: 0, False: 15]
   ------------------
-  245|      0|            return proto;
-  246|     15|    }
-  247|     15|}
+  237|      0|            return proto;
+  238|     15|    }
+  239|     15|}
 
 ping_new:
-  336|     12|{
-  337|     12|    Ping *ping = (Ping *)mem_alloc(mem, sizeof(Ping));
-  338|       |
-  339|     12|    if (ping == nullptr) {
+  328|     12|{
+  329|     12|    Ping *ping = (Ping *)mem_alloc(mem, sizeof(Ping));
+  330|       |
+  331|     12|    if (ping == nullptr) {
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
-  |  Branch (339:9): [True: 1, False: 11]
+  |  Branch (331:9): [True: 1, False: 11]
   ------------------
-  340|      1|        return nullptr;
+  332|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-  341|      1|    }
-  342|       |
-  343|     11|    ping->ping_array = ping_array_new(mem, PING_NUM_MAX, PING_TIMEOUT);
+  333|      1|    }
+  334|       |
+  335|     11|    ping->ping_array = ping_array_new(mem, PING_NUM_MAX, PING_TIMEOUT);
   ------------------
   |  |   23|     11|#define PING_NUM_MAX 512
   ------------------
@@ -2351,41 +2349,41 @@ ping_new:
   ------------------
   |  |   43|     11|#define PING_TIMEOUT 5
   ------------------
-  344|       |
-  345|     11|    if (ping->ping_array == nullptr) {
+  336|       |
+  337|     11|    if (ping->ping_array == nullptr) {
   ------------------
   |  |   63|     11|#define nullptr NULL
   ------------------
-  |  Branch (345:9): [True: 2, False: 9]
+  |  Branch (337:9): [True: 2, False: 9]
   ------------------
-  346|      2|        mem_delete(mem, ping);
-  347|      2|        return nullptr;
+  338|      2|        mem_delete(mem, ping);
+  339|      2|        return nullptr;
   ------------------
   |  |   63|      2|#define nullptr NULL
   ------------------
-  348|      2|    }
-  349|       |
-  350|      9|    ping->mono_time = mono_time;
-  351|      9|    ping->rng = rng;
-  352|      9|    ping->mem = mem;
-  353|      9|    ping->dht = dht;
-  354|      9|    networking_registerhandler(dht_get_net(ping->dht), NET_PACKET_PING_REQUEST, &handle_ping_request, dht);
-  355|      9|    networking_registerhandler(dht_get_net(ping->dht), NET_PACKET_PING_RESPONSE, &handle_ping_response, dht);
-  356|       |
-  357|      9|    return ping;
-  358|     11|}
+  340|      2|    }
+  341|       |
+  342|      9|    ping->mono_time = mono_time;
+  343|      9|    ping->rng = rng;
+  344|      9|    ping->mem = mem;
+  345|      9|    ping->dht = dht;
+  346|      9|    networking_registerhandler(dht_get_net(ping->dht), NET_PACKET_PING_REQUEST, &handle_ping_request, dht);
+  347|      9|    networking_registerhandler(dht_get_net(ping->dht), NET_PACKET_PING_RESPONSE, &handle_ping_response, dht);
+  348|       |
+  349|      9|    return ping;
+  350|     11|}
 ping_kill:
-  361|     12|{
-  362|     12|    if (ping == nullptr) {
+  353|     12|{
+  354|     12|    if (ping == nullptr) {
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
-  |  Branch (362:9): [True: 3, False: 9]
+  |  Branch (354:9): [True: 3, False: 9]
   ------------------
-  363|      3|        return;
-  364|      3|    }
-  365|       |
-  366|      9|    networking_registerhandler(dht_get_net(ping->dht), NET_PACKET_PING_REQUEST, nullptr, nullptr);
+  355|      3|        return;
+  356|      3|    }
+  357|       |
+  358|      9|    networking_registerhandler(dht_get_net(ping->dht), NET_PACKET_PING_REQUEST, nullptr, nullptr);
   ------------------
   |  |   63|      9|#define nullptr NULL
   ------------------
@@ -2393,7 +2391,7 @@ ping_kill:
   ------------------
   |  |   63|      9|#define nullptr NULL
   ------------------
-  367|      9|    networking_registerhandler(dht_get_net(ping->dht), NET_PACKET_PING_RESPONSE, nullptr, nullptr);
+  359|      9|    networking_registerhandler(dht_get_net(ping->dht), NET_PACKET_PING_RESPONSE, nullptr, nullptr);
   ------------------
   |  |   63|      9|#define nullptr NULL
   ------------------
@@ -2401,10 +2399,10 @@ ping_kill:
   ------------------
   |  |   63|      9|#define nullptr NULL
   ------------------
-  368|      9|    ping_array_kill(ping->ping_array);
-  369|       |
-  370|      9|    mem_delete(mem, ping);
-  371|      9|}
+  360|      9|    ping_array_kill(ping->ping_array);
+  361|       |
+  362|      9|    mem_delete(mem, ping);
+  363|      9|}
 
 ping_array_new:
    37|     19|{
@@ -2468,32 +2466,32 @@ ping_array_new:
    66|     17|    return empty_array;
    67|     18|}
 ping_array_kill:
-   78|     21|{
-   79|     21|    if (array == nullptr) {
+   77|     21|{
+   78|     21|    if (array == nullptr) {
   ------------------
   |  |   63|     21|#define nullptr NULL
   ------------------
-  |  Branch (79:9): [True: 4, False: 17]
+  |  Branch (78:9): [True: 4, False: 17]
   ------------------
-   80|      4|        return;
-   81|      4|    }
-   82|       |
-   83|     17|    while (array->last_deleted != array->last_added) {
+   79|      4|        return;
+   80|      4|    }
+   81|       |
+   82|     17|    while (array->last_deleted != array->last_added) {
   ------------------
-  |  Branch (83:12): [True: 0, False: 17]
+  |  Branch (82:12): [True: 0, False: 17]
   ------------------
-   84|      0|        const uint32_t index = array->last_deleted % array->total_size;
-   85|      0|        clear_entry(array, index);
-   86|      0|        ++array->last_deleted;
-   87|      0|    }
-   88|       |
-   89|     17|    mem_delete(array->mem, array->entries);
-   90|     17|    mem_delete(array->mem, array);
-   91|     17|}
+   83|      0|        const uint32_t index = array->last_deleted % array->total_size;
+   84|      0|        clear_entry(array, index);
+   85|      0|        ++array->last_deleted;
+   86|      0|    }
+   87|       |
+   88|     17|    mem_delete(array->mem, array->entries);
+   89|     17|    mem_delete(array->mem, array);
+   90|     17|}
 
 shared_key_cache_new:
-   52|     18|{
-   53|     18|    if (mono_time == nullptr || self_secret_key == nullptr || timeout == 0 || keys_per_slot == 0) {
+   50|     18|{
+   51|     18|    if (mono_time == nullptr || self_secret_key == nullptr || timeout == 0 || keys_per_slot == 0) {
   ------------------
   |  |   63|     36|#define nullptr NULL
   ------------------
@@ -2501,117 +2499,117 @@ shared_key_cache_new:
   ------------------
   |  |   63|     36|#define nullptr NULL
   ------------------
-  |  Branch (53:9): [True: 0, False: 18]
-  |  Branch (53:33): [True: 0, False: 18]
-  |  Branch (53:63): [True: 0, False: 18]
-  |  Branch (53:79): [True: 0, False: 18]
+  |  Branch (51:9): [True: 0, False: 18]
+  |  Branch (51:33): [True: 0, False: 18]
+  |  Branch (51:63): [True: 0, False: 18]
+  |  Branch (51:79): [True: 0, False: 18]
   ------------------
-   54|      0|        return nullptr;
+   52|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-   55|      0|    }
-   56|       |
-   57|       |    // Time must not be zero, since we use that as special value for empty slots
-   58|     18|    if (mono_time_get(mono_time) == 0) {
+   53|      0|    }
+   54|       |
+   55|       |    // Time must not be zero, since we use that as special value for empty slots
+   56|     18|    if (mono_time_get(mono_time) == 0) {
   ------------------
-  |  Branch (58:9): [True: 0, False: 18]
+  |  Branch (56:9): [True: 0, False: 18]
   ------------------
-   59|       |        // Fail loudly in debug environments
-   60|      0|        LOGGER_FATAL(log, "time must not be zero (mono_time not initialised?)");
+   57|       |        // Fail loudly in debug environments
+   58|      0|        LOGGER_FATAL(log, "time must not be zero (mono_time not initialised?)");
   ------------------
-  |  |   90|      0|    do {                                \
-  |  |   91|      0|        LOGGER_ERROR(log, __VA_ARGS__); \
+  |  |   83|      0|    do {                                \
+  |  |   84|      0|        LOGGER_ERROR(log, __VA_ARGS__); \
   |  |  ------------------
-  |  |  |  |   87|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  |  |  ------------------
-  |  |  |  |  |  |   76|      0|    do {                                                                         \
-  |  |  |  |  |  |   77|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  |  |  ------------------
   |  |  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  |  |  ------------------
-  |  |  |  |  |  |  |  Branch (77:13): [Folded - Ignored]
+  |  |  |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  |  |  ------------------
-  |  |  |  |  |  |   78|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |  |  |   79|      0|        }                                                                        \
-  |  |  |  |  |  |   80|      0|    } while (0)
+  |  |  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |  |  |   73|      0|    } while (0)
   |  |  |  |  |  |  ------------------
-  |  |  |  |  |  |  |  Branch (80:14): [Folded - Ignored]
+  |  |  |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  |  |  ------------------
   |  |  |  |  ------------------
   |  |  ------------------
-  |  |   92|      0|        logger_abort();                 \
-  |  |   93|      0|    } while (0)
+  |  |   85|      0|        logger_abort();                 \
+  |  |   86|      0|    } while (0)
   |  |  ------------------
-  |  |  |  Branch (93:14): [Folded - Ignored]
+  |  |  |  Branch (86:14): [Folded - Ignored]
   |  |  ------------------
   ------------------
-   61|      0|        return nullptr;
+   59|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-   62|      0|    }
-   63|       |
-   64|     18|    Shared_Key_Cache *res = (Shared_Key_Cache *)mem_alloc(mem, sizeof(Shared_Key_Cache));
-   65|     18|    if (res == nullptr) {
+   60|      0|    }
+   61|       |
+   62|     18|    Shared_Key_Cache *res = (Shared_Key_Cache *)mem_alloc(mem, sizeof(Shared_Key_Cache));
+   63|     18|    if (res == nullptr) {
   ------------------
   |  |   63|     18|#define nullptr NULL
   ------------------
-  |  Branch (65:9): [True: 1, False: 17]
+  |  Branch (63:9): [True: 1, False: 17]
   ------------------
-   66|      1|        return nullptr;
+   64|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-   67|      1|    }
-   68|       |
-   69|     17|    res->self_secret_key = self_secret_key;
-   70|     17|    res->mono_time = mono_time;
-   71|     17|    res->mem = mem;
-   72|     17|    res->log = log;
-   73|     17|    res->keys_per_slot = keys_per_slot;
-   74|       |
-   75|       |    // We take one byte from the public key for each bucket and store keys_per_slot elements there
-   76|     17|    const size_t cache_size = 256 * keys_per_slot;
-   77|     17|    Shared_Key *keys = (Shared_Key *)mem_valloc(mem, cache_size, sizeof(Shared_Key));
-   78|       |
-   79|     17|    if (keys == nullptr) {
+   65|      1|    }
+   66|       |
+   67|     17|    res->self_secret_key = self_secret_key;
+   68|     17|    res->mono_time = mono_time;
+   69|     17|    res->mem = mem;
+   70|     17|    res->log = log;
+   71|     17|    res->keys_per_slot = keys_per_slot;
+   72|       |
+   73|       |    // We take one byte from the public key for each bucket and store keys_per_slot elements there
+   74|     17|    const size_t cache_size = 256 * keys_per_slot;
+   75|     17|    Shared_Key *keys = (Shared_Key *)mem_valloc(mem, cache_size, sizeof(Shared_Key));
+   76|       |
+   77|     17|    if (keys == nullptr) {
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-  |  Branch (79:9): [True: 0, False: 17]
+  |  Branch (77:9): [True: 0, False: 17]
   ------------------
-   80|      0|        mem_delete(mem, res);
-   81|      0|        return nullptr;
+   78|      0|        mem_delete(mem, res);
+   79|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-   82|      0|    }
+   80|      0|    }
+   81|       |
+   82|     17|    crypto_memlock(keys, cache_size * sizeof(Shared_Key));
    83|       |
-   84|     17|    crypto_memlock(keys, cache_size * sizeof(Shared_Key));
+   84|     17|    res->keys = keys;
    85|       |
-   86|     17|    res->keys = keys;
-   87|       |
-   88|     17|    return res;
-   89|     17|}
+   86|     17|    return res;
+   87|     17|}
 shared_key_cache_free:
-   92|     24|{
-   93|     24|    if (cache == nullptr) {
+   90|     24|{
+   91|     24|    if (cache == nullptr) {
   ------------------
   |  |   63|     24|#define nullptr NULL
   ------------------
-  |  Branch (93:9): [True: 7, False: 17]
+  |  Branch (91:9): [True: 7, False: 17]
   ------------------
-   94|      7|        return;
-   95|      7|    }
-   96|       |
-   97|     17|    const size_t cache_size = 256 * cache->keys_per_slot;
-   98|       |    // Don't leave key material in memory
-   99|     17|    crypto_memzero(cache->keys, cache_size * sizeof(Shared_Key));
-  100|     17|    crypto_memunlock(cache->keys, cache_size * sizeof(Shared_Key));
-  101|     17|    mem_delete(cache->mem, cache->keys);
-  102|     17|    mem_delete(cache->mem, cache);
-  103|     17|}
+   92|      7|        return;
+   93|      7|    }
+   94|       |
+   95|     17|    const size_t cache_size = 256 * cache->keys_per_slot;
+   96|       |    // Don't leave key material in memory
+   97|     17|    crypto_memzero(cache->keys, cache_size * sizeof(Shared_Key));
+   98|     17|    crypto_memunlock(cache->keys, cache_size * sizeof(Shared_Key));
+   99|     17|    mem_delete(cache->mem, cache->keys);
+  100|     17|    mem_delete(cache->mem, cache);
+  101|     17|}
 
 memzero:
    99|     54|{

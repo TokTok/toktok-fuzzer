@@ -210,73 +210,73 @@ mod_list_unpack:
    79|      9|    return unpacked_len;
    80|      9|}
 mod_list_cleanup:
-  229|     21|{
-  230|     21|    free_uint8_t_pointer_array(moderation->mem, moderation->mod_list, moderation->num_mods);
-  231|     21|    moderation->num_mods = 0;
-  232|     21|    moderation->mod_list = nullptr;
+  228|     21|{
+  229|     21|    free_uint8_t_pointer_array(moderation->mem, moderation->mod_list, moderation->num_mods);
+  230|     21|    moderation->num_mods = 0;
+  231|     21|    moderation->mod_list = nullptr;
   ------------------
   |  |   63|     21|#define nullptr NULL
   ------------------
-  233|     21|}
+  232|     21|}
 sanctions_creds_unpack:
-  318|      2|{
-  319|      2|    uint16_t len_processed = 0;
-  320|       |
-  321|      2|    net_unpack_u32(&data[len_processed], &creds->version);
-  322|      2|    len_processed += sizeof(uint32_t);
-  323|      2|    memcpy(creds->hash, &data[len_processed], MOD_SANCTION_HASH_SIZE);
+  317|      2|{
+  318|      2|    uint16_t len_processed = 0;
+  319|       |
+  320|      2|    net_unpack_u32(&data[len_processed], &creds->version);
+  321|      2|    len_processed += sizeof(uint32_t);
+  322|      2|    memcpy(creds->hash, &data[len_processed], MOD_SANCTION_HASH_SIZE);
   ------------------
   |  |   28|      2|#define MOD_SANCTION_HASH_SIZE CRYPTO_SHA256_SIZE
   |  |  ------------------
   |  |  |  |   74|      2|#define CRYPTO_SHA256_SIZE             32
   |  |  ------------------
   ------------------
-  324|      2|    len_processed += MOD_SANCTION_HASH_SIZE;
+  323|      2|    len_processed += MOD_SANCTION_HASH_SIZE;
   ------------------
   |  |   28|      2|#define MOD_SANCTION_HASH_SIZE CRYPTO_SHA256_SIZE
   |  |  ------------------
   |  |  |  |   74|      2|#define CRYPTO_SHA256_SIZE             32
   |  |  ------------------
   ------------------
-  325|      2|    net_unpack_u16(&data[len_processed], &creds->checksum);
-  326|      2|    len_processed += sizeof(uint16_t);
-  327|      2|    memcpy(creds->sig_pk, &data[len_processed], SIG_PUBLIC_KEY_SIZE);
+  324|      2|    net_unpack_u16(&data[len_processed], &creds->checksum);
+  325|      2|    len_processed += sizeof(uint16_t);
+  326|      2|    memcpy(creds->sig_pk, &data[len_processed], SIG_PUBLIC_KEY_SIZE);
   ------------------
   |  |  132|      2|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   33|      2|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  ------------------
   ------------------
-  328|      2|    len_processed += SIG_PUBLIC_KEY_SIZE;
+  327|      2|    len_processed += SIG_PUBLIC_KEY_SIZE;
   ------------------
   |  |  132|      2|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   33|      2|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  ------------------
   ------------------
-  329|      2|    memcpy(creds->sig, &data[len_processed], SIGNATURE_SIZE);
+  328|      2|    memcpy(creds->sig, &data[len_processed], SIGNATURE_SIZE);
   ------------------
   |  |   27|      2|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
   |  |  ------------------
   |  |  |  |   28|      2|#define CRYPTO_SIGNATURE_SIZE          64
   |  |  ------------------
   ------------------
-  330|      2|    len_processed += SIGNATURE_SIZE;
+  329|      2|    len_processed += SIGNATURE_SIZE;
   ------------------
   |  |   27|      2|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
   |  |  ------------------
   |  |  |  |   28|      2|#define CRYPTO_SIGNATURE_SIZE          64
   |  |  ------------------
   ------------------
-  331|       |
-  332|      2|    return len_processed;
-  333|      2|}
+  330|       |
+  331|      2|    return len_processed;
+  332|      2|}
 sanctions_list_unpack:
-  337|     15|{
-  338|     15|    uint16_t num = 0;
-  339|     15|    uint16_t len_processed = 0;
-  340|       |
-  341|     64|    while (num < max_sanctions && num < MOD_MAX_NUM_SANCTIONS && len_processed < length) {
+  336|     15|{
+  337|     15|    uint16_t num = 0;
+  338|     15|    uint16_t len_processed = 0;
+  339|       |
+  340|     64|    while (num < max_sanctions && num < MOD_MAX_NUM_SANCTIONS && len_processed < length) {
   ------------------
   |  |   52|    126|#define MOD_MAX_NUM_SANCTIONS        (MOD_MAX_NUM_SANCTIONS_LIMIT / 12)
   |  |  ------------------
@@ -338,11 +338,11 @@ sanctions_list_unpack:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (341:12): [True: 62, False: 2]
-  |  Branch (341:35): [True: 62, False: 0]
-  |  Branch (341:66): [True: 57, False: 5]
+  |  Branch (340:12): [True: 62, False: 2]
+  |  Branch (340:35): [True: 62, False: 0]
+  |  Branch (340:66): [True: 57, False: 5]
   ------------------
-  342|     57|        if (len_processed + sizeof(uint8_t) + SIG_PUBLIC_KEY_SIZE + TIME_STAMP_SIZE > length) {
+  341|     57|        if (len_processed + sizeof(uint8_t) + SIG_PUBLIC_KEY_SIZE + TIME_STAMP_SIZE > length) {
   ------------------
   |  |  132|     57|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
@@ -353,98 +353,98 @@ sanctions_list_unpack:
   ------------------
   |  |   30|     57|#define TIME_STAMP_SIZE sizeof(uint64_t)
   ------------------
-  |  Branch (342:13): [True: 1, False: 56]
+  |  Branch (341:13): [True: 1, False: 56]
   ------------------
-  343|      1|            return -1;
-  344|      1|        }
-  345|       |
-  346|     56|        memcpy(&sanctions[num].type, &data[len_processed], sizeof(uint8_t));
-  347|     56|        len_processed += sizeof(uint8_t);
-  348|     56|        memcpy(sanctions[num].setter_public_sig_key, &data[len_processed], SIG_PUBLIC_KEY_SIZE);
-  ------------------
-  |  |  132|     56|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
-  |  |  ------------------
-  |  |  |  |   33|     56|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
-  |  |  ------------------
-  ------------------
-  349|     56|        len_processed += SIG_PUBLIC_KEY_SIZE;
+  342|      1|            return -1;
+  343|      1|        }
+  344|       |
+  345|     56|        memcpy(&sanctions[num].type, &data[len_processed], sizeof(uint8_t));
+  346|     56|        len_processed += sizeof(uint8_t);
+  347|     56|        memcpy(sanctions[num].setter_public_sig_key, &data[len_processed], SIG_PUBLIC_KEY_SIZE);
   ------------------
   |  |  132|     56|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   33|     56|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  ------------------
   ------------------
-  350|     56|        net_unpack_u64(&data[len_processed], &sanctions[num].time_set);
-  351|     56|        len_processed += TIME_STAMP_SIZE;
+  348|     56|        len_processed += SIG_PUBLIC_KEY_SIZE;
+  ------------------
+  |  |  132|     56|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  ------------------
+  |  |  |  |   33|     56|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  ------------------
+  ------------------
+  349|     56|        net_unpack_u64(&data[len_processed], &sanctions[num].time_set);
+  350|     56|        len_processed += TIME_STAMP_SIZE;
   ------------------
   |  |   30|     56|#define TIME_STAMP_SIZE sizeof(uint64_t)
   ------------------
-  352|       |
-  353|     56|        if (sanctions[num].type == SA_OBSERVER) {
+  351|       |
+  352|     56|        if (sanctions[num].type == SA_OBSERVER) {
   ------------------
-  |  Branch (353:13): [True: 52, False: 4]
+  |  Branch (352:13): [True: 52, False: 4]
   ------------------
-  354|     52|            if (len_processed + ENC_PUBLIC_KEY_SIZE > length) {
+  353|     52|            if (len_processed + ENC_PUBLIC_KEY_SIZE > length) {
   ------------------
   |  |  122|     52|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   43|     52|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  |  Branch (354:17): [True: 2, False: 50]
+  |  Branch (353:17): [True: 2, False: 50]
   ------------------
-  355|      2|                return -1;
-  356|      2|            }
-  357|       |
-  358|     50|            memcpy(sanctions[num].target_public_enc_key, &data[len_processed], ENC_PUBLIC_KEY_SIZE);
-  ------------------
-  |  |  122|     50|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
-  |  |  ------------------
-  |  |  |  |   43|     50|#define CRYPTO_PUBLIC_KEY_SIZE         32
-  |  |  ------------------
-  ------------------
-  359|     50|            len_processed += ENC_PUBLIC_KEY_SIZE;
+  354|      2|                return -1;
+  355|      2|            }
+  356|       |
+  357|     50|            memcpy(sanctions[num].target_public_enc_key, &data[len_processed], ENC_PUBLIC_KEY_SIZE);
   ------------------
   |  |  122|     50|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   43|     50|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  360|     50|        } else {
-  361|      4|            return -1;
-  362|      4|        }
-  363|       |
-  364|     50|        if (len_processed + SIGNATURE_SIZE > length) {
+  358|     50|            len_processed += ENC_PUBLIC_KEY_SIZE;
+  ------------------
+  |  |  122|     50|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  ------------------
+  |  |  |  |   43|     50|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  ------------------
+  ------------------
+  359|     50|        } else {
+  360|      4|            return -1;
+  361|      4|        }
+  362|       |
+  363|     50|        if (len_processed + SIGNATURE_SIZE > length) {
   ------------------
   |  |   27|     50|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
   |  |  ------------------
   |  |  |  |   28|     50|#define CRYPTO_SIGNATURE_SIZE          64
   |  |  ------------------
   ------------------
-  |  Branch (364:13): [True: 1, False: 49]
+  |  Branch (363:13): [True: 1, False: 49]
   ------------------
-  365|      1|            return -1;
-  366|      1|        }
-  367|       |
-  368|     49|        memcpy(sanctions[num].signature, &data[len_processed], SIGNATURE_SIZE);
-  ------------------
-  |  |   27|     49|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
-  |  |  ------------------
-  |  |  |  |   28|     49|#define CRYPTO_SIGNATURE_SIZE          64
-  |  |  ------------------
-  ------------------
-  369|     49|        len_processed += SIGNATURE_SIZE;
+  364|      1|            return -1;
+  365|      1|        }
+  366|       |
+  367|     49|        memcpy(sanctions[num].signature, &data[len_processed], SIGNATURE_SIZE);
   ------------------
   |  |   27|     49|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
   |  |  ------------------
   |  |  |  |   28|     49|#define CRYPTO_SIGNATURE_SIZE          64
   |  |  ------------------
   ------------------
-  370|       |
-  371|     49|        ++num;
-  372|     49|    }
-  373|       |
-  374|      7|    if (length <= len_processed || length - len_processed < MOD_SANCTIONS_CREDS_SIZE) {
+  368|     49|        len_processed += SIGNATURE_SIZE;
+  ------------------
+  |  |   27|     49|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
+  |  |  ------------------
+  |  |  |  |   28|     49|#define CRYPTO_SIGNATURE_SIZE          64
+  |  |  ------------------
+  ------------------
+  369|       |
+  370|     49|        ++num;
+  371|     49|    }
+  372|       |
+  373|      7|    if (length <= len_processed || length - len_processed < MOD_SANCTIONS_CREDS_SIZE) {
   ------------------
   |  |   33|      2|#define MOD_SANCTIONS_CREDS_SIZE (sizeof(uint32_t) + MOD_SANCTION_HASH_SIZE + sizeof(uint16_t) +\
   |  |  ------------------
@@ -468,31 +468,31 @@ sanctions_list_unpack:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (374:9): [True: 5, False: 2]
-  |  Branch (374:36): [True: 1, False: 1]
+  |  Branch (373:9): [True: 5, False: 2]
+  |  Branch (373:36): [True: 1, False: 1]
   ------------------
-  375|      6|        if (length != len_processed) {
+  374|      6|        if (length != len_processed) {
   ------------------
-  |  Branch (375:13): [True: 1, False: 5]
+  |  Branch (374:13): [True: 1, False: 5]
   ------------------
-  376|      1|            return -1;
-  377|      1|        }
-  378|       |
-  379|      5|        if (processed_data_len != nullptr) {
+  375|      1|            return -1;
+  376|      1|        }
+  377|       |
+  378|      5|        if (processed_data_len != nullptr) {
   ------------------
   |  |   63|      5|#define nullptr NULL
   ------------------
-  |  Branch (379:13): [True: 5, False: 0]
+  |  Branch (378:13): [True: 5, False: 0]
   ------------------
-  380|      5|            *processed_data_len = len_processed;
-  381|      5|        }
-  382|       |
-  383|      5|        return num;
-  384|      6|    }
-  385|       |
-  386|      1|    const uint16_t creds_len = sanctions_creds_unpack(creds, &data[len_processed]);
-  387|       |
-  388|      1|    if (creds_len != MOD_SANCTIONS_CREDS_SIZE) {
+  379|      5|            *processed_data_len = len_processed;
+  380|      5|        }
+  381|       |
+  382|      5|        return num;
+  383|      6|    }
+  384|       |
+  385|      1|    const uint16_t creds_len = sanctions_creds_unpack(creds, &data[len_processed]);
+  386|       |
+  387|      1|    if (creds_len != MOD_SANCTIONS_CREDS_SIZE) {
   ------------------
   |  |   33|      1|#define MOD_SANCTIONS_CREDS_SIZE (sizeof(uint32_t) + MOD_SANCTION_HASH_SIZE + sizeof(uint16_t) +\
   |  |  ------------------
@@ -516,22 +516,22 @@ sanctions_list_unpack:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (388:9): [True: 0, False: 1]
+  |  Branch (387:9): [True: 0, False: 1]
   ------------------
-  389|      0|        return -1;
-  390|      0|    }
-  391|       |
-  392|      1|    if (processed_data_len != nullptr) {
+  388|      0|        return -1;
+  389|      0|    }
+  390|       |
+  391|      1|    if (processed_data_len != nullptr) {
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-  |  Branch (392:9): [True: 1, False: 0]
+  |  Branch (391:9): [True: 1, False: 0]
   ------------------
-  393|      1|        *processed_data_len = len_processed + creds_len;
-  394|      1|    }
-  395|       |
-  396|      1|    return num;
-  397|      1|}
+  392|      1|        *processed_data_len = len_processed + creds_len;
+  393|      1|    }
+  394|       |
+  395|      1|    return num;
+  396|      1|}
 
 LLVMFuzzerTestOneInput:
    36|     30|{
@@ -580,48 +580,48 @@ group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionCredsUnpackER9Fuzz_
    30|      1|}
 
 os_memory:
-   46|     11|{
-   47|     11|    return &os_memory_obj;
-   48|     11|}
+   42|     11|{
+   43|     11|    return &os_memory_obj;
+   44|     11|}
 mem_balloc:
-   51|    106|{
-   52|    106|    void *const ptr = mem->funcs->malloc(mem->obj, size);
-   53|    106|    return ptr;
-   54|    106|}
+   47|    106|{
+   48|    106|    void *const ptr = mem->funcs->malloc(mem->obj, size);
+   49|    106|    return ptr;
+   50|    106|}
 mem_valloc:
-   69|      9|{
-   70|      9|    const uint32_t bytes = nmemb * size;
-   71|       |
-   72|      9|    if (size != 0 && bytes / size != nmemb) {
+   65|      9|{
+   66|      9|    const uint32_t bytes = nmemb * size;
+   67|       |
+   68|      9|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (72:9): [True: 9, False: 0]
-  |  Branch (72:22): [True: 0, False: 9]
+  |  Branch (68:9): [True: 9, False: 0]
+  |  Branch (68:22): [True: 0, False: 9]
   ------------------
-   73|      0|        return nullptr;
+   69|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-   74|      0|    }
-   75|       |
-   76|      9|    void *const ptr = mem->funcs->calloc(mem->obj, nmemb, size);
-   77|      9|    return ptr;
-   78|      9|}
+   70|      0|    }
+   71|       |
+   72|      9|    void *const ptr = mem->funcs->calloc(mem->obj, nmemb, size);
+   73|      9|    return ptr;
+   74|      9|}
 mem_delete:
-   93|    115|{
-   94|    115|    mem->funcs->free(mem->obj, ptr);
-   95|    115|}
+   89|    115|{
+   90|    115|    mem->funcs->free(mem->obj, ptr);
+   91|    115|}
 mem.c:sys_malloc:
-   15|    106|{
-   16|    106|    return malloc(size);
-   17|    106|}
+   14|    106|{
+   15|    106|    return malloc(size);
+   16|    106|}
 mem.c:sys_calloc:
-   21|      9|{
-   22|      9|    return calloc(nmemb, size);
-   23|      9|}
+   19|      9|{
+   20|      9|    return calloc(nmemb, size);
+   21|      9|}
 mem.c:sys_free:
-   33|    115|{
-   34|    115|    free(ptr);
-   35|    115|}
+   29|    115|{
+   30|    115|    free(ptr);
+   31|    115|}
 
 _ZN12Memory_ClassD2Ev:
    15|     11|Memory_Class::~Memory_Class() = default;
@@ -642,32 +642,32 @@ _ZNK12Memory_ClasscvPK6MemoryEv:
    11|     11|    operator Memory const *() const { return &self; }
 
 net_unpack_u16:
- 2325|    230|{
- 2326|    230|    const uint8_t hi = bytes[0];
- 2327|    230|    const uint8_t lo = bytes[1];
- 2328|    230|    *v = ((uint16_t)hi << 8) | lo;
- 2329|    230|    return sizeof(*v);
- 2330|    230|}
+ 2278|    230|{
+ 2279|    230|    const uint8_t hi = bytes[0];
+ 2280|    230|    const uint8_t lo = bytes[1];
+ 2281|    230|    *v = ((uint16_t)hi << 8) | lo;
+ 2282|    230|    return sizeof(*v);
+ 2283|    230|}
 net_unpack_u32:
- 2333|    114|{
- 2334|    114|    const uint8_t *p = bytes;
- 2335|    114|    uint16_t hi;
- 2336|    114|    uint16_t lo;
- 2337|    114|    p += net_unpack_u16(p, &hi);
- 2338|    114|    p += net_unpack_u16(p, &lo);
- 2339|    114|    *v = ((uint32_t)hi << 16) | lo;
- 2340|    114|    return p - bytes;
- 2341|    114|}
+ 2286|    114|{
+ 2287|    114|    const uint8_t *p = bytes;
+ 2288|    114|    uint16_t hi;
+ 2289|    114|    uint16_t lo;
+ 2290|    114|    p += net_unpack_u16(p, &hi);
+ 2291|    114|    p += net_unpack_u16(p, &lo);
+ 2292|    114|    *v = ((uint32_t)hi << 16) | lo;
+ 2293|    114|    return p - bytes;
+ 2294|    114|}
 net_unpack_u64:
- 2344|     56|{
- 2345|     56|    const uint8_t *p = bytes;
- 2346|     56|    uint32_t hi;
- 2347|     56|    uint32_t lo;
- 2348|     56|    p += net_unpack_u32(p, &hi);
- 2349|     56|    p += net_unpack_u32(p, &lo);
- 2350|     56|    *v = ((uint64_t)hi << 32) | lo;
- 2351|     56|    return p - bytes;
- 2352|     56|}
+ 2297|     56|{
+ 2298|     56|    const uint8_t *p = bytes;
+ 2299|     56|    uint32_t hi;
+ 2300|     56|    uint32_t lo;
+ 2301|     56|    p += net_unpack_u32(p, &hi);
+ 2302|     56|    p += net_unpack_u32(p, &lo);
+ 2303|     56|    *v = ((uint64_t)hi << 32) | lo;
+ 2304|     56|    return p - bytes;
+ 2305|     56|}
 
 _Z16require_not_nullIK6MemoryEPT_PKciS3_:
    73|     11|{
