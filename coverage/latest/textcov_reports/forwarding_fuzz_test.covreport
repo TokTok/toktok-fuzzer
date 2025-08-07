@@ -95,21 +95,21 @@ fuzz_support.cc:_ZL12alloc_commonIDoFPvmmETnT_XadL_Z6callocEEJjjEES0_PKcmR9Fuzz_
   ------------------
   |  |  122|    174|    if (INPUT.size() < sizeof(TYPE)) {                 \
   |  |  ------------------
-  |  |  |  Branch (122:9): [True: 115, False: 59]
+  |  |  |  Branch (122:9): [True: 125, False: 49]
   |  |  ------------------
-  |  |  123|    115|        return VAL;                                    \
-  |  |  124|    115|    }                                                  \
+  |  |  123|    125|        return VAL;                                    \
+  |  |  124|    125|    }                                                  \
   |  |  125|    174|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-   90|     59|        const bool, want_alloc, data, report_alloc("tox1", func, size, Func(args...)));
-   91|     59|    if (!want_alloc) {
+   90|     49|        const bool, want_alloc, data, report_alloc("tox1", func, size, Func(args...)));
+   91|     49|    if (!want_alloc) {
   ------------------
-  |  Branch (91:9): [True: 4, False: 55]
+  |  Branch (91:9): [True: 4, False: 45]
   ------------------
    92|      4|        return nullptr;
    93|      4|    }
-   94|     55|    return report_alloc("tox1", func, size, Func(args...));
-   95|     59|}
+   94|     45|    return report_alloc("tox1", func, size, Func(args...));
+   95|     49|}
 fuzz_support.cc:_ZNK3$_3clEP11Fuzz_SystemPv:
   113|    169|    ![](Fuzz_System *self, void *ptr) { std::free(ptr); },
 fuzz_support.cc:_ZNK3$_4clEP11Fuzz_System6Socket:
@@ -134,7 +134,7 @@ fuzz_support.cc:_ZNK4$_17clEP11Fuzz_System6SocketiiPKvm:
 _ZNK9Fuzz_Data4sizeEv:
    69|    695|    std::size_t size() const { return size_; }
 _ZN9Fuzz_Data8consume1EPKc:
-   68|    218|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   68|    208|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN9Fuzz_Data8ConsumercvT_ItEEv:
    60|     78|        {
    61|     78|            const uint8_t *bytes = fd.consume(func, sizeof(T));
@@ -227,11 +227,11 @@ _ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
   177|       |        // fuzzer to come up with a better selector.
   178|      1|    }
 _ZN9Fuzz_Data8ConsumercvbEv:
-   46|     59|        {
+   46|     49|        {
    47|       |            // Special case because memcpy causes UB for bool (which can't be
    48|       |            // anything other than 0 or 1).
-   49|     59|            const bool val = fd.data_[0];
-   50|     59|            if (FUZZ_DEBUG) {
+   49|     49|            const bool val = fd.data_[0];
+   50|     49|            if (FUZZ_DEBUG) {
   ------------------
   |  Branch (50:17): [Folded - Ignored]
   ------------------
@@ -240,10 +240,10 @@ _ZN9Fuzz_Data8ConsumercvbEv:
   |  Branch (51:75): [True: 0, False: 0]
   ------------------
    52|      0|            }
-   53|     59|            ++fd.data_;
-   54|     59|            --fd.size_;
-   55|     59|            return val;
-   56|     59|        }
+   53|     49|            ++fd.data_;
+   54|     49|            --fd.size_;
+   55|     49|            return val;
+   56|     49|        }
 
 send_forward_request:
    50|     46|{
@@ -322,25 +322,25 @@ create_forward_chain_packet:
    76|       |
    77|     43|    uint16_t offset = 0;
    78|       |
-   79|     95|    for (uint16_t j = 0; j < chain_length; ++j) {
+   79|     92|    for (uint16_t j = 0; j < chain_length; ++j) {
   ------------------
-  |  Branch (79:26): [True: 52, False: 43]
+  |  Branch (79:26): [True: 49, False: 43]
   ------------------
-   80|     52|        packet[offset] = NET_PACKET_FORWARD_REQUEST;
-   81|     52|        ++offset;
-   82|     52|        memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
+   80|     49|        packet[offset] = NET_PACKET_FORWARD_REQUEST;
+   81|     49|        ++offset;
+   82|     49|        memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   43|     52|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|     49|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
                       memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   43|     52|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|     49|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-   83|     52|        offset += CRYPTO_PUBLIC_KEY_SIZE;
+   83|     49|        offset += CRYPTO_PUBLIC_KEY_SIZE;
   ------------------
-  |  |   43|     52|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|     49|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-   84|     52|    }
+   84|     49|    }
    85|       |
    86|     43|    memcpy(packet + offset, data, data_length);
    87|     43|    return true;
@@ -969,8 +969,8 @@ new_networking_ex:
  1213|       |     */
  1214|     59|    if (port_from == 0 && port_to == 0) {
   ------------------
-  |  Branch (1214:9): [True: 27, False: 32]
-  |  Branch (1214:27): [True: 0, False: 27]
+  |  Branch (1214:9): [True: 25, False: 34]
+  |  Branch (1214:27): [True: 0, False: 25]
   ------------------
  1215|      0|        port_from = TOX_PORTRANGE_FROM;
   ------------------
@@ -982,19 +982,19 @@ new_networking_ex:
   ------------------
  1217|     59|    } else if (port_from == 0 && port_to != 0) {
   ------------------
-  |  Branch (1217:16): [True: 27, False: 32]
-  |  Branch (1217:34): [True: 27, False: 0]
+  |  Branch (1217:16): [True: 25, False: 34]
+  |  Branch (1217:34): [True: 25, False: 0]
   ------------------
- 1218|     27|        port_from = port_to;
- 1219|     32|    } else if (port_from != 0 && port_to == 0) {
+ 1218|     25|        port_from = port_to;
+ 1219|     34|    } else if (port_from != 0 && port_to == 0) {
   ------------------
-  |  Branch (1219:16): [True: 32, False: 0]
-  |  Branch (1219:34): [True: 1, False: 31]
+  |  Branch (1219:16): [True: 34, False: 0]
+  |  Branch (1219:34): [True: 1, False: 33]
   ------------------
  1220|      1|        port_to = port_from;
- 1221|     31|    } else if (port_from > port_to) {
+ 1221|     33|    } else if (port_from > port_to) {
   ------------------
-  |  Branch (1221:16): [True: 1, False: 30]
+  |  Branch (1221:16): [True: 1, False: 32]
   ------------------
  1222|      1|        const uint16_t temp_port = port_from;
  1223|      1|        port_from = port_to;
