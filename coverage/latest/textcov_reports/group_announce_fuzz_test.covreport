@@ -1,18 +1,18 @@
 _ZNK9Fuzz_Data4sizeEv:
    69|  12.4k|    std::size_t size() const { return size_; }
 _ZN9Fuzz_Data8consume1EPKc:
-   68|  7.95k|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   68|  7.90k|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN9Fuzz_Data8ConsumercvT_IhEEv:
-   60|  5.95k|        {
-   61|  5.95k|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|  5.95k|            T val;
-   63|  5.95k|            std::memcpy(&val, bytes, sizeof(T));
-   64|  5.95k|            return val;
-   65|  5.95k|        }
+   60|  5.93k|        {
+   61|  5.93k|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   62|  5.93k|            T val;
+   63|  5.93k|            std::memcpy(&val, bytes, sizeof(T));
+   64|  5.93k|            return val;
+   65|  5.93k|        }
 _ZN9Fuzz_Data7consumeEPKcm:
-   75|  12.3k|    {
-   76|  12.3k|        const uint8_t *val = data_;
-   77|  12.3k|        if (FUZZ_DEBUG) {
+   75|  12.2k|    {
+   76|  12.2k|        const uint8_t *val = data_;
+   77|  12.2k|        if (FUZZ_DEBUG) {
   ------------------
   |  Branch (77:13): [Folded - Ignored]
   ------------------
@@ -35,73 +35,73 @@ _ZN9Fuzz_Data7consumeEPKcm:
    85|      0|                    val[count - 1], count);
    86|      0|            }
    87|      0|        }
-   88|  12.3k|        data_ += count;
-   89|  12.3k|        size_ -= count;
-   90|  12.3k|        return val;
-   91|  12.3k|    }
+   88|  12.2k|        data_ += count;
+   89|  12.2k|        size_ -= count;
+   90|  12.2k|        return val;
+   91|  12.2k|    }
 _ZN9Fuzz_Data8ConsumercvT_ItEEv:
-   60|  2.00k|        {
-   61|  2.00k|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|  2.00k|            T val;
-   63|  2.00k|            std::memcpy(&val, bytes, sizeof(T));
-   64|  2.00k|            return val;
-   65|  2.00k|        }
+   60|  1.97k|        {
+   61|  1.97k|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   62|  1.97k|            T val;
+   63|  1.97k|            std::memcpy(&val, bytes, sizeof(T));
+   64|  1.97k|            return val;
+   65|  1.97k|        }
 _ZNK9Fuzz_Data4dataEv:
-   71|    126|    const uint8_t *data() const { return data_; }
+   71|    114|    const uint8_t *data() const { return data_; }
 _ZNK9Fuzz_Data5emptyEv:
-   72|  4.37k|    bool empty() const { return size_ == 0; }
+   72|  4.36k|    bool empty() const { return size_ == 0; }
 group_announce_fuzz_test.cc:_Z18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_123TestUnpackAnnouncesListER9Fuzz_DataEEXadL_ZNS0_24TestUnpackPublicAnnounceES2_EEXadL_ZNS0_9TestDoGcaES2_EEEEvPKhm:
-  183|    375|{
-  184|    375|    Fuzz_Data input{data, size};
+  183|    362|{
+  184|    362|    Fuzz_Data input{data, size};
   185|       |
-  186|    375|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  186|    362|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
   ------------------
-  |  |  105|    375|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|    362|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 0, False: 375]
+  |  |  |  Branch (105:9): [True: 0, False: 362]
   |  |  ------------------
   |  |  106|      0|        return;                               \
   |  |  107|      0|    }                                         \
-  |  |  108|    375|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|    362|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-  187|    375|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  188|    375|}
+  187|    362|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  188|    362|}
 _ZN9Fuzz_DataC2EPKhm:
-   32|    375|        : data_(input_data)
-   33|    375|        , base_(input_data)
-   34|    375|        , size_(input_size)
-   35|    375|    {
-   36|    375|    }
+   32|    362|        : data_(input_data)
+   33|    362|        , base_(input_data)
+   34|    362|        , size_(input_size)
+   35|    362|    {
+   36|    362|    }
 group_announce_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_123TestUnpackAnnouncesListER9Fuzz_DataEEXadL_ZNS0_24TestUnpackPublicAnnounceES2_EEXadL_ZNS0_9TestDoGcaES2_EEEE6selectEhS2_:
-  164|    375|    {
-  165|    375|        if (selector == sizeof...(Args)) {
+  164|    362|    {
+  165|    362|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (165:13): [True: 114, False: 261]
+  |  Branch (165:13): [True: 106, False: 256]
   ------------------
-  166|    114|            return Arg(input);
-  167|    114|        }
-  168|    261|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|    375|    }
+  166|    106|            return Arg(input);
+  167|    106|        }
+  168|    256|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  169|    362|    }
 group_announce_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_124TestUnpackPublicAnnounceER9Fuzz_DataEEXadL_ZNS0_9TestDoGcaES2_EEEE6selectEhS2_:
-  164|    261|    {
-  165|    261|        if (selector == sizeof...(Args)) {
+  164|    256|    {
+  165|    256|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (165:13): [True: 15, False: 246]
+  |  Branch (165:13): [True: 11, False: 245]
   ------------------
-  166|     15|            return Arg(input);
-  167|     15|        }
-  168|    246|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|    261|    }
+  166|     11|            return Arg(input);
+  167|     11|        }
+  168|    245|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  169|    256|    }
 group_announce_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_19TestDoGcaER9Fuzz_DataEEEE6selectEhS2_:
-  164|    246|    {
-  165|    246|        if (selector == sizeof...(Args)) {
+  164|    245|    {
+  165|    245|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (165:13): [True: 245, False: 1]
+  |  Branch (165:13): [True: 244, False: 1]
   ------------------
-  166|    245|            return Arg(input);
-  167|    245|        }
+  166|    244|            return Arg(input);
+  167|    244|        }
   168|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|    246|    }
+  169|    245|    }
 _ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
   175|      1|    {
   176|       |        // The selector selected no function, so we do nothing and rely on the
@@ -109,308 +109,308 @@ _ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
   178|      1|    }
 
 cmp_init:
-  837|  3.47k|                                         cmp_writer *write) {
-  838|  3.47k|  ctx->error = CMP_ERROR_NONE;
-  839|  3.47k|  ctx->buf = buf;
-  840|  3.47k|  ctx->read = read;
-  841|  3.47k|  ctx->skip = skip;
-  842|  3.47k|  ctx->write = write;
-  843|  3.47k|}
+  837|  3.43k|                                         cmp_writer *write) {
+  838|  3.43k|  ctx->error = CMP_ERROR_NONE;
+  839|  3.43k|  ctx->buf = buf;
+  840|  3.43k|  ctx->read = read;
+  841|  3.43k|  ctx->skip = skip;
+  842|  3.43k|  ctx->write = write;
+  843|  3.43k|}
 
 pack_nodes:
-  413|  1.04k|{
-  414|  1.04k|    const uint32_t size = bin_pack_obj_array_b_size(bin_pack_node_handler, nodes, number, logger);
-  415|  1.04k|    if (!bin_pack_obj_array_b(bin_pack_node_handler, nodes, number, logger, data, length)) {
+  413|  1.03k|{
+  414|  1.03k|    const uint32_t size = bin_pack_obj_array_b_size(bin_pack_node_handler, nodes, number, logger);
+  415|  1.03k|    if (!bin_pack_obj_array_b(bin_pack_node_handler, nodes, number, logger, data, length)) {
   ------------------
-  |  Branch (415:9): [True: 0, False: 1.04k]
+  |  Branch (415:9): [True: 0, False: 1.03k]
   ------------------
   416|      0|        return -1;
   417|      0|    }
-  418|  1.04k|    return size;
-  419|  1.04k|}
+  418|  1.03k|    return size;
+  419|  1.03k|}
 unpack_nodes:
-  423|  2.33k|{
-  424|  2.33k|    uint32_t num = 0;
-  425|  2.33k|    uint32_t len_processed = 0;
+  423|  2.29k|{
+  424|  2.29k|    uint32_t num = 0;
+  425|  2.29k|    uint32_t len_processed = 0;
   426|       |
-  427|  3.14k|    while (num < max_num_nodes && len_processed < length) {
+  427|  3.09k|    while (num < max_num_nodes && len_processed < length) {
   ------------------
-  |  Branch (427:12): [True: 1.02k, False: 2.12k]
-  |  Branch (427:35): [True: 959, False: 66]
+  |  Branch (427:12): [True: 1.01k, False: 2.08k]
+  |  Branch (427:35): [True: 944, False: 66]
   ------------------
-  428|    959|        const int ipp_size = unpack_ip_port(&nodes[num].ip_port, data + len_processed, length - len_processed, tcp_enabled);
+  428|    944|        const int ipp_size = unpack_ip_port(&nodes[num].ip_port, data + len_processed, length - len_processed, tcp_enabled);
   429|       |
-  430|    959|        if (ipp_size == -1) {
+  430|    944|        if (ipp_size == -1) {
   ------------------
-  |  Branch (430:13): [True: 81, False: 878]
+  |  Branch (430:13): [True: 81, False: 863]
   ------------------
   431|     81|            break;
   432|     81|        }
   433|       |
-  434|    878|        len_processed += ipp_size;
+  434|    863|        len_processed += ipp_size;
   435|       |
-  436|    878|        if (len_processed + CRYPTO_PUBLIC_KEY_SIZE > length) {
+  436|    863|        if (len_processed + CRYPTO_PUBLIC_KEY_SIZE > length) {
   ------------------
-  |  |   43|    878|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|    863|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  |  Branch (436:13): [True: 71, False: 807]
+  |  Branch (436:13): [True: 71, False: 792]
   ------------------
   437|     71|            return -1;
   438|     71|        }
   439|       |
-  440|    807|        memcpy(nodes[num].public_key, data + len_processed, CRYPTO_PUBLIC_KEY_SIZE);
+  440|    792|        memcpy(nodes[num].public_key, data + len_processed, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   43|    807|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|    792|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  441|    807|        len_processed += CRYPTO_PUBLIC_KEY_SIZE;
+  441|    792|        len_processed += CRYPTO_PUBLIC_KEY_SIZE;
   ------------------
-  |  |   43|    807|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|    792|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  442|    807|        ++num;
+  442|    792|        ++num;
   443|       |
-  444|    807|#ifndef NDEBUG
-  445|    807|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
+  444|    792|#ifndef NDEBUG
+  445|    792|        const uint32_t increment = ipp_size + CRYPTO_PUBLIC_KEY_SIZE;
   ------------------
-  |  |   43|    807|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|    792|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  446|    807|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
-  447|    807|#endif /* NDEBUG */
-  448|    807|    }
+  446|    792|        assert(increment == PACKED_NODE_SIZE_IP4 || increment == PACKED_NODE_SIZE_IP6);
+  447|    792|#endif /* NDEBUG */
+  448|    792|    }
   449|       |
-  450|  2.26k|    if (num == 0 && max_num_nodes > 0 && length > 0) {
+  450|  2.22k|    if (num == 0 && max_num_nodes > 0 && length > 0) {
   ------------------
-  |  Branch (450:9): [True: 1.46k, False: 807]
-  |  Branch (450:21): [True: 147, False: 1.31k]
+  |  Branch (450:9): [True: 1.43k, False: 792]
+  |  Branch (450:21): [True: 147, False: 1.28k]
   |  Branch (450:42): [True: 81, False: 66]
   ------------------
   451|     81|        return -1;
   452|     81|    }
   453|       |
-  454|  2.18k|    if (processed_data_len != nullptr) {
+  454|  2.14k|    if (processed_data_len != nullptr) {
   ------------------
-  |  |   63|  2.18k|#define nullptr NULL
+  |  |   63|  2.14k|#define nullptr NULL
   ------------------
-  |  Branch (454:9): [True: 2.18k, False: 0]
+  |  Branch (454:9): [True: 2.14k, False: 0]
   ------------------
-  455|  2.18k|        *processed_data_len = len_processed;
-  456|  2.18k|    }
+  455|  2.14k|        *processed_data_len = len_processed;
+  456|  2.14k|    }
   457|       |
-  458|  2.18k|    return num;
-  459|  2.26k|}
+  458|  2.14k|    return num;
+  459|  2.22k|}
 DHT.c:bin_pack_node_handler:
-  406|  1.56k|{
-  407|  1.56k|    const Node_format *nodes = (const Node_format *)arr;
-  408|  1.56k|    return bin_pack_ip_port(bp, logger, &nodes[index].ip_port)
+  406|  1.53k|{
+  407|  1.53k|    const Node_format *nodes = (const Node_format *)arr;
+  408|  1.53k|    return bin_pack_ip_port(bp, logger, &nodes[index].ip_port)
   ------------------
-  |  Branch (408:12): [True: 1.56k, False: 0]
+  |  Branch (408:12): [True: 1.53k, False: 0]
   ------------------
-  409|  1.56k|           && bin_pack_bin_b(bp, nodes[index].public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  409|  1.53k|           && bin_pack_bin_b(bp, nodes[index].public_key, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   43|  1.56k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   43|  1.53k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  |  Branch (409:15): [True: 1.56k, False: 0]
+  |  Branch (409:15): [True: 1.53k, False: 0]
   ------------------
-  410|  1.56k|}
+  410|  1.53k|}
 
 bin_pack_obj_size:
-   64|    693|{
-   65|    693|    Bin_Pack bp;
-   66|    693|    bin_pack_init(&bp, nullptr, 0);
+   64|    688|{
+   65|    688|    Bin_Pack bp;
+   66|    688|    bin_pack_init(&bp, nullptr, 0);
   ------------------
-  |  |   63|    693|#define nullptr NULL
+  |  |   63|    688|#define nullptr NULL
   ------------------
-   67|    693|    if (!callback(obj, logger, &bp)) {
+   67|    688|    if (!callback(obj, logger, &bp)) {
   ------------------
-  |  Branch (67:9): [True: 0, False: 693]
+  |  Branch (67:9): [True: 0, False: 688]
   ------------------
    68|      0|        return UINT32_MAX;
    69|      0|    }
-   70|    693|    return bp.bytes_pos;
-   71|    693|}
+   70|    688|    return bp.bytes_pos;
+   71|    688|}
 bin_pack_obj:
-   74|    693|{
-   75|    693|    Bin_Pack bp;
-   76|    693|    bin_pack_init(&bp, buf, buf_size);
-   77|    693|    return callback(obj, logger, &bp);
-   78|    693|}
+   74|    688|{
+   75|    688|    Bin_Pack bp;
+   76|    688|    bin_pack_init(&bp, buf, buf_size);
+   77|    688|    return callback(obj, logger, &bp);
+   78|    688|}
 bin_pack_obj_array_b_size:
-   81|  1.04k|{
-   82|  1.04k|    Bin_Pack bp;
-   83|  1.04k|    bin_pack_init(&bp, nullptr, 0);
+   81|  1.03k|{
+   82|  1.03k|    Bin_Pack bp;
+   83|  1.03k|    bin_pack_init(&bp, nullptr, 0);
   ------------------
-  |  |   63|  1.04k|#define nullptr NULL
+  |  |   63|  1.03k|#define nullptr NULL
   ------------------
-   84|  1.04k|    if (arr == nullptr) {
+   84|  1.03k|    if (arr == nullptr) {
   ------------------
-  |  |   63|  1.04k|#define nullptr NULL
+  |  |   63|  1.03k|#define nullptr NULL
   ------------------
-  |  Branch (84:9): [True: 0, False: 1.04k]
+  |  Branch (84:9): [True: 0, False: 1.03k]
   ------------------
    85|      0|        assert(arr_size == 0);
    86|      0|    }
-   87|  1.82k|    for (uint32_t i = 0; i < arr_size; ++i) {
+   87|  1.79k|    for (uint32_t i = 0; i < arr_size; ++i) {
   ------------------
-  |  Branch (87:26): [True: 781, False: 1.04k]
+  |  Branch (87:26): [True: 766, False: 1.03k]
   ------------------
-   88|    781|        if (!callback(arr, i, logger, &bp)) {
+   88|    766|        if (!callback(arr, i, logger, &bp)) {
   ------------------
-  |  Branch (88:13): [True: 0, False: 781]
+  |  Branch (88:13): [True: 0, False: 766]
   ------------------
    89|      0|            return UINT32_MAX;
    90|      0|        }
-   91|    781|    }
-   92|  1.04k|    return bp.bytes_pos;
-   93|  1.04k|}
+   91|    766|    }
+   92|  1.03k|    return bp.bytes_pos;
+   93|  1.03k|}
 bin_pack_obj_array_b:
-   96|  1.04k|{
-   97|  1.04k|    Bin_Pack bp;
-   98|  1.04k|    bin_pack_init(&bp, buf, buf_size);
-   99|  1.04k|    if (arr == nullptr) {
+   96|  1.03k|{
+   97|  1.03k|    Bin_Pack bp;
+   98|  1.03k|    bin_pack_init(&bp, buf, buf_size);
+   99|  1.03k|    if (arr == nullptr) {
   ------------------
-  |  |   63|  1.04k|#define nullptr NULL
+  |  |   63|  1.03k|#define nullptr NULL
   ------------------
-  |  Branch (99:9): [True: 0, False: 1.04k]
+  |  Branch (99:9): [True: 0, False: 1.03k]
   ------------------
   100|      0|        assert(arr_size == 0);
   101|      0|    }
-  102|  1.82k|    for (uint32_t i = 0; i < arr_size; ++i) {
+  102|  1.79k|    for (uint32_t i = 0; i < arr_size; ++i) {
   ------------------
-  |  Branch (102:26): [True: 781, False: 1.04k]
+  |  Branch (102:26): [True: 766, False: 1.03k]
   ------------------
-  103|    781|        if (!callback(arr, i, logger, &bp)) {
+  103|    766|        if (!callback(arr, i, logger, &bp)) {
   ------------------
-  |  Branch (103:13): [True: 0, False: 781]
+  |  Branch (103:13): [True: 0, False: 766]
   ------------------
   104|      0|            return false;
   105|      0|        }
-  106|    781|    }
-  107|  1.04k|    return true;
-  108|  1.04k|}
+  106|    766|    }
+  107|  1.03k|    return true;
+  108|  1.03k|}
 bin_pack_u08_b:
-  176|  8.84k|{
-  177|  8.84k|    return bp->ctx.write(&bp->ctx, &val, 1) == 1;
-  178|  8.84k|}
+  176|  8.72k|{
+  177|  8.72k|    return bp->ctx.write(&bp->ctx, &val, 1) == 1;
+  178|  8.72k|}
 bin_pack_u16_b:
-  181|  2.94k|{
-  182|  2.94k|    return bin_pack_u08_b(bp, (val >> 8) & 0xff)
+  181|  2.90k|{
+  182|  2.90k|    return bin_pack_u08_b(bp, (val >> 8) & 0xff)
   ------------------
-  |  Branch (182:12): [True: 2.94k, False: 0]
+  |  Branch (182:12): [True: 2.90k, False: 0]
   ------------------
-  183|  2.94k|           && bin_pack_u08_b(bp, val & 0xff);
+  183|  2.90k|           && bin_pack_u08_b(bp, val & 0xff);
   ------------------
-  |  Branch (183:15): [True: 2.94k, False: 0]
+  |  Branch (183:15): [True: 2.90k, False: 0]
   ------------------
-  184|  2.94k|}
+  184|  2.90k|}
 bin_pack_bin_b:
-  199|  4.51k|{
-  200|  4.51k|    return bp->ctx.write(&bp->ctx, data, length) == length;
-  201|  4.51k|}
+  199|  4.44k|{
+  200|  4.44k|    return bp->ctx.write(&bp->ctx, data, length) == length;
+  201|  4.44k|}
 bin_pack.c:bin_pack_init:
-   56|  3.47k|{
-   57|  3.47k|    bp->bytes = buf;
-   58|  3.47k|    bp->bytes_size = buf_size;
-   59|  3.47k|    bp->bytes_pos = 0;
-   60|  3.47k|    cmp_init(&bp->ctx, bp, null_reader, null_skipper, buf_writer);
-   61|  3.47k|}
+   56|  3.43k|{
+   57|  3.43k|    bp->bytes = buf;
+   58|  3.43k|    bp->bytes_size = buf_size;
+   59|  3.43k|    bp->bytes_pos = 0;
+   60|  3.43k|    cmp_init(&bp->ctx, bp, null_reader, null_skipper, buf_writer);
+   61|  3.43k|}
 bin_pack.c:buf_writer:
-   35|  13.3k|{
-   36|  13.3k|    const uint8_t *bytes = (const uint8_t *)data;
-   37|  13.3k|    Bin_Pack *bp = (Bin_Pack *)ctx->buf;
-   38|  13.3k|    assert(bp != nullptr);
-   39|  13.3k|    const uint32_t new_pos = bp->bytes_pos + count;
-   40|  13.3k|    if (new_pos < bp->bytes_pos) {
+   35|  13.1k|{
+   36|  13.1k|    const uint8_t *bytes = (const uint8_t *)data;
+   37|  13.1k|    Bin_Pack *bp = (Bin_Pack *)ctx->buf;
+   38|  13.1k|    assert(bp != nullptr);
+   39|  13.1k|    const uint32_t new_pos = bp->bytes_pos + count;
+   40|  13.1k|    if (new_pos < bp->bytes_pos) {
   ------------------
-  |  Branch (40:9): [True: 0, False: 13.3k]
+  |  Branch (40:9): [True: 0, False: 13.1k]
   ------------------
    41|       |        // 32 bit overflow.
    42|      0|        return 0;
    43|      0|    }
-   44|  13.3k|    if (bp->bytes != nullptr) {
+   44|  13.1k|    if (bp->bytes != nullptr) {
   ------------------
-  |  |   63|  13.3k|#define nullptr NULL
+  |  |   63|  13.1k|#define nullptr NULL
   ------------------
-  |  Branch (44:9): [True: 6.67k, False: 6.67k]
+  |  Branch (44:9): [True: 6.58k, False: 6.58k]
   ------------------
-   45|  6.67k|        if (new_pos > bp->bytes_size) {
+   45|  6.58k|        if (new_pos > bp->bytes_size) {
   ------------------
-  |  Branch (45:13): [True: 0, False: 6.67k]
+  |  Branch (45:13): [True: 0, False: 6.58k]
   ------------------
    46|       |            // Buffer too small.
    47|      0|            return 0;
    48|      0|        }
-   49|  6.67k|        memcpy(&bp->bytes[bp->bytes_pos], bytes, count);
-   50|  6.67k|    }
-   51|  13.3k|    bp->bytes_pos += count;
-   52|  13.3k|    return count;
-   53|  13.3k|}
+   49|  6.58k|        memcpy(&bp->bytes[bp->bytes_pos], bytes, count);
+   50|  6.58k|    }
+   51|  13.1k|    bp->bytes_pos += count;
+   52|  13.1k|    return count;
+   53|  13.1k|}
 
 gca_get_announces:
-   62|    945|{
-   63|    945|    if (gc_announces == nullptr || gc_announces_list == nullptr || chat_id == nullptr || max_nodes == 0
+   62|    957|{
+   63|    957|    if (gc_announces == nullptr || gc_announces_list == nullptr || chat_id == nullptr || max_nodes == 0
   ------------------
-  |  |   63|  1.89k|#define nullptr NULL
-  ------------------
-                  if (gc_announces == nullptr || gc_announces_list == nullptr || chat_id == nullptr || max_nodes == 0
-  ------------------
-  |  |   63|  1.89k|#define nullptr NULL
+  |  |   63|  1.91k|#define nullptr NULL
   ------------------
                   if (gc_announces == nullptr || gc_announces_list == nullptr || chat_id == nullptr || max_nodes == 0
   ------------------
-  |  |   63|  1.89k|#define nullptr NULL
+  |  |   63|  1.91k|#define nullptr NULL
   ------------------
-  |  Branch (63:9): [True: 0, False: 945]
-  |  Branch (63:36): [True: 0, False: 945]
-  |  Branch (63:68): [True: 0, False: 945]
-  |  Branch (63:90): [True: 99, False: 846]
+                  if (gc_announces == nullptr || gc_announces_list == nullptr || chat_id == nullptr || max_nodes == 0
   ------------------
-   64|    945|            || except_public_key == nullptr) {
+  |  |   63|  1.91k|#define nullptr NULL
   ------------------
-  |  |   63|    846|#define nullptr NULL
+  |  Branch (63:9): [True: 0, False: 957]
+  |  Branch (63:36): [True: 0, False: 957]
+  |  Branch (63:68): [True: 0, False: 957]
+  |  Branch (63:90): [True: 99, False: 858]
   ------------------
-  |  Branch (64:16): [True: 0, False: 846]
+   64|    957|            || except_public_key == nullptr) {
+  ------------------
+  |  |   63|    858|#define nullptr NULL
+  ------------------
+  |  Branch (64:16): [True: 0, False: 858]
   ------------------
    65|     99|        return -1;
    66|     99|    }
    67|       |
-   68|    846|    const GC_Announces *announces = get_announces_by_chat_id(gc_announces_list, chat_id);
+   68|    858|    const GC_Announces *announces = get_announces_by_chat_id(gc_announces_list, chat_id);
    69|       |
-   70|    846|    if (announces == nullptr) {
+   70|    858|    if (announces == nullptr) {
   ------------------
-  |  |   63|    846|#define nullptr NULL
+  |  |   63|    858|#define nullptr NULL
   ------------------
-  |  Branch (70:9): [True: 427, False: 419]
+  |  Branch (70:9): [True: 427, False: 431]
   ------------------
    71|    427|        return 0;
    72|    427|    }
    73|       |
-   74|    419|    uint16_t added_count = 0;
+   74|    431|    uint16_t added_count = 0;
    75|       |
-   76|  2.71k|    for (size_t i = 0; i < announces->index && i < GCA_MAX_SAVED_ANNOUNCES_PER_GC && added_count < max_nodes; ++i) {
+   76|  2.74k|    for (size_t i = 0; i < announces->index && i < GCA_MAX_SAVED_ANNOUNCES_PER_GC && added_count < max_nodes; ++i) {
   ------------------
-  |  |   28|  5.07k|#define GCA_MAX_SAVED_ANNOUNCES_PER_GC 16
+  |  |   28|  5.13k|#define GCA_MAX_SAVED_ANNOUNCES_PER_GC 16
   ------------------
-  |  Branch (76:24): [True: 2.36k, False: 353]
-  |  Branch (76:48): [True: 2.29k, False: 66]
-  |  Branch (76:86): [True: 2.29k, False: 0]
+  |  Branch (76:24): [True: 2.38k, False: 365]
+  |  Branch (76:48): [True: 2.31k, False: 66]
+  |  Branch (76:86): [True: 2.31k, False: 0]
   ------------------
-   77|  2.29k|        const size_t index = i % GCA_MAX_SAVED_ANNOUNCES_PER_GC;
+   77|  2.31k|        const size_t index = i % GCA_MAX_SAVED_ANNOUNCES_PER_GC;
   ------------------
-  |  |   28|  2.29k|#define GCA_MAX_SAVED_ANNOUNCES_PER_GC 16
+  |  |   28|  2.31k|#define GCA_MAX_SAVED_ANNOUNCES_PER_GC 16
   ------------------
    78|       |
-   79|  2.29k|        if (memcmp(except_public_key, announces->peer_announces[index].base_announce.peer_public_key,
+   79|  2.31k|        if (memcmp(except_public_key, announces->peer_announces[index].base_announce.peer_public_key,
   ------------------
-  |  Branch (79:13): [True: 200, False: 2.09k]
+  |  Branch (79:13): [True: 224, False: 2.09k]
   ------------------
-   80|  2.29k|                   ENC_PUBLIC_KEY_SIZE) == 0) {
+   80|  2.31k|                   ENC_PUBLIC_KEY_SIZE) == 0) {
   ------------------
-  |  |  122|  2.29k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  122|  2.31k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   43|  2.29k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |   43|  2.31k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-   81|    200|            continue;
-   82|    200|        }
+   81|    224|            continue;
+   82|    224|        }
    83|       |
    84|  2.09k|        bool already_added = false;
    85|       |
@@ -443,60 +443,60 @@ gca_get_announces:
    97|  1.40k|        }
    98|  2.09k|    }
    99|       |
-  100|    419|    return added_count;
-  101|    846|}
+  100|    431|    return added_count;
+  101|    858|}
 gca_pack_announce:
-  109|  1.11k|{
-  110|  1.11k|    if (length < GCA_ANNOUNCE_MAX_SIZE) {
+  109|  1.09k|{
+  110|  1.09k|    if (length < GCA_ANNOUNCE_MAX_SIZE) {
   ------------------
-  |  |   37|  1.11k|#define GCA_ANNOUNCE_MAX_SIZE (ENC_PUBLIC_KEY_SIZE + 1 + 1 + (PACKED_NODE_SIZE_IP6 * 2))
+  |  |   37|  1.09k|#define GCA_ANNOUNCE_MAX_SIZE (ENC_PUBLIC_KEY_SIZE + 1 + 1 + (PACKED_NODE_SIZE_IP6 * 2))
   |  |  ------------------
-  |  |  |  |  122|  1.11k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  |  |  122|  1.09k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   43|  1.11k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |  |  |   43|  1.09k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  |  |  ------------------
   |  |  ------------------
   |  |               #define GCA_ANNOUNCE_MAX_SIZE (ENC_PUBLIC_KEY_SIZE + 1 + 1 + (PACKED_NODE_SIZE_IP6 * 2))
   |  |  ------------------
-  |  |  |  |   72|  1.11k|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
+  |  |  |  |   72|  1.09k|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
   |  |  |  |  ------------------
-  |  |  |  |  |  |  186|  1.11k|#define SIZE_IP6 16
+  |  |  |  |  |  |  186|  1.09k|#define SIZE_IP6 16
   |  |  |  |  ------------------
   |  |  |  |               #define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
   |  |  |  |  ------------------
-  |  |  |  |  |  |   43|  1.11k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |  |  |   43|  1.09k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (110:9): [True: 5, False: 1.11k]
+  |  Branch (110:9): [True: 4, False: 1.09k]
   ------------------
-  111|      5|        LOGGER_ERROR(log, "Invalid announce length: %u", length);
+  111|      4|        LOGGER_ERROR(log, "Invalid announce length: %u", length);
   ------------------
-  |  |   80|      5|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      4|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|      5|    do {                                                                         \
-  |  |  |  |   70|      5|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      4|    do {                                                                         \
+  |  |  |  |   70|      4|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     10|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|      8|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   71|      5|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|      5|        }                                                                        \
-  |  |  |  |   73|      5|    } while (0)
+  |  |  |  |   71|      4|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      4|        }                                                                        \
+  |  |  |  |   73|      4|    } while (0)
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  112|      5|        return -1;
-  113|      5|    }
+  112|      4|        return -1;
+  113|      4|    }
   114|       |
-  115|  1.11k|    if (data == nullptr) {
+  115|  1.09k|    if (data == nullptr) {
   ------------------
-  |  |   63|  1.11k|#define nullptr NULL
+  |  |   63|  1.09k|#define nullptr NULL
   ------------------
-  |  Branch (115:9): [True: 0, False: 1.11k]
+  |  Branch (115:9): [True: 0, False: 1.09k]
   ------------------
   116|      0|        LOGGER_ERROR(log, "data is null");
   ------------------
@@ -520,11 +520,11 @@ gca_pack_announce:
   117|      0|        return -1;
   118|      0|    }
   119|       |
-  120|  1.11k|    if (announce == nullptr) {
+  120|  1.09k|    if (announce == nullptr) {
   ------------------
-  |  |   63|  1.11k|#define nullptr NULL
+  |  |   63|  1.09k|#define nullptr NULL
   ------------------
-  |  Branch (120:9): [True: 0, False: 1.11k]
+  |  Branch (120:9): [True: 0, False: 1.09k]
   ------------------
   121|      0|        LOGGER_ERROR(log, "announce is null");
   ------------------
@@ -548,67 +548,67 @@ gca_pack_announce:
   122|      0|        return -1;
   123|      0|    }
   124|       |
-  125|  1.11k|    uint16_t offset = 0;
-  126|  1.11k|    memcpy(data + offset, announce->peer_public_key, ENC_PUBLIC_KEY_SIZE);
+  125|  1.09k|    uint16_t offset = 0;
+  126|  1.09k|    memcpy(data + offset, announce->peer_public_key, ENC_PUBLIC_KEY_SIZE);
   ------------------
-  |  |  122|  1.11k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  122|  1.09k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   43|  1.11k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |   43|  1.09k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  127|  1.11k|    offset += ENC_PUBLIC_KEY_SIZE;
+  127|  1.09k|    offset += ENC_PUBLIC_KEY_SIZE;
   ------------------
-  |  |  122|  1.11k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  122|  1.09k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   43|  1.11k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |   43|  1.09k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
   128|       |
-  129|  1.11k|    data[offset] = announce->ip_port_is_set ? 1 : 0;
+  129|  1.09k|    data[offset] = announce->ip_port_is_set ? 1 : 0;
   ------------------
-  |  Branch (129:20): [True: 693, False: 419]
+  |  Branch (129:20): [True: 688, False: 404]
   ------------------
-  130|  1.11k|    ++offset;
+  130|  1.09k|    ++offset;
   131|       |
-  132|  1.11k|    data[offset] = announce->tcp_relays_count;
-  133|  1.11k|    ++offset;
+  132|  1.09k|    data[offset] = announce->tcp_relays_count;
+  133|  1.09k|    ++offset;
   134|       |
-  135|  1.11k|    if (!announce->ip_port_is_set && announce->tcp_relays_count == 0) {
+  135|  1.09k|    if (!announce->ip_port_is_set && announce->tcp_relays_count == 0) {
   ------------------
-  |  Branch (135:9): [True: 419, False: 693]
-  |  Branch (135:38): [True: 67, False: 352]
+  |  Branch (135:9): [True: 404, False: 688]
+  |  Branch (135:38): [True: 62, False: 342]
   ------------------
-  136|     67|        LOGGER_ERROR(log, "Failed to pack announce: no valid ip_port or tcp relay");
+  136|     62|        LOGGER_ERROR(log, "Failed to pack announce: no valid ip_port or tcp relay");
   ------------------
-  |  |   80|     67|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|     62|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|     67|    do {                                                                         \
-  |  |  |  |   70|     67|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|     62|    do {                                                                         \
+  |  |  |  |   70|     62|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|    134|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|    124|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   71|     67|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|     67|        }                                                                        \
-  |  |  |  |   73|     67|    } while (0)
+  |  |  |  |   71|     62|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|     62|        }                                                                        \
+  |  |  |  |   73|     62|    } while (0)
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  137|     67|        return -1;
-  138|     67|    }
+  137|     62|        return -1;
+  138|     62|    }
   139|       |
-  140|  1.04k|    if (announce->ip_port_is_set) {
+  140|  1.03k|    if (announce->ip_port_is_set) {
   ------------------
-  |  Branch (140:9): [True: 693, False: 352]
+  |  Branch (140:9): [True: 688, False: 342]
   ------------------
-  141|    693|        const int ip_port_length = pack_ip_port(log, data + offset, length - offset, &announce->ip_port);
+  141|    688|        const int ip_port_length = pack_ip_port(log, data + offset, length - offset, &announce->ip_port);
   142|       |
-  143|    693|        if (ip_port_length == -1) {
+  143|    688|        if (ip_port_length == -1) {
   ------------------
-  |  Branch (143:13): [True: 0, False: 693]
+  |  Branch (143:13): [True: 0, False: 688]
   ------------------
   144|      0|            LOGGER_ERROR(log, "Failed to pack ip_port");
   ------------------
@@ -632,15 +632,15 @@ gca_pack_announce:
   145|      0|            return -1;
   146|      0|        }
   147|       |
-  148|    693|        offset += ip_port_length;
-  149|    693|    }
+  148|    688|        offset += ip_port_length;
+  149|    688|    }
   150|       |
-  151|  1.04k|    const int nodes_length = pack_nodes(log, data + offset, length - offset, announce->tcp_relays,
-  152|  1.04k|                                        announce->tcp_relays_count);
+  151|  1.03k|    const int nodes_length = pack_nodes(log, data + offset, length - offset, announce->tcp_relays,
+  152|  1.03k|                                        announce->tcp_relays_count);
   153|       |
-  154|  1.04k|    if (nodes_length == -1) {
+  154|  1.03k|    if (nodes_length == -1) {
   ------------------
-  |  Branch (154:9): [True: 0, False: 1.04k]
+  |  Branch (154:9): [True: 0, False: 1.03k]
   ------------------
   155|      0|        LOGGER_ERROR(log, "Failed to pack TCP nodes");
   ------------------
@@ -664,93 +664,93 @@ gca_pack_announce:
   156|      0|        return -1;
   157|      0|    }
   158|       |
-  159|  1.04k|    return nodes_length + offset;
-  160|  1.04k|}
+  159|  1.03k|    return nodes_length + offset;
+  160|  1.03k|}
 gca_pack_public_announce:
-  228|     12|{
-  229|     12|    if (public_announce == nullptr || data == nullptr || length < CHAT_ID_SIZE) {
+  228|      8|{
+  229|      8|    if (public_announce == nullptr || data == nullptr || length < CHAT_ID_SIZE) {
   ------------------
-  |  |   63|     24|#define nullptr NULL
-  ------------------
-                  if (public_announce == nullptr || data == nullptr || length < CHAT_ID_SIZE) {
-  ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     16|#define nullptr NULL
   ------------------
                   if (public_announce == nullptr || data == nullptr || length < CHAT_ID_SIZE) {
   ------------------
-  |  |  142|     12|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |   63|     16|#define nullptr NULL
+  ------------------
+                  if (public_announce == nullptr || data == nullptr || length < CHAT_ID_SIZE) {
+  ------------------
+  |  |  142|      8|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|     12|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|      8|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|     12|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|      8|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (229:9): [True: 0, False: 12]
-  |  Branch (229:39): [True: 0, False: 12]
-  |  Branch (229:58): [True: 6, False: 6]
+  |  Branch (229:9): [True: 0, False: 8]
+  |  Branch (229:39): [True: 0, False: 8]
+  |  Branch (229:58): [True: 4, False: 4]
   ------------------
-  230|      6|        return -1;
-  231|      6|    }
+  230|      4|        return -1;
+  231|      4|    }
   232|       |
-  233|      6|    memcpy(data, public_announce->chat_public_key, CHAT_ID_SIZE);
+  233|      4|    memcpy(data, public_announce->chat_public_key, CHAT_ID_SIZE);
   ------------------
-  |  |  142|      6|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |  142|      4|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|      6|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|      4|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|      6|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|      4|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
   234|       |
-  235|      6|    const int packed_size = gca_pack_announce(log, data + CHAT_ID_SIZE, length - CHAT_ID_SIZE,
+  235|      4|    const int packed_size = gca_pack_announce(log, data + CHAT_ID_SIZE, length - CHAT_ID_SIZE,
   ------------------
-  |  |  142|      6|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |  142|      4|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|      6|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|      4|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|      6|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|      4|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
                   const int packed_size = gca_pack_announce(log, data + CHAT_ID_SIZE, length - CHAT_ID_SIZE,
   ------------------
-  |  |  142|      6|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |  142|      4|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|      6|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|      4|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|      6|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|      4|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  236|      6|                            &public_announce->base_announce);
+  236|      4|                            &public_announce->base_announce);
   237|       |
-  238|      6|    if (packed_size < 0) {
+  238|      4|    if (packed_size < 0) {
   ------------------
-  |  Branch (238:9): [True: 5, False: 1]
+  |  Branch (238:9): [True: 3, False: 1]
   ------------------
-  239|      5|        LOGGER_ERROR(log, "Failed to pack public group announce");
+  239|      3|        LOGGER_ERROR(log, "Failed to pack public group announce");
   ------------------
-  |  |   80|      5|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      3|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|      5|    do {                                                                         \
-  |  |  |  |   70|      5|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      3|    do {                                                                         \
+  |  |  |  |   70|      3|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     10|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|      6|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   71|      5|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|      5|        }                                                                        \
-  |  |  |  |   73|      5|    } while (0)
+  |  |  |  |   71|      3|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      3|        }                                                                        \
+  |  |  |  |   73|      3|    } while (0)
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  240|      5|        return -1;
-  241|      5|    }
+  240|      3|        return -1;
+  241|      3|    }
   242|       |
   243|      1|    return packed_size + CHAT_ID_SIZE;
   ------------------
@@ -762,20 +762,20 @@ gca_pack_public_announce:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  244|      6|}
+  244|      4|}
 gca_unpack_public_announce:
-  248|  1.88k|{
-  249|  1.88k|    if (length < CHAT_ID_SIZE) {
+  248|  1.86k|{
+  249|  1.86k|    if (length < CHAT_ID_SIZE) {
   ------------------
-  |  |  142|  1.88k|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |  142|  1.86k|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|  1.88k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|  1.86k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|  1.88k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|  1.86k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (249:9): [True: 215, False: 1.67k]
+  |  Branch (249:9): [True: 215, False: 1.65k]
   ------------------
   250|    215|        LOGGER_ERROR(log, "invalid public announce length: %u", length);
   ------------------
@@ -799,11 +799,11 @@ gca_unpack_public_announce:
   251|    215|        return -1;
   252|    215|    }
   253|       |
-  254|  1.67k|    if (data == nullptr) {
+  254|  1.65k|    if (data == nullptr) {
   ------------------
-  |  |   63|  1.67k|#define nullptr NULL
+  |  |   63|  1.65k|#define nullptr NULL
   ------------------
-  |  Branch (254:9): [True: 0, False: 1.67k]
+  |  Branch (254:9): [True: 0, False: 1.65k]
   ------------------
   255|      0|        LOGGER_ERROR(log, "data is null");
   ------------------
@@ -827,11 +827,11 @@ gca_unpack_public_announce:
   256|      0|        return -1;
   257|      0|    }
   258|       |
-  259|  1.67k|    if (public_announce == nullptr) {
+  259|  1.65k|    if (public_announce == nullptr) {
   ------------------
-  |  |   63|  1.67k|#define nullptr NULL
+  |  |   63|  1.65k|#define nullptr NULL
   ------------------
-  |  Branch (259:9): [True: 0, False: 1.67k]
+  |  Branch (259:9): [True: 0, False: 1.65k]
   ------------------
   260|      0|        LOGGER_ERROR(log, "public_announce is null");
   ------------------
@@ -855,36 +855,36 @@ gca_unpack_public_announce:
   261|      0|        return -1;
   262|      0|    }
   263|       |
-  264|  1.67k|    memcpy(public_announce->chat_public_key, data, CHAT_ID_SIZE);
+  264|  1.65k|    memcpy(public_announce->chat_public_key, data, CHAT_ID_SIZE);
   ------------------
-  |  |  142|  1.67k|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |  142|  1.65k|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|  1.67k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|  1.65k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|  1.67k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|  1.65k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
   265|       |
-  266|  1.67k|    const int base_announce_size = gca_unpack_announce(log, data + ENC_PUBLIC_KEY_SIZE, length - ENC_PUBLIC_KEY_SIZE,
+  266|  1.65k|    const int base_announce_size = gca_unpack_announce(log, data + ENC_PUBLIC_KEY_SIZE, length - ENC_PUBLIC_KEY_SIZE,
   ------------------
-  |  |  122|  1.67k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  122|  1.65k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   43|  1.67k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |   43|  1.65k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
                   const int base_announce_size = gca_unpack_announce(log, data + ENC_PUBLIC_KEY_SIZE, length - ENC_PUBLIC_KEY_SIZE,
   ------------------
-  |  |  122|  1.67k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  122|  1.65k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   43|  1.67k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |   43|  1.65k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  267|  1.67k|                                   &public_announce->base_announce);
+  267|  1.65k|                                   &public_announce->base_announce);
   268|       |
-  269|  1.67k|    if (base_announce_size == -1) {
+  269|  1.65k|    if (base_announce_size == -1) {
   ------------------
-  |  Branch (269:9): [True: 907, False: 767]
+  |  Branch (269:9): [True: 907, False: 746]
   ------------------
   270|    907|        LOGGER_ERROR(log, "Failed to unpack group announce");
   ------------------
@@ -908,24 +908,24 @@ gca_unpack_public_announce:
   271|    907|        return -1;
   272|    907|    }
   273|       |
-  274|    767|    return base_announce_size + CHAT_ID_SIZE;
+  274|    746|    return base_announce_size + CHAT_ID_SIZE;
   ------------------
-  |  |  142|    767|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |  142|    746|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|    767|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|    746|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|    767|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|    746|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  275|  1.67k|}
+  275|  1.65k|}
 gca_pack_announces_list:
-  279|     76|{
-  280|     76|    if (data == nullptr) {
+  279|     68|{
+  280|     68|    if (data == nullptr) {
   ------------------
-  |  |   63|     76|#define nullptr NULL
+  |  |   63|     68|#define nullptr NULL
   ------------------
-  |  Branch (280:9): [True: 0, False: 76]
+  |  Branch (280:9): [True: 0, False: 68]
   ------------------
   281|      0|        LOGGER_ERROR(log, "data is null");
   ------------------
@@ -949,11 +949,11 @@ gca_pack_announces_list:
   282|      0|        return -1;
   283|      0|    }
   284|       |
-  285|     76|    if (announces == nullptr) {
+  285|     68|    if (announces == nullptr) {
   ------------------
-  |  |   63|     76|#define nullptr NULL
+  |  |   63|     68|#define nullptr NULL
   ------------------
-  |  Branch (285:9): [True: 0, False: 76]
+  |  Branch (285:9): [True: 0, False: 68]
   ------------------
   286|      0|        LOGGER_ERROR(log, "announces is null");
   ------------------
@@ -977,61 +977,61 @@ gca_pack_announces_list:
   287|      0|        return -1;
   288|      0|    }
   289|       |
-  290|     76|    uint16_t offset = 0;
+  290|     68|    uint16_t offset = 0;
   291|       |
-  292|  1.12k|    for (size_t i = 0; i < announces_count; ++i) {
+  292|  1.09k|    for (size_t i = 0; i < announces_count; ++i) {
   ------------------
-  |  Branch (292:24): [True: 1.11k, False: 9]
+  |  Branch (292:24): [True: 1.09k, False: 5]
   ------------------
-  293|  1.11k|        const int packed_length = gca_pack_announce(log, data + offset, length - offset, &announces[i]);
+  293|  1.09k|        const int packed_length = gca_pack_announce(log, data + offset, length - offset, &announces[i]);
   294|       |
-  295|  1.11k|        if (packed_length < 0) {
+  295|  1.09k|        if (packed_length < 0) {
   ------------------
-  |  Branch (295:13): [True: 67, False: 1.04k]
+  |  Branch (295:13): [True: 63, False: 1.02k]
   ------------------
-  296|     67|            LOGGER_ERROR(log, "Failed to pack group announce");
+  296|     63|            LOGGER_ERROR(log, "Failed to pack group announce");
   ------------------
-  |  |   80|     67|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|     63|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|     67|    do {                                                                         \
-  |  |  |  |   70|     67|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|     63|    do {                                                                         \
+  |  |  |  |   70|     63|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|    134|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|    126|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (70:13): [Folded - Ignored]
   |  |  |  |  ------------------
-  |  |  |  |   71|     67|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|     67|        }                                                                        \
-  |  |  |  |   73|     67|    } while (0)
+  |  |  |  |   71|     63|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|     63|        }                                                                        \
+  |  |  |  |   73|     63|    } while (0)
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (73:14): [Folded - Ignored]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  297|     67|            return -1;
-  298|     67|        }
+  297|     63|            return -1;
+  298|     63|        }
   299|       |
-  300|  1.04k|        offset += packed_length;
-  301|  1.04k|    }
+  300|  1.02k|        offset += packed_length;
+  301|  1.02k|    }
   302|       |
-  303|      9|    if (processed != nullptr) {
+  303|      5|    if (processed != nullptr) {
   ------------------
-  |  |   63|      9|#define nullptr NULL
+  |  |   63|      5|#define nullptr NULL
   ------------------
-  |  Branch (303:9): [True: 9, False: 0]
+  |  Branch (303:9): [True: 5, False: 0]
   ------------------
-  304|      9|        *processed = offset;
-  305|      9|    }
+  304|      5|        *processed = offset;
+  305|      5|    }
   306|       |
-  307|      9|    return announces_count;
-  308|     76|}
+  307|      5|    return announces_count;
+  308|     68|}
 gca_unpack_announces_list:
-  312|    112|{
-  313|    112|    if (data == nullptr) {
+  312|    104|{
+  313|    104|    if (data == nullptr) {
   ------------------
-  |  |   63|    112|#define nullptr NULL
+  |  |   63|    104|#define nullptr NULL
   ------------------
-  |  Branch (313:9): [True: 0, False: 112]
+  |  Branch (313:9): [True: 0, False: 104]
   ------------------
   314|      0|        LOGGER_ERROR(log, "data is null");
   ------------------
@@ -1055,11 +1055,11 @@ gca_unpack_announces_list:
   315|      0|        return -1;
   316|      0|    }
   317|       |
-  318|    112|    if (announces == nullptr) {
+  318|    104|    if (announces == nullptr) {
   ------------------
-  |  |   63|    112|#define nullptr NULL
+  |  |   63|    104|#define nullptr NULL
   ------------------
-  |  Branch (318:9): [True: 0, False: 112]
+  |  Branch (318:9): [True: 0, False: 104]
   ------------------
   319|      0|        LOGGER_ERROR(log, "announces is null");
   ------------------
@@ -1083,19 +1083,19 @@ gca_unpack_announces_list:
   320|      0|        return -1;
   321|      0|    }
   322|       |
-  323|    112|    uint16_t offset = 0;
-  324|    112|    int announces_count = 0;
+  323|    104|    uint16_t offset = 0;
+  324|    104|    int announces_count = 0;
   325|       |
-  326|  1.46k|    for (size_t i = 0; i < max_count && length > offset; ++i) {
+  326|  1.43k|    for (size_t i = 0; i < max_count && length > offset; ++i) {
   ------------------
-  |  Branch (326:24): [True: 1.45k, False: 13]
-  |  Branch (326:41): [True: 1.38k, False: 63]
+  |  Branch (326:24): [True: 1.43k, False: 6]
+  |  Branch (326:41): [True: 1.37k, False: 62]
   ------------------
-  327|  1.38k|        const int unpacked_length = gca_unpack_announce(log, data + offset, length - offset, &announces[i]);
+  327|  1.37k|        const int unpacked_length = gca_unpack_announce(log, data + offset, length - offset, &announces[i]);
   328|       |
-  329|  1.38k|        if (unpacked_length == -1) {
+  329|  1.37k|        if (unpacked_length == -1) {
   ------------------
-  |  Branch (329:13): [True: 36, False: 1.35k]
+  |  Branch (329:13): [True: 36, False: 1.33k]
   ------------------
   330|     36|            LOGGER_WARNING(log, "Failed to unpack group announce: %d %d", length, offset);
   ------------------
@@ -1119,24 +1119,24 @@ gca_unpack_announces_list:
   331|     36|            return -1;
   332|     36|        }
   333|       |
-  334|  1.35k|        offset += unpacked_length;
-  335|  1.35k|        ++announces_count;
-  336|  1.35k|    }
+  334|  1.33k|        offset += unpacked_length;
+  335|  1.33k|        ++announces_count;
+  336|  1.33k|    }
   337|       |
-  338|     76|    return announces_count;
-  339|    112|}
+  338|     68|    return announces_count;
+  339|    104|}
 gca_add_announce:
-  365|    755|{
-  366|    755|    if (gc_announces_list == nullptr || public_announce == nullptr) {
+  365|    738|{
+  366|    738|    if (gc_announces_list == nullptr || public_announce == nullptr) {
   ------------------
-  |  |   63|  1.51k|#define nullptr NULL
+  |  |   63|  1.47k|#define nullptr NULL
   ------------------
                   if (gc_announces_list == nullptr || public_announce == nullptr) {
   ------------------
-  |  |   63|    755|#define nullptr NULL
+  |  |   63|    738|#define nullptr NULL
   ------------------
-  |  Branch (366:9): [True: 0, False: 755]
-  |  Branch (366:41): [True: 0, False: 755]
+  |  Branch (366:9): [True: 0, False: 738]
+  |  Branch (366:41): [True: 0, False: 738]
   ------------------
   367|      0|        return nullptr;
   ------------------
@@ -1144,58 +1144,58 @@ gca_add_announce:
   ------------------
   368|      0|    }
   369|       |
-  370|    755|    GC_Announces *announces = get_announces_by_chat_id(gc_announces_list, public_announce->chat_public_key);
+  370|    738|    GC_Announces *announces = get_announces_by_chat_id(gc_announces_list, public_announce->chat_public_key);
   371|       |
   372|       |    // No entry for this chat_id exists so we create one
-  373|    755|    if (announces == nullptr) {
+  373|    738|    if (announces == nullptr) {
   ------------------
-  |  |   63|    755|#define nullptr NULL
+  |  |   63|    738|#define nullptr NULL
   ------------------
-  |  Branch (373:9): [True: 453, False: 302]
+  |  Branch (373:9): [True: 446, False: 292]
   ------------------
-  374|    453|        announces = gca_new_announces(mem, gc_announces_list, public_announce);
+  374|    446|        announces = gca_new_announces(mem, gc_announces_list, public_announce);
   375|       |
-  376|    453|        if (announces == nullptr) {
+  376|    446|        if (announces == nullptr) {
   ------------------
-  |  |   63|    453|#define nullptr NULL
+  |  |   63|    446|#define nullptr NULL
   ------------------
-  |  Branch (376:13): [True: 0, False: 453]
+  |  Branch (376:13): [True: 0, False: 446]
   ------------------
   377|      0|            return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
   378|      0|        }
-  379|    453|    }
+  379|    446|    }
   380|       |
-  381|    755|    const uint64_t cur_time = mono_time_get(mono_time);
+  381|    738|    const uint64_t cur_time = mono_time_get(mono_time);
   382|       |
-  383|    755|    announces->last_announce_received_timestamp = cur_time;
+  383|    738|    announces->last_announce_received_timestamp = cur_time;
   384|       |
-  385|    755|    const uint64_t index = announces->index % GCA_MAX_SAVED_ANNOUNCES_PER_GC;
+  385|    738|    const uint64_t index = announces->index % GCA_MAX_SAVED_ANNOUNCES_PER_GC;
   ------------------
-  |  |   28|    755|#define GCA_MAX_SAVED_ANNOUNCES_PER_GC 16
+  |  |   28|    738|#define GCA_MAX_SAVED_ANNOUNCES_PER_GC 16
   ------------------
   386|       |
-  387|    755|    GC_Peer_Announce *gc_peer_announce = &announces->peer_announces[index];
+  387|    738|    GC_Peer_Announce *gc_peer_announce = &announces->peer_announces[index];
   388|       |
-  389|    755|    gc_peer_announce->base_announce = public_announce->base_announce;
+  389|    738|    gc_peer_announce->base_announce = public_announce->base_announce;
   390|       |
-  391|    755|    gc_peer_announce->timestamp = cur_time;
+  391|    738|    gc_peer_announce->timestamp = cur_time;
   392|       |
-  393|    755|    ++announces->index;
+  393|    738|    ++announces->index;
   394|       |
-  395|    755|    return gc_peer_announce;
-  396|    755|}
+  395|    738|    return gc_peer_announce;
+  396|    738|}
 new_gca_list:
-  408|    245|{
-  409|    245|    GC_Announces_List *announces_list = (GC_Announces_List *)mem_alloc(mem, sizeof(GC_Announces_List));
+  408|    244|{
+  409|    244|    GC_Announces_List *announces_list = (GC_Announces_List *)mem_alloc(mem, sizeof(GC_Announces_List));
   410|       |
-  411|    245|    if (announces_list == nullptr) {
+  411|    244|    if (announces_list == nullptr) {
   ------------------
-  |  |   63|    245|#define nullptr NULL
+  |  |   63|    244|#define nullptr NULL
   ------------------
-  |  Branch (411:9): [True: 0, False: 245]
+  |  Branch (411:9): [True: 0, False: 244]
   ------------------
   412|      0|        return nullptr;
   ------------------
@@ -1203,36 +1203,36 @@ new_gca_list:
   ------------------
   413|      0|    }
   414|       |
-  415|    245|    announces_list->mem = mem;
+  415|    244|    announces_list->mem = mem;
   416|       |
-  417|    245|    return announces_list;
-  418|    245|}
+  417|    244|    return announces_list;
+  418|    244|}
 kill_gca:
-  421|    245|{
-  422|    245|    if (announces_list == nullptr) {
+  421|    244|{
+  422|    244|    if (announces_list == nullptr) {
   ------------------
-  |  |   63|    245|#define nullptr NULL
+  |  |   63|    244|#define nullptr NULL
   ------------------
-  |  Branch (422:9): [True: 0, False: 245]
+  |  Branch (422:9): [True: 0, False: 244]
   ------------------
   423|      0|        return;
   424|      0|    }
   425|       |
-  426|    245|    GC_Announces *root = announces_list->root_announces;
+  426|    244|    GC_Announces *root = announces_list->root_announces;
   427|       |
-  428|    499|    while (root != nullptr) {
+  428|    491|    while (root != nullptr) {
   ------------------
-  |  |   63|    499|#define nullptr NULL
+  |  |   63|    491|#define nullptr NULL
   ------------------
-  |  Branch (428:12): [True: 254, False: 245]
+  |  Branch (428:12): [True: 247, False: 244]
   ------------------
-  429|    254|        GC_Announces *next = root->next_announce;
-  430|    254|        mem_delete(announces_list->mem, root);
-  431|    254|        root = next;
-  432|    254|    }
+  429|    247|        GC_Announces *next = root->next_announce;
+  430|    247|        mem_delete(announces_list->mem, root);
+  431|    247|        root = next;
+  432|    247|    }
   433|       |
-  434|    245|    mem_delete(announces_list->mem, announces_list);
-  435|    245|}
+  434|    244|    mem_delete(announces_list->mem, announces_list);
+  435|    244|}
 do_gca:
   444|    367|{
   445|    367|    if (gc_announces_list == nullptr) {
@@ -1279,75 +1279,75 @@ do_gca:
   466|     78|    }
   467|     22|}
 cleanup_gca:
-  470|    631|{
-  471|    631|    if (gc_announces_list == nullptr || chat_id == nullptr) {
+  470|    607|{
+  471|    607|    if (gc_announces_list == nullptr || chat_id == nullptr) {
   ------------------
-  |  |   63|  1.26k|#define nullptr NULL
+  |  |   63|  1.21k|#define nullptr NULL
   ------------------
                   if (gc_announces_list == nullptr || chat_id == nullptr) {
   ------------------
-  |  |   63|    631|#define nullptr NULL
+  |  |   63|    607|#define nullptr NULL
   ------------------
-  |  Branch (471:9): [True: 0, False: 631]
-  |  Branch (471:41): [True: 0, False: 631]
+  |  Branch (471:9): [True: 0, False: 607]
+  |  Branch (471:41): [True: 0, False: 607]
   ------------------
   472|      0|        return;
   473|      0|    }
   474|       |
-  475|    631|    GC_Announces *announces = get_announces_by_chat_id(gc_announces_list, chat_id);
+  475|    607|    GC_Announces *announces = get_announces_by_chat_id(gc_announces_list, chat_id);
   476|       |
-  477|    631|    if (announces != nullptr) {
+  477|    607|    if (announces != nullptr) {
   ------------------
-  |  |   63|    631|#define nullptr NULL
+  |  |   63|    607|#define nullptr NULL
   ------------------
-  |  Branch (477:9): [True: 199, False: 432]
+  |  Branch (477:9): [True: 199, False: 408]
   ------------------
   478|    199|        remove_announces(gc_announces_list, announces);
   479|    199|    }
-  480|    631|}
+  480|    607|}
 group_announce.c:get_announces_by_chat_id:
-   46|  2.23k|{
-   47|  2.23k|    GC_Announces *announces = gc_announces_list->root_announces;
+   46|  2.20k|{
+   47|  2.20k|    GC_Announces *announces = gc_announces_list->root_announces;
    48|       |
-   49|  4.44k|    while (announces != nullptr) {
+   49|  4.33k|    while (announces != nullptr) {
   ------------------
-  |  |   63|  4.44k|#define nullptr NULL
+  |  |   63|  4.33k|#define nullptr NULL
   ------------------
-  |  Branch (49:12): [True: 3.13k, False: 1.31k]
+  |  Branch (49:12): [True: 3.05k, False: 1.28k]
   ------------------
-   50|  3.13k|        if (memcmp(announces->chat_id, chat_id, CHAT_ID_SIZE) == 0) {
+   50|  3.05k|        if (memcmp(announces->chat_id, chat_id, CHAT_ID_SIZE) == 0) {
   ------------------
-  |  |  142|  3.13k|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |  142|  3.05k|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|  3.13k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|  3.05k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|  3.13k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|  3.05k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (50:13): [True: 920, False: 2.21k]
+  |  Branch (50:13): [True: 922, False: 2.13k]
   ------------------
-   51|    920|            return announces;
-   52|    920|        }
+   51|    922|            return announces;
+   52|    922|        }
    53|       |
-   54|  2.21k|        announces = announces->next_announce;
-   55|  2.21k|    }
+   54|  2.13k|        announces = announces->next_announce;
+   55|  2.13k|    }
    56|       |
-   57|  1.31k|    return nullptr;
+   57|  1.28k|    return nullptr;
   ------------------
-  |  |   63|  1.31k|#define nullptr NULL
+  |  |   63|  1.28k|#define nullptr NULL
   ------------------
-   58|  2.23k|}
+   58|  2.20k|}
 group_announce.c:gca_unpack_announce:
-  169|  3.06k|{
-  170|  3.06k|    if (length < ENC_PUBLIC_KEY_SIZE + 2) {
+  169|  3.02k|{
+  170|  3.02k|    if (length < ENC_PUBLIC_KEY_SIZE + 2) {
   ------------------
-  |  |  122|  3.06k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  122|  3.02k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   43|  3.06k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |   43|  3.02k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  |  Branch (170:9): [True: 202, False: 2.86k]
+  |  Branch (170:9): [True: 202, False: 2.82k]
   ------------------
   171|    202|        LOGGER_ERROR(log, "Invalid announce length: %u", length);
   ------------------
@@ -1371,11 +1371,11 @@ group_announce.c:gca_unpack_announce:
   172|    202|        return -1;
   173|    202|    }
   174|       |
-  175|  2.86k|    if (data == nullptr) {
+  175|  2.82k|    if (data == nullptr) {
   ------------------
-  |  |   63|  2.86k|#define nullptr NULL
+  |  |   63|  2.82k|#define nullptr NULL
   ------------------
-  |  Branch (175:9): [True: 0, False: 2.86k]
+  |  Branch (175:9): [True: 0, False: 2.82k]
   ------------------
   176|      0|        LOGGER_ERROR(log, "data is null");
   ------------------
@@ -1399,11 +1399,11 @@ group_announce.c:gca_unpack_announce:
   177|      0|        return -1;
   178|      0|    }
   179|       |
-  180|  2.86k|    if (announce == nullptr) {
+  180|  2.82k|    if (announce == nullptr) {
   ------------------
-  |  |   63|  2.86k|#define nullptr NULL
+  |  |   63|  2.82k|#define nullptr NULL
   ------------------
-  |  Branch (180:9): [True: 0, False: 2.86k]
+  |  Branch (180:9): [True: 0, False: 2.82k]
   ------------------
   181|      0|        LOGGER_ERROR(log, "announce is null");
   ------------------
@@ -1427,53 +1427,53 @@ group_announce.c:gca_unpack_announce:
   182|      0|        return -1;
   183|      0|    }
   184|       |
-  185|  2.86k|    uint16_t offset = 0;
-  186|  2.86k|    memcpy(announce->peer_public_key, data + offset, ENC_PUBLIC_KEY_SIZE);
+  185|  2.82k|    uint16_t offset = 0;
+  186|  2.82k|    memcpy(announce->peer_public_key, data + offset, ENC_PUBLIC_KEY_SIZE);
   ------------------
-  |  |  122|  2.86k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  122|  2.82k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   43|  2.86k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |   43|  2.82k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  187|  2.86k|    offset += ENC_PUBLIC_KEY_SIZE;
+  187|  2.82k|    offset += ENC_PUBLIC_KEY_SIZE;
   ------------------
-  |  |  122|  2.86k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  122|  2.82k|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   43|  2.86k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  |  |   43|  2.82k|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
   188|       |
-  189|  2.86k|    net_unpack_bool(&data[offset], &announce->ip_port_is_set);
-  190|  2.86k|    ++offset;
+  189|  2.82k|    net_unpack_bool(&data[offset], &announce->ip_port_is_set);
+  190|  2.82k|    ++offset;
   191|       |
-  192|  2.86k|    announce->tcp_relays_count = data[offset];
-  193|  2.86k|    ++offset;
+  192|  2.82k|    announce->tcp_relays_count = data[offset];
+  193|  2.82k|    ++offset;
   194|       |
-  195|  2.86k|    if (announce->tcp_relays_count > GCA_MAX_ANNOUNCED_TCP_RELAYS) {
+  195|  2.82k|    if (announce->tcp_relays_count > GCA_MAX_ANNOUNCED_TCP_RELAYS) {
   ------------------
-  |  |   31|  2.86k|#define GCA_MAX_ANNOUNCED_TCP_RELAYS 1
+  |  |   31|  2.82k|#define GCA_MAX_ANNOUNCED_TCP_RELAYS 1
   ------------------
-  |  Branch (195:9): [True: 66, False: 2.79k]
+  |  Branch (195:9): [True: 66, False: 2.75k]
   ------------------
   196|     66|        return -1;
   197|     66|    }
   198|       |
-  199|  2.79k|    if (announce->ip_port_is_set) {
+  199|  2.75k|    if (announce->ip_port_is_set) {
   ------------------
-  |  Branch (199:9): [True: 1.32k, False: 1.47k]
+  |  Branch (199:9): [True: 1.32k, False: 1.43k]
   ------------------
   200|  1.32k|        if (length - offset == 0) {
   ------------------
-  |  Branch (200:13): [True: 194, False: 1.13k]
+  |  Branch (200:13): [True: 194, False: 1.12k]
   ------------------
   201|    194|            return -1;
   202|    194|        }
   203|       |
-  204|  1.13k|        const int ip_port_length = unpack_ip_port(&announce->ip_port, data + offset, length - offset, false);
+  204|  1.12k|        const int ip_port_length = unpack_ip_port(&announce->ip_port, data + offset, length - offset, false);
   205|       |
-  206|  1.13k|        if (ip_port_length == -1) {
+  206|  1.12k|        if (ip_port_length == -1) {
   ------------------
-  |  Branch (206:13): [True: 263, False: 868]
+  |  Branch (206:13): [True: 263, False: 863]
   ------------------
   207|    263|            LOGGER_ERROR(log, "Failed to unpack ip_port");
   ------------------
@@ -1497,16 +1497,16 @@ group_announce.c:gca_unpack_announce:
   208|    263|            return -1;
   209|    263|        }
   210|       |
-  211|    868|        offset += ip_port_length;
-  212|    868|    }
+  211|    863|        offset += ip_port_length;
+  212|    863|    }
   213|       |
-  214|  2.33k|    uint16_t nodes_length;
-  215|  2.33k|    const int nodes_count = unpack_nodes(announce->tcp_relays, announce->tcp_relays_count, &nodes_length,
-  216|  2.33k|                                         data + offset, length - offset, true);
+  214|  2.29k|    uint16_t nodes_length;
+  215|  2.29k|    const int nodes_count = unpack_nodes(announce->tcp_relays, announce->tcp_relays_count, &nodes_length,
+  216|  2.29k|                                         data + offset, length - offset, true);
   217|       |
-  218|  2.33k|    if (nodes_count != announce->tcp_relays_count) {
+  218|  2.29k|    if (nodes_count != announce->tcp_relays_count) {
   ------------------
-  |  Branch (218:9): [True: 218, False: 2.12k]
+  |  Branch (218:9): [True: 218, False: 2.08k]
   ------------------
   219|    218|        LOGGER_ERROR(log, "Failed to unpack TCP nodes");
   ------------------
@@ -1530,17 +1530,17 @@ group_announce.c:gca_unpack_announce:
   220|    218|        return -1;
   221|    218|    }
   222|       |
-  223|  2.12k|    return offset + nodes_length;
-  224|  2.33k|}
+  223|  2.08k|    return offset + nodes_length;
+  224|  2.29k|}
 group_announce.c:gca_new_announces:
-  342|    453|{
-  343|    453|    GC_Announces *announces = (GC_Announces *)mem_alloc(mem, sizeof(GC_Announces));
+  342|    446|{
+  343|    446|    GC_Announces *announces = (GC_Announces *)mem_alloc(mem, sizeof(GC_Announces));
   344|       |
-  345|    453|    if (announces == nullptr) {
+  345|    446|    if (announces == nullptr) {
   ------------------
-  |  |   63|    453|#define nullptr NULL
+  |  |   63|    446|#define nullptr NULL
   ------------------
-  |  Branch (345:9): [True: 0, False: 453]
+  |  Branch (345:9): [True: 0, False: 446]
   ------------------
   346|      0|        return nullptr;
   ------------------
@@ -1548,36 +1548,36 @@ group_announce.c:gca_new_announces:
   ------------------
   347|      0|    }
   348|       |
-  349|    453|    announces->index = 0;
-  350|    453|    announces->prev_announce = nullptr;
+  349|    446|    announces->index = 0;
+  350|    446|    announces->prev_announce = nullptr;
   ------------------
-  |  |   63|    453|#define nullptr NULL
+  |  |   63|    446|#define nullptr NULL
   ------------------
   351|       |
-  352|    453|    if (gc_announces_list->root_announces != nullptr) {
+  352|    446|    if (gc_announces_list->root_announces != nullptr) {
   ------------------
-  |  |   63|    453|#define nullptr NULL
+  |  |   63|    446|#define nullptr NULL
   ------------------
-  |  Branch (352:9): [True: 274, False: 179]
+  |  Branch (352:9): [True: 268, False: 178]
   ------------------
-  353|    274|        gc_announces_list->root_announces->prev_announce = announces;
-  354|    274|    }
+  353|    268|        gc_announces_list->root_announces->prev_announce = announces;
+  354|    268|    }
   355|       |
-  356|    453|    announces->next_announce = gc_announces_list->root_announces;
-  357|    453|    gc_announces_list->root_announces = announces;
-  358|    453|    memcpy(announces->chat_id, public_announce->chat_public_key, CHAT_ID_SIZE);
+  356|    446|    announces->next_announce = gc_announces_list->root_announces;
+  357|    446|    gc_announces_list->root_announces = announces;
+  358|    446|    memcpy(announces->chat_id, public_announce->chat_public_key, CHAT_ID_SIZE);
   ------------------
-  |  |  142|    453|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
+  |  |  142|    446|#define CHAT_ID_SIZE                   SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |  132|    453|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  132|    446|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   33|    453|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   33|    446|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
   359|       |
-  360|    453|    return announces;
-  361|    453|}
+  360|    446|    return announces;
+  361|    446|}
 group_announce.c:remove_announces:
    23|    199|{
    24|    199|    if (announces == nullptr || gc_announces_list == nullptr) {
@@ -1618,150 +1618,150 @@ group_announce.c:remove_announces:
    39|    199|}
 
 LLVMFuzzerTestOneInput:
-  113|    375|{
-  114|    375|    fuzz_select_target<TestUnpackAnnouncesList, TestUnpackPublicAnnounce, TestDoGca>(data, size);
-  115|    375|    return 0;
-  116|    375|}
+  113|    362|{
+  114|    362|    fuzz_select_target<TestUnpackAnnouncesList, TestUnpackPublicAnnounce, TestDoGca>(data, size);
+  115|    362|    return 0;
+  116|    362|}
 group_announce_fuzz_test.cc:_ZN12_GLOBAL__N_123TestUnpackAnnouncesListER9Fuzz_Data:
-   14|    114|{
-   15|    114|    CONSUME1_OR_RETURN(const uint8_t, max_count, input);
+   14|    106|{
+   15|    106|    CONSUME1_OR_RETURN(const uint8_t, max_count, input);
   ------------------
-  |  |  105|    114|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|    106|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 113]
+  |  |  |  Branch (105:9): [True: 1, False: 105]
   |  |  ------------------
   |  |  106|      1|        return;                               \
   |  |  107|      1|    }                                         \
-  |  |  108|    114|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|    106|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
    16|       |    // Always allocate at least something to avoid passing nullptr to functions below.
-   17|    113|    std::vector<GC_Announce> announces(max_count + 1);
+   17|    105|    std::vector<GC_Announce> announces(max_count + 1);
    18|       |
    19|       |    // TODO(iphydf): How do we know the packed size?
-   20|    113|    CONSUME1_OR_RETURN(const uint16_t, packed_size, input);
+   20|    105|    CONSUME1_OR_RETURN(const uint16_t, packed_size, input);
   ------------------
-  |  |  105|    113|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|    105|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 112]
+  |  |  |  Branch (105:9): [True: 1, False: 104]
   |  |  ------------------
   |  |  106|      1|        return;                               \
   |  |  107|      1|    }                                         \
-  |  |  108|    113|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|    105|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
    21|       |
-   22|    112|    Test_Memory mem;
-   23|    112|    Logger *logger = logger_new(mem);
-   24|    112|    if (gca_unpack_announces_list(logger, input.data(), input.size(), announces.data(), max_count)
+   22|    104|    Test_Memory mem;
+   23|    104|    Logger *logger = logger_new(mem);
+   24|    104|    if (gca_unpack_announces_list(logger, input.data(), input.size(), announces.data(), max_count)
   ------------------
-  |  Branch (24:9): [True: 76, False: 36]
+  |  Branch (24:9): [True: 68, False: 36]
   ------------------
-   25|    112|        != -1) {
+   25|    104|        != -1) {
    26|       |        // Always allocate at least something to avoid passing nullptr to functions below.
-   27|     76|        std::vector<uint8_t> packed(packed_size + 1);
-   28|     76|        size_t processed;
-   29|     76|        gca_pack_announces_list(
-   30|     76|            logger, packed.data(), packed_size, announces.data(), max_count, &processed);
-   31|     76|    }
-   32|    112|    logger_kill(logger);
-   33|    112|}
+   27|     68|        std::vector<uint8_t> packed(packed_size + 1);
+   28|     68|        size_t processed;
+   29|     68|        gca_pack_announces_list(
+   30|     68|            logger, packed.data(), packed_size, announces.data(), max_count, &processed);
+   31|     68|    }
+   32|    104|    logger_kill(logger);
+   33|    104|}
 group_announce_fuzz_test.cc:_ZN12_GLOBAL__N_124TestUnpackPublicAnnounceER9Fuzz_Data:
-   36|     15|{
-   37|     15|    GC_Public_Announce public_announce;
+   36|     11|{
+   37|     11|    GC_Public_Announce public_announce;
    38|       |
    39|       |    // TODO(iphydf): How do we know the packed size?
-   40|     15|    CONSUME1_OR_RETURN(const uint16_t, packed_size, input);
+   40|     11|    CONSUME1_OR_RETURN(const uint16_t, packed_size, input);
   ------------------
-  |  |  105|     15|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|     11|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 14]
+  |  |  |  Branch (105:9): [True: 1, False: 10]
   |  |  ------------------
   |  |  106|      1|        return;                               \
   |  |  107|      1|    }                                         \
-  |  |  108|     15|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|     11|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
    41|       |
-   42|     14|    Test_Memory mem;
-   43|     14|    Logger *logger = logger_new(mem);
-   44|     14|    if (gca_unpack_public_announce(logger, input.data(), input.size(), &public_announce) != -1) {
+   42|     10|    Test_Memory mem;
+   43|     10|    Logger *logger = logger_new(mem);
+   44|     10|    if (gca_unpack_public_announce(logger, input.data(), input.size(), &public_announce) != -1) {
   ------------------
-  |  Branch (44:9): [True: 12, False: 2]
+  |  Branch (44:9): [True: 8, False: 2]
   ------------------
    45|       |        // Always allocate at least something to avoid passing nullptr to functions below.
-   46|     12|        std::vector<uint8_t> packed(packed_size + 1);
-   47|     12|        gca_pack_public_announce(logger, packed.data(), packed_size, &public_announce);
-   48|     12|    }
-   49|     14|    logger_kill(logger);
-   50|     14|}
+   46|      8|        std::vector<uint8_t> packed(packed_size + 1);
+   47|      8|        gca_pack_public_announce(logger, packed.data(), packed_size, &public_announce);
+   48|      8|    }
+   49|     10|    logger_kill(logger);
+   50|     10|}
 group_announce_fuzz_test.cc:_ZN12_GLOBAL__N_19TestDoGcaER9Fuzz_Data:
-   53|    245|{
-   54|    245|    Test_Memory mem;
-   55|    245|    std::unique_ptr<Logger, void (*)(Logger *)> logger(logger_new(mem), logger_kill);
+   53|    244|{
+   54|    244|    Test_Memory mem;
+   55|    244|    std::unique_ptr<Logger, void (*)(Logger *)> logger(logger_new(mem), logger_kill);
    56|       |
-   57|    245|    uint64_t clock = 1;
-   58|    245|    std::unique_ptr<Mono_Time, std::function<void(Mono_Time *)>> mono_time(
-   59|    245|        mono_time_new(
-   60|    245|            mem, [](void *user_data) { return *static_cast<uint64_t *>(user_data); }, &clock),
-   61|    245|        [mem](Mono_Time *ptr) { mono_time_free(mem, ptr); });
-   62|    245|    assert(mono_time != nullptr);
-   63|    245|    std::unique_ptr<GC_Announces_List, void (*)(GC_Announces_List *)> gca(
-   64|    245|        new_gca_list(mem), kill_gca);
-   65|    245|    assert(gca != nullptr);
+   57|    244|    uint64_t clock = 1;
+   58|    244|    std::unique_ptr<Mono_Time, std::function<void(Mono_Time *)>> mono_time(
+   59|    244|        mono_time_new(
+   60|    244|            mem, [](void *user_data) { return *static_cast<uint64_t *>(user_data); }, &clock),
+   61|    244|        [mem](Mono_Time *ptr) { mono_time_free(mem, ptr); });
+   62|    244|    assert(mono_time != nullptr);
+   63|    244|    std::unique_ptr<GC_Announces_List, void (*)(GC_Announces_List *)> gca(
+   64|    244|        new_gca_list(mem), kill_gca);
+   65|    244|    assert(gca != nullptr);
    66|       |
-   67|  4.37k|    while (!input.empty()) {
+   67|  4.36k|    while (!input.empty()) {
   ------------------
-  |  Branch (67:12): [True: 4.14k, False: 232]
+  |  Branch (67:12): [True: 4.13k, False: 231]
   ------------------
-   68|  4.14k|        CONSUME1_OR_RETURN(const uint8_t, choice, input);
+   68|  4.13k|        CONSUME1_OR_RETURN(const uint8_t, choice, input);
   ------------------
-  |  |  105|  4.14k|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|  4.13k|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 0, False: 4.14k]
+  |  |  |  Branch (105:9): [True: 0, False: 4.13k]
   |  |  ------------------
   |  |  106|      0|        return;                               \
   |  |  107|      0|    }                                         \
-  |  |  108|  4.14k|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|  4.13k|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-   69|  4.14k|        switch (choice) {
+   69|  4.13k|        switch (choice) {
   ------------------
-  |  Branch (69:17): [True: 313, False: 3.83k]
+  |  Branch (69:17): [True: 332, False: 3.80k]
   ------------------
-   70|  1.87k|        case 0: {
+   70|  1.86k|        case 0: {
   ------------------
-  |  Branch (70:9): [True: 1.87k, False: 2.26k]
+  |  Branch (70:9): [True: 1.86k, False: 2.27k]
   ------------------
    71|       |            // Add an announce.
-   72|  1.87k|            CONSUME1_OR_RETURN(const uint16_t, length, input);
+   72|  1.86k|            CONSUME1_OR_RETURN(const uint16_t, length, input);
   ------------------
-  |  |  105|  1.87k|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|  1.86k|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 1.87k]
+  |  |  |  Branch (105:9): [True: 1, False: 1.85k]
   |  |  ------------------
   |  |  106|      1|        return;                               \
   |  |  107|      1|    }                                         \
-  |  |  108|  1.87k|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|  1.86k|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-   73|  1.87k|            CONSUME_OR_RETURN(const uint8_t *data, input, length);
+   73|  1.85k|            CONSUME_OR_RETURN(const uint8_t *data, input, length);
   ------------------
-  |  |  139|  1.87k|    if (INPUT.size() < SIZE) {               \
+  |  |  139|  1.85k|    if (INPUT.size() < SIZE) {               \
   |  |  ------------------
-  |  |  |  Branch (139:9): [True: 1, False: 1.87k]
+  |  |  |  Branch (139:9): [True: 1, False: 1.85k]
   |  |  ------------------
   |  |  140|      1|        return;                              \
   |  |  141|      1|    }                                        \
-  |  |  142|  1.87k|    DECL = INPUT.consume(__func__, SIZE)
+  |  |  142|  1.85k|    DECL = INPUT.consume(__func__, SIZE)
   ------------------
-   74|  1.87k|            GC_Public_Announce public_announce;
-   75|  1.87k|            if (gca_unpack_public_announce(logger.get(), data, length, &public_announce) != -1) {
+   74|  1.85k|            GC_Public_Announce public_announce;
+   75|  1.85k|            if (gca_unpack_public_announce(logger.get(), data, length, &public_announce) != -1) {
   ------------------
-  |  Branch (75:17): [True: 755, False: 1.12k]
+  |  Branch (75:17): [True: 738, False: 1.12k]
   ------------------
-   76|    755|                gca_add_announce(mem, mono_time.get(), gca.get(), &public_announce);
-   77|    755|            }
-   78|  1.87k|            break;
-   79|  1.87k|        }
+   76|    738|                gca_add_announce(mem, mono_time.get(), gca.get(), &public_announce);
+   77|    738|            }
+   78|  1.85k|            break;
+   79|  1.85k|        }
    80|    368|        case 1: {
   ------------------
-  |  Branch (80:9): [True: 368, False: 3.77k]
+  |  Branch (80:9): [True: 368, False: 3.76k]
   ------------------
    81|       |            // Advance the time by a number of tox_iteration_intervals.
    82|    368|            CONSUME1_OR_RETURN(const uint8_t, iterations, input);
@@ -1779,82 +1779,82 @@ group_announce_fuzz_test.cc:_ZN12_GLOBAL__N_19TestDoGcaER9Fuzz_Data:
    85|    367|            do_gca(mono_time.get(), gca.get());
    86|    367|            break;
    87|    368|        }
-   88|    954|        case 2: {
+   88|    966|        case 2: {
   ------------------
-  |  Branch (88:9): [True: 954, False: 3.19k]
+  |  Branch (88:9): [True: 966, False: 3.16k]
   ------------------
    89|       |            // Get announces.
-   90|    954|            CONSUME1_OR_RETURN(const uint8_t, max_nodes, input);
+   90|    966|            CONSUME1_OR_RETURN(const uint8_t, max_nodes, input);
   ------------------
-  |  |  105|    954|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|    966|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 953]
+  |  |  |  Branch (105:9): [True: 1, False: 965]
   |  |  ------------------
   |  |  106|      1|        return;                               \
   |  |  107|      1|    }                                         \
-  |  |  108|    954|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|    966|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
    91|       |            // Always allocate at least something to avoid passing nullptr to functions below.
-   92|    953|            std::vector<GC_Announce> gc_announces(max_nodes + 1);
-   93|    953|            CONSUME_OR_RETURN(const uint8_t *chat_id, input, CHAT_ID_SIZE);
+   92|    965|            std::vector<GC_Announce> gc_announces(max_nodes + 1);
+   93|    965|            CONSUME_OR_RETURN(const uint8_t *chat_id, input, CHAT_ID_SIZE);
   ------------------
-  |  |  139|    953|    if (INPUT.size() < SIZE) {               \
+  |  |  139|    965|    if (INPUT.size() < SIZE) {               \
   |  |  ------------------
-  |  |  |  Branch (139:9): [True: 7, False: 946]
+  |  |  |  Branch (139:9): [True: 7, False: 958]
   |  |  ------------------
   |  |  140|      7|        return;                              \
   |  |  141|      7|    }                                        \
-  |  |  142|    953|    DECL = INPUT.consume(__func__, SIZE)
+  |  |  142|    965|    DECL = INPUT.consume(__func__, SIZE)
   ------------------
-   94|    946|            CONSUME_OR_RETURN(const uint8_t *except_public_key, input, ENC_PUBLIC_KEY_SIZE);
+   94|    958|            CONSUME_OR_RETURN(const uint8_t *except_public_key, input, ENC_PUBLIC_KEY_SIZE);
   ------------------
-  |  |  139|    946|    if (INPUT.size() < SIZE) {               \
+  |  |  139|    958|    if (INPUT.size() < SIZE) {               \
   |  |  ------------------
-  |  |  |  Branch (139:9): [True: 1, False: 945]
+  |  |  |  Branch (139:9): [True: 1, False: 957]
   |  |  ------------------
   |  |  140|      1|        return;                              \
   |  |  141|      1|    }                                        \
-  |  |  142|    946|    DECL = INPUT.consume(__func__, SIZE)
+  |  |  142|    958|    DECL = INPUT.consume(__func__, SIZE)
   ------------------
-   95|    945|            gca_get_announces(
-   96|    945|                gca.get(), gc_announces.data(), max_nodes, chat_id, except_public_key);
-   97|    945|            break;
-   98|    946|        }
-   99|    632|        case 3: {
+   95|    957|            gca_get_announces(
+   96|    957|                gca.get(), gc_announces.data(), max_nodes, chat_id, except_public_key);
+   97|    957|            break;
+   98|    958|        }
+   99|    608|        case 3: {
   ------------------
-  |  Branch (99:9): [True: 632, False: 3.51k]
+  |  Branch (99:9): [True: 608, False: 3.52k]
   ------------------
   100|       |            // Remove a chat.
-  101|    632|            CONSUME_OR_RETURN(const uint8_t *chat_id, input, CHAT_ID_SIZE);
+  101|    608|            CONSUME_OR_RETURN(const uint8_t *chat_id, input, CHAT_ID_SIZE);
   ------------------
-  |  |  139|    632|    if (INPUT.size() < SIZE) {               \
+  |  |  139|    608|    if (INPUT.size() < SIZE) {               \
   |  |  ------------------
-  |  |  |  Branch (139:9): [True: 1, False: 631]
+  |  |  |  Branch (139:9): [True: 1, False: 607]
   |  |  ------------------
   |  |  140|      1|        return;                              \
   |  |  141|      1|    }                                        \
-  |  |  142|    632|    DECL = INPUT.consume(__func__, SIZE)
+  |  |  142|    608|    DECL = INPUT.consume(__func__, SIZE)
   ------------------
-  102|    631|            cleanup_gca(gca.get(), chat_id);
-  103|    631|            break;
-  104|    632|        }
-  105|  4.14k|        }
-  106|  4.14k|    }
-  107|    245|}
+  102|    607|            cleanup_gca(gca.get(), chat_id);
+  103|    607|            break;
+  104|    608|        }
+  105|  4.13k|        }
+  106|  4.13k|    }
+  107|    244|}
 group_announce_fuzz_test.cc:_ZZN12_GLOBAL__N_19TestDoGcaER9Fuzz_DataENK3$_1clEPv:
-   60|    245|            mem, [](void *user_data) { return *static_cast<uint64_t *>(user_data); }, &clock),
+   60|    244|            mem, [](void *user_data) { return *static_cast<uint64_t *>(user_data); }, &clock),
 group_announce_fuzz_test.cc:_ZZN12_GLOBAL__N_19TestDoGcaER9Fuzz_DataENK3$_0clEP9Mono_Time:
-   61|    245|        [mem](Mono_Time *ptr) { mono_time_free(mem, ptr); });
+   61|    244|        [mem](Mono_Time *ptr) { mono_time_free(mem, ptr); });
 
 logger_new:
-   33|    371|{
-   34|    371|    Logger *log = (Logger *)mem_alloc(mem, sizeof(Logger));
+   33|    358|{
+   34|    358|    Logger *log = (Logger *)mem_alloc(mem, sizeof(Logger));
    35|       |
-   36|    371|    if (log == nullptr) {
+   36|    358|    if (log == nullptr) {
   ------------------
-  |  |   63|    371|#define nullptr NULL
+  |  |   63|    358|#define nullptr NULL
   ------------------
-  |  Branch (36:9): [True: 0, False: 371]
+  |  Branch (36:9): [True: 0, False: 358]
   ------------------
    37|      0|        return nullptr;
   ------------------
@@ -1862,42 +1862,42 @@ logger_new:
   ------------------
    38|      0|    }
    39|       |
-   40|    371|    log->mem = mem;
+   40|    358|    log->mem = mem;
    41|       |
-   42|    371|    return log;
-   43|    371|}
+   42|    358|    return log;
+   43|    358|}
 logger_kill:
-   46|    371|{
-   47|    371|    if (log == nullptr) {
+   46|    358|{
+   47|    358|    if (log == nullptr) {
   ------------------
-  |  |   63|    371|#define nullptr NULL
+  |  |   63|    358|#define nullptr NULL
   ------------------
-  |  Branch (47:9): [True: 0, False: 371]
+  |  Branch (47:9): [True: 0, False: 358]
   ------------------
    48|      0|        return;
    49|      0|    }
    50|       |
-   51|    371|    mem_delete(log->mem, log);
-   52|    371|}
+   51|    358|    mem_delete(log->mem, log);
+   52|    358|}
 logger_write:
-   64|  1.98k|{
-   65|  1.98k|    if (log == nullptr) {
+   64|  1.97k|{
+   65|  1.97k|    if (log == nullptr) {
   ------------------
-  |  |   63|  1.98k|#define nullptr NULL
+  |  |   63|  1.97k|#define nullptr NULL
   ------------------
-  |  Branch (65:9): [True: 0, False: 1.98k]
+  |  Branch (65:9): [True: 0, False: 1.97k]
   ------------------
    66|      0|        return;
    67|      0|    }
    68|       |
-   69|  1.98k|    if (log->callback == nullptr) {
+   69|  1.97k|    if (log->callback == nullptr) {
   ------------------
-  |  |   63|  1.98k|#define nullptr NULL
+  |  |   63|  1.97k|#define nullptr NULL
   ------------------
-  |  Branch (69:9): [True: 1.98k, False: 0]
+  |  Branch (69:9): [True: 1.97k, False: 0]
   ------------------
-   70|  1.98k|        return;
-   71|  1.98k|    }
+   70|  1.97k|        return;
+   71|  1.97k|    }
    72|       |
    73|       |    // Only pass the file name, not the entire file path, for privacy reasons.
    74|       |    // The full path may contain PII of the person compiling toxcore (their
@@ -1927,54 +1927,54 @@ logger_write:
    93|      0|}
 
 os_memory:
-   42|    371|{
-   43|    371|    return &os_memory_obj;
-   44|    371|}
+   42|    358|{
+   43|    358|    return &os_memory_obj;
+   44|    358|}
 mem_alloc:
-   59|  1.55k|{
-   60|  1.55k|    void *const ptr = mem->funcs->calloc(mem->obj, 1, size);
-   61|  1.55k|    return ptr;
-   62|  1.55k|}
+   59|  1.53k|{
+   60|  1.53k|    void *const ptr = mem->funcs->calloc(mem->obj, 1, size);
+   61|  1.53k|    return ptr;
+   62|  1.53k|}
 mem_delete:
-   89|  1.55k|{
-   90|  1.55k|    mem->funcs->free(mem->obj, ptr);
-   91|  1.55k|}
+   89|  1.53k|{
+   90|  1.53k|    mem->funcs->free(mem->obj, ptr);
+   91|  1.53k|}
 mem.c:sys_calloc:
-   19|  1.55k|{
-   20|  1.55k|    return calloc(nmemb, size);
-   21|  1.55k|}
+   19|  1.53k|{
+   20|  1.53k|    return calloc(nmemb, size);
+   21|  1.53k|}
 mem.c:sys_free:
-   29|  1.55k|{
-   30|  1.55k|    free(ptr);
-   31|  1.55k|}
+   29|  1.53k|{
+   30|  1.53k|    free(ptr);
+   31|  1.53k|}
 
 _ZN12Memory_ClassD2Ev:
-   15|    861|Memory_Class::~Memory_Class() = default;
+   15|    846|Memory_Class::~Memory_Class() = default;
 _ZN11Test_Memory6callocEPvjj:
-   20|  1.55k|{
-   21|  1.55k|    return mem->funcs->calloc(mem->obj, nmemb, size);
-   22|  1.55k|}
+   20|  1.53k|{
+   21|  1.53k|    return mem->funcs->calloc(mem->obj, nmemb, size);
+   22|  1.53k|}
 _ZN11Test_Memory4freeEPvS0_:
-   29|  1.55k|void Test_Memory::free(void *obj, void *ptr) { return mem->funcs->free(mem->obj, ptr); }
+   29|  1.53k|void Test_Memory::free(void *obj, void *ptr) { return mem->funcs->free(mem->obj, ptr); }
 
 _ZN12Memory_ClassC2Ev:
-   15|    371|        : self{&vtable, this}
-   16|    371|    {
-   17|    371|    }
+   15|    358|        : self{&vtable, this}
+   16|    358|    {
+   17|    358|    }
 _ZNK12Memory_ClasscvPK6MemoryEv:
-   11|  1.86k|    operator Memory const *() const { return &self; }
+   11|  1.82k|    operator Memory const *() const { return &self; }
 _ZN12Memory_ClassC2ERKS_:
-   13|    490|    Memory_Class(Memory_Class const &) = default;
+   13|    488|    Memory_Class(Memory_Class const &) = default;
 
 mono_time_new:
-  111|    245|{
-  112|    245|    Mono_Time *mono_time = (Mono_Time *)mem_alloc(mem, sizeof(Mono_Time));
+  111|    244|{
+  112|    244|    Mono_Time *mono_time = (Mono_Time *)mem_alloc(mem, sizeof(Mono_Time));
   113|       |
-  114|    245|    if (mono_time == nullptr) {
+  114|    244|    if (mono_time == nullptr) {
   ------------------
-  |  |   63|    245|#define nullptr NULL
+  |  |   63|    244|#define nullptr NULL
   ------------------
-  |  Branch (114:9): [True: 0, False: 245]
+  |  Branch (114:9): [True: 0, False: 244]
   ------------------
   115|      0|        return nullptr;
   ------------------
@@ -1982,14 +1982,14 @@ mono_time_new:
   ------------------
   116|      0|    }
   117|       |
-  118|    245|#ifndef ESP_PLATFORM
-  119|    245|    pthread_rwlock_t *rwlock = (pthread_rwlock_t *)mem_alloc(mem, sizeof(pthread_rwlock_t));
+  118|    244|#ifndef ESP_PLATFORM
+  119|    244|    pthread_rwlock_t *rwlock = (pthread_rwlock_t *)mem_alloc(mem, sizeof(pthread_rwlock_t));
   120|       |
-  121|    245|    if (rwlock == nullptr) {
+  121|    244|    if (rwlock == nullptr) {
   ------------------
-  |  |   63|    245|#define nullptr NULL
+  |  |   63|    244|#define nullptr NULL
   ------------------
-  |  Branch (121:9): [True: 0, False: 245]
+  |  Branch (121:9): [True: 0, False: 244]
   ------------------
   122|      0|        mem_delete(mem, mono_time);
   123|      0|        return nullptr;
@@ -1998,11 +1998,11 @@ mono_time_new:
   ------------------
   124|      0|    }
   125|       |
-  126|    245|    if (pthread_rwlock_init(rwlock, nullptr) != 0) {
+  126|    244|    if (pthread_rwlock_init(rwlock, nullptr) != 0) {
   ------------------
-  |  |   63|    245|#define nullptr NULL
+  |  |   63|    244|#define nullptr NULL
   ------------------
-  |  Branch (126:9): [True: 0, False: 245]
+  |  Branch (126:9): [True: 0, False: 244]
   ------------------
   127|      0|        mem_delete(mem, rwlock);
   128|      0|        mem_delete(mem, mono_time);
@@ -2012,143 +2012,143 @@ mono_time_new:
   ------------------
   130|      0|    }
   131|       |
-  132|    245|    mono_time->time_update_lock = rwlock;
-  133|    245|#endif /* ESP_PLATFORM */
+  132|    244|    mono_time->time_update_lock = rwlock;
+  133|    244|#endif /* ESP_PLATFORM */
   134|       |
-  135|    245|    mono_time_set_current_time_callback(mono_time, current_time_callback, user_data);
+  135|    244|    mono_time_set_current_time_callback(mono_time, current_time_callback, user_data);
   136|       |
-  137|    245|    mono_time->cur_time = 0;
-  138|    245|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  137|    244|    mono_time->cur_time = 0;
+  138|    244|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   139|       |    // Maximum reproducibility. Never return time = 0.
-  140|    245|    mono_time->base_time = 1000000000;
+  140|    244|    mono_time->base_time = 1000000000;
   141|       |#else
   142|       |    // Never return time = 0 in case time() returns 0 (e.g. on microcontrollers
   143|       |    // without battery-powered RTC or ones where NTP didn't initialise it yet).
   144|       |    mono_time->base_time = max_u64(1, (uint64_t)time(nullptr)) * UINT64_C(1000) - current_time_monotonic(mono_time);
   145|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
   146|       |
-  147|    245|    mono_time_update(mono_time);
+  147|    244|    mono_time_update(mono_time);
   148|       |
-  149|    245|    return mono_time;
-  150|    245|}
+  149|    244|    return mono_time;
+  150|    244|}
 mono_time_free:
-  153|    245|{
-  154|    245|    if (mono_time == nullptr) {
+  153|    244|{
+  154|    244|    if (mono_time == nullptr) {
   ------------------
-  |  |   63|    245|#define nullptr NULL
+  |  |   63|    244|#define nullptr NULL
   ------------------
-  |  Branch (154:9): [True: 0, False: 245]
+  |  Branch (154:9): [True: 0, False: 244]
   ------------------
   155|      0|        return;
   156|      0|    }
-  157|    245|#ifndef ESP_PLATFORM
-  158|    245|    pthread_rwlock_destroy(mono_time->time_update_lock);
-  159|    245|    mem_delete(mem, mono_time->time_update_lock);
-  160|    245|#endif /* ESP_PLATFORM */
-  161|    245|    mem_delete(mem, mono_time);
-  162|    245|}
+  157|    244|#ifndef ESP_PLATFORM
+  158|    244|    pthread_rwlock_destroy(mono_time->time_update_lock);
+  159|    244|    mem_delete(mem, mono_time->time_update_lock);
+  160|    244|#endif /* ESP_PLATFORM */
+  161|    244|    mem_delete(mem, mono_time);
+  162|    244|}
 mono_time_update:
-  165|    245|{
-  166|    245|    const uint64_t cur_time =
-  167|    245|        mono_time->base_time + mono_time->current_time_callback(mono_time->user_data);
+  165|    244|{
+  166|    244|    const uint64_t cur_time =
+  167|    244|        mono_time->base_time + mono_time->current_time_callback(mono_time->user_data);
   168|       |
-  169|    245|#ifndef ESP_PLATFORM
-  170|    245|    pthread_rwlock_wrlock(mono_time->time_update_lock);
-  171|    245|#endif /* ESP_PLATFORM */
-  172|    245|    mono_time->cur_time = cur_time;
-  173|    245|#ifndef ESP_PLATFORM
-  174|    245|    pthread_rwlock_unlock(mono_time->time_update_lock);
-  175|    245|#endif /* ESP_PLATFORM */
-  176|    245|}
+  169|    244|#ifndef ESP_PLATFORM
+  170|    244|    pthread_rwlock_wrlock(mono_time->time_update_lock);
+  171|    244|#endif /* ESP_PLATFORM */
+  172|    244|    mono_time->cur_time = cur_time;
+  173|    244|#ifndef ESP_PLATFORM
+  174|    244|    pthread_rwlock_unlock(mono_time->time_update_lock);
+  175|    244|#endif /* ESP_PLATFORM */
+  176|    244|}
 mono_time_get_ms:
-  179|  1.22k|{
+  179|  1.20k|{
   180|       |#if !defined(ESP_PLATFORM) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
   181|       |    // Fuzzing is only single thread for now, no locking needed */
   182|       |    pthread_rwlock_rdlock(mono_time->time_update_lock);
   183|       |#endif /* !ESP_PLATFORM */
-  184|  1.22k|    const uint64_t cur_time = mono_time->cur_time;
+  184|  1.20k|    const uint64_t cur_time = mono_time->cur_time;
   185|       |#if !defined(ESP_PLATFORM) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
   186|       |    pthread_rwlock_unlock(mono_time->time_update_lock);
   187|       |#endif /* !ESP_PLATFORM */
-  188|  1.22k|    return cur_time;
-  189|  1.22k|}
+  188|  1.20k|    return cur_time;
+  189|  1.20k|}
 mono_time_get:
-  192|  1.22k|{
-  193|  1.22k|    return mono_time_get_ms(mono_time) / UINT64_C(1000);
-  194|  1.22k|}
+  192|  1.20k|{
+  193|  1.20k|    return mono_time_get_ms(mono_time) / UINT64_C(1000);
+  194|  1.20k|}
 mono_time_is_timeout:
   197|    445|{
   198|    445|    return timestamp + timeout <= mono_time_get(mono_time);
   199|    445|}
 mono_time_set_current_time_callback:
-  203|    245|{
-  204|    245|    if (current_time_callback == nullptr) {
+  203|    244|{
+  204|    244|    if (current_time_callback == nullptr) {
   ------------------
-  |  |   63|    245|#define nullptr NULL
+  |  |   63|    244|#define nullptr NULL
   ------------------
-  |  Branch (204:9): [True: 0, False: 245]
+  |  Branch (204:9): [True: 0, False: 244]
   ------------------
   205|      0|        mono_time->current_time_callback = current_time_monotonic_default;
   206|      0|        mono_time->user_data = mono_time;
-  207|    245|    } else {
-  208|    245|        mono_time->current_time_callback = current_time_callback;
-  209|    245|        mono_time->user_data = user_data;
-  210|    245|    }
-  211|    245|}
+  207|    244|    } else {
+  208|    244|        mono_time->current_time_callback = current_time_callback;
+  209|    244|        mono_time->user_data = user_data;
+  210|    244|    }
+  211|    244|}
 
 net_family_ipv4:
   384|    622|{
   385|    622|    return family_ipv4;
   386|    622|}
 net_family_ipv6:
-  389|    737|{
-  390|    737|    return family_ipv6;
-  391|    737|}
+  389|    719|{
+  390|    719|    return family_ipv6;
+  391|    719|}
 net_family_tcp_ipv4:
-  404|    248|{
-  405|    248|    return family_tcp_ipv4;
-  406|    248|}
+  404|    246|{
+  405|    246|    return family_tcp_ipv4;
+  406|    246|}
 net_family_tcp_ipv6:
   409|    284|{
   410|    284|    return family_tcp_ipv6;
   411|    284|}
 net_family_is_ipv4:
-  429|  2.94k|{
-  430|  2.94k|    return family.value == family_ipv4.value;
-  431|  2.94k|}
+  429|  2.90k|{
+  430|  2.90k|    return family.value == family_ipv4.value;
+  431|  2.90k|}
 net_family_is_ipv6:
-  434|  1.80k|{
-  435|  1.80k|    return family.value == family_ipv6.value;
-  436|  1.80k|}
+  434|  1.76k|{
+  435|  1.76k|    return family.value == family_ipv6.value;
+  436|  1.76k|}
 net_family_is_tcp_ipv4:
-  449|  2.15k|{
-  450|  2.15k|    return family.value == family_tcp_ipv4.value;
-  451|  2.15k|}
+  449|  2.11k|{
+  450|  2.11k|    return family.value == family_tcp_ipv4.value;
+  451|  2.11k|}
 net_family_is_tcp_ipv6:
   454|    550|{
   455|    550|    return family.value == family_tcp_ipv6.value;
   456|    550|}
 ipport_reset:
- 1598|  1.89k|{
- 1599|  1.89k|    if (ipport == nullptr) {
+ 1598|  1.87k|{
+ 1599|  1.87k|    if (ipport == nullptr) {
   ------------------
-  |  |   63|  1.89k|#define nullptr NULL
+  |  |   63|  1.87k|#define nullptr NULL
   ------------------
-  |  Branch (1599:9): [True: 0, False: 1.89k]
+  |  Branch (1599:9): [True: 0, False: 1.87k]
   ------------------
  1600|      0|        return;
  1601|      0|    }
  1602|       |
- 1603|  1.89k|    *ipport = empty_ip_port;
- 1604|  1.89k|}
+ 1603|  1.87k|    *ipport = empty_ip_port;
+ 1604|  1.87k|}
 bin_pack_ip_port:
- 1691|  2.94k|{
- 1692|  2.94k|    bool is_ipv4;
- 1693|  2.94k|    uint8_t family;
+ 1691|  2.90k|{
+ 1692|  2.90k|    bool is_ipv4;
+ 1693|  2.90k|    uint8_t family;
  1694|       |
- 1695|  2.94k|    if (net_family_is_ipv4(ip_port->ip.family)) {
+ 1695|  2.90k|    if (net_family_is_ipv4(ip_port->ip.family)) {
   ------------------
-  |  Branch (1695:9): [True: 798, False: 2.15k]
+  |  Branch (1695:9): [True: 798, False: 2.11k]
   ------------------
  1696|       |        // TODO(irungentoo): use functions to convert endianness
  1697|    798|        is_ipv4 = true;
@@ -2156,25 +2156,25 @@ bin_pack_ip_port:
   ------------------
   |  |  168|    798|#define TOX_AF_INET 2
   ------------------
- 1699|  2.15k|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
+ 1699|  2.11k|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
   ------------------
-  |  Branch (1699:16): [True: 346, False: 1.80k]
+  |  Branch (1699:16): [True: 342, False: 1.76k]
   ------------------
- 1700|    346|        is_ipv4 = true;
- 1701|    346|        family = TOX_TCP_INET;
+ 1700|    342|        is_ipv4 = true;
+ 1701|    342|        family = TOX_TCP_INET;
   ------------------
-  |  |  170|    346|#define TOX_TCP_INET 130
+  |  |  170|    342|#define TOX_TCP_INET 130
   ------------------
- 1702|  1.80k|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
+ 1702|  1.76k|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
   ------------------
-  |  Branch (1702:16): [True: 1.25k, False: 550]
+  |  Branch (1702:16): [True: 1.21k, False: 550]
   ------------------
- 1703|  1.25k|        is_ipv4 = false;
- 1704|  1.25k|        family = TOX_AF_INET6;
+ 1703|  1.21k|        is_ipv4 = false;
+ 1704|  1.21k|        family = TOX_AF_INET6;
   ------------------
-  |  |  169|  1.25k|#define TOX_AF_INET6 10
+  |  |  169|  1.21k|#define TOX_AF_INET6 10
   ------------------
- 1705|  1.25k|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
+ 1705|  1.21k|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
   ------------------
   |  Branch (1705:16): [True: 550, False: 0]
   ------------------
@@ -2209,86 +2209,86 @@ bin_pack_ip_port:
  1713|      0|        return false;
  1714|      0|    }
  1715|       |
- 1716|  2.94k|    return bin_pack_u08_b(bp, family)
+ 1716|  2.90k|    return bin_pack_u08_b(bp, family)
   ------------------
-  |  Branch (1716:12): [True: 2.94k, False: 0]
+  |  Branch (1716:12): [True: 2.90k, False: 0]
   ------------------
- 1717|  2.94k|           && bin_pack_ip(bp, &ip_port->ip, is_ipv4)
+ 1717|  2.90k|           && bin_pack_ip(bp, &ip_port->ip, is_ipv4)
   ------------------
-  |  Branch (1717:15): [True: 2.94k, False: 0]
+  |  Branch (1717:15): [True: 2.90k, False: 0]
   ------------------
- 1718|  2.94k|           && bin_pack_u16_b(bp, net_ntohs(ip_port->port));
+ 1718|  2.90k|           && bin_pack_u16_b(bp, net_ntohs(ip_port->port));
   ------------------
-  |  Branch (1718:15): [True: 2.94k, False: 0]
+  |  Branch (1718:15): [True: 2.90k, False: 0]
   ------------------
- 1719|  2.94k|}
+ 1719|  2.90k|}
 pack_ip_port:
- 1728|    693|{
- 1729|    693|    const uint32_t size = bin_pack_obj_size(bin_pack_ip_port_handler, ip_port, logger);
+ 1728|    688|{
+ 1729|    688|    const uint32_t size = bin_pack_obj_size(bin_pack_ip_port_handler, ip_port, logger);
  1730|       |
- 1731|    693|    if (size > length) {
+ 1731|    688|    if (size > length) {
   ------------------
-  |  Branch (1731:9): [True: 0, False: 693]
+  |  Branch (1731:9): [True: 0, False: 688]
   ------------------
  1732|      0|        return -1;
  1733|      0|    }
  1734|       |
- 1735|    693|    if (!bin_pack_obj(bin_pack_ip_port_handler, ip_port, logger, data, length)) {
+ 1735|    688|    if (!bin_pack_obj(bin_pack_ip_port_handler, ip_port, logger, data, length)) {
   ------------------
-  |  Branch (1735:9): [True: 0, False: 693]
+  |  Branch (1735:9): [True: 0, False: 688]
   ------------------
  1736|      0|        return -1;
  1737|      0|    }
  1738|       |
- 1739|    693|    assert(size < INT_MAX);
- 1740|    693|    return (int)size;
- 1741|    693|}
+ 1739|    688|    assert(size < INT_MAX);
+ 1740|    688|    return (int)size;
+ 1741|    688|}
 unpack_ip_port:
- 1744|  2.09k|{
- 1745|  2.09k|    if (data == nullptr) {
+ 1744|  2.07k|{
+ 1745|  2.07k|    if (data == nullptr) {
   ------------------
-  |  |   63|  2.09k|#define nullptr NULL
+  |  |   63|  2.07k|#define nullptr NULL
   ------------------
-  |  Branch (1745:9): [True: 0, False: 2.09k]
+  |  Branch (1745:9): [True: 0, False: 2.07k]
   ------------------
  1746|      0|        return -1;
  1747|      0|    }
  1748|       |
- 1749|  2.09k|    bool is_ipv4;
- 1750|  2.09k|    Family host_family;
+ 1749|  2.07k|    bool is_ipv4;
+ 1750|  2.07k|    Family host_family;
  1751|       |
- 1752|  2.09k|    if (data[0] == TOX_AF_INET) {
+ 1752|  2.07k|    if (data[0] == TOX_AF_INET) {
   ------------------
-  |  |  168|  2.09k|#define TOX_AF_INET 2
+  |  |  168|  2.07k|#define TOX_AF_INET 2
   ------------------
-  |  Branch (1752:9): [True: 622, False: 1.46k]
+  |  Branch (1752:9): [True: 622, False: 1.44k]
   ------------------
  1753|    622|        is_ipv4 = true;
  1754|    622|        host_family = net_family_ipv4();
- 1755|  1.46k|    } else if (data[0] == TOX_TCP_INET) {
+ 1755|  1.44k|    } else if (data[0] == TOX_TCP_INET) {
   ------------------
-  |  |  170|  1.46k|#define TOX_TCP_INET 130
+  |  |  170|  1.44k|#define TOX_TCP_INET 130
   ------------------
-  |  Branch (1755:16): [True: 314, False: 1.15k]
+  |  Branch (1755:16): [True: 312, False: 1.13k]
   ------------------
- 1756|    314|        if (!tcp_enabled) {
+ 1756|    312|        if (!tcp_enabled) {
   ------------------
-  |  Branch (1756:13): [True: 66, False: 248]
+  |  Branch (1756:13): [True: 66, False: 246]
   ------------------
  1757|     66|            return -1;
  1758|     66|        }
  1759|       |
- 1760|    248|        is_ipv4 = true;
- 1761|    248|        host_family = net_family_tcp_ipv4();
- 1762|  1.15k|    } else if (data[0] == TOX_AF_INET6) {
+ 1760|    246|        is_ipv4 = true;
+ 1761|    246|        host_family = net_family_tcp_ipv4();
+ 1762|  1.13k|    } else if (data[0] == TOX_AF_INET6) {
   ------------------
-  |  |  169|  1.15k|#define TOX_AF_INET6 10
+  |  |  169|  1.13k|#define TOX_AF_INET6 10
   ------------------
-  |  Branch (1762:16): [True: 737, False: 417]
+  |  Branch (1762:16): [True: 719, False: 417]
   ------------------
- 1763|    737|        is_ipv4 = false;
- 1764|    737|        host_family = net_family_ipv6();
- 1765|    737|    } else if (data[0] == TOX_TCP_INET6) {
+ 1763|    719|        is_ipv4 = false;
+ 1764|    719|        host_family = net_family_ipv6();
+ 1765|    719|    } else if (data[0] == TOX_TCP_INET6) {
   ------------------
   |  |  171|    417|#define TOX_TCP_INET6 138
   ------------------
@@ -2307,108 +2307,108 @@ unpack_ip_port:
  1773|     67|        return -1;
  1774|     67|    }
  1775|       |
- 1776|  1.89k|    ipport_reset(ip_port);
+ 1776|  1.87k|    ipport_reset(ip_port);
  1777|       |
- 1778|  1.89k|    if (is_ipv4) {
+ 1778|  1.87k|    if (is_ipv4) {
   ------------------
-  |  Branch (1778:9): [True: 870, False: 1.02k]
+  |  Branch (1778:9): [True: 868, False: 1.00k]
   ------------------
- 1779|    870|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+ 1779|    868|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
   ------------------
-  |  |  185|    870|#define SIZE_IP4 4
+  |  |  185|    868|#define SIZE_IP4 4
   ------------------
  1780|       |
- 1781|    870|        if (size > length) {
+ 1781|    868|        if (size > length) {
   ------------------
-  |  Branch (1781:13): [True: 72, False: 798]
+  |  Branch (1781:13): [True: 72, False: 796]
   ------------------
  1782|     72|            return -1;
  1783|     72|        }
  1784|       |
- 1785|    798|        ip_port->ip.family = host_family;
- 1786|    798|        memcpy(ip_port->ip.ip.v4.uint8, data + 1, SIZE_IP4);
+ 1785|    796|        ip_port->ip.family = host_family;
+ 1786|    796|        memcpy(ip_port->ip.ip.v4.uint8, data + 1, SIZE_IP4);
   ------------------
-  |  |  185|    798|#define SIZE_IP4 4
+  |  |  185|    796|#define SIZE_IP4 4
   ------------------
- 1787|    798|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
+ 1787|    796|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
   ------------------
-  |  |  185|    798|#define SIZE_IP4 4
+  |  |  185|    796|#define SIZE_IP4 4
   ------------------
- 1788|    798|        return size;
- 1789|  1.02k|    } else {
- 1790|  1.02k|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
+ 1788|    796|        return size;
+ 1789|  1.00k|    } else {
+ 1790|  1.00k|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
   ------------------
-  |  |  186|  1.02k|#define SIZE_IP6 16
+  |  |  186|  1.00k|#define SIZE_IP6 16
   ------------------
  1791|       |
- 1792|  1.02k|        if (size > length) {
+ 1792|  1.00k|        if (size > length) {
   ------------------
-  |  Branch (1792:13): [True: 73, False: 948]
+  |  Branch (1792:13): [True: 73, False: 930]
   ------------------
  1793|     73|            return -1;
  1794|     73|        }
  1795|       |
- 1796|    948|        ip_port->ip.family = host_family;
- 1797|    948|        memcpy(ip_port->ip.ip.v6.uint8, data + 1, SIZE_IP6);
+ 1796|    930|        ip_port->ip.family = host_family;
+ 1797|    930|        memcpy(ip_port->ip.ip.v6.uint8, data + 1, SIZE_IP6);
   ------------------
-  |  |  186|    948|#define SIZE_IP6 16
+  |  |  186|    930|#define SIZE_IP6 16
   ------------------
- 1798|    948|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
+ 1798|    930|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
   ------------------
-  |  |  186|    948|#define SIZE_IP6 16
+  |  |  186|    930|#define SIZE_IP6 16
   ------------------
- 1799|    948|        return size;
- 1800|  1.02k|    }
- 1801|  1.89k|}
+ 1799|    930|        return size;
+ 1800|  1.00k|    }
+ 1801|  1.87k|}
 net_ntohs:
- 2238|  2.94k|{
- 2239|  2.94k|    return ntohs(hostshort);
- 2240|  2.94k|}
+ 2238|  2.90k|{
+ 2239|  2.90k|    return ntohs(hostshort);
+ 2240|  2.90k|}
 net_unpack_bool:
- 2272|  2.86k|{
- 2273|  2.86k|    *v = bytes[0] != 0;
- 2274|  2.86k|    return 1;
- 2275|  2.86k|}
+ 2272|  2.82k|{
+ 2273|  2.82k|    *v = bytes[0] != 0;
+ 2274|  2.82k|    return 1;
+ 2275|  2.82k|}
 network.c:bin_pack_ip:
- 1678|  2.94k|{
- 1679|  2.94k|    if (is_ipv4) {
+ 1678|  2.90k|{
+ 1679|  2.90k|    if (is_ipv4) {
   ------------------
-  |  Branch (1679:9): [True: 1.14k, False: 1.80k]
+  |  Branch (1679:9): [True: 1.14k, False: 1.76k]
   ------------------
  1680|  1.14k|        return bin_pack_bin_b(bp, ip->ip.v4.uint8, SIZE_IP4);
   ------------------
   |  |  185|  1.14k|#define SIZE_IP4 4
   ------------------
- 1681|  1.80k|    } else {
- 1682|  1.80k|        return bin_pack_bin_b(bp, ip->ip.v6.uint8, SIZE_IP6);
+ 1681|  1.76k|    } else {
+ 1682|  1.76k|        return bin_pack_bin_b(bp, ip->ip.v6.uint8, SIZE_IP6);
   ------------------
-  |  |  186|  1.80k|#define SIZE_IP6 16
+  |  |  186|  1.76k|#define SIZE_IP6 16
   ------------------
- 1683|  1.80k|    }
- 1684|  2.94k|}
+ 1683|  1.76k|    }
+ 1684|  2.90k|}
 network.c:bin_pack_ip_port_handler:
- 1722|  1.38k|{
- 1723|  1.38k|    const IP_Port *ip_port = (const IP_Port *)obj;
- 1724|  1.38k|    return bin_pack_ip_port(bp, logger, ip_port);
- 1725|  1.38k|}
+ 1722|  1.37k|{
+ 1723|  1.37k|    const IP_Port *ip_port = (const IP_Port *)obj;
+ 1724|  1.37k|    return bin_pack_ip_port(bp, logger, ip_port);
+ 1725|  1.37k|}
 
 _Z16require_not_nullIK6MemoryEPT_PKciS3_:
-   73|    371|{
-   74|    371|    if (ptr == nullptr) {
+   73|    358|{
+   74|    358|    if (ptr == nullptr) {
   ------------------
-  |  Branch (74:9): [True: 0, False: 371]
+  |  Branch (74:9): [True: 0, False: 358]
   ------------------
    75|      0|        std::fprintf(stderr, "unexpected null pointer at %s:%d\n", file, line);
    76|      0|        std::exit(7);
    77|      0|    }
-   78|    371|    return ptr;
-   79|    371|}
+   78|    358|    return ptr;
+   79|    358|}
 _ZN6MethodIFPvS0_jjE12Memory_ClassE6invokeIXadL_ZNS2_6callocES0_jjEEEES0_S0_jj:
-   31|  1.55k|    {
-   32|  1.55k|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|  1.55k|    }
+   31|  1.53k|    {
+   32|  1.53k|        return (static_cast<Class *>(self)->*M)(self, args...);
+   33|  1.53k|    }
 _ZN6MethodIFvPvS0_E12Memory_ClassE6invokeIXadL_ZNS2_4freeES0_S0_EEEEvS0_S0_:
-   31|  1.55k|    {
-   32|  1.55k|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|  1.55k|    }
+   31|  1.53k|    {
+   32|  1.53k|        return (static_cast<Class *>(self)->*M)(self, args...);
+   33|  1.53k|    }
 
