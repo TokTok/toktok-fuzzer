@@ -95,21 +95,21 @@ fuzz_support.cc:_ZL12alloc_commonIDoFPvmmETnT_XadL_Z6callocEEJjjEES0_PKcmR9Fuzz_
   ------------------
   |  |  122|    189|    if (INPUT.size() < sizeof(TYPE)) {                 \
   |  |  ------------------
-  |  |  |  Branch (122:9): [True: 123, False: 66]
+  |  |  |  Branch (122:9): [True: 126, False: 63]
   |  |  ------------------
-  |  |  123|    123|        return VAL;                                    \
-  |  |  124|    123|    }                                                  \
+  |  |  123|    126|        return VAL;                                    \
+  |  |  124|    126|    }                                                  \
   |  |  125|    189|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-   90|     66|        const bool, want_alloc, data, report_alloc("tox1", func, size, Func(args...)));
-   91|     66|    if (!want_alloc) {
+   90|     63|        const bool, want_alloc, data, report_alloc("tox1", func, size, Func(args...)));
+   91|     63|    if (!want_alloc) {
   ------------------
-  |  Branch (91:9): [True: 4, False: 62]
+  |  Branch (91:9): [True: 4, False: 59]
   ------------------
    92|      4|        return nullptr;
    93|      4|    }
-   94|     62|    return report_alloc("tox1", func, size, Func(args...));
-   95|     66|}
+   94|     59|    return report_alloc("tox1", func, size, Func(args...));
+   95|     63|}
 fuzz_support.cc:_ZNK3$_3clEP11Fuzz_SystemPv:
   113|    184|    ![](Fuzz_System *self, void *ptr) { std::free(ptr); },
 fuzz_support.cc:_ZNK3$_4clEP11Fuzz_System6Socket:
@@ -134,7 +134,7 @@ fuzz_support.cc:_ZNK4$_17clEP11Fuzz_System6SocketiiPKvm:
 _ZNK9Fuzz_Data4sizeEv:
    69|    745|    std::size_t size() const { return size_; }
 _ZN9Fuzz_Data8consume1EPKc:
-   68|    235|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   68|    232|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN9Fuzz_Data8ConsumercvT_ItEEv:
    60|     83|        {
    61|     83|            const uint8_t *bytes = fd.consume(func, sizeof(T));
@@ -227,11 +227,11 @@ _ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
   177|       |        // fuzzer to come up with a better selector.
   178|      1|    }
 _ZN9Fuzz_Data8ConsumercvbEv:
-   46|     66|        {
+   46|     63|        {
    47|       |            // Special case because memcpy causes UB for bool (which can't be
    48|       |            // anything other than 0 or 1).
-   49|     66|            const bool val = fd.data_[0];
-   50|     66|            if (FUZZ_DEBUG) {
+   49|     63|            const bool val = fd.data_[0];
+   50|     63|            if (FUZZ_DEBUG) {
   ------------------
   |  Branch (50:17): [Folded - Ignored]
   ------------------
@@ -240,10 +240,10 @@ _ZN9Fuzz_Data8ConsumercvbEv:
   |  Branch (51:75): [True: 0, False: 0]
   ------------------
    52|      0|            }
-   53|     66|            ++fd.data_;
-   54|     66|            --fd.size_;
-   55|     66|            return val;
-   56|     66|        }
+   53|     63|            ++fd.data_;
+   54|     63|            --fd.size_;
+   55|     63|            return val;
+   56|     63|        }
 
 send_forward_request:
    50|     51|{
@@ -969,8 +969,8 @@ new_networking_ex:
  1213|       |     */
  1214|     64|    if (port_from == 0 && port_to == 0) {
   ------------------
-  |  Branch (1214:9): [True: 21, False: 43]
-  |  Branch (1214:27): [True: 0, False: 21]
+  |  Branch (1214:9): [True: 23, False: 41]
+  |  Branch (1214:27): [True: 0, False: 23]
   ------------------
  1215|      0|        port_from = TOX_PORTRANGE_FROM;
   ------------------
@@ -982,19 +982,19 @@ new_networking_ex:
   ------------------
  1217|     64|    } else if (port_from == 0 && port_to != 0) {
   ------------------
-  |  Branch (1217:16): [True: 21, False: 43]
-  |  Branch (1217:34): [True: 21, False: 0]
+  |  Branch (1217:16): [True: 23, False: 41]
+  |  Branch (1217:34): [True: 23, False: 0]
   ------------------
- 1218|     21|        port_from = port_to;
- 1219|     43|    } else if (port_from != 0 && port_to == 0) {
+ 1218|     23|        port_from = port_to;
+ 1219|     41|    } else if (port_from != 0 && port_to == 0) {
   ------------------
-  |  Branch (1219:16): [True: 43, False: 0]
-  |  Branch (1219:34): [True: 1, False: 42]
+  |  Branch (1219:16): [True: 41, False: 0]
+  |  Branch (1219:34): [True: 1, False: 40]
   ------------------
  1220|      1|        port_to = port_from;
- 1221|     42|    } else if (port_from > port_to) {
+ 1221|     40|    } else if (port_from > port_to) {
   ------------------
-  |  Branch (1221:16): [True: 1, False: 41]
+  |  Branch (1221:16): [True: 1, False: 39]
   ------------------
  1222|      1|        const uint16_t temp_port = port_from;
  1223|      1|        port_from = port_to;
