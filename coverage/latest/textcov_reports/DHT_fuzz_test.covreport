@@ -631,31 +631,26 @@ crypto_memzero:
   121|      2|}
 pk_equal:
   144|      2|{
-  145|      2|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-  146|       |    // Hope that this is better for the fuzzer
-  147|      2|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
+  145|      2|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
   ------------------
   |  |   44|      2|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  148|       |#else
-  149|       |    return crypto_verify_32(pk1, pk2) == 0;
-  150|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  151|      2|}
+  146|      2|}
 encrypt_precompute:
-  234|      1|{
-  235|      1|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-  236|      1|    memcpy(shared_key, public_key, CRYPTO_SHARED_KEY_SIZE);
+  224|      1|{
+  225|      1|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  226|      1|    memcpy(shared_key, public_key, CRYPTO_SHARED_KEY_SIZE);
   ------------------
   |  |   54|      1|#define CRYPTO_SHARED_KEY_SIZE         32
   ------------------
-  237|      1|    return 0;
-  238|       |#else
-  239|       |    return crypto_box_beforenm(shared_key, public_key, secret_key);
-  240|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  241|      1|}
+  227|      1|    return 0;
+  228|       |#else
+  229|       |    return crypto_box_beforenm(shared_key, public_key, secret_key);
+  230|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+  231|      1|}
 decrypt_data_symmetric:
-  301|      1|{
-  302|      1|    if (length <= crypto_box_BOXZEROBYTES || shared_key == nullptr || nonce == nullptr || encrypted == nullptr
+  291|      1|{
+  292|      1|    if (length <= crypto_box_BOXZEROBYTES || shared_key == nullptr || nonce == nullptr || encrypted == nullptr
   ------------------
   |  |   63|      2|#define nullptr NULL
   ------------------
@@ -667,74 +662,74 @@ decrypt_data_symmetric:
   ------------------
   |  |   63|      2|#define nullptr NULL
   ------------------
-  |  Branch (302:9): [True: 0, False: 1]
-  |  Branch (302:46): [True: 0, False: 1]
-  |  Branch (302:71): [True: 0, False: 1]
-  |  Branch (302:91): [True: 0, False: 1]
+  |  Branch (292:9): [True: 0, False: 1]
+  |  Branch (292:46): [True: 0, False: 1]
+  |  Branch (292:71): [True: 0, False: 1]
+  |  Branch (292:91): [True: 0, False: 1]
   ------------------
-  303|      1|            || plain == nullptr) {
+  293|      1|            || plain == nullptr) {
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-  |  Branch (303:16): [True: 0, False: 1]
+  |  Branch (293:16): [True: 0, False: 1]
   ------------------
-  304|      0|        return -1;
-  305|      0|    }
-  306|       |
-  307|      1|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-  308|      1|    assert(length >= crypto_box_MACBYTES);
+  294|      0|        return -1;
+  295|      0|    }
+  296|       |
+  297|      1|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  298|      1|    assert(length >= crypto_box_MACBYTES);
   ------------------
-  |  Branch (308:5): [True: 1, False: 0]
+  |  Branch (298:5): [True: 1, False: 0]
   ------------------
-  309|      1|    memcpy(plain, encrypted, length - crypto_box_MACBYTES);  // Don't encrypt anything
-  310|       |#else
-  311|       |
-  312|       |    const size_t size_temp_plain = length + crypto_box_ZEROBYTES;
-  313|       |    const size_t size_temp_encrypted = length + crypto_box_BOXZEROBYTES;
-  314|       |
-  315|       |    uint8_t *temp_plain = crypto_malloc(mem, size_temp_plain);
-  316|       |    uint8_t *temp_encrypted = crypto_malloc(mem, size_temp_encrypted);
-  317|       |
-  318|       |    if (temp_plain == nullptr || temp_encrypted == nullptr) {
-  319|       |        crypto_free(mem, temp_plain, size_temp_plain);
-  320|       |        crypto_free(mem, temp_encrypted, size_temp_encrypted);
-  321|       |        return -1;
-  322|       |    }
-  323|       |
-  324|       |    // crypto_box_open_afternm requires the entire range of the output array be
-  325|       |    // initialised with something. It doesn't matter what it's initialised with,
-  326|       |    // so we'll pick 0x00.
-  327|       |    memzero(temp_plain, size_temp_plain);
-  328|       |
-  329|       |    memzero(temp_encrypted, crypto_box_BOXZEROBYTES);
-  330|       |    // Pad the message with 16 0 bytes.
-  331|       |    memcpy(temp_encrypted + crypto_box_BOXZEROBYTES, encrypted, length);
-  332|       |
-  333|       |    if (crypto_box_open_afternm(temp_plain, temp_encrypted, length + crypto_box_BOXZEROBYTES, nonce,
-  334|       |                                shared_key) != 0) {
-  335|       |        crypto_free(mem, temp_plain, size_temp_plain);
-  336|       |        crypto_free(mem, temp_encrypted, size_temp_encrypted);
-  337|       |        return -1;
-  338|       |    }
-  339|       |
-  340|       |    memcpy(plain, temp_plain + crypto_box_ZEROBYTES, length - crypto_box_MACBYTES);
-  341|       |
-  342|       |    crypto_free(mem, temp_plain, size_temp_plain);
-  343|       |    crypto_free(mem, temp_encrypted, size_temp_encrypted);
-  344|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  345|      1|    assert(length > crypto_box_MACBYTES);
+  299|      1|    memcpy(plain, encrypted, length - crypto_box_MACBYTES);  // Don't encrypt anything
+  300|       |#else
+  301|       |
+  302|       |    const size_t size_temp_plain = length + crypto_box_ZEROBYTES;
+  303|       |    const size_t size_temp_encrypted = length + crypto_box_BOXZEROBYTES;
+  304|       |
+  305|       |    uint8_t *temp_plain = crypto_malloc(mem, size_temp_plain);
+  306|       |    uint8_t *temp_encrypted = crypto_malloc(mem, size_temp_encrypted);
+  307|       |
+  308|       |    if (temp_plain == nullptr || temp_encrypted == nullptr) {
+  309|       |        crypto_free(mem, temp_plain, size_temp_plain);
+  310|       |        crypto_free(mem, temp_encrypted, size_temp_encrypted);
+  311|       |        return -1;
+  312|       |    }
+  313|       |
+  314|       |    // crypto_box_open_afternm requires the entire range of the output array be
+  315|       |    // initialised with something. It doesn't matter what it's initialised with,
+  316|       |    // so we'll pick 0x00.
+  317|       |    memzero(temp_plain, size_temp_plain);
+  318|       |
+  319|       |    memzero(temp_encrypted, crypto_box_BOXZEROBYTES);
+  320|       |    // Pad the message with 16 0 bytes.
+  321|       |    memcpy(temp_encrypted + crypto_box_BOXZEROBYTES, encrypted, length);
+  322|       |
+  323|       |    if (crypto_box_open_afternm(temp_plain, temp_encrypted, length + crypto_box_BOXZEROBYTES, nonce,
+  324|       |                                shared_key) != 0) {
+  325|       |        crypto_free(mem, temp_plain, size_temp_plain);
+  326|       |        crypto_free(mem, temp_encrypted, size_temp_encrypted);
+  327|       |        return -1;
+  328|       |    }
+  329|       |
+  330|       |    memcpy(plain, temp_plain + crypto_box_ZEROBYTES, length - crypto_box_MACBYTES);
+  331|       |
+  332|       |    crypto_free(mem, temp_plain, size_temp_plain);
+  333|       |    crypto_free(mem, temp_encrypted, size_temp_encrypted);
+  334|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
+  335|      1|    assert(length > crypto_box_MACBYTES);
   ------------------
-  |  Branch (345:5): [True: 1, False: 0]
+  |  Branch (335:5): [True: 1, False: 0]
   ------------------
-  346|      1|    assert(length < INT32_MAX);
+  336|      1|    assert(length < INT32_MAX);
   ------------------
-  |  Branch (346:5): [True: 1, False: 0]
+  |  Branch (336:5): [True: 1, False: 0]
   ------------------
-  347|      1|    return (int32_t)(length - crypto_box_MACBYTES);
-  348|      1|}
+  337|      1|    return (int32_t)(length - crypto_box_MACBYTES);
+  338|      1|}
 decrypt_data:
-  372|      1|{
-  373|      1|    if (public_key == nullptr || secret_key == nullptr) {
+  362|      1|{
+  363|      1|    if (public_key == nullptr || secret_key == nullptr) {
   ------------------
   |  |   63|      2|#define nullptr NULL
   ------------------
@@ -742,18 +737,18 @@ decrypt_data:
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-  |  Branch (373:9): [True: 0, False: 1]
-  |  Branch (373:34): [True: 0, False: 1]
+  |  Branch (363:9): [True: 0, False: 1]
+  |  Branch (363:34): [True: 0, False: 1]
   ------------------
-  374|      0|        return -1;
-  375|      0|    }
-  376|       |
-  377|      1|    uint8_t k[crypto_box_BEFORENMBYTES];
-  378|      1|    encrypt_precompute(public_key, secret_key, k);
-  379|      1|    const int ret = decrypt_data_symmetric(mem, k, nonce, encrypted, length, plain);
-  380|      1|    crypto_memzero(k, sizeof(k));
-  381|      1|    return ret;
-  382|      1|}
+  364|      0|        return -1;
+  365|      0|    }
+  366|       |
+  367|      1|    uint8_t k[crypto_box_BEFORENMBYTES];
+  368|      1|    encrypt_precompute(public_key, secret_key, k);
+  369|      1|    const int ret = decrypt_data_symmetric(mem, k, nonce, encrypted, length, plain);
+  370|      1|    crypto_memzero(k, sizeof(k));
+  371|      1|    return ret;
+  372|      1|}
 
 logger_new:
    33|     17|{

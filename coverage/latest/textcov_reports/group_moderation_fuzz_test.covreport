@@ -1,20 +1,20 @@
 _ZNK9Fuzz_Data4sizeEv:
-   69|     73|    std::size_t size() const { return size_; }
+   69|    145|    std::size_t size() const { return size_; }
 _ZN9Fuzz_Data8consume1EPKc:
-   68|     43|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   68|     91|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN9Fuzz_Data8ConsumercvT_ItEEv:
-   60|     12|        {
-   61|     12|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|     12|            T val;
-   63|     12|            std::memcpy(&val, bytes, sizeof(T));
-   64|     12|            return val;
-   65|     12|        }
+   60|     36|        {
+   61|     36|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   62|     36|            T val;
+   63|     36|            std::memcpy(&val, bytes, sizeof(T));
+   64|     36|            return val;
+   65|     36|        }
 _ZN9Fuzz_Data7consumeEPKcm:
-   75|     44|    {
-   76|     44|        const uint8_t *val = data_;
-   77|     44|        if (FUZZ_DEBUG) {
+   75|     92|    {
+   76|     92|        const uint8_t *val = data_;
+   77|     92|        if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (77:13): [Folded, False: 44]
+  |  Branch (77:13): [Folded, False: 92]
   ------------------
    78|      0|            if (pos() == TRACE_TRAP) {
   ------------------
@@ -35,51 +35,51 @@ _ZN9Fuzz_Data7consumeEPKcm:
    85|      0|                    val[count - 1], count);
    86|      0|            }
    87|      0|        }
-   88|     44|        data_ += count;
-   89|     44|        size_ -= count;
-   90|     44|        return val;
-   91|     44|    }
+   88|     92|        data_ += count;
+   89|     92|        size_ -= count;
+   90|     92|        return val;
+   91|     92|    }
 _ZNK9Fuzz_Data4dataEv:
-   71|     27|    const uint8_t *data() const { return data_; }
+   71|     51|    const uint8_t *data() const { return data_; }
 group_moderation_fuzz_test.cc:_Z18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionsListUnpackES2_EEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEEvPKhm:
-  183|     31|{
-  184|     31|    Fuzz_Data input{data, size};
+  183|     55|{
+  184|     55|    Fuzz_Data input{data, size};
   185|       |
-  186|     31|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  186|     55|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
   ------------------
-  |  |  105|     31|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|     55|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 0, False: 31]
+  |  |  |  Branch (105:9): [True: 0, False: 55]
   |  |  ------------------
   |  |  106|      0|        return;                               \
   |  |  107|      0|    }                                         \
-  |  |  108|     31|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|     55|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-  187|     31|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  188|     31|}
+  187|     55|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  188|     55|}
 _ZN9Fuzz_DataC2EPKhm:
-   32|     31|        : data_(input_data)
-   33|     31|        , base_(input_data)
-   34|     31|        , size_(input_size)
-   35|     31|    {
-   36|     31|    }
+   32|     55|        : data_(input_data)
+   33|     55|        , base_(input_data)
+   34|     55|        , size_(input_size)
+   35|     55|    {
+   36|     55|    }
 _ZN9Fuzz_Data8ConsumercvT_IhEEv:
-   60|     31|        {
-   61|     31|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|     31|            T val;
-   63|     31|            std::memcpy(&val, bytes, sizeof(T));
-   64|     31|            return val;
-   65|     31|        }
+   60|     55|        {
+   61|     55|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   62|     55|            T val;
+   63|     55|            std::memcpy(&val, bytes, sizeof(T));
+   64|     55|            return val;
+   65|     55|        }
 group_moderation_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionsListUnpackES2_EEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEE6selectEhS2_:
-  164|     31|    {
-  165|     31|        if (selector == sizeof...(Args)) {
+  164|     55|    {
+  165|     55|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (165:13): [True: 13, False: 18]
+  |  Branch (165:13): [True: 37, False: 18]
   ------------------
-  166|     13|            return Arg(input);
-  167|     13|        }
+  166|     37|            return Arg(input);
+  167|     37|        }
   168|     18|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|     31|    }
+  169|     55|    }
 group_moderation_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_123TestSanctionsListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEE6selectEhS2_:
   164|     18|    {
   165|     18|        if (selector == sizeof...(Args)) {
@@ -107,176 +107,178 @@ _ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
   178|      1|    }
 
 mod_list_unpack:
-   43|     12|{
-   44|     12|    if (length < num_mods * MOD_LIST_ENTRY_SIZE) {
+   69|     36|{
+   70|     36|    if (length < num_mods * MOD_LIST_ENTRY_SIZE) {
   ------------------
-  |  |   27|     12|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|     36|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   95|     12|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |   95|     36|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   34|     12|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
-  |  Branch (44:9): [True: 1, False: 11]
-  ------------------
-   45|      1|        return -1;
-   46|      1|    }
-   47|       |
-   48|     11|    mod_list_cleanup(moderation);
-   49|       |
-   50|     11|    if (num_mods == 0) {
-  ------------------
-  |  Branch (50:9): [True: 1, False: 10]
-  ------------------
-   51|      1|        return 0;
-   52|      1|    }
-   53|       |
-   54|     10|    uint8_t **tmp_list = (uint8_t **)mem_valloc(moderation->mem, num_mods, sizeof(uint8_t *));
-   55|       |
-   56|     10|    if (tmp_list == nullptr) {
-  ------------------
-  |  |   63|     10|#define nullptr NULL
-  ------------------
-  |  Branch (56:9): [True: 0, False: 10]
-  ------------------
-   57|      0|        return -1;
-   58|      0|    }
-   59|       |
-   60|     10|    uint16_t unpacked_len = 0;
-   61|       |
-   62|    117|    for (uint16_t i = 0; i < num_mods; ++i) {
-  ------------------
-  |  Branch (62:26): [True: 107, False: 10]
-  ------------------
-   63|    107|        uint8_t *entry = (uint8_t *)mem_balloc(moderation->mem, MOD_LIST_ENTRY_SIZE);
-  ------------------
-  |  |   27|    107|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
-  |  |  ------------------
-  |  |  |  |   95|    107|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   34|    107|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   34|     36|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-   64|       |
-   65|    107|        if (entry == nullptr) {
+  |  Branch (70:9): [True: 1, False: 35]
   ------------------
-  |  |   63|    107|#define nullptr NULL
+   71|      1|        return -1;
+   72|      1|    }
+   73|       |
+   74|     35|    mod_list_cleanup(moderation);
+   75|       |
+   76|     35|    if (num_mods == 0) {
   ------------------
-  |  Branch (65:13): [True: 0, False: 107]
+  |  Branch (76:9): [True: 1, False: 34]
   ------------------
-   66|      0|            free_uint8_t_pointer_array(moderation->mem, tmp_list, i);
-   67|      0|            return -1;
-   68|      0|        }
-   69|       |
-   70|    107|        memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
+   77|      1|        return 0;
+   78|      1|    }
+   79|       |
+   80|     34|    uint8_t **tmp_list = (uint8_t **)mem_valloc(moderation->mem, num_mods, sizeof(uint8_t *));
+   81|       |
+   82|     34|    if (tmp_list == nullptr) {
   ------------------
-  |  |   27|    107|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   63|     34|#define nullptr NULL
+  ------------------
+  |  Branch (82:9): [True: 0, False: 34]
+  ------------------
+   83|      0|        return -1;
+   84|      0|    }
+   85|       |
+   86|     34|    uint16_t unpacked_len = 0;
+   87|       |
+   88|  1.84k|    for (uint16_t i = 0; i < num_mods; ++i) {
+  ------------------
+  |  Branch (88:26): [True: 1.81k, False: 34]
+  ------------------
+   89|  1.81k|        uint8_t *entry = (uint8_t *)mem_balloc(moderation->mem, MOD_LIST_ENTRY_SIZE);
+  ------------------
+  |  |   27|  1.81k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   95|    107|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |   95|  1.81k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   34|    107|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   34|  1.81k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+   90|       |
+   91|  1.81k|        if (entry == nullptr) {
+  ------------------
+  |  |   63|  1.81k|#define nullptr NULL
+  ------------------
+  |  Branch (91:13): [True: 0, False: 1.81k]
+  ------------------
+   92|      0|            free_uint8_t_pointer_array(moderation->mem, tmp_list, i);
+   93|      0|            return -1;
+   94|      0|        }
+   95|       |
+   96|  1.81k|        memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
+  ------------------
+  |  |   27|  1.81k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |  ------------------
+  |  |  |  |   95|  1.81k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   34|  1.81k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
                       memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
   ------------------
-  |  |   27|    107|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|  1.81k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   95|    107|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |   95|  1.81k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   34|    107|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
-   71|    107|        tmp_list[i] = entry;
-   72|       |
-   73|    107|        unpacked_len += MOD_LIST_ENTRY_SIZE;
-  ------------------
-  |  |   27|    107|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
-  |  |  ------------------
-  |  |  |  |   95|    107|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   34|    107|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   34|  1.81k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-   74|    107|    }
-   75|       |
-   76|     10|    moderation->mod_list = tmp_list;
-   77|     10|    moderation->num_mods = num_mods;
-   78|       |
-   79|     10|    return unpacked_len;
-   80|     10|}
+   97|  1.81k|        tmp_list[i] = entry;
+   98|       |
+   99|  1.81k|        unpacked_len += MOD_LIST_ENTRY_SIZE;
+  ------------------
+  |  |   27|  1.81k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |  ------------------
+  |  |  |  |   95|  1.81k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   34|  1.81k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+  100|  1.81k|    }
+  101|       |
+  102|     34|    moderation->mod_list = tmp_list;
+  103|     34|    moderation->num_mods = num_mods;
+  104|       |
+  105|     34|    qsort(moderation->mod_list, moderation->num_mods, sizeof(uint8_t *), compare_mod_pointers);
+  106|       |
+  107|     34|    return unpacked_len;
+  108|     34|}
 mod_list_cleanup:
-  228|     23|{
-  229|     23|    free_uint8_t_pointer_array(moderation->mem, moderation->mod_list, moderation->num_mods);
-  230|     23|    moderation->num_mods = 0;
-  231|       |    moderation->mod_list = nullptr;
+  262|     71|{
+  263|     71|    free_uint8_t_pointer_array(moderation->mem, moderation->mod_list, moderation->num_mods);
+  264|     71|    moderation->num_mods = 0;
+  265|       |    moderation->mod_list = nullptr;
   ------------------
-  |  |   63|     23|#define nullptr NULL
+  |  |   63|     71|#define nullptr NULL
   ------------------
-  232|     23|}
+  266|     71|}
 sanctions_creds_unpack:
-  317|      2|{
-  318|      2|    uint16_t len_processed = 0;
-  319|       |
-  320|      2|    net_unpack_u32(&data[len_processed], &creds->version);
-  321|      2|    len_processed += sizeof(uint32_t);
-  322|      2|    memcpy(creds->hash, &data[len_processed], MOD_SANCTION_HASH_SIZE);
+  351|      2|{
+  352|      2|    uint16_t len_processed = 0;
+  353|       |
+  354|      2|    net_unpack_u32(&data[len_processed], &creds->version);
+  355|      2|    len_processed += sizeof(uint32_t);
+  356|      2|    memcpy(creds->hash, &data[len_processed], MOD_SANCTION_HASH_SIZE);
   ------------------
   |  |   28|      2|#define MOD_SANCTION_HASH_SIZE CRYPTO_SHA256_SIZE
   |  |  ------------------
   |  |  |  |   75|      2|#define CRYPTO_SHA256_SIZE             32
   |  |  ------------------
   ------------------
-  323|      2|    len_processed += MOD_SANCTION_HASH_SIZE;
+  357|      2|    len_processed += MOD_SANCTION_HASH_SIZE;
   ------------------
   |  |   28|      2|#define MOD_SANCTION_HASH_SIZE CRYPTO_SHA256_SIZE
   |  |  ------------------
   |  |  |  |   75|      2|#define CRYPTO_SHA256_SIZE             32
   |  |  ------------------
   ------------------
-  324|      2|    net_unpack_u16(&data[len_processed], &creds->checksum);
-  325|      2|    len_processed += sizeof(uint16_t);
-  326|      2|    memcpy(creds->sig_pk, &data[len_processed], SIG_PUBLIC_KEY_SIZE);
+  358|      2|    net_unpack_u16(&data[len_processed], &creds->checksum);
+  359|      2|    len_processed += sizeof(uint16_t);
+  360|      2|    memcpy(creds->sig_pk, &data[len_processed], SIG_PUBLIC_KEY_SIZE);
   ------------------
   |  |   95|      2|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   34|      2|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  ------------------
   ------------------
-  327|      2|    len_processed += SIG_PUBLIC_KEY_SIZE;
+  361|      2|    len_processed += SIG_PUBLIC_KEY_SIZE;
   ------------------
   |  |   95|      2|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   34|      2|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  ------------------
   ------------------
-  328|      2|    memcpy(creds->sig, &data[len_processed], SIGNATURE_SIZE);
+  362|      2|    memcpy(creds->sig, &data[len_processed], SIGNATURE_SIZE);
   ------------------
   |  |   27|      2|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
   |  |  ------------------
   |  |  |  |   29|      2|#define CRYPTO_SIGNATURE_SIZE          64
   |  |  ------------------
   ------------------
-  329|      2|    len_processed += SIGNATURE_SIZE;
+  363|      2|    len_processed += SIGNATURE_SIZE;
   ------------------
   |  |   27|      2|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
   |  |  ------------------
   |  |  |  |   29|      2|#define CRYPTO_SIGNATURE_SIZE          64
   |  |  ------------------
   ------------------
-  330|       |
-  331|      2|    return len_processed;
-  332|      2|}
+  364|       |
+  365|      2|    return len_processed;
+  366|      2|}
 sanctions_list_unpack:
-  336|     15|{
-  337|     15|    uint16_t num = 0;
-  338|     15|    uint16_t len_processed = 0;
-  339|       |
-  340|     64|    while (num < max_sanctions && num < MOD_MAX_NUM_SANCTIONS && len_processed < length) {
+  370|     15|{
+  371|     15|    uint16_t num = 0;
+  372|     15|    uint16_t len_processed = 0;
+  373|       |
+  374|     64|    while (num < max_sanctions && num < MOD_MAX_NUM_SANCTIONS && len_processed < length) {
   ------------------
   |  |   52|    126|#define MOD_MAX_NUM_SANCTIONS        (MOD_MAX_NUM_SANCTIONS_LIMIT / 12)
   |  |  ------------------
@@ -338,11 +340,11 @@ sanctions_list_unpack:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (340:12): [True: 62, False: 2]
-  |  Branch (340:35): [True: 62, False: 0]
-  |  Branch (340:66): [True: 57, False: 5]
+  |  Branch (374:12): [True: 62, False: 2]
+  |  Branch (374:35): [True: 62, False: 0]
+  |  Branch (374:66): [True: 57, False: 5]
   ------------------
-  341|     57|        if (len_processed + sizeof(uint8_t) + SIG_PUBLIC_KEY_SIZE + TIME_STAMP_SIZE > length) {
+  375|     57|        if (len_processed + sizeof(uint8_t) + SIG_PUBLIC_KEY_SIZE + TIME_STAMP_SIZE > length) {
   ------------------
   |  |   95|     57|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
@@ -353,98 +355,98 @@ sanctions_list_unpack:
   ------------------
   |  |   30|     57|#define TIME_STAMP_SIZE sizeof(uint64_t)
   ------------------
-  |  Branch (341:13): [True: 1, False: 56]
+  |  Branch (375:13): [True: 1, False: 56]
   ------------------
-  342|      1|            return -1;
-  343|      1|        }
-  344|       |
-  345|     56|        memcpy(&sanctions[num].type, &data[len_processed], sizeof(uint8_t));
-  346|     56|        len_processed += sizeof(uint8_t);
-  347|     56|        memcpy(sanctions[num].setter_public_sig_key, &data[len_processed], SIG_PUBLIC_KEY_SIZE);
-  ------------------
-  |  |   95|     56|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
-  |  |  ------------------
-  |  |  |  |   34|     56|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
-  |  |  ------------------
-  ------------------
-  348|     56|        len_processed += SIG_PUBLIC_KEY_SIZE;
+  376|      1|            return -1;
+  377|      1|        }
+  378|       |
+  379|     56|        memcpy(&sanctions[num].type, &data[len_processed], sizeof(uint8_t));
+  380|     56|        len_processed += sizeof(uint8_t);
+  381|     56|        memcpy(sanctions[num].setter_public_sig_key, &data[len_processed], SIG_PUBLIC_KEY_SIZE);
   ------------------
   |  |   95|     56|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   34|     56|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  ------------------
   ------------------
-  349|     56|        net_unpack_u64(&data[len_processed], &sanctions[num].time_set);
-  350|     56|        len_processed += TIME_STAMP_SIZE;
+  382|     56|        len_processed += SIG_PUBLIC_KEY_SIZE;
+  ------------------
+  |  |   95|     56|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  ------------------
+  |  |  |  |   34|     56|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  ------------------
+  ------------------
+  383|     56|        net_unpack_u64(&data[len_processed], &sanctions[num].time_set);
+  384|     56|        len_processed += TIME_STAMP_SIZE;
   ------------------
   |  |   30|     56|#define TIME_STAMP_SIZE sizeof(uint64_t)
   ------------------
-  351|       |
-  352|     56|        if (sanctions[num].type == SA_OBSERVER) {
+  385|       |
+  386|     56|        if (sanctions[num].type == SA_OBSERVER) {
   ------------------
-  |  Branch (352:13): [True: 52, False: 4]
+  |  Branch (386:13): [True: 52, False: 4]
   ------------------
-  353|     52|            if (len_processed + ENC_PUBLIC_KEY_SIZE > length) {
+  387|     52|            if (len_processed + ENC_PUBLIC_KEY_SIZE > length) {
   ------------------
   |  |   85|     52|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   44|     52|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  |  Branch (353:17): [True: 2, False: 50]
+  |  Branch (387:17): [True: 2, False: 50]
   ------------------
-  354|      2|                return -1;
-  355|      2|            }
-  356|       |
-  357|     50|            memcpy(sanctions[num].target_public_enc_key, &data[len_processed], ENC_PUBLIC_KEY_SIZE);
-  ------------------
-  |  |   85|     50|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
-  |  |  ------------------
-  |  |  |  |   44|     50|#define CRYPTO_PUBLIC_KEY_SIZE         32
-  |  |  ------------------
-  ------------------
-  358|     50|            len_processed += ENC_PUBLIC_KEY_SIZE;
+  388|      2|                return -1;
+  389|      2|            }
+  390|       |
+  391|     50|            memcpy(sanctions[num].target_public_enc_key, &data[len_processed], ENC_PUBLIC_KEY_SIZE);
   ------------------
   |  |   85|     50|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
   |  |  ------------------
   |  |  |  |   44|     50|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  359|     50|        } else {
-  360|      4|            return -1;
-  361|      4|        }
-  362|       |
-  363|     50|        if (len_processed + SIGNATURE_SIZE > length) {
+  392|     50|            len_processed += ENC_PUBLIC_KEY_SIZE;
+  ------------------
+  |  |   85|     50|#define ENC_PUBLIC_KEY_SIZE            CRYPTO_PUBLIC_KEY_SIZE
+  |  |  ------------------
+  |  |  |  |   44|     50|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |  ------------------
+  ------------------
+  393|     50|        } else {
+  394|      4|            return -1;
+  395|      4|        }
+  396|       |
+  397|     50|        if (len_processed + SIGNATURE_SIZE > length) {
   ------------------
   |  |   27|     50|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
   |  |  ------------------
   |  |  |  |   29|     50|#define CRYPTO_SIGNATURE_SIZE          64
   |  |  ------------------
   ------------------
-  |  Branch (363:13): [True: 1, False: 49]
+  |  Branch (397:13): [True: 1, False: 49]
   ------------------
-  364|      1|            return -1;
-  365|      1|        }
-  366|       |
-  367|     49|        memcpy(sanctions[num].signature, &data[len_processed], SIGNATURE_SIZE);
-  ------------------
-  |  |   27|     49|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
-  |  |  ------------------
-  |  |  |  |   29|     49|#define CRYPTO_SIGNATURE_SIZE          64
-  |  |  ------------------
-  ------------------
-  368|     49|        len_processed += SIGNATURE_SIZE;
+  398|      1|            return -1;
+  399|      1|        }
+  400|       |
+  401|     49|        memcpy(sanctions[num].signature, &data[len_processed], SIGNATURE_SIZE);
   ------------------
   |  |   27|     49|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
   |  |  ------------------
   |  |  |  |   29|     49|#define CRYPTO_SIGNATURE_SIZE          64
   |  |  ------------------
   ------------------
-  369|       |
-  370|     49|        ++num;
-  371|     49|    }
-  372|       |
-  373|      7|    if (length <= len_processed || length - len_processed < MOD_SANCTIONS_CREDS_SIZE) {
+  402|     49|        len_processed += SIGNATURE_SIZE;
+  ------------------
+  |  |   27|     49|#define SIGNATURE_SIZE CRYPTO_SIGNATURE_SIZE
+  |  |  ------------------
+  |  |  |  |   29|     49|#define CRYPTO_SIGNATURE_SIZE          64
+  |  |  ------------------
+  ------------------
+  403|       |
+  404|     49|        ++num;
+  405|     49|    }
+  406|       |
+  407|      7|    if (length <= len_processed || length - len_processed < MOD_SANCTIONS_CREDS_SIZE) {
   ------------------
   |  |   33|      2|#define MOD_SANCTIONS_CREDS_SIZE (sizeof(uint32_t) + MOD_SANCTION_HASH_SIZE + sizeof(uint16_t) +\
   |  |  ------------------
@@ -468,31 +470,31 @@ sanctions_list_unpack:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (373:9): [True: 5, False: 2]
-  |  Branch (373:36): [True: 1, False: 1]
+  |  Branch (407:9): [True: 5, False: 2]
+  |  Branch (407:36): [True: 1, False: 1]
   ------------------
-  374|      6|        if (length != len_processed) {
+  408|      6|        if (length != len_processed) {
   ------------------
-  |  Branch (374:13): [True: 1, False: 5]
+  |  Branch (408:13): [True: 1, False: 5]
   ------------------
-  375|      1|            return -1;
-  376|      1|        }
-  377|       |
-  378|      5|        if (processed_data_len != nullptr) {
+  409|      1|            return -1;
+  410|      1|        }
+  411|       |
+  412|      5|        if (processed_data_len != nullptr) {
   ------------------
   |  |   63|      5|#define nullptr NULL
   ------------------
-  |  Branch (378:13): [True: 5, False: 0]
+  |  Branch (412:13): [True: 5, False: 0]
   ------------------
-  379|      5|            *processed_data_len = len_processed;
-  380|      5|        }
-  381|       |
-  382|      5|        return num;
-  383|      6|    }
-  384|       |
-  385|      1|    const uint16_t creds_len = sanctions_creds_unpack(creds, &data[len_processed]);
-  386|       |
-  387|      1|    if (creds_len != MOD_SANCTIONS_CREDS_SIZE) {
+  413|      5|            *processed_data_len = len_processed;
+  414|      5|        }
+  415|       |
+  416|      5|        return num;
+  417|      6|    }
+  418|       |
+  419|      1|    const uint16_t creds_len = sanctions_creds_unpack(creds, &data[len_processed]);
+  420|       |
+  421|      1|    if (creds_len != MOD_SANCTIONS_CREDS_SIZE) {
   ------------------
   |  |   33|      1|#define MOD_SANCTIONS_CREDS_SIZE (sizeof(uint32_t) + MOD_SANCTION_HASH_SIZE + sizeof(uint16_t) +\
   |  |  ------------------
@@ -516,46 +518,58 @@ sanctions_list_unpack:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (387:9): [True: 0, False: 1]
+  |  Branch (421:9): [True: 0, False: 1]
   ------------------
-  388|      0|        return -1;
-  389|      0|    }
-  390|       |
-  391|      1|    if (processed_data_len != nullptr) {
+  422|      0|        return -1;
+  423|      0|    }
+  424|       |
+  425|      1|    if (processed_data_len != nullptr) {
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
-  |  Branch (391:9): [True: 1, False: 0]
+  |  Branch (425:9): [True: 1, False: 0]
   ------------------
-  392|      1|        *processed_data_len = len_processed + creds_len;
-  393|      1|    }
-  394|       |
-  395|      1|    return num;
-  396|      1|}
+  426|      1|        *processed_data_len = len_processed + creds_len;
+  427|      1|    }
+  428|       |
+  429|      1|    return num;
+  430|      1|}
+group_moderation.c:compare_mod_pointers:
+   45|  8.84k|{
+   46|  8.84k|    const uint8_t *const *mod_a = (const uint8_t *const *)a;
+   47|  8.84k|    const uint8_t *const *mod_b = (const uint8_t *const *)b;
+   48|  8.84k|    return memcmp(*mod_a, *mod_b, SIG_PUBLIC_KEY_SIZE);
+  ------------------
+  |  |   95|  8.84k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  ------------------
+  |  |  |  |   34|  8.84k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  ------------------
+  ------------------
+   49|  8.84k|}
 
 LLVMFuzzerTestOneInput:
-   36|     31|{
-   37|     31|    fuzz_select_target<TestModListUnpack, TestSanctionsListUnpack, TestSanctionCredsUnpack>(
-   38|     31|        data, size);
-   39|     31|    return 0;
-   40|     31|}
+   36|     55|{
+   37|     55|    fuzz_select_target<TestModListUnpack, TestSanctionsListUnpack, TestSanctionCredsUnpack>(
+   38|     55|        data, size);
+   39|     55|    return 0;
+   40|     55|}
 group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_Data:
-    9|     13|{
-   10|     13|    CONSUME1_OR_RETURN(const uint16_t, num_mods, input);
+    9|     37|{
+   10|     37|    CONSUME1_OR_RETURN(const uint16_t, num_mods, input);
   ------------------
-  |  |  105|     13|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |  105|     37|    if (INPUT.size() < sizeof(TYPE)) {        \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 12]
+  |  |  |  Branch (105:9): [True: 1, False: 36]
   |  |  ------------------
   |  |  106|      1|        return;                               \
   |  |  107|      1|    }                                         \
-  |  |  108|     13|    TYPE NAME = INPUT.consume1(__func__)
+  |  |  108|     37|    TYPE NAME = INPUT.consume1(__func__)
   ------------------
-   11|     12|    Test_Memory mem;
-   12|     12|    Moderation mods{mem};
-   13|     12|    mod_list_unpack(&mods, input.data(), input.size(), num_mods);
-   14|     12|    mod_list_cleanup(&mods);
-   15|     12|}
+   11|     36|    Test_Memory mem;
+   12|     36|    Moderation mods{mem};
+   13|     36|    mod_list_unpack(&mods, input.data(), input.size(), num_mods);
+   14|     36|    mod_list_cleanup(&mods);
+   15|     36|}
 group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionsListUnpackER9Fuzz_Data:
    18|     15|{
    19|     15|    Mod_Sanction sanctions[10];
@@ -580,18 +594,18 @@ group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionCredsUnpackER9Fuzz_
    30|      1|}
 
 mem_balloc:
-   14|    107|{
-   15|    107|    void *const ptr = tox_memory_malloc(mem, size);
-   16|    107|    return ptr;
-   17|    107|}
+   14|  1.81k|{
+   15|  1.81k|    void *const ptr = tox_memory_malloc(mem, size);
+   16|  1.81k|    return ptr;
+   17|  1.81k|}
 mem_valloc:
-   35|     10|{
-   36|     10|    const uint32_t bytes = nmemb * size;
+   35|     34|{
+   36|     34|    const uint32_t bytes = nmemb * size;
    37|       |
-   38|     10|    if (size != 0 && bytes / size != nmemb) {
+   38|     34|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (38:9): [True: 10, False: 0]
-  |  Branch (38:22): [True: 0, False: 10]
+  |  Branch (38:9): [True: 34, False: 0]
+  |  Branch (38:22): [True: 0, False: 34]
   ------------------
    39|      0|        return nullptr;
   ------------------
@@ -599,39 +613,39 @@ mem_valloc:
   ------------------
    40|      0|    }
    41|       |
-   42|     10|    void *const ptr = tox_memory_malloc(mem, bytes);
-   43|     10|    if (ptr != nullptr) {
+   42|     34|    void *const ptr = tox_memory_malloc(mem, bytes);
+   43|     34|    if (ptr != nullptr) {
   ------------------
-  |  |   63|     10|#define nullptr NULL
+  |  |   63|     34|#define nullptr NULL
   ------------------
-  |  Branch (43:9): [True: 10, False: 0]
+  |  Branch (43:9): [True: 34, False: 0]
   ------------------
-   44|     10|        memset(ptr, 0, bytes);
-   45|     10|    }
-   46|     10|    return ptr;
-   47|     10|}
+   44|     34|        memset(ptr, 0, bytes);
+   45|     34|    }
+   46|     34|    return ptr;
+   47|     34|}
 mem_delete:
-   62|    117|{
-   63|    117|    tox_memory_dealloc(mem, ptr);
-   64|    117|}
+   62|  1.84k|{
+   63|  1.84k|    tox_memory_dealloc(mem, ptr);
+   64|  1.84k|}
 
 _ZN12Memory_ClassD2Ev:
-   14|     12|Memory_Class::~Memory_Class() = default;
+   14|     36|Memory_Class::~Memory_Class() = default;
 _ZN11Test_Memory6mallocEPvj:
-   17|    117|{
-   18|    117|    return mem->funcs->malloc_callback(mem->user_data, size);
-   19|    117|}
+   17|  1.84k|{
+   18|  1.84k|    return mem->funcs->malloc_callback(mem->user_data, size);
+   19|  1.84k|}
 _ZN11Test_Memory7deallocEPvS0_:
-   27|    117|{
-   28|    117|    return mem->funcs->dealloc_callback(mem->user_data, ptr);
-   29|    117|}
+   27|  1.84k|{
+   28|  1.84k|    return mem->funcs->dealloc_callback(mem->user_data, ptr);
+   29|  1.84k|}
 
 _ZN12Memory_ClassC2Ev:
-   17|     12|        : self{&vtable, this}
-   18|     12|    {
-   19|     12|    }
+   17|     36|        : self{&vtable, this}
+   18|     36|    {
+   19|     36|    }
 _ZNK12Memory_ClasscvPK10Tox_MemoryEv:
-   13|     12|    operator Tox_Memory const *() const { return &self; }
+   13|     36|    operator Tox_Memory const *() const { return &self; }
 
 net_unpack_u16:
  2115|    230|{
@@ -662,75 +676,75 @@ net_unpack_u64:
  2142|     56|}
 
 os_memory:
-   38|     12|{
-   39|     12|    return &os_memory_obj;
-   40|     12|}
+   38|     36|{
+   39|     36|    return &os_memory_obj;
+   40|     36|}
 os_memory.c:os_malloc:
-   13|    117|{
+   13|  1.84k|{
    14|       |    // cppcheck-suppress misra-c2012-21.3
-   15|    117|    return malloc(size);
-   16|    117|}
+   15|  1.84k|    return malloc(size);
+   16|  1.84k|}
 os_memory.c:os_dealloc:
-   25|    117|{
+   25|  1.84k|{
    26|       |    // cppcheck-suppress misra-c2012-21.3
-   27|    117|    free(ptr);
-   28|    117|}
+   27|  1.84k|    free(ptr);
+   28|  1.84k|}
 
 _Z16require_not_nullIK10Tox_MemoryEPT_PKciS3_:
-   73|     12|{
-   74|     12|    if (ptr == nullptr) {
+   73|     36|{
+   74|     36|    if (ptr == nullptr) {
   ------------------
-  |  Branch (74:9): [True: 0, False: 12]
+  |  Branch (74:9): [True: 0, False: 36]
   ------------------
    75|      0|        std::fprintf(stderr, "unexpected null pointer at %s:%d\n", file, line);
    76|      0|        std::exit(7);
    77|      0|    }
-   78|     12|    return ptr;
-   79|     12|}
+   78|     36|    return ptr;
+   79|     36|}
 _ZN6MethodIFPvS0_jE12Memory_ClassE6invokeIXadL_ZNS2_6mallocES0_jEEEES0_S0_j:
-   31|    117|    {
-   32|    117|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|    117|    }
+   31|  1.84k|    {
+   32|  1.84k|        return (static_cast<Class *>(self)->*M)(self, args...);
+   33|  1.84k|    }
 _ZN6MethodIFvPvS0_E12Memory_ClassE6invokeIXadL_ZNS2_7deallocES0_S0_EEEEvS0_S0_:
-   31|    117|    {
-   32|    117|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|    117|    }
+   31|  1.84k|    {
+   32|  1.84k|        return (static_cast<Class *>(self)->*M)(self, args...);
+   33|  1.84k|    }
 
 tox_memory_malloc:
-   37|    117|{
-   38|    117|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
-   39|    117|    return ptr;
-   40|    117|}
+   37|  1.84k|{
+   38|  1.84k|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
+   39|  1.84k|    return ptr;
+   40|  1.84k|}
 tox_memory_dealloc:
-   58|    117|{
-   59|    117|    mem->funcs->dealloc_callback(mem->user_data, ptr);
-   60|    117|}
+   58|  1.84k|{
+   59|  1.84k|    mem->funcs->dealloc_callback(mem->user_data, ptr);
+   60|  1.84k|}
 
 free_uint8_t_pointer_array:
-   27|     23|{
-   28|     23|    if (ary == nullptr) {
+   27|     71|{
+   28|     71|    if (ary == nullptr) {
   ------------------
-  |  |   63|     23|#define nullptr NULL
+  |  |   63|     71|#define nullptr NULL
   ------------------
-  |  Branch (28:9): [True: 13, False: 10]
+  |  Branch (28:9): [True: 37, False: 34]
   ------------------
-   29|     13|        return;
-   30|     13|    }
+   29|     37|        return;
+   30|     37|    }
    31|       |
-   32|    117|    for (size_t i = 0; i < n_items; ++i) {
+   32|  1.84k|    for (size_t i = 0; i < n_items; ++i) {
   ------------------
-  |  Branch (32:24): [True: 107, False: 10]
+  |  Branch (32:24): [True: 1.81k, False: 34]
   ------------------
-   33|    107|        if (ary[i] != nullptr) {
+   33|  1.81k|        if (ary[i] != nullptr) {
   ------------------
-  |  |   63|    107|#define nullptr NULL
+  |  |   63|  1.81k|#define nullptr NULL
   ------------------
-  |  Branch (33:13): [True: 107, False: 0]
+  |  Branch (33:13): [True: 1.81k, False: 0]
   ------------------
-   34|    107|            mem_delete(mem, ary[i]);
-   35|    107|        }
-   36|    107|    }
+   34|  1.81k|            mem_delete(mem, ary[i]);
+   35|  1.81k|        }
+   36|  1.81k|    }
    37|       |
-   38|     10|    mem_delete(mem, ary);
-   39|     10|}
+   38|     34|    mem_delete(mem, ary);
+   39|     34|}
 

@@ -354,95 +354,95 @@ _ZN9Fuzz_Data8ConsumercvbEv:
    56|     91|        }
 
 get_close_nodes:
-  731|      8|{
-  732|      8|    return get_somewhat_close_nodes(
-  733|      8|               dht->cur_time, public_key, nodes_list,
-  734|      8|               sa_family, dht->close_clientlist,
-  735|      8|               dht->friends_list, dht->num_friends,
-  736|      8|               is_lan, want_announce);
-  737|      8|}
+  739|      8|{
+  740|      8|    return get_somewhat_close_nodes(
+  741|      8|               dht->cur_time, public_key, nodes_list,
+  742|      8|               sa_family, dht->close_clientlist,
+  743|      8|               dht->friends_list, dht->num_friends,
+  744|      8|               is_lan, want_announce);
+  745|      8|}
 dht_addfriend:
- 1569|     16|{
- 1570|     16|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
- 1571|       |
- 1572|     16|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
-  ------------------
-  |  Branch (1572:9): [True: 8, False: 8]
-  ------------------
- 1573|      8|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
- 1574|      8|        const uint32_t tmp_lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
- 1575|       |
- 1576|      8|        if (tmp_lock_token == 0) {
-  ------------------
-  |  Branch (1576:13): [True: 0, False: 8]
-  ------------------
- 1577|      0|            return -1;
- 1578|      0|        }
+ 1577|     16|{
+ 1578|     16|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
  1579|       |
- 1580|      8|        return 0;
- 1581|      8|    }
- 1582|       |
- 1583|      8|    DHT_Friend *const temp = (DHT_Friend *)mem_vrealloc(dht->mem, dht->friends_list, dht->num_friends + 1, sizeof(DHT_Friend));
- 1584|       |
- 1585|      8|    if (temp == nullptr) {
+ 1580|     16|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
+  ------------------
+  |  Branch (1580:9): [True: 8, False: 8]
+  ------------------
+ 1581|      8|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
+ 1582|      8|        const uint32_t tmp_lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
+ 1583|       |
+ 1584|      8|        if (tmp_lock_token == 0) {
+  ------------------
+  |  Branch (1584:13): [True: 0, False: 8]
+  ------------------
+ 1585|      0|            return -1;
+ 1586|      0|        }
+ 1587|       |
+ 1588|      8|        return 0;
+ 1589|      8|    }
+ 1590|       |
+ 1591|      8|    DHT_Friend *const temp = (DHT_Friend *)mem_vrealloc(dht->mem, dht->friends_list, dht->num_friends + 1, sizeof(DHT_Friend));
+ 1592|       |
+ 1593|      8|    if (temp == nullptr) {
   ------------------
   |  |   63|      8|#define nullptr NULL
   ------------------
-  |  Branch (1585:9): [True: 0, False: 8]
+  |  Branch (1593:9): [True: 0, False: 8]
   ------------------
- 1586|      0|        return -1;
- 1587|      0|    }
- 1588|       |
- 1589|      8|    dht->friends_list = temp;
- 1590|      8|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
- 1591|      8|    *dht_friend = empty_dht_friend;
- 1592|      8|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
+ 1594|      0|        return -1;
+ 1595|      0|    }
+ 1596|       |
+ 1597|      8|    dht->friends_list = temp;
+ 1598|      8|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
+ 1599|      8|    *dht_friend = empty_dht_friend;
+ 1600|      8|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
   |  |   44|      8|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
- 1593|       |
- 1594|      8|    dht_friend->nat.nat_ping_id = random_u64(dht->rng);
- 1595|      8|    ++dht->num_friends;
- 1596|       |
- 1597|      8|    *lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
- 1598|      8|    assert(*lock_token != 0); // Friend was newly allocated
+ 1601|       |
+ 1602|      8|    dht_friend->nat.nat_ping_id = random_u64(dht->rng);
+ 1603|      8|    ++dht->num_friends;
+ 1604|       |
+ 1605|      8|    *lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
+ 1606|      8|    assert(*lock_token != 0); // Friend was newly allocated
   ------------------
-  |  Branch (1598:5): [True: 8, False: 0]
+  |  Branch (1606:5): [True: 8, False: 0]
   ------------------
- 1599|       |
- 1600|      8|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec(),
- 1601|      8|                                   true, false);
- 1602|       |
- 1603|      8|    return 0;
- 1604|      8|}
+ 1607|       |
+ 1608|      8|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec(),
+ 1609|      8|                                   true, false);
+ 1610|       |
+ 1611|      8|    return 0;
+ 1612|      8|}
 cryptopacket_registerhandler:
- 2410|     21|{
- 2411|     21|    dht->cryptopackethandlers[byte].function = cb;
- 2412|     21|    dht->cryptopackethandlers[byte].object = object;
- 2413|     21|}
+ 2418|     21|{
+ 2419|     21|    dht->cryptopackethandlers[byte].function = cb;
+ 2420|     21|    dht->cryptopackethandlers[byte].object = object;
+ 2421|     21|}
 new_dht:
- 2487|     13|{
- 2488|     13|    if (net == nullptr) {
+ 2495|     13|{
+ 2496|     13|    if (net == nullptr) {
   ------------------
   |  |   63|     13|#define nullptr NULL
   ------------------
-  |  Branch (2488:9): [True: 0, False: 13]
+  |  Branch (2496:9): [True: 0, False: 13]
   ------------------
- 2489|      0|        return nullptr;
+ 2497|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 2490|      0|    }
- 2491|       |
- 2492|     13|    DHT *const dht = (DHT *)mem_alloc(mem, sizeof(DHT));
- 2493|       |
- 2494|     13|    if (dht == nullptr) {
+ 2498|      0|    }
+ 2499|       |
+ 2500|     13|    DHT *const dht = (DHT *)mem_alloc(mem, sizeof(DHT));
+ 2501|       |
+ 2502|     13|    if (dht == nullptr) {
   ------------------
   |  |   63|     13|#define nullptr NULL
   ------------------
-  |  Branch (2494:9): [True: 1, False: 12]
+  |  Branch (2502:9): [True: 1, False: 12]
   ------------------
- 2495|      1|        LOGGER_ERROR(log, "failed to allocate DHT struct (%lu bytes)", (unsigned long)sizeof(DHT));
+ 2503|      1|        LOGGER_ERROR(log, "failed to allocate DHT struct (%lu bytes)", (unsigned long)sizeof(DHT));
   ------------------
   |  |   80|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -461,32 +461,32 @@ new_dht:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2496|      1|        return nullptr;
+ 2504|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
- 2497|      1|    }
- 2498|       |
- 2499|     12|    dht->ns = ns;
- 2500|     12|    dht->mono_time = mono_time;
- 2501|     12|    dht->cur_time = mono_time_get(mono_time);
- 2502|     12|    dht->log = log;
- 2503|     12|    dht->net = net;
- 2504|     12|    dht->rng = rng;
- 2505|     12|    dht->mem = mem;
+ 2505|      1|    }
  2506|       |
- 2507|     12|    dht->hole_punching_enabled = hole_punching_enabled;
- 2508|     12|    dht->lan_discovery_enabled = lan_discovery_enabled;
- 2509|       |
- 2510|     12|    dht->ping = ping_new(mem, mono_time, rng, dht, net);
- 2511|       |
- 2512|     12|    if (dht->ping == nullptr) {
+ 2507|     12|    dht->ns = ns;
+ 2508|     12|    dht->mono_time = mono_time;
+ 2509|     12|    dht->cur_time = mono_time_get(mono_time);
+ 2510|     12|    dht->log = log;
+ 2511|     12|    dht->net = net;
+ 2512|     12|    dht->rng = rng;
+ 2513|     12|    dht->mem = mem;
+ 2514|       |
+ 2515|     12|    dht->hole_punching_enabled = hole_punching_enabled;
+ 2516|     12|    dht->lan_discovery_enabled = lan_discovery_enabled;
+ 2517|       |
+ 2518|     12|    dht->ping = ping_new(mem, mono_time, rng, dht, net);
+ 2519|       |
+ 2520|     12|    if (dht->ping == nullptr) {
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
-  |  Branch (2512:9): [True: 3, False: 9]
+  |  Branch (2520:9): [True: 3, False: 9]
   ------------------
- 2513|      3|        LOGGER_ERROR(log, "failed to initialise ping");
+ 2521|      3|        LOGGER_ERROR(log, "failed to initialise ping");
   ------------------
   |  |   80|      3|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -505,29 +505,29 @@ new_dht:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2514|      3|        kill_dht(dht);
- 2515|      3|        return nullptr;
+ 2522|      3|        kill_dht(dht);
+ 2523|      3|        return nullptr;
   ------------------
   |  |   63|      3|#define nullptr NULL
   ------------------
- 2516|      3|    }
- 2517|       |
- 2518|      9|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, &handle_nodes_request, dht);
- 2519|      9|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, &handle_nodes_response, dht);
- 2520|      9|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
- 2521|      9|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_lan_discovery, dht);
- 2522|      9|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_nat_ping, dht);
+ 2524|      3|    }
+ 2525|       |
+ 2526|      9|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, &handle_nodes_request, dht);
+ 2527|      9|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, &handle_nodes_response, dht);
+ 2528|      9|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
+ 2529|      9|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_lan_discovery, dht);
+ 2530|      9|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_nat_ping, dht);
   ------------------
   |  |   68|      9|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
   ------------------
- 2523|       |
- 2524|      9|#ifdef CHECK_ANNOUNCE_NODE
- 2525|      9|    networking_registerhandler(dht->net, NET_PACKET_DATA_SEARCH_RESPONSE, &handle_data_search_response, dht);
- 2526|      9|#endif /* CHECK_ANNOUNCE_NODE */
- 2527|       |
- 2528|      9|    crypto_new_keypair(rng, dht->self_public_key, dht->self_secret_key);
- 2529|       |
- 2530|      9|    dht->shared_keys_recv = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
+ 2531|       |
+ 2532|      9|#ifdef CHECK_ANNOUNCE_NODE
+ 2533|      9|    networking_registerhandler(dht->net, NET_PACKET_DATA_SEARCH_RESPONSE, &handle_data_search_response, dht);
+ 2534|      9|#endif /* CHECK_ANNOUNCE_NODE */
+ 2535|       |
+ 2536|      9|    crypto_new_keypair(rng, dht->self_public_key, dht->self_secret_key);
+ 2537|       |
+ 2538|      9|    dht->shared_keys_recv = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
   ------------------
   |  |   56|      9|#define KEYS_TIMEOUT 600
   ------------------
@@ -535,7 +535,7 @@ new_dht:
   ------------------
   |  |   55|      9|#define MAX_KEYS_PER_SLOT 4
   ------------------
- 2531|      9|    dht->shared_keys_sent = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
+ 2539|      9|    dht->shared_keys_sent = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
   ------------------
   |  |   56|      9|#define KEYS_TIMEOUT 600
   ------------------
@@ -543,8 +543,8 @@ new_dht:
   ------------------
   |  |   55|      9|#define MAX_KEYS_PER_SLOT 4
   ------------------
- 2532|       |
- 2533|      9|    if (dht->shared_keys_recv == nullptr || dht->shared_keys_sent == nullptr) {
+ 2540|       |
+ 2541|      9|    if (dht->shared_keys_recv == nullptr || dht->shared_keys_sent == nullptr) {
   ------------------
   |  |   63|     18|#define nullptr NULL
   ------------------
@@ -552,10 +552,10 @@ new_dht:
   ------------------
   |  |   63|      8|#define nullptr NULL
   ------------------
-  |  Branch (2533:9): [True: 1, False: 8]
-  |  Branch (2533:45): [True: 0, False: 8]
+  |  Branch (2541:9): [True: 1, False: 8]
+  |  Branch (2541:45): [True: 0, False: 8]
   ------------------
- 2534|      1|        LOGGER_ERROR(log, "failed to initialise shared key cache");
+ 2542|      1|        LOGGER_ERROR(log, "failed to initialise shared key cache");
   ------------------
   |  |   80|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -574,14 +574,14 @@ new_dht:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2535|      1|        kill_dht(dht);
- 2536|      1|        return nullptr;
+ 2543|      1|        kill_dht(dht);
+ 2544|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
- 2537|      1|    }
- 2538|       |
- 2539|      8|    dht->dht_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
+ 2545|      1|    }
+ 2546|       |
+ 2547|      8|    dht->dht_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
   ------------------
   |  |   46|      8|#define DHT_PING_ARRAY_SIZE 512
   ------------------
@@ -589,14 +589,14 @@ new_dht:
   ------------------
   |  |   43|      8|#define PING_TIMEOUT 5
   ------------------
- 2540|       |
- 2541|      8|    if (dht->dht_ping_array == nullptr) {
+ 2548|       |
+ 2549|      8|    if (dht->dht_ping_array == nullptr) {
   ------------------
   |  |   63|      8|#define nullptr NULL
   ------------------
-  |  Branch (2541:9): [True: 0, False: 8]
+  |  Branch (2549:9): [True: 0, False: 8]
   ------------------
- 2542|      0|        LOGGER_ERROR(log, "failed to initialise ping array");
+ 2550|      0|        LOGGER_ERROR(log, "failed to initialise ping array");
   ------------------
   |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -615,26 +615,26 @@ new_dht:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2543|      0|        kill_dht(dht);
- 2544|      0|        return nullptr;
+ 2551|      0|        kill_dht(dht);
+ 2552|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 2545|      0|    }
- 2546|       |
- 2547|     24|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
+ 2553|      0|    }
+ 2554|       |
+ 2555|     24|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
   ------------------
   |  |   61|     24|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
-  |  Branch (2547:26): [True: 16, False: 8]
+  |  Branch (2555:26): [True: 16, False: 8]
   ------------------
- 2548|     16|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
- 2549|     16|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
- 2550|       |
- 2551|     16|        crypto_new_keypair(rng, random_public_key_bytes, random_secret_key_bytes);
- 2552|       |
- 2553|     16|        uint32_t token; // We don't intend to delete these ever, but need to pass the token
- 2554|     16|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, &token) != 0) {
+ 2556|     16|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
+ 2557|     16|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
+ 2558|       |
+ 2559|     16|        crypto_new_keypair(rng, random_public_key_bytes, random_secret_key_bytes);
+ 2560|       |
+ 2561|     16|        uint32_t token; // We don't intend to delete these ever, but need to pass the token
+ 2562|     16|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, &token) != 0) {
   ------------------
   |  |   63|     16|#define nullptr NULL
   ------------------
@@ -642,9 +642,9 @@ new_dht:
   ------------------
   |  |   63|     16|#define nullptr NULL
   ------------------
-  |  Branch (2554:13): [True: 0, False: 16]
+  |  Branch (2562:13): [True: 0, False: 16]
   ------------------
- 2555|      0|            LOGGER_ERROR(log, "failed to add initial random seed DHT friends");
+ 2563|      0|            LOGGER_ERROR(log, "failed to add initial random seed DHT friends");
   ------------------
   |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -663,21 +663,21 @@ new_dht:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2556|      0|            kill_dht(dht);
- 2557|      0|            return nullptr;
+ 2564|      0|            kill_dht(dht);
+ 2565|      0|            return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 2558|      0|        }
- 2559|     16|    }
- 2560|       |
- 2561|      8|    if (dht->num_friends != DHT_FAKE_FRIEND_NUMBER) {
+ 2566|      0|        }
+ 2567|     16|    }
+ 2568|       |
+ 2569|      8|    if (dht->num_friends != DHT_FAKE_FRIEND_NUMBER) {
   ------------------
   |  |   61|      8|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
-  |  Branch (2561:9): [True: 8, False: 0]
+  |  Branch (2569:9): [True: 8, False: 0]
   ------------------
- 2562|      8|        LOGGER_ERROR(log, "the RNG provided seems to be broken: it generated the same keypair twice");
+ 2570|      8|        LOGGER_ERROR(log, "the RNG provided seems to be broken: it generated the same keypair twice");
   ------------------
   |  |   80|      8|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -696,27 +696,27 @@ new_dht:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 2563|      8|        kill_dht(dht);
- 2564|      8|        return nullptr;
+ 2571|      8|        kill_dht(dht);
+ 2572|      8|        return nullptr;
   ------------------
   |  |   63|      8|#define nullptr NULL
   ------------------
- 2565|      8|    }
- 2566|       |
- 2567|      0|    return dht;
- 2568|      8|}
+ 2573|      8|    }
+ 2574|       |
+ 2575|      0|    return dht;
+ 2576|      8|}
 kill_dht:
- 2592|     12|{
- 2593|     12|    if (dht == nullptr) {
+ 2600|     12|{
+ 2601|     12|    if (dht == nullptr) {
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
-  |  Branch (2593:9): [True: 0, False: 12]
+  |  Branch (2601:9): [True: 0, False: 12]
   ------------------
- 2594|      0|        return;
- 2595|      0|    }
- 2596|       |
- 2597|     12|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, nullptr, nullptr);
+ 2602|      0|        return;
+ 2603|      0|    }
+ 2604|       |
+ 2605|     12|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, nullptr, nullptr);
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
@@ -724,7 +724,7 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2598|     12|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, nullptr, nullptr);
+ 2606|     12|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, nullptr, nullptr);
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
@@ -732,7 +732,7 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2599|     12|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
+ 2607|     12|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
@@ -740,7 +740,7 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2600|     12|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
+ 2608|     12|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
@@ -748,7 +748,7 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2601|     12|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
+ 2609|     12|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
   ------------------
   |  |   68|     12|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
   ------------------
@@ -760,32 +760,32 @@ kill_dht:
   ------------------
   |  |   63|     12|#define nullptr NULL
   ------------------
- 2602|       |
- 2603|     12|    shared_key_cache_free(dht->shared_keys_recv);
- 2604|     12|    shared_key_cache_free(dht->shared_keys_sent);
- 2605|     12|    ping_array_kill(dht->dht_ping_array);
- 2606|     12|    ping_kill(dht->mem, dht->ping);
- 2607|     12|    mem_delete(dht->mem, dht->friends_list);
- 2608|     12|    mem_delete(dht->mem, dht->loaded_nodes_list);
- 2609|     12|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
- 2610|     12|    mem_delete(dht->mem, dht);
- 2611|     12|}
+ 2610|       |
+ 2611|     12|    shared_key_cache_free(dht->shared_keys_recv);
+ 2612|     12|    shared_key_cache_free(dht->shared_keys_sent);
+ 2613|     12|    ping_array_kill(dht->dht_ping_array);
+ 2614|     12|    ping_kill(dht->mem, dht->ping);
+ 2615|     12|    mem_delete(dht->mem, dht->friends_list);
+ 2616|     12|    mem_delete(dht->mem, dht->loaded_nodes_list);
+ 2617|     12|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
+ 2618|     12|    mem_delete(dht->mem, dht);
+ 2619|     12|}
 DHT.c:get_somewhat_close_nodes:
-  702|      8|{
-  703|     40|    for (uint16_t i = 0; i < MAX_SENT_NODES; ++i) {
+  710|      8|{
+  711|     40|    for (uint16_t i = 0; i < MAX_SENT_NODES; ++i) {
   ------------------
   |  |   40|     40|#define MAX_SENT_NODES 4
   ------------------
-  |  Branch (703:26): [True: 32, False: 8]
+  |  Branch (711:26): [True: 32, False: 8]
   ------------------
-  704|     32|        nodes_list[i] = empty_node_format;
-  705|     32|    }
-  706|       |
-  707|      8|    uint32_t num_nodes = 0;
-  708|      8|    get_close_nodes_inner(
-  709|      8|        cur_time, public_key,
-  710|      8|        nodes_list, &num_nodes,
-  711|      8|        sa_family, close_clientlist, LCLIENT_LIST,
+  712|     32|        nodes_list[i] = empty_node_format;
+  713|     32|    }
+  714|       |
+  715|      8|    uint32_t num_nodes = 0;
+  716|      8|    get_close_nodes_inner(
+  717|      8|        cur_time, public_key,
+  718|      8|        nodes_list, &num_nodes,
+  719|      8|        sa_family, close_clientlist, LCLIENT_LIST,
   ------------------
   |  |   35|      8|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
@@ -799,150 +799,126 @@ DHT.c:get_somewhat_close_nodes:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  712|      8|        is_lan, want_announce);
-  713|       |
-  714|     16|    for (uint16_t i = 0; i < friends_list_size; ++i) {
+  720|      8|        is_lan, want_announce);
+  721|       |
+  722|     16|    for (uint16_t i = 0; i < friends_list_size; ++i) {
   ------------------
-  |  Branch (714:26): [True: 8, False: 8]
+  |  Branch (722:26): [True: 8, False: 8]
   ------------------
-  715|      8|        const DHT_Friend *dht_friend = &friends_list[i];
-  716|       |
-  717|      8|        get_close_nodes_inner(
-  718|      8|            cur_time, public_key,
-  719|      8|            nodes_list, &num_nodes,
-  720|      8|            sa_family, dht_friend->client_list, MAX_FRIEND_CLIENTS,
+  723|      8|        const DHT_Friend *dht_friend = &friends_list[i];
+  724|       |
+  725|      8|        get_close_nodes_inner(
+  726|      8|            cur_time, public_key,
+  727|      8|            nodes_list, &num_nodes,
+  728|      8|            sa_family, dht_friend->client_list, MAX_FRIEND_CLIENTS,
   ------------------
   |  |   29|      8|#define MAX_FRIEND_CLIENTS 8
   ------------------
-  721|      8|            is_lan, want_announce);
-  722|      8|    }
-  723|       |
-  724|      8|    return num_nodes;
-  725|      8|}
+  729|      8|            is_lan, want_announce);
+  730|      8|    }
+  731|       |
+  732|      8|    return num_nodes;
+  733|      8|}
 DHT.c:get_close_nodes_inner:
-  635|     16|{
-  636|     16|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
+  644|     16|{
+  645|     16|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
   ------------------
-  |  Branch (636:9): [True: 16, False: 0]
-  |  Branch (636:43): [True: 16, False: 0]
-  |  Branch (636:77): [True: 0, False: 16]
+  |  Branch (645:9): [True: 16, False: 0]
+  |  Branch (645:43): [True: 16, False: 0]
+  |  Branch (645:77): [True: 0, False: 16]
   ------------------
-  637|      0|        return;
-  638|      0|    }
-  639|       |
-  640|     16|    uint32_t num_nodes = *num_nodes_ptr;
-  641|       |
-  642|  8.27k|    for (uint32_t i = 0; i < client_list_length; ++i) {
+  646|      0|        return;
+  647|      0|    }
+  648|       |
+  649|     16|    uint32_t num_nodes = *num_nodes_ptr;
+  650|       |
+  651|  8.27k|    for (uint32_t i = 0; i < client_list_length; ++i) {
   ------------------
-  |  Branch (642:26): [True: 8.25k, False: 16]
+  |  Branch (651:26): [True: 8.25k, False: 16]
   ------------------
-  643|  8.25k|        const Client_data *const client = &client_list[i];
-  644|       |
-  645|       |        /* node already in list? */
-  646|  8.25k|        if (index_of_node_pk(nodes_list, MAX_SENT_NODES, client->public_key) != UINT32_MAX) {
+  652|  8.25k|        const Client_data *const client = &client_list[i];
+  653|  8.25k|        const IPPTsPng *ipptp;
+  654|       |
+  655|  8.25k|        if (net_family_is_ipv4(sa_family)) {
   ------------------
-  |  |   40|  8.25k|#define MAX_SENT_NODES 4
+  |  Branch (655:13): [True: 0, False: 8.25k]
   ------------------
-  |  Branch (646:13): [True: 8.25k, False: 0]
+  656|      0|            ipptp = &client->assoc4;
+  657|  8.25k|        } else if (net_family_is_ipv6(sa_family)) {
   ------------------
-  647|  8.25k|            continue;
-  648|  8.25k|        }
-  649|       |
-  650|      0|        const IPPTsPng *ipptp;
-  651|       |
-  652|      0|        if (net_family_is_ipv4(sa_family)) {
+  |  Branch (657:20): [True: 0, False: 8.25k]
   ------------------
-  |  Branch (652:13): [True: 0, False: 0]
+  658|      0|            ipptp = &client->assoc6;
+  659|  8.25k|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
   ------------------
-  653|      0|            ipptp = &client->assoc4;
-  654|      0|        } else if (net_family_is_ipv6(sa_family)) {
+  |  Branch (659:20): [True: 8.25k, False: 0]
   ------------------
-  |  Branch (654:20): [True: 0, False: 0]
+  660|  8.25k|            ipptp = &client->assoc4;
+  661|  8.25k|        } else {
+  662|      0|            ipptp = &client->assoc6;
+  663|      0|        }
+  664|       |
+  665|       |        /* node not in a good condition? */
+  666|  8.25k|        if (assoc_timeout(cur_time, ipptp)) {
   ------------------
-  655|      0|            ipptp = &client->assoc6;
-  656|      0|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
+  |  Branch (666:13): [True: 8.25k, False: 0]
   ------------------
-  |  Branch (656:20): [True: 0, False: 0]
+  667|  8.25k|            continue;
+  668|  8.25k|        }
+  669|       |
+  670|       |        /* don't send LAN ips to non LAN peers */
+  671|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_lan) {
   ------------------
-  657|      0|            ipptp = &client->assoc4;
-  658|      0|        } else {
-  659|      0|            ipptp = &client->assoc6;
-  660|      0|        }
-  661|       |
-  662|       |        /* node not in a good condition? */
-  663|      0|        if (assoc_timeout(cur_time, ipptp)) {
+  |  Branch (671:13): [True: 0, False: 0]
+  |  Branch (671:46): [True: 0, False: 0]
   ------------------
-  |  Branch (663:13): [True: 0, False: 0]
+  672|      0|            continue;
+  673|      0|        }
+  674|       |
+  675|      0|#ifdef CHECK_ANNOUNCE_NODE
+  676|       |
+  677|      0|        if (want_announce && !client->announce_node) {
   ------------------
-  664|      0|            continue;
-  665|      0|        }
-  666|       |
-  667|       |        /* don't send LAN ips to non LAN peers */
-  668|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_lan) {
+  |  Branch (677:13): [True: 0, False: 0]
+  |  Branch (677:30): [True: 0, False: 0]
   ------------------
-  |  Branch (668:13): [True: 0, False: 0]
-  |  Branch (668:46): [True: 0, False: 0]
+  678|      0|            continue;
+  679|      0|        }
+  680|       |
+  681|      0|#endif /* CHECK_ANNOUNCE_NODE */
+  682|       |
+  683|       |        /* node already in list? */
+  684|      0|        if (index_of_node_pk(nodes_list, num_nodes, client->public_key) != UINT32_MAX) {
   ------------------
-  669|      0|            continue;
-  670|      0|        }
-  671|       |
-  672|      0|#ifdef CHECK_ANNOUNCE_NODE
-  673|       |
-  674|      0|        if (want_announce && !client->announce_node) {
+  |  Branch (684:13): [True: 0, False: 0]
   ------------------
-  |  Branch (674:13): [True: 0, False: 0]
-  |  Branch (674:30): [True: 0, False: 0]
-  ------------------
-  675|      0|            continue;
-  676|      0|        }
-  677|       |
-  678|      0|#endif /* CHECK_ANNOUNCE_NODE */
-  679|       |
-  680|      0|        if (num_nodes < MAX_SENT_NODES) {
+  685|      0|            continue;
+  686|      0|        }
+  687|       |
+  688|      0|        if (num_nodes < MAX_SENT_NODES) {
   ------------------
   |  |   40|      0|#define MAX_SENT_NODES 4
   ------------------
-  |  Branch (680:13): [True: 0, False: 0]
+  |  Branch (688:13): [True: 0, False: 0]
   ------------------
-  681|      0|            memcpy(nodes_list[num_nodes].public_key, client->public_key, CRYPTO_PUBLIC_KEY_SIZE);
+  689|      0|            memcpy(nodes_list[num_nodes].public_key, client->public_key, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
   |  |   44|      0|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  682|      0|            nodes_list[num_nodes].ip_port = ipptp->ip_port;
-  683|      0|            ++num_nodes;
-  684|      0|        } else {
-  685|       |            // TODO(zugz): this could be made significantly more efficient by
-  686|       |            // using a version of add_to_list which works with a sorted list.
-  687|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
+  690|      0|            nodes_list[num_nodes].ip_port = ipptp->ip_port;
+  691|      0|            ++num_nodes;
+  692|      0|        } else {
+  693|       |            // TODO(zugz): this could be made significantly more efficient by
+  694|       |            // using a version of add_to_list which works with a sorted list.
+  695|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
   ------------------
   |  |   40|      0|#define MAX_SENT_NODES 4
   ------------------
-  688|      0|        }
-  689|      0|    }
-  690|       |
-  691|     16|    *num_nodes_ptr = num_nodes;
-  692|     16|}
-DHT.c:index_of_node_pk:
-  485|  8.25k|{
-  486|  8.25k|    assert(size == 0 || array != nullptr);
-  ------------------
-  |  Branch (486:5): [True: 0, False: 8.25k]
-  |  Branch (486:5): [True: 8.25k, False: 0]
-  ------------------
-  487|  8.25k|    for (uint32_t i = 0; i < size; ++i) {
-  ------------------
-  |  Branch (487:26): [True: 8.25k, False: 0]
-  ------------------
-  488|  8.25k|        if (pk_equal(array[i].public_key, pk)) {
-  ------------------
-  |  Branch (488:13): [True: 8.25k, False: 0]
-  ------------------
-  489|  8.25k|            return i;
-  490|  8.25k|        }
-  491|  8.25k|    }
-  492|       |
-  493|      0|    return UINT32_MAX;
-  494|  8.25k|}
+  696|      0|        }
+  697|      0|    }
+  698|       |
+  699|     16|    *num_nodes_ptr = num_nodes;
+  700|     16|}
 DHT.c:index_of_friend_pk:
   473|     16|{
   474|     16|    assert(size == 0 || array != nullptr);
@@ -965,45 +941,67 @@ DHT.c:index_of_friend_pk:
   481|      8|    return UINT32_MAX;
   482|     16|}
 DHT.c:dht_friend_lock:
- 1515|     16|{
- 1516|       |    // find first free slot
- 1517|     16|    uint8_t lock_num;
- 1518|     16|    uint32_t lock_token = 0;
- 1519|     24|    for (lock_num = 0; lock_num < DHT_FRIEND_MAX_LOCKS; ++lock_num) {
+ 1523|     16|{
+ 1524|       |    // find first free slot
+ 1525|     16|    uint8_t lock_num;
+ 1526|     16|    uint32_t lock_token = 0;
+ 1527|     24|    for (lock_num = 0; lock_num < DHT_FRIEND_MAX_LOCKS; ++lock_num) {
   ------------------
   |  |   52|     24|#define DHT_FRIEND_MAX_LOCKS 32
   ------------------
-  |  Branch (1519:24): [True: 24, False: 0]
+  |  Branch (1527:24): [True: 24, False: 0]
   ------------------
- 1520|     24|        lock_token = UINT32_C(1) << lock_num;
- 1521|     24|        if ((dht_friend->lock_flags & lock_token) == 0) {
+ 1528|     24|        lock_token = UINT32_C(1) << lock_num;
+ 1529|     24|        if ((dht_friend->lock_flags & lock_token) == 0) {
   ------------------
-  |  Branch (1521:13): [True: 16, False: 8]
+  |  Branch (1529:13): [True: 16, False: 8]
   ------------------
- 1522|     16|            break;
- 1523|     16|        }
- 1524|     24|    }
- 1525|       |
- 1526|       |    // One of the conditions would be enough, but static analyzers don't get that
- 1527|     16|    if (lock_token == 0 || lock_num == DHT_FRIEND_MAX_LOCKS) {
+ 1530|     16|            break;
+ 1531|     16|        }
+ 1532|     24|    }
+ 1533|       |
+ 1534|       |    // One of the conditions would be enough, but static analyzers don't get that
+ 1535|     16|    if (lock_token == 0 || lock_num == DHT_FRIEND_MAX_LOCKS) {
   ------------------
   |  |   52|     16|#define DHT_FRIEND_MAX_LOCKS 32
   ------------------
-  |  Branch (1527:9): [True: 0, False: 16]
-  |  Branch (1527:28): [True: 0, False: 16]
+  |  Branch (1535:9): [True: 0, False: 16]
+  |  Branch (1535:28): [True: 0, False: 16]
   ------------------
- 1528|      0|        return 0;
- 1529|      0|    }
- 1530|       |
- 1531|       |    // Claim that slot
- 1532|     16|    dht_friend->lock_flags |= lock_token;
- 1533|       |
- 1534|     16|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
- 1535|     16|    dht_friend->callbacks[lock_num].data = data;
- 1536|     16|    dht_friend->callbacks[lock_num].number = number;
- 1537|       |
- 1538|     16|    return lock_token;
- 1539|     16|}
+ 1536|      0|        return 0;
+ 1537|      0|    }
+ 1538|       |
+ 1539|       |    // Claim that slot
+ 1540|     16|    dht_friend->lock_flags |= lock_token;
+ 1541|       |
+ 1542|     16|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
+ 1543|     16|    dht_friend->callbacks[lock_num].data = data;
+ 1544|     16|    dht_friend->callbacks[lock_num].number = number;
+ 1545|       |
+ 1546|     16|    return lock_token;
+ 1547|     16|}
+DHT.c:assoc_timeout:
+  193|  8.25k|{
+  194|  8.25k|    return (assoc->timestamp + BAD_NODE_TIMEOUT) <= cur_time;
+  ------------------
+  |  |   54|  8.25k|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  ------------------
+  |  |  |  |   49|  8.25k|#define PING_INTERVAL 60
+  |  |  ------------------
+  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  ------------------
+  |  |  |  |   52|  8.25k|#define PINGS_MISSED_NODE_GOES_BAD 1
+  |  |  ------------------
+  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  ------------------
+  |  |  |  |   49|  8.25k|#define PING_INTERVAL 60
+  |  |  ------------------
+  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  ------------------
+  |  |  |  |   53|  8.25k|#define PING_ROUNDTRIP 2
+  |  |  ------------------
+  ------------------
+  195|  8.25k|}
 
 crypto_memzero:
   115|     29|{
@@ -1032,44 +1030,39 @@ crypto_memunlock:
   140|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
   141|     17|}
 pk_equal:
-  144|  8.26k|{
-  145|  8.26k|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
-  146|       |    // Hope that this is better for the fuzzer
-  147|  8.26k|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
+  144|      8|{
+  145|      8|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
   ------------------
-  |  |   44|  8.26k|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|      8|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  148|       |#else
-  149|       |    return crypto_verify_32(pk1, pk2) == 0;
-  150|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  151|  8.26k|}
+  146|      8|}
 random_u64:
-  200|      8|{
-  201|      8|    uint64_t randnum;
-  202|      8|    random_bytes(rng, (uint8_t *)&randnum, sizeof(randnum));
-  203|      8|    return randnum;
-  204|      8|}
+  190|      8|{
+  191|      8|    uint64_t randnum;
+  192|      8|    random_bytes(rng, (uint8_t *)&randnum, sizeof(randnum));
+  193|      8|    return randnum;
+  194|      8|}
 crypto_new_keypair:
-  438|     25|{
-  439|     25|    random_bytes(rng, secret_key, CRYPTO_SECRET_KEY_SIZE);
+  428|     25|{
+  429|     25|    random_bytes(rng, secret_key, CRYPTO_SECRET_KEY_SIZE);
   ------------------
   |  |   49|     25|#define CRYPTO_SECRET_KEY_SIZE         32
   ------------------
-  440|     25|    memzero(public_key, CRYPTO_PUBLIC_KEY_SIZE);  // Make MSAN happy
+  430|     25|    memzero(public_key, CRYPTO_PUBLIC_KEY_SIZE);  // Make MSAN happy
   ------------------
   |  |   44|     25|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  441|     25|    crypto_derive_public_key(public_key, secret_key);
-  442|     25|    return 0;
-  443|     25|}
+  431|     25|    crypto_derive_public_key(public_key, secret_key);
+  432|     25|    return 0;
+  433|     25|}
 crypto_derive_public_key:
-  447|     25|{
-  448|     25|    crypto_scalarmult_curve25519_base(public_key, secret_key);
-  449|     25|}
+  437|     25|{
+  438|     25|    crypto_scalarmult_curve25519_base(public_key, secret_key);
+  439|     25|}
 random_bytes:
-  498|     33|{
-  499|     33|    tox_random_bytes(rng, bytes, length);
-  500|     33|}
+  488|     33|{
+  489|     33|    tox_random_bytes(rng, bytes, length);
+  490|     33|}
 
 logger_new:
    33|     18|{
@@ -1533,13 +1526,13 @@ net_family_is_unspec:
   426|     31|    return family.value == family_unspec.value;
   427|     31|}
 net_family_is_ipv4:
-  430|     48|{
-  431|     48|    return family.value == family_ipv4.value;
-  432|     48|}
+  430|  8.30k|{
+  431|  8.30k|    return family.value == family_ipv4.value;
+  432|  8.30k|}
 net_family_is_ipv6:
-  435|     63|{
-  436|     63|    return family.value == family_ipv6.value;
-  437|     63|}
+  435|  8.31k|{
+  436|  8.31k|    return family.value == family_ipv6.value;
+  437|  8.31k|}
 sock_valid:
   470|     15|{
   471|     15|    const Socket invalid_socket = net_invalid_socket();
