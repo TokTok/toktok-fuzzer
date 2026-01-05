@@ -1333,100 +1333,100 @@ mono_time_set_current_time_callback:
   211|     13|}
 
 LLVMFuzzerTestOneInput:
-  101|     20|{
-  102|     20|    fuzz_select_target<TestNetCrypto>(data, size);
-  103|     20|    return 0;
-  104|     20|}
+  109|     20|{
+  110|     20|    fuzz_select_target<TestNetCrypto>(data, size);
+  111|     20|    return 0;
+  112|     20|}
 net_crypto_fuzz_test.cc:_ZN12_GLOBAL__N_113TestNetCryptoER9Fuzz_Data:
-   31|     19|{
-   32|     19|    const auto prep = prepare(input);
-   33|     19|    if (!prep.has_value()) {
+   39|     19|{
+   40|     19|    const auto prep = prepare(input);
+   41|     19|    if (!prep.has_value()) {
   ------------------
-  |  Branch (33:9): [True: 1, False: 18]
+  |  Branch (41:9): [True: 1, False: 18]
   ------------------
-   34|      1|        return;
-   35|      1|    }
-   36|     18|    const auto [ipp, iterations] = prep.value();
-   37|       |
-   38|       |    // rest of the fuzz data is input for malloc and network
-   39|     18|    Fuzz_System sys(input);
-   40|       |
-   41|     18|    const Ptr<Logger> logger(logger_new(sys.mem.get()), logger_kill);
-   42|     18|    if (logger == nullptr) {
-  ------------------
-  |  Branch (42:9): [True: 1, False: 17]
-  ------------------
-   43|      1|        return;
-   44|      1|    }
+   42|      1|        return;
+   43|      1|    }
+   44|     18|    const auto [ipp, iterations] = prep.value();
    45|       |
-   46|     17|    const Ptr<Networking_Core> net(new_networking_ex(logger.get(), sys.mem.get(), sys.ns.get(),
-   47|     17|                                       &ipp.ip, ipp.port, ipp.port + 100, nullptr),
-   48|     17|        kill_networking);
-   49|     17|    if (net == nullptr) {
+   46|       |    // rest of the fuzz data is input for malloc and network
+   47|     18|    Fuzz_System sys(input);
+   48|       |
+   49|     18|    const Ptr<Logger> logger(logger_new(sys.mem.get()), logger_kill);
+   50|     18|    if (logger == nullptr) {
   ------------------
-  |  Branch (49:9): [True: 2, False: 15]
+  |  Branch (50:9): [True: 1, False: 17]
   ------------------
-   50|      2|        return;
-   51|      2|    }
-   52|       |
-   53|     15|    const std::unique_ptr<Mono_Time, std::function<void(Mono_Time *)>> mono_time(
-   54|     15|        mono_time_new(
-   55|     15|            sys.mem.get(), [](void *user_data) { return *static_cast<uint64_t *>(user_data); },
-   56|     15|            &sys.clock),
-   57|     15|        [mem = sys.mem.get()](Mono_Time *ptr) { mono_time_free(mem, ptr); });
-   58|     15|    if (mono_time == nullptr) {
+   51|      1|        return;
+   52|      1|    }
+   53|       |
+   54|     17|    const Ptr<Networking_Core> net(new_networking_ex(logger.get(), sys.mem.get(), sys.ns.get(),
+   55|     17|                                       &ipp.ip, ipp.port, ipp.port + 100, nullptr),
+   56|     17|        kill_networking);
+   57|     17|    if (net == nullptr) {
   ------------------
-  |  Branch (58:9): [True: 2, False: 13]
+  |  Branch (57:9): [True: 2, False: 15]
   ------------------
-   59|      2|        return;
-   60|      2|    }
-   61|       |
-   62|     13|    const Ptr<DHT> dht(new_dht(logger.get(), sys.mem.get(), sys.rng.get(), sys.ns.get(),
-   63|     13|                           mono_time.get(), net.get(), false, false),
-   64|     13|        kill_dht);
-   65|     13|    if (dht == nullptr) {
+   58|      2|        return;
+   59|      2|    }
+   60|       |
+   61|     15|    const std::unique_ptr<Mono_Time, std::function<void(Mono_Time *)>> mono_time(
+   62|     15|        mono_time_new(
+   63|     15|            sys.mem.get(), [](void *user_data) { return *static_cast<uint64_t *>(user_data); },
+   64|     15|            &sys.clock),
+   65|     15|        [mem = sys.mem.get()](Mono_Time *ptr) { mono_time_free(mem, ptr); });
+   66|     15|    if (mono_time == nullptr) {
   ------------------
-  |  Branch (65:9): [True: 13, False: 0]
+  |  Branch (66:9): [True: 2, False: 13]
   ------------------
-   66|     13|        return;
-   67|     13|    }
-   68|       |
-   69|      0|    Net_Profile *tcp_np = netprof_new(logger.get(), sys.mem.get());
-   70|       |
-   71|      0|    if (tcp_np == nullptr) {
+   67|      2|        return;
+   68|      2|    }
+   69|       |
+   70|     13|    const Ptr<DHT> dht(new_dht(logger.get(), sys.mem.get(), sys.rng.get(), sys.ns.get(),
+   71|     13|                           mono_time.get(), net.get(), false, false),
+   72|     13|        kill_dht);
+   73|     13|    if (dht == nullptr) {
   ------------------
-  |  Branch (71:9): [True: 0, False: 0]
+  |  Branch (73:9): [True: 13, False: 0]
   ------------------
-   72|      0|        return;
-   73|      0|    }
-   74|       |
-   75|      0|    const TCP_Proxy_Info proxy_info = {0};
+   74|     13|        return;
+   75|     13|    }
    76|       |
-   77|      0|    const Ptr<Net_Crypto> net_crypto(
-   78|      0|        new_net_crypto(logger.get(), sys.mem.get(), sys.rng.get(), sys.ns.get(), mono_time.get(),
-   79|      0|            net.get(), dht.get(), &proxy_info, tcp_np),
-   80|      0|        kill_net_crypto);
-   81|      0|    if (net_crypto == nullptr) {
+   77|      0|    Net_Profile *tcp_np = netprof_new(logger.get(), sys.mem.get());
+   78|       |
+   79|      0|    if (tcp_np == nullptr) {
   ------------------
-  |  Branch (81:9): [True: 0, False: 0]
+  |  Branch (79:9): [True: 0, False: 0]
   ------------------
-   82|      0|        netprof_kill(sys.mem.get(), tcp_np);
-   83|      0|        return;
-   84|      0|    }
-   85|       |
-   86|      0|    for (uint8_t i = 0; i < iterations; ++i) {
+   80|      0|        return;
+   81|      0|    }
+   82|       |
+   83|      0|    const TCP_Proxy_Info proxy_info = {0};
+   84|       |
+   85|      0|    const Ptr<Net_Crypto> net_crypto(
+   86|      0|        new_net_crypto(logger.get(), sys.mem.get(), sys.rng.get(), sys.ns.get(), mono_time.get(),
+   87|      0|            net.get(), dht.get(), &dht_funcs, &proxy_info, tcp_np),
+   88|      0|        kill_net_crypto);
+   89|      0|    if (net_crypto == nullptr) {
   ------------------
-  |  Branch (86:25): [True: 0, False: 0]
+  |  Branch (89:9): [True: 0, False: 0]
   ------------------
-   87|      0|        networking_poll(net.get(), nullptr);
-   88|      0|        do_dht(dht.get());
-   89|      0|        do_net_crypto(net_crypto.get(), nullptr);
-   90|       |        // "Sleep"
-   91|      0|        sys.clock += System::BOOTSTRAP_ITERATION_INTERVAL;
+   90|      0|        netprof_kill(sys.mem.get(), tcp_np);
+   91|      0|        return;
    92|      0|    }
    93|       |
-   94|      0|    netprof_kill(sys.mem.get(), tcp_np);
-   95|      0|}
+   94|      0|    for (uint8_t i = 0; i < iterations; ++i) {
+  ------------------
+  |  Branch (94:25): [True: 0, False: 0]
+  ------------------
+   95|      0|        networking_poll(net.get(), nullptr);
+   96|      0|        do_dht(dht.get());
+   97|      0|        do_net_crypto(net_crypto.get(), nullptr);
+   98|       |        // "Sleep"
+   99|      0|        sys.clock += System::BOOTSTRAP_ITERATION_INTERVAL;
+  100|      0|    }
+  101|       |
+  102|      0|    netprof_kill(sys.mem.get(), tcp_np);
+  103|      0|}
 net_crypto_fuzz_test.cc:_ZN12_GLOBAL__N_17prepareER9Fuzz_Data:
    19|     19|{
    20|     19|    IP_Port ipp;
@@ -1448,9 +1448,9 @@ net_crypto_fuzz_test.cc:_ZN12_GLOBAL__N_17prepareER9Fuzz_Data:
    27|     18|    return {{ipp, iterations}};
    28|     19|}
 net_crypto_fuzz_test.cc:_ZZN12_GLOBAL__N_113TestNetCryptoER9Fuzz_DataENK3$_1clEPv:
-   55|     13|            sys.mem.get(), [](void *user_data) { return *static_cast<uint64_t *>(user_data); },
+   63|     13|            sys.mem.get(), [](void *user_data) { return *static_cast<uint64_t *>(user_data); },
 net_crypto_fuzz_test.cc:_ZZN12_GLOBAL__N_113TestNetCryptoER9Fuzz_DataENK3$_0clEP9Mono_Time:
-   57|     13|        [mem = sys.mem.get()](Mono_Time *ptr) { mono_time_free(mem, ptr); });
+   65|     13|        [mem = sys.mem.get()](Mono_Time *ptr) { mono_time_free(mem, ptr); });
 
 netprof_new:
   139|     16|{
