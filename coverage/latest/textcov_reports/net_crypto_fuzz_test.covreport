@@ -1575,100 +1575,100 @@ sock_valid:
   474|     15|    return sock.value != invalid_socket.value;
   475|     15|}
 kill_sock:
-  823|     15|{
-  824|     15|    ns->funcs->close(ns->obj, sock);
-  825|     15|}
+  824|     15|{
+  825|     15|    ns->funcs->close(ns->obj, sock);
+  826|     15|}
 set_socket_nonblock:
-  828|     15|{
-  829|       |    return ns->funcs->socket_nonblock(ns->obj, sock, true) == 0;
-  830|     15|}
+  829|     15|{
+  830|       |    return ns->funcs->socket_nonblock(ns->obj, sock, true) == 0;
+  831|     15|}
 set_socket_nosigpipe:
-  833|     15|{
-  834|       |#if defined(__APPLE__)
-  835|       |    int set = 1;
-  836|       |    return net_setsockopt(ns, sock, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int)) == 0;
-  837|       |#else
-  838|       |    return true;
-  839|     15|#endif /* __APPLE__ */
-  840|     15|}
+  834|     15|{
+  835|       |#if defined(__APPLE__)
+  836|       |    int set = 1;
+  837|       |    return net_setsockopt(ns, sock, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int)) == 0;
+  838|       |#else
+  839|       |    return true;
+  840|     15|#endif /* __APPLE__ */
+  841|     15|}
 set_socket_dualstack:
-  853|     15|{
-  854|     15|    int ipv6only = 0;
-  855|     15|    size_t optsize = sizeof(ipv6only);
-  856|     15|    const int res = net_getsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, &optsize);
-  857|       |
-  858|     15|    if ((res == 0) && (ipv6only == 0)) {
+  854|     15|{
+  855|     15|    int ipv6only = 0;
+  856|     15|    size_t optsize = sizeof(ipv6only);
+  857|     15|    const int res = net_getsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, &optsize);
+  858|       |
+  859|     15|    if ((res == 0) && (ipv6only == 0)) {
   ------------------
-  |  Branch (858:9): [True: 15, False: 0]
-  |  Branch (858:23): [True: 15, False: 0]
+  |  Branch (859:9): [True: 15, False: 0]
+  |  Branch (859:23): [True: 15, False: 0]
   ------------------
-  859|     15|        return true;
-  860|     15|    }
-  861|       |
-  862|      0|    ipv6only = 0;
-  863|      0|    return net_setsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, sizeof(ipv6only)) == 0;
-  864|     15|}
+  860|     15|        return true;
+  861|     15|    }
+  862|       |
+  863|      0|    ipv6only = 0;
+  864|      0|    return net_setsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, sizeof(ipv6only)) == 0;
+  865|     15|}
 networking_registerhandler:
-  999|    129|{
- 1000|    129|    net->packethandlers[byte].function = cb;
- 1001|    129|    net->packethandlers[byte].object = object;
- 1002|    129|}
+ 1000|    129|{
+ 1001|    129|    net->packethandlers[byte].function = cb;
+ 1002|    129|    net->packethandlers[byte].object = object;
+ 1003|    129|}
 new_networking_ex:
- 1048|     17|{
- 1049|       |    /* If both from and to are 0, use default port range
- 1050|       |     * If one is 0 and the other is non-0, use the non-0 value as only port
- 1051|       |     * If from > to, swap
- 1052|       |     */
- 1053|     17|    if (port_from == 0 && port_to == 0) {
+ 1049|     17|{
+ 1050|       |    /* If both from and to are 0, use default port range
+ 1051|       |     * If one is 0 and the other is non-0, use the non-0 value as only port
+ 1052|       |     * If from > to, swap
+ 1053|       |     */
+ 1054|     17|    if (port_from == 0 && port_to == 0) {
   ------------------
-  |  Branch (1053:9): [True: 0, False: 17]
-  |  Branch (1053:27): [True: 0, False: 0]
+  |  Branch (1054:9): [True: 0, False: 17]
+  |  Branch (1054:27): [True: 0, False: 0]
   ------------------
- 1054|      0|        port_from = TOX_PORTRANGE_FROM;
+ 1055|      0|        port_from = TOX_PORTRANGE_FROM;
   ------------------
   |  |  191|      0|#define TOX_PORTRANGE_FROM 33445
   ------------------
- 1055|      0|        port_to = TOX_PORTRANGE_TO;
+ 1056|      0|        port_to = TOX_PORTRANGE_TO;
   ------------------
   |  |  192|      0|#define TOX_PORTRANGE_TO   33545
   ------------------
- 1056|     17|    } else if (port_from == 0 && port_to != 0) {
+ 1057|     17|    } else if (port_from == 0 && port_to != 0) {
   ------------------
-  |  Branch (1056:16): [True: 0, False: 17]
-  |  Branch (1056:34): [True: 0, False: 0]
+  |  Branch (1057:16): [True: 0, False: 17]
+  |  Branch (1057:34): [True: 0, False: 0]
   ------------------
- 1057|      0|        port_from = port_to;
- 1058|     17|    } else if (port_from != 0 && port_to == 0) {
+ 1058|      0|        port_from = port_to;
+ 1059|     17|    } else if (port_from != 0 && port_to == 0) {
   ------------------
-  |  Branch (1058:16): [True: 17, False: 0]
-  |  Branch (1058:34): [True: 0, False: 17]
+  |  Branch (1059:16): [True: 17, False: 0]
+  |  Branch (1059:34): [True: 0, False: 17]
   ------------------
- 1059|      0|        port_to = port_from;
- 1060|     17|    } else if (port_from > port_to) {
+ 1060|      0|        port_to = port_from;
+ 1061|     17|    } else if (port_from > port_to) {
   ------------------
-  |  Branch (1060:16): [True: 0, False: 17]
+  |  Branch (1061:16): [True: 0, False: 17]
   ------------------
- 1061|      0|        const uint16_t temp_port = port_from;
- 1062|      0|        port_from = port_to;
- 1063|      0|        port_to = temp_port;
- 1064|      0|    }
- 1065|       |
- 1066|     17|    if (error != nullptr) {
+ 1062|      0|        const uint16_t temp_port = port_from;
+ 1063|      0|        port_from = port_to;
+ 1064|      0|        port_to = temp_port;
+ 1065|      0|    }
+ 1066|       |
+ 1067|     17|    if (error != nullptr) {
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-  |  Branch (1066:9): [True: 0, False: 17]
+  |  Branch (1067:9): [True: 0, False: 17]
   ------------------
- 1067|      0|        *error = 2;
- 1068|      0|    }
- 1069|       |
- 1070|       |    /* maybe check for invalid IPs like 224+.x.y.z? if there is any IP set ever */
- 1071|     17|    if (!net_family_is_ipv4(ip->family) && !net_family_is_ipv6(ip->family)) {
+ 1068|      0|        *error = 2;
+ 1069|      0|    }
+ 1070|       |
+ 1071|       |    /* maybe check for invalid IPs like 224+.x.y.z? if there is any IP set ever */
+ 1072|     17|    if (!net_family_is_ipv4(ip->family) && !net_family_is_ipv6(ip->family)) {
   ------------------
-  |  Branch (1071:9): [True: 17, False: 0]
-  |  Branch (1071:44): [True: 0, False: 17]
+  |  Branch (1072:9): [True: 17, False: 0]
+  |  Branch (1072:44): [True: 0, False: 17]
   ------------------
- 1072|      0|        LOGGER_ERROR(log, "invalid address family: %u", ip->family.value);
+ 1073|      0|        LOGGER_ERROR(log, "invalid address family: %u", ip->family.value);
   ------------------
   |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -1687,51 +1687,51 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1073|      0|        return nullptr;
+ 1074|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 1074|      0|    }
- 1075|       |
- 1076|     17|    Networking_Core *temp = (Networking_Core *)mem_alloc(mem, sizeof(Networking_Core));
- 1077|       |
- 1078|     17|    if (temp == nullptr) {
+ 1075|      0|    }
+ 1076|       |
+ 1077|     17|    Networking_Core *temp = (Networking_Core *)mem_alloc(mem, sizeof(Networking_Core));
+ 1078|       |
+ 1079|     17|    if (temp == nullptr) {
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-  |  Branch (1078:9): [True: 1, False: 16]
+  |  Branch (1079:9): [True: 1, False: 16]
   ------------------
- 1079|      1|        return nullptr;
+ 1080|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
- 1080|      1|    }
- 1081|       |
- 1082|     16|    Net_Profile *np = netprof_new(log, mem);
- 1083|       |
- 1084|     16|    if (np == nullptr) {
+ 1081|      1|    }
+ 1082|       |
+ 1083|     16|    Net_Profile *np = netprof_new(log, mem);
+ 1084|       |
+ 1085|     16|    if (np == nullptr) {
   ------------------
   |  |   63|     16|#define nullptr NULL
   ------------------
-  |  Branch (1084:9): [True: 1, False: 15]
+  |  Branch (1085:9): [True: 1, False: 15]
   ------------------
- 1085|      1|        free(temp);
- 1086|      1|        return nullptr;
+ 1086|      1|        free(temp);
+ 1087|      1|        return nullptr;
   ------------------
   |  |   63|      1|#define nullptr NULL
   ------------------
- 1087|      1|    }
- 1088|       |
- 1089|     15|    temp->udp_net_profile = np;
- 1090|     15|    temp->ns = ns;
- 1091|     15|    temp->log = log;
- 1092|     15|    temp->mem = mem;
- 1093|     15|    temp->family = ip->family;
- 1094|     15|    temp->port = 0;
- 1095|       |
- 1096|       |    /* Initialize our socket. */
- 1097|       |    /* add log message what we're creating */
- 1098|     15|    temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
+ 1088|      1|    }
+ 1089|       |
+ 1090|     15|    temp->udp_net_profile = np;
+ 1091|     15|    temp->ns = ns;
+ 1092|     15|    temp->log = log;
+ 1093|     15|    temp->mem = mem;
+ 1094|     15|    temp->family = ip->family;
+ 1095|     15|    temp->port = 0;
+ 1096|       |
+ 1097|       |    /* Initialize our socket. */
+ 1098|       |    /* add log message what we're creating */
+ 1099|     15|    temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
   ------------------
   |  |  203|     15|#define TOX_SOCK_DGRAM 2
   ------------------
@@ -1739,113 +1739,15 @@ new_networking_ex:
   ------------------
   |  |  206|     15|#define TOX_PROTO_UDP 2
   ------------------
- 1099|       |
- 1100|       |    /* Check for socket error. */
- 1101|     15|    if (!sock_valid(temp->sock)) {
+ 1100|       |
+ 1101|       |    /* Check for socket error. */
+ 1102|     15|    if (!sock_valid(temp->sock)) {
   ------------------
-  |  Branch (1101:9): [True: 0, False: 15]
+  |  Branch (1102:9): [True: 0, False: 15]
   ------------------
- 1102|      0|        const int neterror = net_error();
- 1103|      0|        Net_Strerror error_str;
- 1104|      0|        LOGGER_ERROR(log, "failed to get a socket?! %d, %s", neterror, net_strerror(neterror, &error_str));
-  ------------------
-  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   69|      0|    do {                                                                         \
-  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [True: 0, Folded]
-  |  |  |  |  ------------------
-  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|      0|        }                                                                        \
-  |  |  |  |   73|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 0]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1105|      0|        netprof_kill(mem, temp->udp_net_profile);
- 1106|      0|        mem_delete(mem, temp);
- 1107|       |
- 1108|      0|        if (error != nullptr) {
-  ------------------
-  |  |   63|      0|#define nullptr NULL
-  ------------------
-  |  Branch (1108:13): [True: 0, False: 0]
-  ------------------
- 1109|      0|            *error = 1;
- 1110|      0|        }
- 1111|       |
- 1112|      0|        return nullptr;
-  ------------------
-  |  |   63|      0|#define nullptr NULL
-  ------------------
- 1113|      0|    }
- 1114|       |
- 1115|       |    /* Functions to increase the size of the send and receive UDP buffers.
- 1116|       |     */
- 1117|     15|    int n = 1024 * 1024 * 2;
- 1118|       |
- 1119|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n)) != 0) {
-  ------------------
-  |  Branch (1119:9): [True: 0, False: 15]
-  ------------------
- 1120|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_RCVBUF);
-  ------------------
-  |  |   79|      0|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   69|      0|    do {                                                                         \
-  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [True: 0, Folded]
-  |  |  |  |  ------------------
-  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|      0|        }                                                                        \
-  |  |  |  |   73|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 0]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1121|      0|    }
- 1122|       |
- 1123|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_SNDBUF, &n, sizeof(n)) != 0) {
-  ------------------
-  |  Branch (1123:9): [True: 0, False: 15]
-  ------------------
- 1124|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_SNDBUF);
-  ------------------
-  |  |   79|      0|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
-  |  |  ------------------
-  |  |  |  |   69|      0|    do {                                                                         \
-  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [True: 0, Folded]
-  |  |  |  |  ------------------
-  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|      0|        }                                                                        \
-  |  |  |  |   73|      0|    } while (0)
-  |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 0]
-  |  |  |  |  ------------------
-  |  |  ------------------
-  ------------------
- 1125|      0|    }
- 1126|       |
- 1127|       |    /* Enable broadcast on socket */
- 1128|     15|    int broadcast = 1;
- 1129|       |
- 1130|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0) {
-  ------------------
-  |  Branch (1130:9): [True: 0, False: 15]
-  ------------------
- 1131|      0|        LOGGER_ERROR(log, "failed to set socket option %d", SO_BROADCAST);
+ 1103|      0|        const int neterror = net_error();
+ 1104|      0|        Net_Strerror error_str;
+ 1105|      0|        LOGGER_ERROR(log, "failed to get a socket?! %d, %s", neterror, net_strerror(neterror, &error_str));
   ------------------
   |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -1864,87 +1766,185 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1132|      0|    }
- 1133|       |
- 1134|       |    /* iOS UDP sockets are weird and apparently can SIGPIPE */
- 1135|     15|    if (!set_socket_nosigpipe(ns, temp->sock)) {
-  ------------------
-  |  Branch (1135:9): [True: 0, False: 15]
-  ------------------
- 1136|      0|        kill_networking(temp);
- 1137|       |
- 1138|      0|        if (error != nullptr) {
+ 1106|      0|        netprof_kill(mem, temp->udp_net_profile);
+ 1107|      0|        mem_delete(mem, temp);
+ 1108|       |
+ 1109|      0|        if (error != nullptr) {
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-  |  Branch (1138:13): [True: 0, False: 0]
+  |  Branch (1109:13): [True: 0, False: 0]
   ------------------
- 1139|      0|            *error = 1;
- 1140|      0|        }
- 1141|       |
- 1142|      0|        return nullptr;
-  ------------------
-  |  |   63|      0|#define nullptr NULL
-  ------------------
- 1143|      0|    }
- 1144|       |
- 1145|       |    /* Set socket nonblocking. */
- 1146|     15|    if (!set_socket_nonblock(ns, temp->sock)) {
-  ------------------
-  |  Branch (1146:9): [True: 0, False: 15]
-  ------------------
- 1147|      0|        kill_networking(temp);
- 1148|       |
- 1149|      0|        if (error != nullptr) {
+ 1110|      0|            *error = 1;
+ 1111|      0|        }
+ 1112|       |
+ 1113|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-  |  Branch (1149:13): [True: 0, False: 0]
+ 1114|      0|    }
+ 1115|       |
+ 1116|       |    /* Functions to increase the size of the send and receive UDP buffers.
+ 1117|       |     */
+ 1118|     15|    int n = 1024 * 1024 * 2;
+ 1119|       |
+ 1120|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n)) != 0) {
   ------------------
- 1150|      0|            *error = 1;
- 1151|      0|        }
- 1152|       |
- 1153|      0|        return nullptr;
+  |  Branch (1120:9): [True: 0, False: 15]
+  ------------------
+ 1121|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_RCVBUF);
+  ------------------
+  |  |   79|      0|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [True: 0, Folded]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded, False: 0]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1122|      0|    }
+ 1123|       |
+ 1124|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_SNDBUF, &n, sizeof(n)) != 0) {
+  ------------------
+  |  Branch (1124:9): [True: 0, False: 15]
+  ------------------
+ 1125|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_SNDBUF);
+  ------------------
+  |  |   79|      0|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [True: 0, Folded]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded, False: 0]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1126|      0|    }
+ 1127|       |
+ 1128|       |    /* Enable broadcast on socket */
+ 1129|     15|    int broadcast = 1;
+ 1130|       |
+ 1131|     15|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0) {
+  ------------------
+  |  Branch (1131:9): [True: 0, False: 15]
+  ------------------
+ 1132|      0|        LOGGER_ERROR(log, "failed to set socket option %d", SO_BROADCAST);
+  ------------------
+  |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |  ------------------
+  |  |  |  |   69|      0|    do {                                                                         \
+  |  |  |  |   70|      0|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   22|      0|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (70:13): [True: 0, Folded]
+  |  |  |  |  ------------------
+  |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      0|        }                                                                        \
+  |  |  |  |   73|      0|    } while (0)
+  |  |  |  |  ------------------
+  |  |  |  |  |  Branch (73:14): [Folded, False: 0]
+  |  |  |  |  ------------------
+  |  |  ------------------
+  ------------------
+ 1133|      0|    }
+ 1134|       |
+ 1135|       |    /* iOS UDP sockets are weird and apparently can SIGPIPE */
+ 1136|     15|    if (!set_socket_nosigpipe(ns, temp->sock)) {
+  ------------------
+  |  Branch (1136:9): [True: 0, False: 15]
+  ------------------
+ 1137|      0|        kill_networking(temp);
+ 1138|       |
+ 1139|      0|        if (error != nullptr) {
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 1154|      0|    }
- 1155|       |
- 1156|       |    /* Bind our socket to port PORT and the given IP address (usually 0.0.0.0 or ::) */
- 1157|     15|    uint16_t *portptr = nullptr;
+  |  Branch (1139:13): [True: 0, False: 0]
+  ------------------
+ 1140|      0|            *error = 1;
+ 1141|      0|        }
+ 1142|       |
+ 1143|      0|        return nullptr;
+  ------------------
+  |  |   63|      0|#define nullptr NULL
+  ------------------
+ 1144|      0|    }
+ 1145|       |
+ 1146|       |    /* Set socket nonblocking. */
+ 1147|     15|    if (!set_socket_nonblock(ns, temp->sock)) {
+  ------------------
+  |  Branch (1147:9): [True: 0, False: 15]
+  ------------------
+ 1148|      0|        kill_networking(temp);
+ 1149|       |
+ 1150|      0|        if (error != nullptr) {
+  ------------------
+  |  |   63|      0|#define nullptr NULL
+  ------------------
+  |  Branch (1150:13): [True: 0, False: 0]
+  ------------------
+ 1151|      0|            *error = 1;
+ 1152|      0|        }
+ 1153|       |
+ 1154|      0|        return nullptr;
+  ------------------
+  |  |   63|      0|#define nullptr NULL
+  ------------------
+ 1155|      0|    }
+ 1156|       |
+ 1157|       |    /* Bind our socket to port PORT and the given IP address (usually 0.0.0.0 or ::) */
+ 1158|     15|    uint16_t *portptr = nullptr;
   ------------------
   |  |   63|     15|#define nullptr NULL
   ------------------
- 1158|     15|    IP_Port addr;
- 1159|     15|    ip_init(&addr.ip, net_family_is_ipv6(temp->family));
- 1160|       |
- 1161|     15|    if (net_family_is_ipv4(temp->family) || net_family_is_ipv6(temp->family)) {
+ 1159|     15|    IP_Port addr;
+ 1160|     15|    ip_init(&addr.ip, net_family_is_ipv6(temp->family));
+ 1161|       |
+ 1162|     15|    if (net_family_is_ipv4(temp->family) || net_family_is_ipv6(temp->family)) {
   ------------------
-  |  Branch (1161:9): [True: 0, False: 15]
-  |  Branch (1161:45): [True: 15, False: 0]
+  |  Branch (1162:9): [True: 0, False: 15]
+  |  Branch (1162:45): [True: 15, False: 0]
   ------------------
- 1162|     15|        ip_copy(&addr.ip, ip);
- 1163|     15|        addr.port = 0;
- 1164|     15|        portptr = &addr.port;
- 1165|     15|    } else {
- 1166|      0|        mem_delete(mem, temp);
- 1167|      0|        return nullptr;
+ 1163|     15|        ip_copy(&addr.ip, ip);
+ 1164|     15|        addr.port = 0;
+ 1165|     15|        portptr = &addr.port;
+ 1166|     15|    } else {
+ 1167|      0|        mem_delete(mem, temp);
+ 1168|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 1168|      0|    }
- 1169|       |
- 1170|     15|    if (net_family_is_ipv6(ip->family)) {
+ 1169|      0|    }
+ 1170|       |
+ 1171|     15|    if (net_family_is_ipv6(ip->family)) {
   ------------------
-  |  Branch (1170:9): [True: 15, False: 0]
+  |  Branch (1171:9): [True: 15, False: 0]
   ------------------
- 1171|     15|        const bool is_dualstack = set_socket_dualstack(ns, temp->sock);
- 1172|       |
- 1173|     15|        if (is_dualstack) {
+ 1172|     15|        const bool is_dualstack = set_socket_dualstack(ns, temp->sock);
+ 1173|       |
+ 1174|     15|        if (is_dualstack) {
   ------------------
-  |  Branch (1173:13): [True: 15, False: 0]
+  |  Branch (1174:13): [True: 15, False: 0]
   ------------------
- 1174|     15|            LOGGER_TRACE(log, "Dual-stack socket: enabled");
+ 1175|     15|            LOGGER_TRACE(log, "Dual-stack socket: enabled");
   ------------------
   |  |   76|     15|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
   |  |  ------------------
@@ -1963,8 +1963,8 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1175|     15|        } else {
- 1176|      0|            LOGGER_ERROR(log, "Dual-stack socket failed to enable, won't be able to receive from/send to IPv4 addresses");
+ 1176|     15|        } else {
+ 1177|      0|            LOGGER_ERROR(log, "Dual-stack socket failed to enable, won't be able to receive from/send to IPv4 addresses");
   ------------------
   |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -1983,26 +1983,26 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1177|      0|        }
- 1178|       |
- 1179|     15|#ifndef ESP_PLATFORM
- 1180|       |        /* multicast local nodes */
- 1181|     15|        struct ipv6_mreq mreq = {{{{0}}}};
- 1182|     15|        mreq.ipv6mr_multiaddr.s6_addr[0] = 0xFF;
- 1183|     15|        mreq.ipv6mr_multiaddr.s6_addr[1] = 0x02;
- 1184|     15|        mreq.ipv6mr_multiaddr.s6_addr[15] = 0x01;
- 1185|     15|        mreq.ipv6mr_interface = 0;
- 1186|       |
- 1187|     15|        const int res = net_setsockopt(ns, temp->sock, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, &mreq, sizeof(mreq));
- 1188|       |
- 1189|     15|        const int neterror = net_error();
- 1190|     15|        Net_Strerror error_str;
- 1191|       |
- 1192|     15|        if (res < 0) {
+ 1178|      0|        }
+ 1179|       |
+ 1180|     15|#ifndef ESP_PLATFORM
+ 1181|       |        /* multicast local nodes */
+ 1182|     15|        struct ipv6_mreq mreq = {{{{0}}}};
+ 1183|     15|        mreq.ipv6mr_multiaddr.s6_addr[0] = 0xFF;
+ 1184|     15|        mreq.ipv6mr_multiaddr.s6_addr[1] = 0x02;
+ 1185|     15|        mreq.ipv6mr_multiaddr.s6_addr[15] = 0x01;
+ 1186|     15|        mreq.ipv6mr_interface = 0;
+ 1187|       |
+ 1188|     15|        const int res = net_setsockopt(ns, temp->sock, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, &mreq, sizeof(mreq));
+ 1189|       |
+ 1190|     15|        const int neterror = net_error();
+ 1191|     15|        Net_Strerror error_str;
+ 1192|       |
+ 1193|     15|        if (res < 0) {
   ------------------
-  |  Branch (1192:13): [True: 0, False: 15]
+  |  Branch (1193:13): [True: 0, False: 15]
   ------------------
- 1193|      0|            LOGGER_INFO(log, "Failed to activate local multicast membership in FF02::1. (%d, %s)", neterror, net_strerror(neterror, &error_str));
+ 1194|      0|            LOGGER_INFO(log, "Failed to activate local multicast membership in FF02::1. (%d, %s)", neterror, net_strerror(neterror, &error_str));
   ------------------
   |  |   78|      0|#define LOGGER_INFO(log, ...)    LOGGER_WRITE(log, LOGGER_LEVEL_INFO, __VA_ARGS__)
   |  |  ------------------
@@ -2021,8 +2021,8 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1194|     15|        } else {
- 1195|     15|            LOGGER_TRACE(log, "Local multicast group joined successfully. (%d, %s)", neterror, net_strerror(neterror, &error_str));
+ 1195|     15|        } else {
+ 1196|     15|            LOGGER_TRACE(log, "Local multicast group joined successfully. (%d, %s)", neterror, net_strerror(neterror, &error_str));
   ------------------
   |  |   76|     15|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
   |  |  ------------------
@@ -2041,43 +2041,43 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1196|     15|        }
- 1197|     15|#endif /* ESP_PLATFORM */
- 1198|     15|    }
- 1199|       |
- 1200|       |    /* A hanging program or a different user might block the standard port.
- 1201|       |     * As long as it isn't a parameter coming from the commandline,
- 1202|       |     * try a few ports after it, to see if we can find a "free" one.
- 1203|       |     *
- 1204|       |     * If we go on without binding, the first sendto() automatically binds to
- 1205|       |     * a free port chosen by the system (i.e. anything from 1024 to 65535).
- 1206|       |     *
- 1207|       |     * Returning NULL after bind fails has both advantages and disadvantages:
- 1208|       |     * advantage:
- 1209|       |     *   we can rely on getting the port in the range 33445..33450, which
- 1210|       |     *   enables us to tell joe user to open their firewall to a small range
- 1211|       |     *
- 1212|       |     * disadvantage:
- 1213|       |     *   some clients might not test return of tox_new(), blindly assuming that
- 1214|       |     *   it worked ok (which it did previously without a successful bind)
- 1215|       |     */
- 1216|     15|    uint16_t port_to_try = port_from;
- 1217|     15|    *portptr = net_htons(port_to_try);
- 1218|       |
- 1219|     15|    for (uint16_t tries = port_from; tries <= port_to; ++tries) {
+ 1197|     15|        }
+ 1198|     15|#endif /* ESP_PLATFORM */
+ 1199|     15|    }
+ 1200|       |
+ 1201|       |    /* A hanging program or a different user might block the standard port.
+ 1202|       |     * As long as it isn't a parameter coming from the commandline,
+ 1203|       |     * try a few ports after it, to see if we can find a "free" one.
+ 1204|       |     *
+ 1205|       |     * If we go on without binding, the first sendto() automatically binds to
+ 1206|       |     * a free port chosen by the system (i.e. anything from 1024 to 65535).
+ 1207|       |     *
+ 1208|       |     * Returning NULL after bind fails has both advantages and disadvantages:
+ 1209|       |     * advantage:
+ 1210|       |     *   we can rely on getting the port in the range 33445..33450, which
+ 1211|       |     *   enables us to tell joe user to open their firewall to a small range
+ 1212|       |     *
+ 1213|       |     * disadvantage:
+ 1214|       |     *   some clients might not test return of tox_new(), blindly assuming that
+ 1215|       |     *   it worked ok (which it did previously without a successful bind)
+ 1216|       |     */
+ 1217|     15|    uint16_t port_to_try = port_from;
+ 1218|     15|    *portptr = net_htons(port_to_try);
+ 1219|       |
+ 1220|     15|    for (uint16_t tries = port_from; tries <= port_to; ++tries) {
   ------------------
-  |  Branch (1219:38): [True: 15, False: 0]
+  |  Branch (1220:38): [True: 15, False: 0]
   ------------------
- 1220|     15|        const int res = net_bind(ns, temp->sock, &addr);
- 1221|       |
- 1222|     15|        if (res == 0) {
+ 1221|     15|        const int res = net_bind(ns, temp->sock, &addr);
+ 1222|       |
+ 1223|     15|        if (res == 0) {
   ------------------
-  |  Branch (1222:13): [True: 15, False: 0]
+  |  Branch (1223:13): [True: 15, False: 0]
   ------------------
- 1223|     15|            temp->port = *portptr;
- 1224|       |
- 1225|     15|            Ip_Ntoa ip_str;
- 1226|     15|            LOGGER_DEBUG(log, "Bound successfully to %s:%u", net_ip_ntoa(ip, &ip_str),
+ 1224|     15|            temp->port = *portptr;
+ 1225|       |
+ 1226|     15|            Ip_Ntoa ip_str;
+ 1227|     15|            LOGGER_DEBUG(log, "Bound successfully to %s:%u", net_ip_ntoa(ip, &ip_str),
   ------------------
   |  |   77|     15|#define LOGGER_DEBUG(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_DEBUG, __VA_ARGS__)
   |  |  ------------------
@@ -2096,46 +2096,46 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1227|     15|                         net_ntohs(temp->port));
- 1228|       |
- 1229|       |            /* errno isn't reset on success, only set on failure, the failed
- 1230|       |             * binds with parallel clients yield a -EPERM to the outside if
- 1231|       |             * errno isn't cleared here */
- 1232|     15|            if (tries > 0) {
+ 1228|     15|                         net_ntohs(temp->port));
+ 1229|       |
+ 1230|       |            /* errno isn't reset on success, only set on failure, the failed
+ 1231|       |             * binds with parallel clients yield a -EPERM to the outside if
+ 1232|       |             * errno isn't cleared here */
+ 1233|     15|            if (tries > 0) {
   ------------------
-  |  Branch (1232:17): [True: 15, False: 0]
+  |  Branch (1233:17): [True: 15, False: 0]
   ------------------
- 1233|     15|                errno = 0;
- 1234|     15|            }
- 1235|       |
- 1236|     15|            if (error != nullptr) {
+ 1234|     15|                errno = 0;
+ 1235|     15|            }
+ 1236|       |
+ 1237|     15|            if (error != nullptr) {
   ------------------
   |  |   63|     15|#define nullptr NULL
   ------------------
-  |  Branch (1236:17): [True: 0, False: 15]
+  |  Branch (1237:17): [True: 0, False: 15]
   ------------------
- 1237|      0|                *error = 0;
- 1238|      0|            }
- 1239|       |
- 1240|     15|            return temp;
- 1241|     15|        }
- 1242|       |
- 1243|      0|        ++port_to_try;
- 1244|       |
- 1245|      0|        if (port_to_try > port_to) {
+ 1238|      0|                *error = 0;
+ 1239|      0|            }
+ 1240|       |
+ 1241|     15|            return temp;
+ 1242|     15|        }
+ 1243|       |
+ 1244|      0|        ++port_to_try;
+ 1245|       |
+ 1246|      0|        if (port_to_try > port_to) {
   ------------------
-  |  Branch (1245:13): [True: 0, False: 0]
+  |  Branch (1246:13): [True: 0, False: 0]
   ------------------
- 1246|      0|            port_to_try = port_from;
- 1247|      0|        }
- 1248|       |
- 1249|      0|        *portptr = net_htons(port_to_try);
- 1250|      0|    }
- 1251|       |
- 1252|      0|    Ip_Ntoa ip_str;
- 1253|      0|    const int neterror = net_error();
- 1254|      0|    Net_Strerror error_str;
- 1255|      0|    LOGGER_ERROR(log, "failed to bind socket: %d, %s IP: %s port_from: %u port_to: %u",
+ 1247|      0|            port_to_try = port_from;
+ 1248|      0|        }
+ 1249|       |
+ 1250|      0|        *portptr = net_htons(port_to_try);
+ 1251|      0|    }
+ 1252|       |
+ 1253|      0|    Ip_Ntoa ip_str;
+ 1254|      0|    const int neterror = net_error();
+ 1255|      0|    Net_Strerror error_str;
+ 1256|      0|    LOGGER_ERROR(log, "failed to bind socket: %d, %s IP: %s port_from: %u port_to: %u",
   ------------------
   |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
@@ -2154,78 +2154,78 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1256|      0|                 neterror, net_strerror(neterror, &error_str), net_ip_ntoa(ip, &ip_str), port_from, port_to);
- 1257|      0|    kill_networking(temp);
- 1258|       |
- 1259|      0|    if (error != nullptr) {
+ 1257|      0|                 neterror, net_strerror(neterror, &error_str), net_ip_ntoa(ip, &ip_str), port_from, port_to);
+ 1258|      0|    kill_networking(temp);
+ 1259|       |
+ 1260|      0|    if (error != nullptr) {
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-  |  Branch (1259:9): [True: 0, False: 0]
+  |  Branch (1260:9): [True: 0, False: 0]
   ------------------
- 1260|      0|        *error = 1;
- 1261|      0|    }
- 1262|       |
- 1263|       |    return nullptr;
+ 1261|      0|        *error = 1;
+ 1262|      0|    }
+ 1263|       |
+ 1264|       |    return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 1264|     15|}
+ 1265|     15|}
 kill_networking:
- 1284|     15|{
- 1285|     15|    if (net == nullptr) {
+ 1285|     15|{
+ 1286|     15|    if (net == nullptr) {
   ------------------
   |  |   63|     15|#define nullptr NULL
   ------------------
-  |  Branch (1285:9): [True: 0, False: 15]
+  |  Branch (1286:9): [True: 0, False: 15]
   ------------------
- 1286|      0|        return;
- 1287|      0|    }
- 1288|       |
- 1289|     15|    if (!net_family_is_unspec(net->family)) {
+ 1287|      0|        return;
+ 1288|      0|    }
+ 1289|       |
+ 1290|     15|    if (!net_family_is_unspec(net->family)) {
   ------------------
-  |  Branch (1289:9): [True: 15, False: 0]
+  |  Branch (1290:9): [True: 15, False: 0]
   ------------------
- 1290|       |        /* Socket is initialized, so we close it. */
- 1291|     15|        kill_sock(net->ns, net->sock);
- 1292|     15|    }
- 1293|       |
- 1294|     15|    netprof_kill(net->mem, net->udp_net_profile);
- 1295|     15|    mem_delete(net->mem, net);
- 1296|     15|}
+ 1291|       |        /* Socket is initialized, so we close it. */
+ 1292|     15|        kill_sock(net->ns, net->sock);
+ 1293|     15|    }
+ 1294|       |
+ 1295|     15|    netprof_kill(net->mem, net->udp_net_profile);
+ 1296|     15|    mem_delete(net->mem, net);
+ 1297|     15|}
 ip_reset:
- 1409|     34|{
- 1410|     34|    if (ip == nullptr) {
+ 1410|     34|{
+ 1411|     34|    if (ip == nullptr) {
   ------------------
   |  |   63|     34|#define nullptr NULL
   ------------------
-  |  Branch (1410:9): [True: 0, False: 34]
+  |  Branch (1411:9): [True: 0, False: 34]
   ------------------
- 1411|      0|        return;
- 1412|      0|    }
- 1413|       |
- 1414|     34|    *ip = empty_ip;
- 1415|     34|}
+ 1412|      0|        return;
+ 1413|      0|    }
+ 1414|       |
+ 1415|     34|    *ip = empty_ip;
+ 1416|     34|}
 ip_init:
- 1431|     34|{
- 1432|     34|    if (ip == nullptr) {
+ 1432|     34|{
+ 1433|     34|    if (ip == nullptr) {
   ------------------
   |  |   63|     34|#define nullptr NULL
   ------------------
-  |  Branch (1432:9): [True: 0, False: 34]
+  |  Branch (1433:9): [True: 0, False: 34]
   ------------------
- 1433|      0|        return;
- 1434|      0|    }
- 1435|       |
- 1436|     34|    ip_reset(ip);
- 1437|     34|    ip->family = ipv6enabled ? net_family_ipv6() : net_family_ipv4();
+ 1434|      0|        return;
+ 1435|      0|    }
+ 1436|       |
+ 1437|     34|    ip_reset(ip);
+ 1438|     34|    ip->family = ipv6enabled ? net_family_ipv6() : net_family_ipv4();
   ------------------
-  |  Branch (1437:18): [True: 34, False: 0]
+  |  Branch (1438:18): [True: 34, False: 0]
   ------------------
- 1438|     34|}
+ 1439|     34|}
 ip_copy:
- 1466|     15|{
- 1467|     15|    if (source == nullptr || target == nullptr) {
+ 1467|     15|{
+ 1468|     15|    if (source == nullptr || target == nullptr) {
   ------------------
   |  |   63|     30|#define nullptr NULL
   ------------------
@@ -2233,45 +2233,45 @@ ip_copy:
   ------------------
   |  |   63|     15|#define nullptr NULL
   ------------------
-  |  Branch (1467:9): [True: 0, False: 15]
-  |  Branch (1467:30): [True: 0, False: 15]
+  |  Branch (1468:9): [True: 0, False: 15]
+  |  Branch (1468:30): [True: 0, False: 15]
   ------------------
- 1468|      0|        return;
- 1469|      0|    }
- 1470|       |
- 1471|     15|    *target = *source;
- 1472|     15|}
+ 1469|      0|        return;
+ 1470|      0|    }
+ 1471|       |
+ 1472|     15|    *target = *source;
+ 1473|     15|}
 net_socket:
- 1940|     15|{
- 1941|     15|    const int platform_domain = make_family(domain);
- 1942|     15|    const int platform_type = make_socktype(type);
- 1943|     15|    const int platform_prot = make_proto(protocol);
- 1944|     15|    return ns->funcs->socket(ns->obj, platform_domain, platform_type, platform_prot);
- 1945|     15|}
+ 1941|     15|{
+ 1942|     15|    const int platform_domain = make_family(domain);
+ 1943|     15|    const int platform_type = make_socktype(type);
+ 1944|     15|    const int platform_prot = make_proto(protocol);
+ 1945|     15|    return ns->funcs->socket(ns->obj, platform_domain, platform_type, platform_prot);
+ 1946|     15|}
 net_htons:
- 1959|     15|{
- 1960|       |    return htons(hostshort);
- 1961|     15|}
+ 1960|     15|{
+ 1961|       |    return htons(hostshort);
+ 1962|     15|}
 net_error:
- 2044|     15|{
- 2045|       |#ifdef OS_WIN32
- 2046|       |    return WSAGetLastError();
- 2047|       |#else
- 2048|       |    return errno;
- 2049|     15|#endif /* OS_WIN32 */
- 2050|     15|}
+ 2045|     15|{
+ 2046|       |#ifdef OS_WIN32
+ 2047|       |    return WSAGetLastError();
+ 2048|       |#else
+ 2049|       |    return errno;
+ 2050|     15|#endif /* OS_WIN32 */
+ 2051|     15|}
 network.c:net_setsockopt:
-  766|     60|{
-  767|     60|    return ns->funcs->setsockopt(ns->obj, sock, level, optname, optval, optlen);
-  768|     60|}
+  767|     60|{
+  768|     60|    return ns->funcs->setsockopt(ns->obj, sock, level, optname, optval, optlen);
+  769|     60|}
 network.c:net_getsockopt:
-  771|     15|{
-  772|     15|    return ns->funcs->getsockopt(ns->obj, sock, level, optname, optval, optlen);
-  773|     15|}
+  772|     15|{
+  773|     15|    return ns->funcs->getsockopt(ns->obj, sock, level, optname, optval, optlen);
+  774|     15|}
 network.c:net_bind:
-  812|     15|{
-  813|     15|    return ns->funcs->bind(ns->obj, sock, addr);
-  814|     15|}
+  813|     15|{
+  814|     15|    return ns->funcs->bind(ns->obj, sock, addr);
+  815|     15|}
 network.c:make_family:
   257|     15|{
   258|     15|    switch (tox_family.value) {

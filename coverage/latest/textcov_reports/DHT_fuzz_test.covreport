@@ -845,65 +845,65 @@ net_family_is_tcp_ipv6:
   458|     14|    return family.value == family_tcp_ipv6.value;
   459|     14|}
 ipport_reset:
- 1421|    103|{
- 1422|    103|    if (ipport == nullptr) {
+ 1422|    103|{
+ 1423|    103|    if (ipport == nullptr) {
   ------------------
   |  |   63|    103|#define nullptr NULL
   ------------------
-  |  Branch (1422:9): [True: 0, False: 103]
+  |  Branch (1423:9): [True: 0, False: 103]
   ------------------
- 1423|      0|        return;
- 1424|      0|    }
- 1425|       |
- 1426|    103|    *ipport = empty_ip_port;
- 1427|    103|}
+ 1424|      0|        return;
+ 1425|      0|    }
+ 1426|       |
+ 1427|    103|    *ipport = empty_ip_port;
+ 1428|    103|}
 bin_pack_ip_port:
- 1514|     76|{
- 1515|     76|    bool is_ipv4;
- 1516|     76|    uint8_t family;
- 1517|       |
- 1518|     76|    if (net_family_is_ipv4(ip_port->ip.family)) {
+ 1515|     76|{
+ 1516|     76|    bool is_ipv4;
+ 1517|     76|    uint8_t family;
+ 1518|       |
+ 1519|     76|    if (net_family_is_ipv4(ip_port->ip.family)) {
   ------------------
-  |  Branch (1518:9): [True: 28, False: 48]
+  |  Branch (1519:9): [True: 28, False: 48]
   ------------------
- 1519|       |        // TODO(irungentoo): use functions to convert endianness
- 1520|     28|        is_ipv4 = true;
- 1521|     28|        family = TOX_AF_INET;
+ 1520|       |        // TODO(irungentoo): use functions to convert endianness
+ 1521|     28|        is_ipv4 = true;
+ 1522|     28|        family = TOX_AF_INET;
   ------------------
   |  |  197|     28|#define TOX_AF_INET 2
   ------------------
- 1522|     48|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
+ 1523|     48|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
   ------------------
-  |  Branch (1522:16): [True: 18, False: 30]
+  |  Branch (1523:16): [True: 18, False: 30]
   ------------------
- 1523|     18|        is_ipv4 = true;
- 1524|     18|        family = TOX_TCP_INET;
+ 1524|     18|        is_ipv4 = true;
+ 1525|     18|        family = TOX_TCP_INET;
   ------------------
   |  |  199|     18|#define TOX_TCP_INET 130
   ------------------
- 1525|     30|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
+ 1526|     30|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
   ------------------
-  |  Branch (1525:16): [True: 16, False: 14]
+  |  Branch (1526:16): [True: 16, False: 14]
   ------------------
- 1526|     16|        is_ipv4 = false;
- 1527|     16|        family = TOX_AF_INET6;
+ 1527|     16|        is_ipv4 = false;
+ 1528|     16|        family = TOX_AF_INET6;
   ------------------
   |  |  198|     16|#define TOX_AF_INET6 10
   ------------------
- 1528|     16|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
+ 1529|     16|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
   ------------------
-  |  Branch (1528:16): [True: 14, False: 0]
+  |  Branch (1529:16): [True: 14, False: 0]
   ------------------
- 1529|     14|        is_ipv4 = false;
- 1530|     14|        family = TOX_TCP_INET6;
+ 1530|     14|        is_ipv4 = false;
+ 1531|     14|        family = TOX_TCP_INET6;
   ------------------
   |  |  200|     14|#define TOX_TCP_INET6 138
   ------------------
- 1531|     14|    } else {
- 1532|      0|        Ip_Ntoa ip_str;
- 1533|       |        // TODO(iphydf): Find out why we're trying to pack invalid IPs, stop
- 1534|       |        // doing that, and turn this into an error.
- 1535|      0|        LOGGER_TRACE(logger, "cannot pack invalid IP: %s", net_ip_ntoa(&ip_port->ip, &ip_str));
+ 1532|     14|    } else {
+ 1533|      0|        Ip_Ntoa ip_str;
+ 1534|       |        // TODO(iphydf): Find out why we're trying to pack invalid IPs, stop
+ 1535|       |        // doing that, and turn this into an error.
+ 1536|      0|        LOGGER_TRACE(logger, "cannot pack invalid IP: %s", net_ip_ntoa(&ip_port->ip, &ip_str));
   ------------------
   |  |   76|      0|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
   |  |  ------------------
@@ -922,160 +922,160 @@ bin_pack_ip_port:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1536|      0|        return false;
- 1537|      0|    }
- 1538|       |
- 1539|     76|    return bin_pack_u08_b(bp, family)
+ 1537|      0|        return false;
+ 1538|      0|    }
+ 1539|       |
+ 1540|     76|    return bin_pack_u08_b(bp, family)
   ------------------
-  |  Branch (1539:12): [True: 76, False: 0]
+  |  Branch (1540:12): [True: 76, False: 0]
   ------------------
- 1540|     76|           && bin_pack_ip(bp, &ip_port->ip, is_ipv4)
-  ------------------
-  |  Branch (1540:15): [True: 76, False: 0]
-  ------------------
- 1541|     76|           && bin_pack_u16_b(bp, net_ntohs(ip_port->port));
+ 1541|     76|           && bin_pack_ip(bp, &ip_port->ip, is_ipv4)
   ------------------
   |  Branch (1541:15): [True: 76, False: 0]
   ------------------
- 1542|     76|}
+ 1542|     76|           && bin_pack_u16_b(bp, net_ntohs(ip_port->port));
+  ------------------
+  |  Branch (1542:15): [True: 76, False: 0]
+  ------------------
+ 1543|     76|}
 unpack_ip_port:
- 1567|    116|{
- 1568|    116|    if (data == nullptr) {
+ 1568|    116|{
+ 1569|    116|    if (data == nullptr) {
   ------------------
   |  |   63|    116|#define nullptr NULL
   ------------------
-  |  Branch (1568:9): [True: 0, False: 116]
+  |  Branch (1569:9): [True: 0, False: 116]
   ------------------
- 1569|      0|        return -1;
- 1570|      0|    }
- 1571|       |
- 1572|    116|    bool is_ipv4;
- 1573|    116|    Family host_family;
- 1574|       |
- 1575|    116|    if (data[0] == TOX_AF_INET) {
+ 1570|      0|        return -1;
+ 1571|      0|    }
+ 1572|       |
+ 1573|    116|    bool is_ipv4;
+ 1574|    116|    Family host_family;
+ 1575|       |
+ 1576|    116|    if (data[0] == TOX_AF_INET) {
   ------------------
   |  |  197|    116|#define TOX_AF_INET 2
   ------------------
-  |  Branch (1575:9): [True: 33, False: 83]
+  |  Branch (1576:9): [True: 33, False: 83]
   ------------------
- 1576|     33|        is_ipv4 = true;
- 1577|     33|        host_family = net_family_ipv4();
- 1578|     83|    } else if (data[0] == TOX_TCP_INET) {
+ 1577|     33|        is_ipv4 = true;
+ 1578|     33|        host_family = net_family_ipv4();
+ 1579|     83|    } else if (data[0] == TOX_TCP_INET) {
   ------------------
   |  |  199|     83|#define TOX_TCP_INET 130
   ------------------
-  |  Branch (1578:16): [True: 30, False: 53]
+  |  Branch (1579:16): [True: 30, False: 53]
   ------------------
- 1579|     30|        if (!tcp_enabled) {
+ 1580|     30|        if (!tcp_enabled) {
   ------------------
-  |  Branch (1579:13): [True: 1, False: 29]
+  |  Branch (1580:13): [True: 1, False: 29]
   ------------------
- 1580|      1|            return -1;
- 1581|      1|        }
- 1582|       |
- 1583|     29|        is_ipv4 = true;
- 1584|     29|        host_family = net_family_tcp_ipv4();
- 1585|     53|    } else if (data[0] == TOX_AF_INET6) {
+ 1581|      1|            return -1;
+ 1582|      1|        }
+ 1583|       |
+ 1584|     29|        is_ipv4 = true;
+ 1585|     29|        host_family = net_family_tcp_ipv4();
+ 1586|     53|    } else if (data[0] == TOX_AF_INET6) {
   ------------------
   |  |  198|     53|#define TOX_AF_INET6 10
   ------------------
-  |  Branch (1585:16): [True: 23, False: 30]
+  |  Branch (1586:16): [True: 23, False: 30]
   ------------------
- 1586|     23|        is_ipv4 = false;
- 1587|     23|        host_family = net_family_ipv6();
- 1588|     30|    } else if (data[0] == TOX_TCP_INET6) {
+ 1587|     23|        is_ipv4 = false;
+ 1588|     23|        host_family = net_family_ipv6();
+ 1589|     30|    } else if (data[0] == TOX_TCP_INET6) {
   ------------------
   |  |  200|     30|#define TOX_TCP_INET6 138
   ------------------
-  |  Branch (1588:16): [True: 19, False: 11]
+  |  Branch (1589:16): [True: 19, False: 11]
   ------------------
- 1589|     19|        if (!tcp_enabled) {
+ 1590|     19|        if (!tcp_enabled) {
   ------------------
-  |  Branch (1589:13): [True: 1, False: 18]
+  |  Branch (1590:13): [True: 1, False: 18]
   ------------------
- 1590|      1|            return -1;
- 1591|      1|        }
- 1592|       |
- 1593|     18|        is_ipv4 = false;
- 1594|     18|        host_family = net_family_tcp_ipv6();
- 1595|     18|    } else {
- 1596|     11|        return -1;
- 1597|     11|    }
- 1598|       |
- 1599|    103|    ipport_reset(ip_port);
- 1600|       |
- 1601|    103|    if (is_ipv4) {
+ 1591|      1|            return -1;
+ 1592|      1|        }
+ 1593|       |
+ 1594|     18|        is_ipv4 = false;
+ 1595|     18|        host_family = net_family_tcp_ipv6();
+ 1596|     18|    } else {
+ 1597|     11|        return -1;
+ 1598|     11|    }
+ 1599|       |
+ 1600|    103|    ipport_reset(ip_port);
+ 1601|       |
+ 1602|    103|    if (is_ipv4) {
   ------------------
-  |  Branch (1601:9): [True: 62, False: 41]
+  |  Branch (1602:9): [True: 62, False: 41]
   ------------------
- 1602|     62|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+ 1603|     62|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
   ------------------
   |  |   31|     62|#define SIZE_IP4 4
   ------------------
- 1603|       |
- 1604|     62|        if (size > length) {
+ 1604|       |
+ 1605|     62|        if (size > length) {
   ------------------
-  |  Branch (1604:13): [True: 4, False: 58]
+  |  Branch (1605:13): [True: 4, False: 58]
   ------------------
- 1605|      4|            return -1;
- 1606|      4|        }
- 1607|       |
- 1608|     58|        ip_port->ip.family = host_family;
- 1609|     58|        memcpy(ip_port->ip.ip.v4.uint8, data + 1, SIZE_IP4);
-  ------------------
-  |  |   31|     58|#define SIZE_IP4 4
-  ------------------
- 1610|     58|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
+ 1606|      4|            return -1;
+ 1607|      4|        }
+ 1608|       |
+ 1609|     58|        ip_port->ip.family = host_family;
+ 1610|     58|        memcpy(ip_port->ip.ip.v4.uint8, data + 1, SIZE_IP4);
   ------------------
   |  |   31|     58|#define SIZE_IP4 4
   ------------------
- 1611|     58|        return size;
- 1612|     62|    } else {
- 1613|     41|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
+ 1611|     58|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
+  ------------------
+  |  |   31|     58|#define SIZE_IP4 4
+  ------------------
+ 1612|     58|        return size;
+ 1613|     62|    } else {
+ 1614|     41|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
   ------------------
   |  |   32|     41|#define SIZE_IP6 16
   ------------------
- 1614|       |
- 1615|     41|        if (size > length) {
+ 1615|       |
+ 1616|     41|        if (size > length) {
   ------------------
-  |  Branch (1615:13): [True: 3, False: 38]
+  |  Branch (1616:13): [True: 3, False: 38]
   ------------------
- 1616|      3|            return -1;
- 1617|      3|        }
- 1618|       |
- 1619|     38|        ip_port->ip.family = host_family;
- 1620|     38|        memcpy(ip_port->ip.ip.v6.uint8, data + 1, SIZE_IP6);
-  ------------------
-  |  |   32|     38|#define SIZE_IP6 16
-  ------------------
- 1621|     38|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
+ 1617|      3|            return -1;
+ 1618|      3|        }
+ 1619|       |
+ 1620|     38|        ip_port->ip.family = host_family;
+ 1621|     38|        memcpy(ip_port->ip.ip.v6.uint8, data + 1, SIZE_IP6);
   ------------------
   |  |   32|     38|#define SIZE_IP6 16
   ------------------
- 1622|     38|        return size;
- 1623|     41|    }
- 1624|    103|}
+ 1622|     38|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
+  ------------------
+  |  |   32|     38|#define SIZE_IP6 16
+  ------------------
+ 1623|     38|        return size;
+ 1624|     41|    }
+ 1625|    103|}
 net_ntohs:
- 1969|     76|{
- 1970|       |    return ntohs(hostshort);
- 1971|     76|}
+ 1970|     76|{
+ 1971|       |    return ntohs(hostshort);
+ 1972|     76|}
 network.c:bin_pack_ip:
- 1501|     76|{
- 1502|     76|    if (is_ipv4) {
+ 1502|     76|{
+ 1503|     76|    if (is_ipv4) {
   ------------------
-  |  Branch (1502:9): [True: 46, False: 30]
+  |  Branch (1503:9): [True: 46, False: 30]
   ------------------
- 1503|     46|        return bin_pack_bin_b(bp, ip->ip.v4.uint8, SIZE_IP4);
+ 1504|     46|        return bin_pack_bin_b(bp, ip->ip.v4.uint8, SIZE_IP4);
   ------------------
   |  |   31|     46|#define SIZE_IP4 4
   ------------------
- 1504|     46|    } else {
- 1505|     30|        return bin_pack_bin_b(bp, ip->ip.v6.uint8, SIZE_IP6);
+ 1505|     46|    } else {
+ 1506|     30|        return bin_pack_bin_b(bp, ip->ip.v6.uint8, SIZE_IP6);
   ------------------
   |  |   32|     30|#define SIZE_IP6 16
   ------------------
- 1506|     30|    }
- 1507|     76|}
+ 1507|     30|    }
+ 1508|     76|}
 
 os_memory:
    38|     23|{
