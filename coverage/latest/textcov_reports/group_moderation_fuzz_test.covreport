@@ -1,225 +1,316 @@
-_ZNK9Fuzz_Data4sizeEv:
-   69|    148|    std::size_t size() const { return size_; }
-_ZN9Fuzz_Data8consume1EPKc:
-   68|     93|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
-_ZN9Fuzz_Data8ConsumercvT_ItEEv:
-   60|     37|        {
-   61|     37|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|     37|            T val;
-   63|     37|            std::memcpy(&val, bytes, sizeof(T));
-   64|     37|            return val;
-   65|     37|        }
-_ZN9Fuzz_Data7consumeEPKcm:
-   75|     94|    {
-   76|     94|        const uint8_t *val = data_;
-   77|     94|        if (FUZZ_DEBUG) {
+_ZN3tox4test15NetworkUniverseC2Ev:
+    9|     53|NetworkUniverse::NetworkUniverse() { }
+_ZN3tox4test15NetworkUniverseD2Ev:
+   10|     53|NetworkUniverse::~NetworkUniverse() { }
+
+_ZNK3tox4test9Fuzz_Data4sizeEv:
+   61|    321|    std::size_t size() const { return size_; }
+_ZN3tox4test9Fuzz_Data8consume1EPKc:
+   60|    125|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+_ZN3tox4test9Fuzz_Data8ConsumercvT_ItEEv:
+   50|     53|        {
+   51|     53|            if (sizeof(T) > fd.size())
   ------------------
-  |  Branch (77:13): [Folded, False: 94]
+  |  Branch (51:17): [True: 0, False: 53]
   ------------------
-   78|      0|            if (pos() == TRACE_TRAP) {
+   52|      0|                return T{};
+   53|     53|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   54|     53|            T val;
+   55|     53|            std::memcpy(&val, bytes, sizeof(T));
+   56|     53|            return val;
+   57|     53|        }
+_ZN3tox4test9Fuzz_Data7consumeEPKcm:
+   67|    126|    {
+   68|    126|        if (count > size_)
   ------------------
-  |  Branch (78:17): [True: 0, False: 0]
+  |  Branch (68:13): [True: 0, False: 126]
   ------------------
-   79|      0|                __asm__("int $3");
-   80|      0|            }
-   81|      0|            if (count == 1) {
+   69|      0|            return nullptr;
+   70|    126|        const uint8_t *val = data_;
+   71|    126|        if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (81:17): [True: 0, False: 0]
+  |  Branch (71:13): [Folded, False: 126]
   ------------------
-   82|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
-   83|      0|            } else if (count != 0) {
+   72|      0|            if (count == 1) {
   ------------------
-  |  Branch (83:24): [True: 0, False: 0]
+  |  Branch (72:17): [True: 0, False: 0]
   ------------------
-   84|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
-   85|      0|                    val[count - 1], count);
-   86|      0|            }
-   87|      0|        }
-   88|     94|        data_ += count;
-   89|     94|        size_ -= count;
-   90|     94|        return val;
-   91|     94|    }
-_ZNK9Fuzz_Data4dataEv:
-   71|     52|    const uint8_t *data() const { return data_; }
-group_moderation_fuzz_test.cc:_Z18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionsListUnpackES2_EEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEEvPKhm:
-  183|     56|{
-  184|     56|    Fuzz_Data input{data, size};
-  185|       |
-  186|     56|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+   73|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
+   74|      0|            } else if (count != 0) {
   ------------------
-  |  |  105|     56|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  Branch (74:24): [True: 0, False: 0]
+  ------------------
+   75|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
+   76|      0|                    val[count - 1], count);
+   77|      0|            }
+   78|      0|        }
+   79|    126|        data_ += count;
+   80|    126|        size_ -= count;
+   81|    126|        return val;
+   82|    126|    }
+_ZNK3tox4test9Fuzz_Data4dataEv:
+   63|     68|    const uint8_t *data() const { return data_; }
+group_moderation_fuzz_test.cc:_ZN3tox4test18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_117TestModListUnpackERNS0_9Fuzz_DataEEEXadL_ZNS2_23TestSanctionsListUnpackES4_EEXadL_ZNS2_23TestSanctionCredsUnpackES4_EEEEEvPKhm:
+  136|     72|{
+  137|     72|    Fuzz_Data input{data, size};
+  138|       |
+  139|     72|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  ------------------
+  |  |   86|     72|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 0, False: 56]
+  |  |  |  Branch (86:9): [True: 0, False: 72]
   |  |  ------------------
-  |  |  106|      0|        return;                               \
-  |  |  107|      0|    }                                         \
-  |  |  108|     56|    TYPE NAME = INPUT.consume1(__func__)
+  |  |   87|      0|        return;                               \
+  |  |   88|      0|    }                                         \
+  |  |   89|     72|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-  187|     56|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  188|     56|}
-_ZN9Fuzz_DataC2EPKhm:
-   32|     56|        : data_(input_data)
-   33|     56|        , base_(input_data)
-   34|     56|        , size_(input_size)
-   35|     56|    {
-   36|     56|    }
-_ZN9Fuzz_Data8ConsumercvT_IhEEv:
-   60|     56|        {
-   61|     56|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|     56|            T val;
-   63|     56|            std::memcpy(&val, bytes, sizeof(T));
-   64|     56|            return val;
-   65|     56|        }
-group_moderation_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionsListUnpackES2_EEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEE6selectEhS2_:
-  164|     56|    {
-  165|     56|        if (selector == sizeof...(Args)) {
+  140|     72|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  141|     72|}
+_ZN3tox4test9Fuzz_DataC2EPKhm:
+   22|     72|        : data_(input_data)
+   23|     72|        , base_(input_data)
+   24|     72|        , size_(input_size)
+   25|     72|    {
+   26|     72|    }
+_ZN3tox4test9Fuzz_Data8ConsumercvT_IhEEv:
+   50|     72|        {
+   51|     72|            if (sizeof(T) > fd.size())
   ------------------
-  |  Branch (165:13): [True: 38, False: 18]
+  |  Branch (51:17): [True: 0, False: 72]
   ------------------
-  166|     38|            return Arg(input);
-  167|     38|        }
-  168|     18|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|     56|    }
-group_moderation_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_123TestSanctionsListUnpackER9Fuzz_DataEEXadL_ZNS0_23TestSanctionCredsUnpackES2_EEEE6selectEhS2_:
-  164|     18|    {
-  165|     18|        if (selector == sizeof...(Args)) {
+   52|      0|                return T{};
+   53|     72|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   54|     72|            T val;
+   55|     72|            std::memcpy(&val, bytes, sizeof(T));
+   56|     72|            return val;
+   57|     72|        }
+group_moderation_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_117TestModListUnpackERNS0_9Fuzz_DataEEEXadL_ZNS2_23TestSanctionsListUnpackES4_EEXadL_ZNS2_23TestSanctionCredsUnpackES4_EEEE6selectEhS4_:
+  117|     72|    {
+  118|     72|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (165:13): [True: 15, False: 3]
+  |  Branch (118:13): [True: 54, False: 18]
   ------------------
-  166|     15|            return Arg(input);
-  167|     15|        }
-  168|      3|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|     18|    }
-group_moderation_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_123TestSanctionCredsUnpackER9Fuzz_DataEEEE6selectEhS2_:
-  164|      3|    {
-  165|      3|        if (selector == sizeof...(Args)) {
+  119|     54|            return Arg(input);
+  120|     54|        }
+  121|     18|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  122|     72|    }
+group_moderation_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_123TestSanctionsListUnpackERNS0_9Fuzz_DataEEEXadL_ZNS2_23TestSanctionCredsUnpackES4_EEEE6selectEhS4_:
+  117|     18|    {
+  118|     18|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (165:13): [True: 2, False: 1]
+  |  Branch (118:13): [True: 15, False: 3]
   ------------------
-  166|      2|            return Arg(input);
-  167|      2|        }
-  168|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|      3|    }
-_ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
-  175|      1|    {
-  176|       |        // The selector selected no function, so we do nothing and rely on the
-  177|       |        // fuzzer to come up with a better selector.
-  178|      1|    }
+  119|     15|            return Arg(input);
+  120|     15|        }
+  121|      3|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  122|     18|    }
+group_moderation_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_123TestSanctionCredsUnpackERNS0_9Fuzz_DataEEEEE6selectEhS4_:
+  117|      3|    {
+  118|      3|        if (selector == sizeof...(Args)) {
+  ------------------
+  |  Branch (118:13): [True: 2, False: 1]
+  ------------------
+  119|      2|            return Arg(input);
+  120|      2|        }
+  121|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  122|      3|    }
+_ZN3tox4test20Fuzz_Target_SelectorIJEE6selectEhRNS0_9Fuzz_DataE:
+  128|      1|    {
+  129|       |        // The selector selected no function, so we do nothing and rely on the
+  130|       |        // fuzzer to come up with a better selector.
+  131|      1|    }
+
+_ZN3tox4test11ClockSystemD2Ev:
+    5|     53|ClockSystem::~ClockSystem() = default;
+
+_ZN3tox4test11EnvironmentD2Ev:
+    5|     53|Environment::~Environment() = default;
+
+_ZN3tox4test9FakeClockC2Em:
+    6|     53|    : now_ms_(start_time_ms)
+    7|     53|{
+    8|     53|}
+
+_ZN3tox4test10FakeMemoryC2Ev:
+   23|     53|FakeMemory::FakeMemory() = default;
+_ZN3tox4test10FakeMemoryD2Ev:
+   24|     53|FakeMemory::~FakeMemory() = default;
+_ZN3tox4test10FakeMemory6mallocEm:
+   27|  3.17k|{
+   28|  3.17k|    bool fail = failure_injector_ && failure_injector_(size);
+  ------------------
+  |  Branch (28:17): [True: 0, False: 3.17k]
+  |  Branch (28:38): [True: 0, False: 0]
+  ------------------
+   29|       |
+   30|  3.17k|    if (observer_) {
+  ------------------
+  |  Branch (30:9): [True: 0, False: 3.17k]
+  ------------------
+   31|      0|        observer_(!fail);
+   32|      0|    }
+   33|       |
+   34|  3.17k|    if (fail) {
+  ------------------
+  |  Branch (34:9): [True: 0, False: 3.17k]
+  ------------------
+   35|      0|        return nullptr;
+   36|      0|    }
+   37|  3.17k|    return std::malloc(size);
+   38|  3.17k|}
+_ZN3tox4test10FakeMemory4freeEPv:
+   55|  3.17k|void FakeMemory::free(void *ptr) { std::free(ptr); }
+_ZN3tox4test10FakeMemory12get_c_memoryEv:
+   64|     53|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+fake_memory.cc:_ZNK3tox4test3$_0clEPvj:
+   14|  3.17k|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
+fake_memory.cc:_ZNK3tox4test3$_2clEPvS2_:
+   18|  3.17k|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
+
+_ZN3tox4test10FakeRandomC2Em:
+   21|     53|    : rng_(seed)
+   22|     53|{
+   23|     53|}
+
+_ZN3tox4test12MemorySystemD2Ev:
+    5|     53|MemorySystem::~MemorySystem() = default;
+
+_ZN3tox4test12RandomSystemD2Ev:
+    5|     53|RandomSystem::~RandomSystem() = default;
+
+_ZN3tox4test20SimulatedEnvironmentC2Ev:
+    8|     53|    : sim_(std::make_unique<Simulation>())
+    9|     53|    , global_random_(std::make_unique<FakeRandom>(12345))
+   10|     53|    , global_memory_(std::make_unique<FakeMemory>())
+   11|     53|{
+   12|     53|}
+_ZN3tox4test20SimulatedEnvironmentD2Ev:
+   14|     53|SimulatedEnvironment::~SimulatedEnvironment() = default;
+_ZN3tox4test20SimulatedEnvironment11fake_memoryEv:
+   32|     53|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
+
+_ZN3tox4test10SimulationC2Ev:
+   10|     53|    : clock_(std::make_unique<FakeClock>())
+   11|     53|    , net_(std::make_unique<NetworkUniverse>())
+   12|     53|{
+   13|     53|}
+_ZN3tox4test10SimulationD2Ev:
+   15|     53|Simulation::~Simulation() = default;
 
 mod_list_unpack:
-   69|     37|{
-   70|     37|    if (length < num_mods * MOD_LIST_ENTRY_SIZE) {
+   69|     53|{
+   70|     53|    if (length < num_mods * MOD_LIST_ENTRY_SIZE) {
   ------------------
-  |  |   27|     37|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|     53|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   95|     37|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |   95|     53|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   34|     37|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   34|     53|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  |  Branch (70:9): [True: 1, False: 36]
+  |  Branch (70:9): [True: 1, False: 52]
   ------------------
    71|      1|        return -1;
    72|      1|    }
    73|       |
-   74|     36|    mod_list_cleanup(moderation);
+   74|     52|    mod_list_cleanup(moderation);
    75|       |
-   76|     36|    if (num_mods == 0) {
+   76|     52|    if (num_mods == 0) {
   ------------------
-  |  Branch (76:9): [True: 1, False: 35]
+  |  Branch (76:9): [True: 1, False: 51]
   ------------------
    77|      1|        return 0;
    78|      1|    }
    79|       |
-   80|     35|    uint8_t **tmp_list = (uint8_t **)mem_valloc(moderation->mem, num_mods, sizeof(uint8_t *));
+   80|     51|    uint8_t **tmp_list = (uint8_t **)mem_valloc(moderation->mem, num_mods, sizeof(uint8_t *));
    81|       |
-   82|     35|    if (tmp_list == nullptr) {
+   82|     51|    if (tmp_list == nullptr) {
   ------------------
-  |  |   63|     35|#define nullptr NULL
+  |  |   63|     51|#define nullptr NULL
   ------------------
-  |  Branch (82:9): [True: 0, False: 35]
+  |  Branch (82:9): [True: 0, False: 51]
   ------------------
    83|      0|        return -1;
    84|      0|    }
    85|       |
-   86|     35|    uint16_t unpacked_len = 0;
+   86|     51|    uint16_t unpacked_len = 0;
    87|       |
-   88|  2.00k|    for (uint16_t i = 0; i < num_mods; ++i) {
+   88|  3.17k|    for (uint16_t i = 0; i < num_mods; ++i) {
   ------------------
-  |  Branch (88:26): [True: 1.96k, False: 35]
+  |  Branch (88:26): [True: 3.12k, False: 51]
   ------------------
-   89|  1.96k|        uint8_t *entry = (uint8_t *)mem_balloc(moderation->mem, MOD_LIST_ENTRY_SIZE);
+   89|  3.12k|        uint8_t *entry = (uint8_t *)mem_balloc(moderation->mem, MOD_LIST_ENTRY_SIZE);
   ------------------
-  |  |   27|  1.96k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|  3.12k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   95|  1.96k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |   95|  3.12k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   34|  1.96k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   34|  3.12k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
    90|       |
-   91|  1.96k|        if (entry == nullptr) {
+   91|  3.12k|        if (entry == nullptr) {
   ------------------
-  |  |   63|  1.96k|#define nullptr NULL
+  |  |   63|  3.12k|#define nullptr NULL
   ------------------
-  |  Branch (91:13): [True: 0, False: 1.96k]
+  |  Branch (91:13): [True: 0, False: 3.12k]
   ------------------
    92|      0|            free_uint8_t_pointer_array(moderation->mem, tmp_list, i);
    93|      0|            return -1;
    94|      0|        }
    95|       |
-   96|  1.96k|        memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
+   96|  3.12k|        memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
   ------------------
-  |  |   27|  1.96k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|  3.12k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   95|  1.96k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |   95|  3.12k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   34|  1.96k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   34|  3.12k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
                       memcpy(entry, &data[i * MOD_LIST_ENTRY_SIZE], MOD_LIST_ENTRY_SIZE);
   ------------------
-  |  |   27|  1.96k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|  3.12k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   95|  1.96k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |   95|  3.12k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   34|  1.96k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   34|  3.12k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-   97|  1.96k|        tmp_list[i] = entry;
+   97|  3.12k|        tmp_list[i] = entry;
    98|       |
-   99|  1.96k|        unpacked_len += MOD_LIST_ENTRY_SIZE;
+   99|  3.12k|        unpacked_len += MOD_LIST_ENTRY_SIZE;
   ------------------
-  |  |   27|  1.96k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
+  |  |   27|  3.12k|#define MOD_LIST_ENTRY_SIZE SIG_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   95|  1.96k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |  |  |   95|  3.12k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  |  |  ------------------
-  |  |  |  |  |  |   34|  1.96k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |  |  |   34|  3.12k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  100|  1.96k|    }
+  100|  3.12k|    }
   101|       |
-  102|     35|    moderation->mod_list = tmp_list;
-  103|     35|    moderation->num_mods = num_mods;
+  102|     51|    moderation->mod_list = tmp_list;
+  103|     51|    moderation->num_mods = num_mods;
   104|       |
-  105|     35|    qsort(moderation->mod_list, moderation->num_mods, sizeof(uint8_t *), compare_mod_pointers);
+  105|     51|    qsort(moderation->mod_list, moderation->num_mods, sizeof(uint8_t *), compare_mod_pointers);
   106|       |
-  107|     35|    return unpacked_len;
-  108|     35|}
+  107|     51|    return unpacked_len;
+  108|     51|}
 mod_list_cleanup:
-  262|     73|{
-  263|     73|    free_uint8_t_pointer_array(moderation->mem, moderation->mod_list, moderation->num_mods);
-  264|     73|    moderation->num_mods = 0;
+  262|    105|{
+  263|    105|    free_uint8_t_pointer_array(moderation->mem, moderation->mod_list, moderation->num_mods);
+  264|    105|    moderation->num_mods = 0;
   265|       |    moderation->mod_list = nullptr;
   ------------------
-  |  |   63|     73|#define nullptr NULL
+  |  |   63|    105|#define nullptr NULL
   ------------------
-  266|     73|}
+  266|    105|}
 sanctions_creds_unpack:
   351|      2|{
   352|      2|    uint16_t len_processed = 0;
@@ -535,77 +626,78 @@ sanctions_list_unpack:
   429|      1|    return num;
   430|      1|}
 group_moderation.c:compare_mod_pointers:
-   45|  9.71k|{
-   46|  9.71k|    const uint8_t *const *mod_a = (const uint8_t *const *)a;
-   47|  9.71k|    const uint8_t *const *mod_b = (const uint8_t *const *)b;
-   48|  9.71k|    return memcmp(*mod_a, *mod_b, SIG_PUBLIC_KEY_SIZE);
+   45|  15.3k|{
+   46|  15.3k|    const uint8_t *const *mod_a = (const uint8_t *const *)a;
+   47|  15.3k|    const uint8_t *const *mod_b = (const uint8_t *const *)b;
+   48|  15.3k|    return memcmp(*mod_a, *mod_b, SIG_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   95|  9.71k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
+  |  |   95|  15.3k|#define SIG_PUBLIC_KEY_SIZE            CRYPTO_SIGN_PUBLIC_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   34|  9.71k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
+  |  |  |  |   34|  15.3k|#define CRYPTO_SIGN_PUBLIC_KEY_SIZE    32
   |  |  ------------------
   ------------------
-   49|  9.71k|}
+   49|  15.3k|}
 
 LLVMFuzzerTestOneInput:
-   36|     56|{
-   37|     56|    fuzz_select_target<TestModListUnpack, TestSanctionsListUnpack, TestSanctionCredsUnpack>(
-   38|     56|        data, size);
-   39|     56|    return 0;
-   40|     56|}
-group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_117TestModListUnpackER9Fuzz_Data:
-    9|     38|{
-   10|     38|    CONSUME1_OR_RETURN(const uint16_t, num_mods, input);
+   40|     72|{
+   41|     72|    tox::test::fuzz_select_target<TestModListUnpack, TestSanctionsListUnpack,
+   42|     72|        TestSanctionCredsUnpack>(data, size);
+   43|     72|    return 0;
+   44|     72|}
+group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_117TestModListUnpackERN3tox4test9Fuzz_DataE:
+   12|     54|{
+   13|     54|    CONSUME1_OR_RETURN(const uint16_t, num_mods, input);
   ------------------
-  |  |  105|     38|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |   86|     54|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 37]
+  |  |  |  Branch (86:9): [True: 1, False: 53]
   |  |  ------------------
-  |  |  106|      1|        return;                               \
-  |  |  107|      1|    }                                         \
-  |  |  108|     38|    TYPE NAME = INPUT.consume1(__func__)
+  |  |   87|      1|        return;                               \
+  |  |   88|      1|    }                                         \
+  |  |   89|     54|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-   11|     37|    Test_Memory mem;
-   12|     37|    Moderation mods{mem};
-   13|     37|    mod_list_unpack(&mods, input.data(), input.size(), num_mods);
-   14|     37|    mod_list_cleanup(&mods);
-   15|     37|}
-group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionsListUnpackER9Fuzz_Data:
-   18|     15|{
-   19|     15|    Mod_Sanction sanctions[10];
-   20|     15|    Mod_Sanction_Creds creds;
-   21|     15|    uint16_t processed_data_len;
-   22|     15|    sanctions_list_unpack(sanctions, &creds, 10, input.data(), input.size(), &processed_data_len);
-   23|     15|}
-group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionCredsUnpackER9Fuzz_Data:
-   26|      2|{
-   27|      2|    CONSUME_OR_RETURN(const uint8_t *data, input, MOD_SANCTIONS_CREDS_SIZE);
+   14|     53|    SimulatedEnvironment env;
+   15|     53|    auto c_mem = env.fake_memory().get_c_memory();
+   16|     53|    Moderation mods{&c_mem};
+   17|     53|    mod_list_unpack(&mods, input.data(), input.size(), num_mods);
+   18|     53|    mod_list_cleanup(&mods);
+   19|     53|}
+group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionsListUnpackERN3tox4test9Fuzz_DataE:
+   22|     15|{
+   23|     15|    Mod_Sanction sanctions[10];
+   24|     15|    Mod_Sanction_Creds creds;
+   25|     15|    uint16_t processed_data_len;
+   26|     15|    sanctions_list_unpack(sanctions, &creds, 10, input.data(), input.size(), &processed_data_len);
+   27|     15|}
+group_moderation_fuzz_test.cc:_ZN12_GLOBAL__N_123TestSanctionCredsUnpackERN3tox4test9Fuzz_DataE:
+   30|      2|{
+   31|      2|    CONSUME_OR_RETURN(const uint8_t *data, input, MOD_SANCTIONS_CREDS_SIZE);
   ------------------
-  |  |  139|      2|    if (INPUT.size() < SIZE) {               \
+  |  |   98|      2|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (139:9): [True: 1, False: 1]
+  |  |  |  Branch (98:9): [True: 1, False: 1]
   |  |  ------------------
-  |  |  140|      1|        return;                              \
-  |  |  141|      1|    }                                        \
-  |  |  142|      2|    DECL = INPUT.consume(__func__, SIZE)
+  |  |   99|      1|        return;                              \
+  |  |  100|      1|    }                                        \
+  |  |  101|      2|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   28|      1|    Mod_Sanction_Creds creds;
-   29|      1|    sanctions_creds_unpack(&creds, data);
-   30|      1|}
+   32|      1|    Mod_Sanction_Creds creds;
+   33|      1|    sanctions_creds_unpack(&creds, data);
+   34|      1|}
 
 mem_balloc:
-   14|  1.96k|{
-   15|  1.96k|    void *const ptr = tox_memory_malloc(mem, size);
-   16|  1.96k|    return ptr;
-   17|  1.96k|}
+   14|  3.12k|{
+   15|  3.12k|    void *const ptr = tox_memory_malloc(mem, size);
+   16|  3.12k|    return ptr;
+   17|  3.12k|}
 mem_valloc:
-   35|     35|{
-   36|     35|    const uint32_t bytes = nmemb * size;
+   35|     51|{
+   36|     51|    const uint32_t bytes = nmemb * size;
    37|       |
-   38|     35|    if (size != 0 && bytes / size != nmemb) {
+   38|     51|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (38:9): [True: 35, False: 0]
-  |  Branch (38:22): [True: 0, False: 35]
+  |  Branch (38:9): [True: 51, False: 0]
+  |  Branch (38:22): [True: 0, False: 51]
   ------------------
    39|      0|        return nullptr;
   ------------------
@@ -613,39 +705,21 @@ mem_valloc:
   ------------------
    40|      0|    }
    41|       |
-   42|     35|    void *const ptr = tox_memory_malloc(mem, bytes);
-   43|     35|    if (ptr != nullptr) {
+   42|     51|    void *const ptr = tox_memory_malloc(mem, bytes);
+   43|     51|    if (ptr != nullptr) {
   ------------------
-  |  |   63|     35|#define nullptr NULL
+  |  |   63|     51|#define nullptr NULL
   ------------------
-  |  Branch (43:9): [True: 35, False: 0]
+  |  Branch (43:9): [True: 51, False: 0]
   ------------------
-   44|     35|        memset(ptr, 0, bytes);
-   45|     35|    }
-   46|     35|    return ptr;
-   47|     35|}
+   44|     51|        memset(ptr, 0, bytes);
+   45|     51|    }
+   46|     51|    return ptr;
+   47|     51|}
 mem_delete:
-   62|  2.00k|{
-   63|  2.00k|    tox_memory_dealloc(mem, ptr);
-   64|  2.00k|}
-
-_ZN12Memory_ClassD2Ev:
-   14|     37|Memory_Class::~Memory_Class() = default;
-_ZN11Test_Memory6mallocEPvj:
-   17|  2.00k|{
-   18|  2.00k|    return mem->funcs->malloc_callback(mem->user_data, size);
-   19|  2.00k|}
-_ZN11Test_Memory7deallocEPvS0_:
-   27|  2.00k|{
-   28|  2.00k|    return mem->funcs->dealloc_callback(mem->user_data, ptr);
-   29|  2.00k|}
-
-_ZN12Memory_ClassC2Ev:
-   17|     37|        : self{&vtable, this}
-   18|     37|    {
-   19|     37|    }
-_ZNK12Memory_ClasscvPK10Tox_MemoryEv:
-   13|     37|    operator Tox_Memory const *() const { return &self; }
+   62|  3.17k|{
+   63|  3.17k|    tox_memory_dealloc(mem, ptr);
+   64|  3.17k|}
 
 net_unpack_u16:
  2010|    230|{
@@ -675,76 +749,41 @@ net_unpack_u64:
  2036|     56|    return p - bytes;
  2037|     56|}
 
-os_memory:
-   38|     37|{
-   39|     37|    return &os_memory_obj;
-   40|     37|}
-os_memory.c:os_malloc:
-   13|  2.00k|{
-   14|       |    // cppcheck-suppress misra-c2012-21.3
-   15|  2.00k|    return malloc(size);
-   16|  2.00k|}
-os_memory.c:os_dealloc:
-   25|  2.00k|{
-   26|       |    // cppcheck-suppress misra-c2012-21.3
-   27|  2.00k|    free(ptr);
-   28|  2.00k|}
-
-_Z16require_not_nullIK10Tox_MemoryEPT_PKciS3_:
-   73|     37|{
-   74|     37|    if (ptr == nullptr) {
-  ------------------
-  |  Branch (74:9): [True: 0, False: 37]
-  ------------------
-   75|      0|        std::fprintf(stderr, "unexpected null pointer at %s:%d\n", file, line);
-   76|      0|        std::exit(7);
-   77|      0|    }
-   78|     37|    return ptr;
-   79|     37|}
-_ZN6MethodIFPvS0_jE12Memory_ClassE6invokeIXadL_ZNS2_6mallocES0_jEEEES0_S0_j:
-   31|  2.00k|    {
-   32|  2.00k|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|  2.00k|    }
-_ZN6MethodIFvPvS0_E12Memory_ClassE6invokeIXadL_ZNS2_7deallocES0_S0_EEEEvS0_S0_:
-   31|  2.00k|    {
-   32|  2.00k|        return (static_cast<Class *>(self)->*M)(self, args...);
-   33|  2.00k|    }
-
 tox_memory_malloc:
-   37|  2.00k|{
-   38|  2.00k|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
-   39|  2.00k|    return ptr;
-   40|  2.00k|}
+   37|  3.17k|{
+   38|  3.17k|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
+   39|  3.17k|    return ptr;
+   40|  3.17k|}
 tox_memory_dealloc:
-   58|  2.00k|{
-   59|  2.00k|    mem->funcs->dealloc_callback(mem->user_data, ptr);
-   60|  2.00k|}
+   58|  3.17k|{
+   59|  3.17k|    mem->funcs->dealloc_callback(mem->user_data, ptr);
+   60|  3.17k|}
 
 free_uint8_t_pointer_array:
-   27|     73|{
-   28|     73|    if (ary == nullptr) {
+   27|    105|{
+   28|    105|    if (ary == nullptr) {
   ------------------
-  |  |   63|     73|#define nullptr NULL
+  |  |   63|    105|#define nullptr NULL
   ------------------
-  |  Branch (28:9): [True: 38, False: 35]
+  |  Branch (28:9): [True: 54, False: 51]
   ------------------
-   29|     38|        return;
-   30|     38|    }
+   29|     54|        return;
+   30|     54|    }
    31|       |
-   32|  2.00k|    for (size_t i = 0; i < n_items; ++i) {
+   32|  3.17k|    for (size_t i = 0; i < n_items; ++i) {
   ------------------
-  |  Branch (32:24): [True: 1.96k, False: 35]
+  |  Branch (32:24): [True: 3.12k, False: 51]
   ------------------
-   33|  1.96k|        if (ary[i] != nullptr) {
+   33|  3.12k|        if (ary[i] != nullptr) {
   ------------------
-  |  |   63|  1.96k|#define nullptr NULL
+  |  |   63|  3.12k|#define nullptr NULL
   ------------------
-  |  Branch (33:13): [True: 1.96k, False: 0]
+  |  Branch (33:13): [True: 3.12k, False: 0]
   ------------------
-   34|  1.96k|            mem_delete(mem, ary[i]);
-   35|  1.96k|        }
-   36|  1.96k|    }
+   34|  3.12k|            mem_delete(mem, ary[i]);
+   35|  3.12k|        }
+   36|  3.12k|    }
    37|       |
-   38|     35|    mem_delete(mem, ary);
-   39|     35|}
+   38|     51|    mem_delete(mem, ary);
+   39|     51|}
 

@@ -1,111 +1,202 @@
-_ZNK9Fuzz_Data4sizeEv:
-   69|    123|    std::size_t size() const { return size_; }
-_ZN9Fuzz_Data7consumeEPKcm:
-   75|     50|    {
-   76|     50|        const uint8_t *val = data_;
-   77|     50|        if (FUZZ_DEBUG) {
+_ZN3tox4test15NetworkUniverseC2Ev:
+    9|     23|NetworkUniverse::NetworkUniverse() { }
+_ZN3tox4test15NetworkUniverseD2Ev:
+   10|     23|NetworkUniverse::~NetworkUniverse() { }
+
+_ZNK3tox4test9Fuzz_Data4sizeEv:
+   61|    164|    std::size_t size() const { return size_; }
+_ZN3tox4test9Fuzz_Data7consumeEPKcm:
+   67|     50|    {
+   68|     50|        if (count > size_)
   ------------------
-  |  Branch (77:13): [Folded, False: 50]
+  |  Branch (68:13): [True: 0, False: 50]
   ------------------
-   78|      0|            if (pos() == TRACE_TRAP) {
+   69|      0|            return nullptr;
+   70|     50|        const uint8_t *val = data_;
+   71|     50|        if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (78:17): [True: 0, False: 0]
+  |  Branch (71:13): [Folded, False: 50]
   ------------------
-   79|      0|                __asm__("int $3");
-   80|      0|            }
-   81|      0|            if (count == 1) {
+   72|      0|            if (count == 1) {
   ------------------
-  |  Branch (81:17): [True: 0, False: 0]
+  |  Branch (72:17): [True: 0, False: 0]
   ------------------
-   82|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
-   83|      0|            } else if (count != 0) {
+   73|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
+   74|      0|            } else if (count != 0) {
   ------------------
-  |  Branch (83:24): [True: 0, False: 0]
+  |  Branch (74:24): [True: 0, False: 0]
   ------------------
-   84|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
-   85|      0|                    val[count - 1], count);
-   86|      0|            }
-   87|      0|        }
-   88|     50|        data_ += count;
-   89|     50|        size_ -= count;
-   90|     50|        return val;
-   91|     50|    }
-_ZNK9Fuzz_Data4dataEv:
-   71|     37|    const uint8_t *data() const { return data_; }
-_ZN9Fuzz_Data8consume1EPKc:
-   68|     74|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
-_ZN9Fuzz_Data8ConsumercvbEv:
-   46|     33|        {
-   47|       |            // Special case because memcpy causes UB for bool (which can't be
-   48|       |            // anything other than 0 or 1).
-   49|     33|            const bool val = fd.data_[0];
-   50|     33|            if (FUZZ_DEBUG) {
+   75|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
+   76|      0|                    val[count - 1], count);
+   77|      0|            }
+   78|      0|        }
+   79|     50|        data_ += count;
+   80|     50|        size_ -= count;
+   81|     50|        return val;
+   82|     50|    }
+_ZNK3tox4test9Fuzz_Data4dataEv:
+   63|     37|    const uint8_t *data() const { return data_; }
+_ZN3tox4test9Fuzz_Data8consume1EPKc:
+   60|     74|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+_ZN3tox4test9Fuzz_Data8ConsumercvbEv:
+   36|     33|        {
+   37|     33|            if (fd.empty())
   ------------------
-  |  Branch (50:17): [Folded, False: 33]
+  |  Branch (37:17): [True: 0, False: 33]
   ------------------
-   51|      0|                std::printf("consume@%zu(%s): bool %s\n", fd.pos(), func, val ? "true" : "false");
+   38|      0|                return false;
+   39|     33|            const bool val = fd.data_[0];
+   40|     33|            if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (51:75): [True: 0, False: 0]
+  |  Branch (40:17): [Folded, False: 33]
   ------------------
-   52|      0|            }
-   53|     33|            ++fd.data_;
-   54|     33|            --fd.size_;
-   55|     33|            return val;
-   56|     33|        }
-DHT_fuzz_test.cc:_Z18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_117TestHandleRequestER9Fuzz_DataEEXadL_ZNS0_15TestUnpackNodesES2_EEEEvPKhm:
-  183|     41|{
-  184|     41|    Fuzz_Data input{data, size};
-  185|       |
-  186|     41|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+   41|      0|                std::printf("consume@%zu(%s): bool %s\n", fd.pos(), func, val ? "true" : "false");
   ------------------
-  |  |  105|     41|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  Branch (41:75): [True: 0, False: 0]
+  ------------------
+   42|      0|            }
+   43|     33|            ++fd.data_;
+   44|     33|            --fd.size_;
+   45|     33|            return val;
+   46|     33|        }
+_ZNK3tox4test9Fuzz_Data5emptyEv:
+   64|     33|    bool empty() const { return size_ == 0; }
+DHT_fuzz_test.cc:_ZN3tox4test18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_117TestHandleRequestERNS0_9Fuzz_DataEEEXadL_ZNS2_15TestUnpackNodesES4_EEEEEvPKhm:
+  136|     41|{
+  137|     41|    Fuzz_Data input{data, size};
+  138|       |
+  139|     41|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  ------------------
+  |  |   86|     41|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 0, False: 41]
+  |  |  |  Branch (86:9): [True: 0, False: 41]
   |  |  ------------------
-  |  |  106|      0|        return;                               \
-  |  |  107|      0|    }                                         \
-  |  |  108|     41|    TYPE NAME = INPUT.consume1(__func__)
+  |  |   87|      0|        return;                               \
+  |  |   88|      0|    }                                         \
+  |  |   89|     41|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-  187|     41|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  188|     41|}
-_ZN9Fuzz_DataC2EPKhm:
-   32|     41|        : data_(input_data)
-   33|     41|        , base_(input_data)
-   34|     41|        , size_(input_size)
-   35|     41|    {
-   36|     41|    }
-_ZN9Fuzz_Data8ConsumercvT_IhEEv:
-   60|     41|        {
-   61|     41|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   62|     41|            T val;
-   63|     41|            std::memcpy(&val, bytes, sizeof(T));
-   64|     41|            return val;
-   65|     41|        }
-DHT_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_117TestHandleRequestER9Fuzz_DataEEXadL_ZNS0_15TestUnpackNodesES2_EEEE6selectEhS2_:
-  164|     41|    {
-  165|     41|        if (selector == sizeof...(Args)) {
+  140|     41|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  141|     41|}
+_ZN3tox4test9Fuzz_DataC2EPKhm:
+   22|     41|        : data_(input_data)
+   23|     41|        , base_(input_data)
+   24|     41|        , size_(input_size)
+   25|     41|    {
+   26|     41|    }
+_ZN3tox4test9Fuzz_Data8ConsumercvT_IhEEv:
+   50|     41|        {
+   51|     41|            if (sizeof(T) > fd.size())
   ------------------
-  |  Branch (165:13): [True: 6, False: 35]
+  |  Branch (51:17): [True: 0, False: 41]
   ------------------
-  166|      6|            return Arg(input);
-  167|      6|        }
-  168|     35|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|     41|    }
-DHT_fuzz_test.cc:_ZN20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_115TestUnpackNodesER9Fuzz_DataEEEE6selectEhS2_:
-  164|     35|    {
-  165|     35|        if (selector == sizeof...(Args)) {
+   52|      0|                return T{};
+   53|     41|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   54|     41|            T val;
+   55|     41|            std::memcpy(&val, bytes, sizeof(T));
+   56|     41|            return val;
+   57|     41|        }
+DHT_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_117TestHandleRequestERNS0_9Fuzz_DataEEEXadL_ZNS2_15TestUnpackNodesES4_EEEE6selectEhS4_:
+  117|     41|    {
+  118|     41|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (165:13): [True: 34, False: 1]
+  |  Branch (118:13): [True: 6, False: 35]
   ------------------
-  166|     34|            return Arg(input);
-  167|     34|        }
-  168|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  169|     35|    }
-_ZN20Fuzz_Target_SelectorIJEE6selectEhR9Fuzz_Data:
-  175|      1|    {
-  176|       |        // The selector selected no function, so we do nothing and rely on the
-  177|       |        // fuzzer to come up with a better selector.
-  178|      1|    }
+  119|      6|            return Arg(input);
+  120|      6|        }
+  121|     35|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  122|     41|    }
+DHT_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_115TestUnpackNodesERNS0_9Fuzz_DataEEEEE6selectEhS4_:
+  117|     35|    {
+  118|     35|        if (selector == sizeof...(Args)) {
+  ------------------
+  |  Branch (118:13): [True: 34, False: 1]
+  ------------------
+  119|     34|            return Arg(input);
+  120|     34|        }
+  121|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  122|     35|    }
+_ZN3tox4test20Fuzz_Target_SelectorIJEE6selectEhRNS0_9Fuzz_DataE:
+  128|      1|    {
+  129|       |        // The selector selected no function, so we do nothing and rely on the
+  130|       |        // fuzzer to come up with a better selector.
+  131|      1|    }
+
+_ZN3tox4test11ClockSystemD2Ev:
+    5|     23|ClockSystem::~ClockSystem() = default;
+
+_ZN3tox4test11EnvironmentD2Ev:
+    5|     23|Environment::~Environment() = default;
+
+_ZN3tox4test9FakeClockC2Em:
+    6|     23|    : now_ms_(start_time_ms)
+    7|     23|{
+    8|     23|}
+
+_ZN3tox4test10FakeMemoryC2Ev:
+   23|     23|FakeMemory::FakeMemory() = default;
+_ZN3tox4test10FakeMemoryD2Ev:
+   24|     23|FakeMemory::~FakeMemory() = default;
+_ZN3tox4test10FakeMemory6mallocEm:
+   27|     17|{
+   28|     17|    bool fail = failure_injector_ && failure_injector_(size);
+  ------------------
+  |  Branch (28:17): [True: 0, False: 17]
+  |  Branch (28:38): [True: 0, False: 0]
+  ------------------
+   29|       |
+   30|     17|    if (observer_) {
+  ------------------
+  |  Branch (30:9): [True: 0, False: 17]
+  ------------------
+   31|      0|        observer_(!fail);
+   32|      0|    }
+   33|       |
+   34|     17|    if (fail) {
+  ------------------
+  |  Branch (34:9): [True: 0, False: 17]
+  ------------------
+   35|      0|        return nullptr;
+   36|      0|    }
+   37|     17|    return std::malloc(size);
+   38|     17|}
+_ZN3tox4test10FakeMemory4freeEPv:
+   55|     17|void FakeMemory::free(void *ptr) { std::free(ptr); }
+_ZN3tox4test10FakeMemory12get_c_memoryEv:
+   64|     23|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+fake_memory.cc:_ZNK3tox4test3$_0clEPvj:
+   14|     17|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
+fake_memory.cc:_ZNK3tox4test3$_2clEPvS2_:
+   18|     17|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
+
+_ZN3tox4test10FakeRandomC2Em:
+   21|     23|    : rng_(seed)
+   22|     23|{
+   23|     23|}
+
+_ZN3tox4test12MemorySystemD2Ev:
+    5|     23|MemorySystem::~MemorySystem() = default;
+
+_ZN3tox4test12RandomSystemD2Ev:
+    5|     23|RandomSystem::~RandomSystem() = default;
+
+_ZN3tox4test20SimulatedEnvironmentC2Ev:
+    8|     23|    : sim_(std::make_unique<Simulation>())
+    9|     23|    , global_random_(std::make_unique<FakeRandom>(12345))
+   10|     23|    , global_memory_(std::make_unique<FakeMemory>())
+   11|     23|{
+   12|     23|}
+_ZN3tox4test20SimulatedEnvironmentD2Ev:
+   14|     23|SimulatedEnvironment::~SimulatedEnvironment() = default;
+_ZN3tox4test20SimulatedEnvironment11fake_memoryEv:
+   32|     23|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
+
+_ZN3tox4test10SimulationC2Ev:
+   10|     23|    : clock_(std::make_unique<FakeClock>())
+   11|     23|    , net_(std::make_unique<NetworkUniverse>())
+   12|     23|{
+   13|     23|}
+_ZN3tox4test10SimulationD2Ev:
+   15|     23|Simulation::~Simulation() = default;
 
 cmp_init:
   837|     34|                                         cmp_writer *write) {
@@ -348,66 +439,68 @@ DHT.c:bin_pack_node_handler:
   405|     76|}
 
 LLVMFuzzerTestOneInput:
-   65|     41|{
-   66|     41|    fuzz_select_target<TestHandleRequest, TestUnpackNodes>(data, size);
-   67|     41|    return 0;
-   68|     41|}
-DHT_fuzz_test.cc:_ZN12_GLOBAL__N_117TestHandleRequestER9Fuzz_Data:
-   14|      6|{
-   15|      6|    const Test_Memory mem;
-   16|       |
-   17|      6|    CONSUME_OR_RETURN(const uint8_t *self_public_key, input, CRYPTO_PUBLIC_KEY_SIZE);
+   70|     41|{
+   71|     41|    tox::test::fuzz_select_target<TestHandleRequest, TestUnpackNodes>(data, size);
+   72|     41|    return 0;
+   73|     41|}
+DHT_fuzz_test.cc:_ZN12_GLOBAL__N_117TestHandleRequestERN3tox4test9Fuzz_DataE:
+   17|      6|{
+   18|      6|    SimulatedEnvironment env;
+   19|      6|    auto c_mem = env.fake_memory().get_c_memory();
+   20|       |
+   21|      6|    CONSUME_OR_RETURN(const uint8_t *self_public_key, input, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |  139|      6|    if (INPUT.size() < SIZE) {               \
+  |  |   98|      6|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (139:9): [True: 1, False: 5]
+  |  |  |  Branch (98:9): [True: 1, False: 5]
   |  |  ------------------
-  |  |  140|      1|        return;                              \
-  |  |  141|      1|    }                                        \
-  |  |  142|      6|    DECL = INPUT.consume(__func__, SIZE)
+  |  |   99|      1|        return;                              \
+  |  |  100|      1|    }                                        \
+  |  |  101|      6|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   18|      5|    CONSUME_OR_RETURN(const uint8_t *self_secret_key, input, CRYPTO_SECRET_KEY_SIZE);
+   22|      5|    CONSUME_OR_RETURN(const uint8_t *self_secret_key, input, CRYPTO_SECRET_KEY_SIZE);
   ------------------
-  |  |  139|      5|    if (INPUT.size() < SIZE) {               \
+  |  |   98|      5|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (139:9): [True: 1, False: 4]
+  |  |  |  Branch (98:9): [True: 1, False: 4]
   |  |  ------------------
-  |  |  140|      1|        return;                              \
-  |  |  141|      1|    }                                        \
-  |  |  142|      5|    DECL = INPUT.consume(__func__, SIZE)
+  |  |   99|      1|        return;                              \
+  |  |  100|      1|    }                                        \
+  |  |  101|      5|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   19|       |
-   20|      4|    uint8_t public_key[CRYPTO_PUBLIC_KEY_SIZE];
-   21|      4|    uint8_t request[MAX_CRYPTO_REQUEST_SIZE];
-   22|      4|    uint8_t request_id;
-   23|      4|    handle_request(mem, self_public_key, self_secret_key, public_key, request, &request_id,
-   24|      4|        input.data(), input.size());
-   25|      4|}
-DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesER9Fuzz_Data:
-   28|     34|{
-   29|     34|    CONSUME1_OR_RETURN(const bool, tcp_enabled, input);
+   23|       |
+   24|      4|    uint8_t public_key[CRYPTO_PUBLIC_KEY_SIZE];
+   25|      4|    uint8_t request[MAX_CRYPTO_REQUEST_SIZE];
+   26|      4|    uint8_t request_id;
+   27|      4|    handle_request(&c_mem, self_public_key, self_secret_key, public_key, request, &request_id,
+   28|      4|        input.data(), input.size());
+   29|      4|}
+DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
+   32|     34|{
+   33|     34|    CONSUME1_OR_RETURN(const bool, tcp_enabled, input);
   ------------------
-  |  |  105|     34|    if (INPUT.size() < sizeof(TYPE)) {        \
+  |  |   86|     34|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (105:9): [True: 1, False: 33]
+  |  |  |  Branch (86:9): [True: 1, False: 33]
   |  |  ------------------
-  |  |  106|      1|        return;                               \
-  |  |  107|      1|    }                                         \
-  |  |  108|     34|    TYPE NAME = INPUT.consume1(__func__)
+  |  |   87|      1|        return;                               \
+  |  |   88|      1|    }                                         \
+  |  |   89|     34|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-   30|       |
-   31|     33|    const uint16_t node_count = 5;
-   32|     33|    Node_format nodes[node_count];
-   33|     33|    uint16_t processed_data_len;
-   34|     33|    const int packed_count = unpack_nodes(
-   35|     33|        nodes, node_count, &processed_data_len, input.data(), input.size(), tcp_enabled);
-   36|     33|    if (packed_count > 0) {
+   34|       |
+   35|     33|    const uint16_t node_count = 5;
+   36|     33|    Node_format nodes[node_count];
+   37|     33|    uint16_t processed_data_len;
+   38|     33|    const int packed_count = unpack_nodes(
+   39|     33|        nodes, node_count, &processed_data_len, input.data(), input.size(), tcp_enabled);
+   40|     33|    if (packed_count > 0) {
   ------------------
-  |  Branch (36:9): [True: 17, False: 16]
+  |  Branch (40:9): [True: 17, False: 16]
   ------------------
-   37|     17|        const Memory *mem = os_memory();
-   38|     17|        Logger *logger = logger_new(mem);
-   39|     17|        std::vector<uint8_t> packed(packed_count * PACKED_NODE_SIZE_IP6);
+   41|     17|        SimulatedEnvironment env;
+   42|     17|        auto c_mem = env.fake_memory().get_c_memory();
+   43|     17|        Logger *logger = logger_new(&c_mem);
+   44|     17|        std::vector<uint8_t> packed(packed_count * PACKED_NODE_SIZE_IP6);
   ------------------
   |  |   72|     17|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
   |  |  ------------------
@@ -418,9 +511,9 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesER9Fuzz_Data:
   |  |  |  |   44|     17|#define CRYPTO_PUBLIC_KEY_SIZE         32
   |  |  ------------------
   ------------------
-   40|     17|        const int packed_size
-   41|     17|            = pack_nodes(logger, packed.data(), packed.size(), nodes, packed_count);
-   42|     17|        LOGGER_ASSERT(logger, packed_size == processed_data_len,
+   45|     17|        const int packed_size
+   46|     17|            = pack_nodes(logger, packed.data(), packed.size(), nodes, packed_count);
+   47|     17|        LOGGER_ASSERT(logger, packed_size == processed_data_len,
   ------------------
   |  |   89|     17|    do {                                           \
   |  |   90|     17|        if (!(cond)) {                             \
@@ -480,26 +573,26 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesER9Fuzz_Data:
   |  |  |  Branch (94:14): [Folded, False: 17]
   |  |  ------------------
   ------------------
-   43|     17|            "packed size (%d) != unpacked size (%d)", packed_size, processed_data_len);
-   44|     17|        logger_kill(logger);
-   45|       |
-   46|       |        // Check that packed nodes can be unpacked again and result in the
-   47|       |        // original unpacked nodes.
-   48|     17|        Node_format nodes2[node_count];
-   49|     17|        uint16_t processed_data_len2;
-   50|     17|        const int packed_count2 = unpack_nodes(
-   51|     17|            nodes2, node_count, &processed_data_len2, packed.data(), packed.size(), tcp_enabled);
-   52|     17|        (void)packed_count2;
-   53|       |#if 0
-   54|       |        assert(processed_data_len2 == processed_data_len);
-   55|       |        assert(packed_count2 == packed_count);
-   56|       |#endif
-   57|       |        assert(memcmp(nodes, nodes2, sizeof(Node_format) * packed_count) == 0);
+   48|     17|            "packed size (%d) != unpacked size (%d)", packed_size, processed_data_len);
+   49|     17|        logger_kill(logger);
+   50|       |
+   51|       |        // Check that packed nodes can be unpacked again and result in the
+   52|       |        // original unpacked nodes.
+   53|     17|        Node_format nodes2[node_count];
+   54|     17|        uint16_t processed_data_len2;
+   55|     17|        const int packed_count2 = unpack_nodes(
+   56|     17|            nodes2, node_count, &processed_data_len2, packed.data(), packed.size(), tcp_enabled);
+   57|     17|        (void)packed_count2;
+   58|       |#if 0
+   59|       |        assert(processed_data_len2 == processed_data_len);
+   60|       |        assert(packed_count2 == packed_count);
+   61|       |#endif
+   62|       |        assert(memcmp(nodes, nodes2, sizeof(Node_format) * packed_count) == 0);
   ------------------
-  |  Branch (57:9): [True: 17, False: 0]
+  |  Branch (62:9): [True: 17, False: 0]
   ------------------
-   58|     17|    }
-   59|     33|}
+   63|     17|    }
+   64|     33|}
 
 bin_pack_obj_array_b_size:
    81|     17|{
@@ -802,16 +895,6 @@ mem_delete:
    63|     17|    tox_memory_dealloc(mem, ptr);
    64|     17|}
 
-_ZN12Memory_ClassD2Ev:
-   14|      6|Memory_Class::~Memory_Class() = default;
-
-_ZN12Memory_ClassC2Ev:
-   17|      6|        : self{&vtable, this}
-   18|      6|    {
-   19|      6|    }
-_ZNK12Memory_ClasscvPK10Tox_MemoryEv:
-   13|      4|    operator Tox_Memory const *() const { return &self; }
-
 net_family_ipv4:
   387|     33|{
   388|     33|    return family_ipv4;
@@ -1076,33 +1159,6 @@ network.c:bin_pack_ip:
   ------------------
  1507|     30|    }
  1508|     76|}
-
-os_memory:
-   38|     23|{
-   39|     23|    return &os_memory_obj;
-   40|     23|}
-os_memory.c:os_malloc:
-   13|     17|{
-   14|       |    // cppcheck-suppress misra-c2012-21.3
-   15|     17|    return malloc(size);
-   16|     17|}
-os_memory.c:os_dealloc:
-   25|     17|{
-   26|       |    // cppcheck-suppress misra-c2012-21.3
-   27|     17|    free(ptr);
-   28|     17|}
-
-_Z16require_not_nullIK10Tox_MemoryEPT_PKciS3_:
-   73|      6|{
-   74|      6|    if (ptr == nullptr) {
-  ------------------
-  |  Branch (74:9): [True: 0, False: 6]
-  ------------------
-   75|      0|        std::fprintf(stderr, "unexpected null pointer at %s:%d\n", file, line);
-   76|      0|        std::exit(7);
-   77|      0|    }
-   78|      6|    return ptr;
-   79|      6|}
 
 tox_memory_malloc:
    37|     17|{
