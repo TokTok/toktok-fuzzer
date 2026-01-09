@@ -1,211 +1,211 @@
 _ZN3tox4test16FakeNetworkStackC2ERNS0_15NetworkUniverseE:
-   58|    294|    : universe_(universe)
-   59|    294|{
-   60|    294|}
+   59|     87|    : universe_(universe)
+   60|     87|{
+   61|     87|}
 _ZN3tox4test16FakeNetworkStackD2Ev:
-   62|    294|FakeNetworkStack::~FakeNetworkStack() = default;
+   63|     87|FakeNetworkStack::~FakeNetworkStack() = default;
 _ZN3tox4test16FakeNetworkStack13get_c_networkEv:
-   64|    294|struct Network FakeNetworkStack::get_c_network() { return Network{&kVtable, this}; }
+   65|     87|struct Network FakeNetworkStack::get_c_network() { return Network{&kVtable, this}; }
 _ZN3tox4test16FakeNetworkStack6socketEiii:
-   67|    449|{
-   68|    449|    std::lock_guard<std::mutex> lock(mutex_);
-   69|    449|    int fd = next_fd_++;
-   70|       |
-   71|    449|    std::unique_ptr<FakeSocket> sock;
-   72|    449|    if (type == SOCK_DGRAM) {
+   68|    129|{
+   69|    129|    std::lock_guard<std::mutex> lock(mutex_);
+   70|    129|    int fd = next_fd_++;
+   71|       |
+   72|    129|    std::unique_ptr<FakeSocket> sock;
+   73|    129|    if (type == SOCK_DGRAM) {
   ------------------
-  |  Branch (72:9): [True: 449, False: 0]
+  |  Branch (73:9): [True: 129, False: 0]
   ------------------
-   73|    449|        sock = std::make_unique<FakeUdpSocket>(universe_);
-   74|    449|    } else if (type == SOCK_STREAM) {
+   74|    129|        sock = std::make_unique<FakeUdpSocket>(universe_);
+   75|    129|    } else if (type == SOCK_STREAM) {
   ------------------
-  |  Branch (74:16): [True: 0, False: 0]
+  |  Branch (75:16): [True: 0, False: 0]
   ------------------
-   75|      0|        sock = std::make_unique<FakeTcpSocket>(universe_);
-   76|      0|    } else {
-   77|       |        // Unknown type
-   78|      0|        return net_socket_from_native(-1);
-   79|      0|    }
-   80|       |
-   81|    449|    sockets_[fd] = std::move(sock);
-   82|    449|    return net_socket_from_native(fd);
-   83|    449|}
+   76|      0|        sock = std::make_unique<FakeTcpSocket>(universe_);
+   77|      0|    } else {
+   78|       |        // Unknown type
+   79|      0|        return net_socket_from_native(-1);
+   80|      0|    }
+   81|       |
+   82|    129|    sockets_[fd] = std::move(sock);
+   83|    129|    return net_socket_from_native(fd);
+   84|    129|}
 _ZN3tox4test16FakeNetworkStack8get_sockE6Socket:
-   86|  1.86k|{
-   87|  1.86k|    std::lock_guard<std::mutex> lock(mutex_);
-   88|  1.86k|    auto it = sockets_.find(net_socket_to_native(sock));
-   89|  1.86k|    if (it != sockets_.end()) {
+   87|    523|{
+   88|    523|    std::lock_guard<std::mutex> lock(mutex_);
+   89|    523|    auto it = sockets_.find(net_socket_to_native(sock));
+   90|    523|    if (it != sockets_.end()) {
   ------------------
-  |  Branch (89:9): [True: 1.86k, False: 0]
+  |  Branch (90:9): [True: 523, False: 0]
   ------------------
-   90|  1.86k|        return it->second.get();
-   91|  1.86k|    }
-   92|      0|    return nullptr;
-   93|  1.86k|}
+   91|    523|        return it->second.get();
+   92|    523|    }
+   93|      0|    return nullptr;
+   94|    523|}
 _ZN3tox4test16FakeNetworkStack5closeE6Socket:
-   96|    285|{
-   97|    285|    std::lock_guard<std::mutex> lock(mutex_);
-   98|    285|    int fd = net_socket_to_native(sock);
-   99|    285|    auto it = sockets_.find(fd);
-  100|    285|    if (it == sockets_.end()) {
+   97|     76|{
+   98|     76|    std::lock_guard<std::mutex> lock(mutex_);
+   99|     76|    int fd = net_socket_to_native(sock);
+  100|     76|    auto it = sockets_.find(fd);
+  101|     76|    if (it == sockets_.end()) {
   ------------------
-  |  Branch (100:9): [True: 0, False: 285]
+  |  Branch (101:9): [True: 0, False: 76]
   ------------------
-  101|      0|        errno = EBADF;
-  102|      0|        return -1;
-  103|      0|    }
-  104|    285|    it->second->close();
-  105|    285|    sockets_.erase(it);
-  106|    285|    return 0;
-  107|    285|}
+  102|      0|        errno = EBADF;
+  103|      0|        return -1;
+  104|      0|    }
+  105|     76|    it->second->close();
+  106|     76|    sockets_.erase(it);
+  107|     76|    return 0;
+  108|     76|}
 _ZN3tox4test16FakeNetworkStack4bindE6SocketPK7IP_Port:
-  111|    552|{
-  112|    552|    if (auto *s = get_sock(sock))
+  112|    161|{
+  113|    161|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (112:15): [True: 552, False: 0]
+  |  Branch (113:15): [True: 161, False: 0]
   ------------------
-  113|    552|        return s->bind(addr);
-  114|    552|    errno = EBADF;
-  115|      0|    return -1;
-  116|    552|}
+  114|    161|        return s->bind(addr);
+  115|    161|    errno = EBADF;
+  116|      0|    return -1;
+  117|    161|}
 _ZN3tox4test16FakeNetworkStack6sendtoE6SocketPKhmPK7IP_Port:
-  177|    175|{
-  178|    175|    if (auto *s = get_sock(sock))
+  186|     58|{
+  187|     58|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (178:15): [True: 175, False: 0]
+  |  Branch (187:15): [True: 58, False: 0]
   ------------------
-  179|    175|        return s->sendto(buf, len, addr);
-  180|    175|    errno = EBADF;
-  181|      0|    return -1;
-  182|    175|}
+  188|     58|        return s->sendto(buf, len, addr);
+  189|     58|    errno = EBADF;
+  190|      0|    return -1;
+  191|     58|}
 _ZN3tox4test16FakeNetworkStack15socket_nonblockE6Socketb:
-  193|    285|{
-  194|    285|    if (auto *s = get_sock(sock))
+  202|     76|{
+  203|     76|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (194:15): [True: 285, False: 0]
+  |  Branch (203:15): [True: 76, False: 0]
   ------------------
-  195|    285|        return s->socket_nonblock(nonblock);
-  196|    285|    errno = EBADF;
-  197|      0|    return -1;
-  198|    285|}
+  204|     76|        return s->socket_nonblock(nonblock);
+  205|     76|    errno = EBADF;
+  206|      0|    return -1;
+  207|     76|}
 _ZN3tox4test16FakeNetworkStack10setsockoptE6SocketiiPKvm:
-  210|    855|{
-  211|    855|    if (auto *s = get_sock(sock))
+  219|    228|{
+  220|    228|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (211:15): [True: 855, False: 0]
+  |  Branch (220:15): [True: 228, False: 0]
   ------------------
-  212|    855|        return s->setsockopt(level, optname, optval, optlen);
-  213|    855|    errno = EBADF;
-  214|      0|    return -1;
-  215|    855|}
+  221|    228|        return s->setsockopt(level, optname, optval, optlen);
+  222|    228|    errno = EBADF;
+  223|      0|    return -1;
+  224|    228|}
 _ZN3tox4test16FakeNetworkStack21get_bound_udp_socketsEv:
-  228|    294|{
-  229|    294|    std::lock_guard<std::mutex> lock(mutex_);
-  230|    294|    std::vector<FakeUdpSocket *> result;
-  231|    294|    for (const auto &pair : sockets_) {
+  237|     87|{
+  238|     87|    std::lock_guard<std::mutex> lock(mutex_);
+  239|     87|    std::vector<FakeUdpSocket *> result;
+  240|     87|    for (const auto &pair : sockets_) {
   ------------------
-  |  Branch (231:27): [True: 164, False: 294]
+  |  Branch (240:27): [True: 53, False: 87]
   ------------------
-  232|    164|        FakeSocket *s = pair.second.get();
-  233|    164|        if (s->type() == SOCK_DGRAM && s->local_port() != 0) {
+  241|     53|        FakeSocket *s = pair.second.get();
+  242|     53|        if (s->type() == SOCK_DGRAM && s->local_port() != 0) {
   ------------------
-  |  Branch (233:13): [True: 164, False: 0]
-  |  Branch (233:40): [True: 164, False: 0]
+  |  Branch (242:13): [True: 53, False: 0]
+  |  Branch (242:40): [True: 53, False: 0]
   ------------------
-  234|    164|            result.push_back(static_cast<FakeUdpSocket *>(s));
-  235|    164|        }
-  236|    164|    }
-  237|    294|    return result;
-  238|    294|}
+  243|     53|            result.push_back(static_cast<FakeUdpSocket *>(s));
+  244|     53|        }
+  245|     53|    }
+  246|     87|    return result;
+  247|     87|}
 fake_network_stack.cc:_ZNK3tox4test3$_0clEPv6Socket:
-    9|    285|    = [](void *obj, Socket sock) { return static_cast<FakeNetworkStack *>(obj)->close(sock); },
+    9|     76|    = [](void *obj, Socket sock) { return static_cast<FakeNetworkStack *>(obj)->close(sock); },
 fake_network_stack.cc:_ZNK3tox4test3$_2clEPv6SocketPK7IP_Port:
-   14|    388|          const IP_Port *addr) { return static_cast<FakeNetworkStack *>(obj)->bind(sock, addr); },
+   14|    108|          const IP_Port *addr) { return static_cast<FakeNetworkStack *>(obj)->bind(sock, addr); },
 fake_network_stack.cc:_ZNK3tox4test3$_9clEPv6SocketPKhmPK7IP_Port:
-   32|    175|        [](void *obj, Socket sock, const uint8_t *buf, size_t len, const IP_Port *addr) {
-   33|    175|            return static_cast<FakeNetworkStack *>(obj)->sendto(sock, buf, len, addr);
-   34|    175|        },
+   33|     58|        [](void *obj, Socket sock, const uint8_t *buf, size_t len, const IP_Port *addr) {
+   34|     58|            return static_cast<FakeNetworkStack *>(obj)->sendto(sock, buf, len, addr);
+   35|     58|        },
 fake_network_stack.cc:_ZNK3tox4test4$_10clEPviii:
-   37|    285|          int proto) { return static_cast<FakeNetworkStack *>(obj)->socket(domain, type, proto); },
+   38|     76|          int proto) { return static_cast<FakeNetworkStack *>(obj)->socket(domain, type, proto); },
 fake_network_stack.cc:_ZNK3tox4test4$_11clEPv6Socketb:
-   39|    285|        [](void *obj, Socket sock, bool nonblock) {
-   40|    285|            return static_cast<FakeNetworkStack *>(obj)->socket_nonblock(sock, nonblock);
-   41|    285|        },
+   40|     76|        [](void *obj, Socket sock, bool nonblock) {
+   41|     76|            return static_cast<FakeNetworkStack *>(obj)->socket_nonblock(sock, nonblock);
+   42|     76|        },
 fake_network_stack.cc:_ZNK3tox4test4$_13clEPv6SocketiiPKvm:
-   48|    855|        [](void *obj, Socket sock, int level, int optname, const void *optval, size_t optlen) {
-   49|    855|            return static_cast<FakeNetworkStack *>(obj)->setsockopt(
-   50|    855|                sock, level, optname, optval, optlen);
-   51|    855|        },
+   49|    228|        [](void *obj, Socket sock, int level, int optname, const void *optval, size_t optlen) {
+   50|    228|            return static_cast<FakeNetworkStack *>(obj)->setsockopt(
+   51|    228|                sock, level, optname, optval, optlen);
+   52|    228|        },
 
 _ZN3tox4test10FakeSocketC2ERNS0_15NetworkUniverseEi:
-   15|    449|    : universe_(universe)
-   16|    449|    , type_(type)
-   17|    449|{
-   18|    449|}
+   15|    129|    : universe_(universe)
+   16|    129|    , type_(type)
+   17|    129|{
+   18|    129|}
 _ZN3tox4test10FakeSocketD2Ev:
-   20|    449|FakeSocket::~FakeSocket() = default;
+   20|    129|FakeSocket::~FakeSocket() = default;
 _ZN3tox4test10FakeSocket10setsockoptEiiPKvm:
-   29|    855|int FakeSocket::setsockopt(int level, int optname, const void *optval, size_t optlen) { return 0; }
+   29|    228|int FakeSocket::setsockopt(int level, int optname, const void *optval, size_t optlen) { return 0; }
 _ZN3tox4test10FakeSocket15socket_nonblockEb:
-   31|    285|{
-   32|    285|    nonblocking_ = nonblock;
-   33|    285|    return 0;
-   34|    285|}
+   31|     76|{
+   32|     76|    nonblocking_ = nonblock;
+   33|     76|    return 0;
+   34|     76|}
 _ZN3tox4test13FakeUdpSocketC2ERNS0_15NetworkUniverseE:
-   39|    449|    : FakeSocket(universe, SOCK_DGRAM)
-   40|    449|{
-   41|    449|}
+   39|    129|    : FakeSocket(universe, SOCK_DGRAM)
+   40|    129|{
+   41|    129|}
 _ZN3tox4test13FakeUdpSocketD2Ev:
-   43|    449|FakeUdpSocket::~FakeUdpSocket() { close_impl(); }
+   43|    129|FakeUdpSocket::~FakeUdpSocket() { close_impl(); }
 _ZN3tox4test13FakeUdpSocket5closeEv:
-   46|    285|{
-   47|    285|    std::lock_guard<std::mutex> lock(mutex_);
-   48|    285|    close_impl();
-   49|    285|    return 0;
-   50|    285|}
+   46|     76|{
+   47|     76|    std::lock_guard<std::mutex> lock(mutex_);
+   48|     76|    close_impl();
+   49|     76|    return 0;
+   50|     76|}
 _ZN3tox4test13FakeUdpSocket10close_implEv:
-   53|    734|{
-   54|    734|    if (local_port_ != 0) {
+   53|    205|{
+   54|    205|    if (local_port_ != 0) {
   ------------------
-  |  Branch (54:9): [True: 449, False: 285]
+  |  Branch (54:9): [True: 129, False: 76]
   ------------------
-   55|    449|        universe_.unbind_udp(local_port_);
-   56|    449|        local_port_ = 0;
-   57|    449|    }
-   58|    734|}
+   55|    129|        universe_.unbind_udp(local_port_);
+   56|    129|        local_port_ = 0;
+   57|    129|    }
+   58|    205|}
 _ZN3tox4test13FakeUdpSocket4bindEPK7IP_Port:
-   61|    552|{
-   62|    552|    std::lock_guard<std::mutex> lock(mutex_);
-   63|    552|    if (local_port_ != 0)
+   61|    161|{
+   62|    161|    std::lock_guard<std::mutex> lock(mutex_);
+   63|    161|    if (local_port_ != 0)
   ------------------
-  |  Branch (63:9): [True: 0, False: 552]
+  |  Branch (63:9): [True: 0, False: 161]
   ------------------
    64|      0|        return -1;  // Already bound
    65|       |
-   66|    552|    uint16_t port = addr->port;
-   67|    552|    if (port == 0) {
+   66|    161|    uint16_t port = addr->port;
+   67|    161|    if (port == 0) {
   ------------------
-  |  Branch (67:9): [True: 0, False: 552]
+  |  Branch (67:9): [True: 0, False: 161]
   ------------------
    68|      0|        port = universe_.find_free_port();
    69|      0|    }
    70|       |
-   71|    552|    if (universe_.bind_udp(port, this)) {
+   71|    161|    if (universe_.bind_udp(port, this)) {
   ------------------
-  |  Branch (71:9): [True: 449, False: 103]
+  |  Branch (71:9): [True: 129, False: 32]
   ------------------
-   72|    449|        local_port_ = port;
-   73|    449|        return 0;
-   74|    449|    }
-   75|    552|    errno = EADDRINUSE;
-   76|    103|    return -1;
-   77|    552|}
+   72|    129|        local_port_ = port;
+   73|    129|        return 0;
+   74|    129|    }
+   75|    161|    errno = EADDRINUSE;
+   76|     32|    return -1;
+   77|    161|}
 _ZN3tox4test13FakeUdpSocket6sendtoEPKhmPK7IP_Port:
-  108|    175|{
-  109|    175|    std::lock_guard<std::mutex> lock(mutex_);
-  110|    175|    if (local_port_ == 0) {
+  108|     58|{
+  109|     58|    std::lock_guard<std::mutex> lock(mutex_);
+  110|     58|    if (local_port_ == 0) {
   ------------------
-  |  Branch (110:9): [True: 0, False: 175]
+  |  Branch (110:9): [True: 0, False: 58]
   ------------------
   111|       |        // Implicit bind
   112|      0|        uint16_t p = universe_.find_free_port();
@@ -220,57 +220,57 @@ _ZN3tox4test13FakeUdpSocket6sendtoEPKhmPK7IP_Port:
   118|      0|        }
   119|      0|    }
   120|       |
-  121|    175|    Packet p{};
+  121|     58|    Packet p{};
   122|       |    // Source
-  123|    175|    ip_init(&p.from.ip, net_family_is_ipv6(addr->ip.family));
-  124|    175|    if (net_family_is_ipv4(p.from.ip.family)) {
+  123|     58|    ip_init(&p.from.ip, net_family_is_ipv6(addr->ip.family));
+  124|     58|    if (net_family_is_ipv4(p.from.ip.family)) {
   ------------------
-  |  Branch (124:9): [True: 175, False: 0]
+  |  Branch (124:9): [True: 58, False: 0]
   ------------------
-  125|    175|        p.from.ip.ip.v4.uint32 = 0x7F000001;
-  126|    175|    } else {
+  125|     58|        p.from.ip.ip.v4.uint32 = net_htonl(0x7F000001);
+  126|     58|    } else {
   127|      0|        p.from.ip.ip.v6.uint8[15] = 1;
   128|      0|    }
-  129|    175|    p.from.port = local_port_;
-  130|    175|    p.to = *addr;
-  131|    175|    p.data.assign(buf, buf + len);
-  132|    175|    p.is_tcp = false;
+  129|     58|    p.from.port = local_port_;
+  130|     58|    p.to = *addr;
+  131|     58|    p.data.assign(buf, buf + len);
+  132|     58|    p.is_tcp = false;
   133|       |
-  134|    175|    universe_.send_packet(p);
-  135|    175|    return len;
-  136|    175|}
+  134|     58|    universe_.send_packet(p);
+  135|     58|    return len;
+  136|     58|}
 
 _ZNK3tox4test10FakeSocket4typeEv:
-   54|    164|    int type() const { return type_; }
+   56|     53|    int type() const { return type_; }
 _ZNK3tox4test10FakeSocket10local_portEv:
-   55|    164|    uint16_t local_port() const { return local_port_; }
+   57|     53|    uint16_t local_port() const { return local_port_; }
 
 _ZN3tox4test15NetworkUniverseC2Ev:
-    9|    294|NetworkUniverse::NetworkUniverse() { }
+    9|     87|NetworkUniverse::NetworkUniverse() { }
 _ZN3tox4test15NetworkUniverseD2Ev:
-   10|    294|NetworkUniverse::~NetworkUniverse() { }
+   10|     87|NetworkUniverse::~NetworkUniverse() { }
 _ZN3tox4test15NetworkUniverse8bind_udpEtPNS0_13FakeUdpSocketE:
-   13|    552|{
-   14|    552|    std::lock_guard<std::mutex> lock(mutex_);
-   15|    552|    if (udp_bindings_.count(port))
+   13|    161|{
+   14|    161|    std::lock_guard<std::mutex> lock(mutex_);
+   15|    161|    if (udp_bindings_.count(port))
   ------------------
-  |  Branch (15:9): [True: 103, False: 449]
+  |  Branch (15:9): [True: 32, False: 129]
   ------------------
-   16|    103|        return false;
-   17|    449|    udp_bindings_[port] = socket;
-   18|    449|    return true;
-   19|    552|}
+   16|     32|        return false;
+   17|    129|    udp_bindings_[port] = socket;
+   18|    129|    return true;
+   19|    161|}
 _ZN3tox4test15NetworkUniverse10unbind_udpEt:
-   22|    449|{
-   23|    449|    std::lock_guard<std::mutex> lock(mutex_);
-   24|    449|    udp_bindings_.erase(port);
-   25|    449|}
+   22|    129|{
+   23|    129|    std::lock_guard<std::mutex> lock(mutex_);
+   24|    129|    udp_bindings_.erase(port);
+   25|    129|}
 _ZN3tox4test15NetworkUniverse11send_packetENS0_6PacketE:
-   47|    175|{
+   47|     58|{
    48|       |    // Apply filters
-   49|    175|    for (const auto &filter : filters_) {
+   49|     58|    for (const auto &filter : filters_) {
   ------------------
-  |  Branch (49:29): [True: 0, False: 175]
+  |  Branch (49:29): [True: 0, False: 58]
   ------------------
    50|      0|        if (!filter(p))
   ------------------
@@ -280,713 +280,713 @@ _ZN3tox4test15NetworkUniverse11send_packetENS0_6PacketE:
    52|      0|    }
    53|       |
    54|       |    // Notify observers
-   55|    175|    for (const auto &observer : observers_) {
+   55|     58|    for (const auto &observer : observers_) {
   ------------------
-  |  Branch (55:31): [True: 0, False: 175]
+  |  Branch (55:31): [True: 0, False: 58]
   ------------------
    56|      0|        observer(p);
    57|      0|    }
    58|       |
-   59|    175|    p.delivery_time += global_latency_ms_;
+   59|     58|    p.delivery_time += global_latency_ms_;
    60|       |
-   61|    175|    std::lock_guard<std::mutex> lock(mutex_);
-   62|    175|    event_queue_.push(std::move(p));
-   63|    175|}
+   61|     58|    std::lock_guard<std::mutex> lock(mutex_);
+   62|     58|    event_queue_.push(std::move(p));
+   63|     58|}
 _ZN3tox4test15NetworkUniverse14find_free_portEt:
-  141|    294|{
-  142|    294|    std::lock_guard<std::mutex> lock(mutex_);
-  143|    294|    for (uint16_t p = start; p < 65535; ++p) {
+  141|     87|{
+  142|     87|    std::lock_guard<std::mutex> lock(mutex_);
+  143|     87|    for (uint16_t p = start; p < 65535; ++p) {
   ------------------
-  |  Branch (143:30): [True: 294, False: 0]
+  |  Branch (143:30): [True: 87, False: 0]
   ------------------
-  144|    294|        if (udp_bindings_.find(p) == udp_bindings_.end()
+  144|     87|        if (udp_bindings_.find(p) == udp_bindings_.end()
   ------------------
-  |  Branch (144:13): [True: 294, False: 0]
-  |  Branch (144:13): [True: 294, False: 0]
+  |  Branch (144:13): [True: 87, False: 0]
+  |  Branch (144:13): [True: 87, False: 0]
   ------------------
-  145|    294|            && tcp_bindings_.find(p) == tcp_bindings_.end()) {
+  145|     87|            && tcp_bindings_.find(p) == tcp_bindings_.end()) {
   ------------------
-  |  Branch (145:16): [True: 294, False: 0]
+  |  Branch (145:16): [True: 87, False: 0]
   ------------------
-  146|    294|            return p;
-  147|    294|        }
-  148|    294|    }
+  146|     87|            return p;
+  147|     87|        }
+  148|     87|    }
   149|      0|    return 0;
-  150|    294|}
+  150|     87|}
 
 _ZNK3tox4test9Fuzz_Data4sizeEv:
-   61|  3.64k|    std::size_t size() const { return size_; }
+   99|  1.15k|    std::size_t size() const { return size_; }
 _ZN3tox4test9Fuzz_Data8consume1EPKc:
-   60|    625|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   61|    211|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN3tox4test9Fuzz_Data8ConsumercvT_ItEEv:
-   50|    311|        {
-   51|    311|            if (sizeof(T) > fd.size())
+   51|    104|        {
+   52|    104|            if (sizeof(T) > fd.size())
   ------------------
-  |  Branch (51:17): [True: 0, False: 311]
+  |  Branch (52:17): [True: 0, False: 104]
   ------------------
-   52|      0|                return T{};
-   53|    311|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   54|    311|            T val;
-   55|    311|            std::memcpy(&val, bytes, sizeof(T));
-   56|    311|            return val;
-   57|    311|        }
+   53|      0|                return T{};
+   54|    104|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   55|    104|            T val;
+   56|    104|            std::memcpy(&val, bytes, sizeof(T));
+   57|    104|            return val;
+   58|    104|        }
 _ZN3tox4test9Fuzz_Data7consumeEPKcm:
-   67|  2.59k|    {
-   68|  2.59k|        if (count > size_)
+  105|    754|    {
+  106|    754|        if (count > size_)
   ------------------
-  |  Branch (68:13): [True: 0, False: 2.59k]
+  |  Branch (106:13): [True: 0, False: 754]
   ------------------
-   69|      0|            return nullptr;
-   70|  2.59k|        const uint8_t *val = data_;
-   71|  2.59k|        if (FUZZ_DEBUG) {
+  107|      0|            return nullptr;
+  108|    754|        const uint8_t *val = data_;
+  109|    754|        if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (71:13): [Folded, False: 2.59k]
+  |  Branch (109:13): [Folded, False: 754]
   ------------------
-   72|      0|            if (count == 1) {
+  110|      0|            if (count == 1) {
   ------------------
-  |  Branch (72:17): [True: 0, False: 0]
+  |  Branch (110:17): [True: 0, False: 0]
   ------------------
-   73|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
-   74|      0|            } else if (count != 0) {
+  111|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
+  112|      0|            } else if (count != 0) {
   ------------------
-  |  Branch (74:24): [True: 0, False: 0]
+  |  Branch (112:24): [True: 0, False: 0]
   ------------------
-   75|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
-   76|      0|                    val[count - 1], count);
-   77|      0|            }
-   78|      0|        }
-   79|  2.59k|        data_ += count;
-   80|  2.59k|        size_ -= count;
-   81|  2.59k|        return val;
-   82|  2.59k|    }
+  113|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
+  114|      0|                    val[count - 1], count);
+  115|      0|            }
+  116|      0|        }
+  117|    754|        data_ += count;
+  118|    754|        size_ -= count;
+  119|    754|        return val;
+  120|    754|    }
 forwarding_fuzz_test.cc:_ZN3tox4test18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_122TestSendForwardRequestERNS0_9Fuzz_DataEEEXadL_ZNS2_16TestForwardReplyES4_EEEEEvPKhm:
-  136|    314|{
-  137|    314|    Fuzz_Data input{data, size};
-  138|       |
-  139|    314|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  174|    107|{
+  175|    107|    Fuzz_Data input{data, size};
+  176|       |
+  177|    107|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
   ------------------
-  |  |   86|    314|    if ((INPUT).size() < sizeof(TYPE)) {      \
+  |  |  124|    107|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (86:9): [True: 0, False: 314]
+  |  |  |  Branch (124:9): [True: 0, False: 107]
   |  |  ------------------
-  |  |   87|      0|        return;                               \
-  |  |   88|      0|    }                                         \
-  |  |   89|    314|    TYPE NAME = (INPUT).consume1(__func__)
+  |  |  125|      0|        return;                               \
+  |  |  126|      0|    }                                         \
+  |  |  127|    107|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-  140|    314|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  141|    314|}
+  178|    107|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  179|    107|}
 _ZN3tox4test9Fuzz_DataC2EPKhm:
-   22|    314|        : data_(input_data)
-   23|    314|        , base_(input_data)
-   24|    314|        , size_(input_size)
-   25|    314|    {
-   26|    314|    }
+   23|    107|        : data_(input_data)
+   24|    107|        , base_(input_data)
+   25|    107|        , size_(input_size)
+   26|    107|    {
+   27|    107|    }
 _ZN3tox4test9Fuzz_Data8ConsumercvT_IhEEv:
-   50|    314|        {
-   51|    314|            if (sizeof(T) > fd.size())
+   51|    107|        {
+   52|    107|            if (sizeof(T) > fd.size())
   ------------------
-  |  Branch (51:17): [True: 0, False: 314]
+  |  Branch (52:17): [True: 0, False: 107]
   ------------------
-   52|      0|                return T{};
-   53|    314|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   54|    314|            T val;
-   55|    314|            std::memcpy(&val, bytes, sizeof(T));
-   56|    314|            return val;
-   57|    314|        }
+   53|      0|                return T{};
+   54|    107|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   55|    107|            T val;
+   56|    107|            std::memcpy(&val, bytes, sizeof(T));
+   57|    107|            return val;
+   58|    107|        }
 forwarding_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_122TestSendForwardRequestERNS0_9Fuzz_DataEEEXadL_ZNS2_16TestForwardReplyES4_EEEE6selectEhS4_:
-  117|    314|    {
-  118|    314|        if (selector == sizeof...(Args)) {
+  155|    107|    {
+  156|    107|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (118:13): [True: 265, False: 49]
+  |  Branch (156:13): [True: 67, False: 40]
   ------------------
-  119|    265|            return Arg(input);
-  120|    265|        }
-  121|     49|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  122|    314|    }
+  157|     67|            return Arg(input);
+  158|     67|        }
+  159|     40|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  160|    107|    }
 forwarding_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_116TestForwardReplyERNS0_9Fuzz_DataEEEEE6selectEhS4_:
-  117|     49|    {
-  118|     49|        if (selector == sizeof...(Args)) {
+  155|     40|    {
+  156|     40|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (118:13): [True: 48, False: 1]
+  |  Branch (156:13): [True: 39, False: 1]
   ------------------
-  119|     48|            return Arg(input);
-  120|     48|        }
-  121|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  122|     49|    }
+  157|     39|            return Arg(input);
+  158|     39|        }
+  159|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  160|     40|    }
 _ZN3tox4test20Fuzz_Target_SelectorIJEE6selectEhRNS0_9Fuzz_DataE:
-  128|      1|    {
-  129|       |        // The selector selected no function, so we do nothing and rely on the
-  130|       |        // fuzzer to come up with a better selector.
-  131|      1|    }
+  166|      1|    {
+  167|       |        // The selector selected no function, so we do nothing and rely on the
+  168|       |        // fuzzer to come up with a better selector.
+  169|      1|    }
 
 _ZN3tox4test10Simulation5clockEv:
-   46|    294|    FakeClock &clock() { return *clock_; }
+   46|     87|    FakeClock &clock() { return *clock_; }
 _ZN3tox4test10Simulation3netEv:
-   47|    588|    NetworkUniverse &net() { return *net_; }
+   47|    174|    NetworkUniverse &net() { return *net_; }
 _ZN3tox4test13SimulatedNode12fake_networkEv:
-   73|    328|    FakeNetworkStack &fake_network() { return *network_; }
+   73|    106|    FakeNetworkStack &fake_network() { return *network_; }
 _ZN3tox4test13SimulatedNode13get_c_networkEv:
-   88|    294|    struct Network get_c_network() { return network_->get_c_network(); }
+   88|     87|    struct Network get_c_network() { return network_->get_c_network(); }
 
 _ZN3tox4test11ClockSystemD2Ev:
-    5|    294|ClockSystem::~ClockSystem() = default;
+    5|     87|ClockSystem::~ClockSystem() = default;
 
 _ZN3tox4test11EnvironmentD2Ev:
-    5|    588|Environment::~Environment() = default;
+    5|    174|Environment::~Environment() = default;
 
 _ZN3tox4test9FakeClockC2Em:
-    6|    294|    : now_ms_(start_time_ms)
-    7|    294|{
-    8|    294|}
+    6|     87|    : now_ms_(start_time_ms)
+    7|     87|{
+    8|     87|}
 
 _ZN3tox4test10FakeMemoryC2Ev:
-   23|    588|FakeMemory::FakeMemory() = default;
+   23|    174|FakeMemory::FakeMemory() = default;
 _ZN3tox4test10FakeMemoryD2Ev:
-   24|    588|FakeMemory::~FakeMemory() = default;
+   24|    174|FakeMemory::~FakeMemory() = default;
 _ZN3tox4test10FakeMemory6mallocEm:
-   27|    869|{
-   28|    869|    bool fail = failure_injector_ && failure_injector_(size);
+   27|    242|{
+   28|    242|    bool fail = failure_injector_ && failure_injector_(size);
   ------------------
-  |  Branch (28:17): [True: 869, False: 0]
-  |  Branch (28:38): [True: 6, False: 863]
+  |  Branch (28:17): [True: 242, False: 0]
+  |  Branch (28:38): [True: 8, False: 234]
   ------------------
    29|       |
-   30|    869|    if (observer_) {
+   30|    242|    if (observer_) {
   ------------------
-  |  Branch (30:9): [True: 0, False: 869]
+  |  Branch (30:9): [True: 0, False: 242]
   ------------------
    31|      0|        observer_(!fail);
    32|      0|    }
    33|       |
-   34|    869|    if (fail) {
+   34|    242|    if (fail) {
   ------------------
-  |  Branch (34:9): [True: 6, False: 863]
+  |  Branch (34:9): [True: 8, False: 234]
   ------------------
-   35|      6|        return nullptr;
-   36|      6|    }
-   37|    863|    return std::malloc(size);
-   38|    869|}
+   35|      8|        return nullptr;
+   36|      8|    }
+   37|    234|    return std::malloc(size);
+   38|    242|}
 _ZN3tox4test10FakeMemory4freeEPv:
-   55|    861|void FakeMemory::free(void *ptr) { std::free(ptr); }
+   55|    233|void FakeMemory::free(void *ptr) { std::free(ptr); }
 _ZN3tox4test10FakeMemory20set_failure_injectorENSt3__18functionIFbmEEE:
-   58|    294|{
-   59|    294|    failure_injector_ = std::move(injector);
-   60|    294|}
+   58|     87|{
+   59|     87|    failure_injector_ = std::move(injector);
+   60|     87|}
 _ZN3tox4test10FakeMemory12get_c_memoryEv:
-   64|    294|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+   64|     87|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
 fake_memory.cc:_ZNK3tox4test3$_0clEPvj:
-   14|    869|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
+   14|    242|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
 fake_memory.cc:_ZNK3tox4test3$_2clEPvS2_:
-   18|    861|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
+   18|    233|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
 
 _ZN3tox4test10FakeRandomC2Em:
-   21|    588|    : rng_(seed)
-   22|    588|{
-   23|    588|}
+   21|    174|    : rng_(seed)
+   22|    174|{
+   23|    174|}
 _ZN3tox4test10FakeRandom12get_c_randomEv:
-   61|    294|struct Tox_Random FakeRandom::get_c_random() { return Tox_Random{&kFakeRandomVtable, this}; }
+   61|     87|struct Tox_Random FakeRandom::get_c_random() { return Tox_Random{&kFakeRandomVtable, this}; }
 
 _ZN3tox4test28configure_fuzz_memory_sourceERNS0_10FakeMemoryERNS0_9Fuzz_DataE:
-   44|    294|{
-   45|    294|    memory.set_failure_injector([&input](size_t size) -> bool {
-   46|    294|        if (input.size() < 1) {
+   44|     87|{
+   45|     87|    memory.set_failure_injector([&input](size_t size) -> bool {
+   46|     87|        if (input.size() < 1) {
    47|       |            // Legacy behavior: if input runs out, allocation succeeds.
-   48|    294|            return false;
-   49|    294|        }
+   48|     87|            return false;
+   49|     87|        }
    50|       |
-   51|    294|        const uint8_t *b = input.consume("malloc_decision", 1);
-   52|    294|        bool succeed = (b && *b);
-   53|    294|        return !succeed;  // Return true to fail
-   54|    294|    });
-   55|    294|}
+   51|     87|        const uint8_t *b = input.consume("malloc_decision", 1);
+   52|     87|        bool succeed = (b && *b);
+   53|     87|        return !succeed;  // Return true to fail
+   54|     87|    });
+   55|     87|}
 fuzz_helpers.cc:_ZZN3tox4test28configure_fuzz_memory_sourceERNS0_10FakeMemoryERNS0_9Fuzz_DataEENK3$_0clEm:
-   45|    869|    memory.set_failure_injector([&input](size_t size) -> bool {
-   46|    869|        if (input.size() < 1) {
+   45|    242|    memory.set_failure_injector([&input](size_t size) -> bool {
+   46|    242|        if (input.size() < 1) {
   ------------------
-  |  Branch (46:13): [True: 405, False: 464]
+  |  Branch (46:13): [True: 172, False: 70]
   ------------------
    47|       |            // Legacy behavior: if input runs out, allocation succeeds.
-   48|    405|            return false;
-   49|    405|        }
+   48|    172|            return false;
+   49|    172|        }
    50|       |
-   51|    464|        const uint8_t *b = input.consume("malloc_decision", 1);
-   52|    464|        bool succeed = (b && *b);
+   51|     70|        const uint8_t *b = input.consume("malloc_decision", 1);
+   52|     70|        bool succeed = (b && *b);
   ------------------
-  |  Branch (52:25): [True: 464, False: 0]
-  |  Branch (52:30): [True: 458, False: 6]
+  |  Branch (52:25): [True: 70, False: 0]
+  |  Branch (52:30): [True: 62, False: 8]
   ------------------
-   53|    464|        return !succeed;  // Return true to fail
-   54|    869|    });
+   53|     70|        return !succeed;  // Return true to fail
+   54|    242|    });
 
 _ZN3tox4test12MemorySystemD2Ev:
-    5|    588|MemorySystem::~MemorySystem() = default;
+    5|    174|MemorySystem::~MemorySystem() = default;
 
 _ZN3tox4test13NetworkSystemD2Ev:
-    5|    294|NetworkSystem::~NetworkSystem() = default;
+    5|     87|NetworkSystem::~NetworkSystem() = default;
 
 _ZN3tox4test12RandomSystemD2Ev:
-    5|    588|RandomSystem::~RandomSystem() = default;
+    5|    174|RandomSystem::~RandomSystem() = default;
 
 _ZN3tox4test20SimulatedEnvironmentC2Ev:
-    8|    294|    : sim_(std::make_unique<Simulation>())
-    9|    294|    , global_random_(std::make_unique<FakeRandom>(12345))
-   10|    294|    , global_memory_(std::make_unique<FakeMemory>())
-   11|    294|{
-   12|    294|}
+    8|     87|    : sim_(std::make_unique<Simulation>())
+    9|     87|    , global_random_(std::make_unique<FakeRandom>(12345))
+   10|     87|    , global_memory_(std::make_unique<FakeMemory>())
+   11|     87|{
+   12|     87|}
 _ZN3tox4test20SimulatedEnvironmentD2Ev:
-   14|    294|SimulatedEnvironment::~SimulatedEnvironment() = default;
+   14|     87|SimulatedEnvironment::~SimulatedEnvironment() = default;
 _ZN3tox4test20SimulatedEnvironment11fake_memoryEv:
-   32|    294|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
+   32|     87|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
 _ZN3tox4test20SimulatedEnvironment11create_nodeEt:
-   35|    294|{
-   36|    294|    auto scoped = std::make_unique<ScopedToxSystem>();
-   37|    294|    scoped->node = sim_->create_node();
+   35|     87|{
+   36|     87|    auto scoped = std::make_unique<ScopedToxSystem>();
+   37|     87|    scoped->node = sim_->create_node();
    38|       |
    39|       |    // Bind port
-   40|    294|    if (port != 0) {
+   40|     87|    if (port != 0) {
   ------------------
-  |  Branch (40:9): [True: 164, False: 130]
+  |  Branch (40:9): [True: 53, False: 34]
   ------------------
-   41|    164|        Socket s = scoped->node->fake_network().socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-   42|    164|        IP_Port addr;
-   43|    164|        ip_init(&addr.ip, false);
-   44|    164|        addr.ip.ip.v4.uint32 = 0;
-   45|    164|        addr.port = port;
-   46|    164|        scoped->node->fake_network().bind(s, &addr);
-   47|    164|    }
+   41|     53|        Socket s = scoped->node->fake_network().socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+   42|     53|        IP_Port addr;
+   43|     53|        ip_init(&addr.ip, false);
+   44|     53|        addr.ip.ip.v4.uint32 = 0;
+   45|     53|        addr.port = port;
+   46|     53|        scoped->node->fake_network().bind(s, &addr);
+   47|     53|    }
    48|       |
    49|       |    // Get Primary Endpoint for Fuzzer
-   50|    294|    scoped->endpoint = scoped->node->get_primary_socket();
+   50|     87|    scoped->endpoint = scoped->node->get_primary_socket();
    51|       |
    52|       |    // Use global Random and Memory for legacy compatibility.
-   53|    294|    scoped->c_random = global_random_->get_c_random();
-   54|    294|    scoped->c_memory = global_memory_->get_c_memory();
+   53|     87|    scoped->c_random = global_random_->get_c_random();
+   54|     87|    scoped->c_memory = global_memory_->get_c_memory();
    55|       |
    56|       |    // Use Node's Network
-   57|    294|    scoped->c_network = scoped->node->get_c_network();
+   57|     87|    scoped->c_network = scoped->node->get_c_network();
    58|       |
    59|       |    // Setup System
-   60|    294|    scoped->system.mem = &scoped->c_memory;
-   61|    294|    scoped->system.ns = &scoped->c_network;
-   62|    294|    scoped->system.rng = &scoped->c_random;
+   60|     87|    scoped->system.mem = &scoped->c_memory;
+   61|     87|    scoped->system.ns = &scoped->c_network;
+   62|     87|    scoped->system.rng = &scoped->c_random;
    63|       |
-   64|    294|    scoped->system.mono_time_user_data = &sim_->clock();
-   65|    294|    scoped->system.mono_time_callback = [](void *user_data) -> uint64_t {
-   66|    294|        return static_cast<FakeClock *>(user_data)->current_time_ms();
-   67|    294|    };
+   64|     87|    scoped->system.mono_time_user_data = &sim_->clock();
+   65|     87|    scoped->system.mono_time_callback = [](void *user_data) -> uint64_t {
+   66|     87|        return static_cast<FakeClock *>(user_data)->current_time_ms();
+   67|     87|    };
    68|       |
-   69|    294|    return scoped;
-   70|    294|}
+   69|     87|    return scoped;
+   70|     87|}
 
 _ZN3tox4test10SimulationC2Ev:
-   10|    294|    : clock_(std::make_unique<FakeClock>())
-   11|    294|    , net_(std::make_unique<NetworkUniverse>())
-   12|    294|{
-   13|    294|}
+   10|     87|    : clock_(std::make_unique<FakeClock>())
+   11|     87|    , net_(std::make_unique<NetworkUniverse>())
+   12|     87|{
+   13|     87|}
 _ZN3tox4test10SimulationD2Ev:
-   15|    294|Simulation::~Simulation() = default;
+   15|     87|Simulation::~Simulation() = default;
 _ZN3tox4test10Simulation11create_nodeEv:
-   35|    294|{
-   36|    294|    return std::make_unique<SimulatedNode>(*this);
-   37|    294|}
+   35|     87|{
+   36|     87|    return std::make_unique<SimulatedNode>(*this);
+   37|     87|}
 _ZN3tox4test13SimulatedNodeC2ERNS0_10SimulationE:
-   42|    294|    : sim_(sim)
-   43|    294|    , network_(std::make_unique<FakeNetworkStack>(sim.net()))
+   42|     87|    : sim_(sim)
+   43|     87|    , network_(std::make_unique<FakeNetworkStack>(sim.net()))
    44|       |    , random_(
-   45|    294|          std::make_unique<FakeRandom>(12345 + sim.net().find_free_port(0)))  // Pseudo-random seed
-   46|    294|    , memory_(std::make_unique<FakeMemory>())
-   47|    294|{
-   48|    294|}
+   45|     87|          std::make_unique<FakeRandom>(12345 + sim.net().find_free_port(0)))  // Pseudo-random seed
+   46|     87|    , memory_(std::make_unique<FakeMemory>())
+   47|     87|{
+   48|     87|}
 _ZN3tox4test13SimulatedNodeD2Ev:
-   50|    294|SimulatedNode::~SimulatedNode() = default;
+   50|     87|SimulatedNode::~SimulatedNode() = default;
 _ZN3tox4test13SimulatedNode18get_primary_socketEv:
-  101|    294|{
-  102|    294|    auto sockets = network_->get_bound_udp_sockets();
-  103|    294|    if (sockets.empty())
+  101|     87|{
+  102|     87|    auto sockets = network_->get_bound_udp_sockets();
+  103|     87|    if (sockets.empty())
   ------------------
-  |  Branch (103:9): [True: 130, False: 164]
+  |  Branch (103:9): [True: 34, False: 53]
   ------------------
-  104|    130|        return nullptr;
-  105|    164|    return sockets.front();  // Return the first one bound
-  106|    294|}
+  104|     34|        return nullptr;
+  105|     53|    return sockets.front();  // Return the first one bound
+  106|     87|}
 
 send_forward_request:
-   45|    257|{
-   46|    257|    if (chain_length == 0 || chain_length > MAX_FORWARD_CHAIN_LENGTH
+   45|     55|{
+   46|     55|    if (chain_length == 0 || chain_length > MAX_FORWARD_CHAIN_LENGTH
   ------------------
-  |  |   27|    513|#define MAX_FORWARD_CHAIN_LENGTH 4
+  |  |   27|    109|#define MAX_FORWARD_CHAIN_LENGTH 4
   ------------------
-  |  Branch (46:9): [True: 1, False: 256]
-  |  Branch (46:30): [True: 1, False: 255]
+  |  Branch (46:9): [True: 1, False: 54]
+  |  Branch (46:30): [True: 1, False: 53]
   ------------------
-   47|    255|            || data_length > MAX_FORWARD_DATA_SIZE) {
+   47|     53|            || data_length > MAX_FORWARD_DATA_SIZE) {
   ------------------
-  |  |   25|    255|#define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
+  |  |   25|     53|#define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
   |  |  ------------------
-  |  |  |  |  140|    255|#define MAX_UDP_PACKET_SIZE 2048
+  |  |  |  |  140|     53|#define MAX_UDP_PACKET_SIZE 2048
   |  |  ------------------
   |  |               #define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
   |  |  ------------------
-  |  |  |  |   24|    255|#define MAX_SENDBACK_SIZE (0xff - 1)
+  |  |  |  |   24|     53|#define MAX_SENDBACK_SIZE (0xff - 1)
   |  |  ------------------
   ------------------
-  |  Branch (47:16): [True: 1, False: 254]
+  |  Branch (47:16): [True: 1, False: 52]
   ------------------
    48|      3|        return false;
    49|      3|    }
    50|       |
-   51|    254|    const uint16_t len = forward_chain_packet_size(chain_length, data_length);
-   52|    254|    VLA(uint8_t, packet, len);
+   51|     52|    const uint16_t len = forward_chain_packet_size(chain_length, data_length);
+   52|     52|    VLA(uint8_t, packet, len);
   ------------------
-  |  |   59|    254|#define VLA ALLOC_VLA
+  |  |   59|     52|#define VLA ALLOC_VLA
   |  |  ------------------
-  |  |  |  |   28|    254|#define ALLOC_VLA(type, name, size) type name[size]
+  |  |  |  |   28|     52|#define ALLOC_VLA(type, name, size) type name[size]
   |  |  ------------------
   ------------------
    53|       |
-   54|    254|    return create_forward_chain_packet(chain_keys, chain_length, data, data_length, packet)
+   54|     52|    return create_forward_chain_packet(chain_keys, chain_length, data, data_length, packet)
   ------------------
-  |  Branch (54:12): [True: 254, False: 0]
+  |  Branch (54:12): [True: 52, False: 0]
   ------------------
-   55|    254|           && sendpacket(net, forwarder, packet, len) == len;
+   55|     52|           && sendpacket(net, forwarder, packet, len) == len;
   ------------------
-  |  Branch (55:15): [True: 158, False: 96]
+  |  Branch (55:15): [True: 45, False: 7]
   ------------------
-   56|    257|}
+   56|     55|}
 forward_chain_packet_size:
-   59|    254|{
-   60|    254|    return chain_length * (1 + CRYPTO_PUBLIC_KEY_SIZE) + data_length;
+   59|     52|{
+   60|     52|    return chain_length * (1 + CRYPTO_PUBLIC_KEY_SIZE) + data_length;
   ------------------
-  |  |   44|    254|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|     52|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-   61|    254|}
+   61|     52|}
 create_forward_chain_packet:
-   66|    254|{
-   67|    254|    if (chain_length == 0 || chain_length > MAX_FORWARD_CHAIN_LENGTH
+   66|     52|{
+   67|     52|    if (chain_length == 0 || chain_length > MAX_FORWARD_CHAIN_LENGTH
   ------------------
-  |  |   27|    508|#define MAX_FORWARD_CHAIN_LENGTH 4
+  |  |   27|    104|#define MAX_FORWARD_CHAIN_LENGTH 4
   ------------------
-  |  Branch (67:9): [True: 0, False: 254]
-  |  Branch (67:30): [True: 0, False: 254]
+  |  Branch (67:9): [True: 0, False: 52]
+  |  Branch (67:30): [True: 0, False: 52]
   ------------------
-   68|    254|            || data_length > MAX_FORWARD_DATA_SIZE) {
+   68|     52|            || data_length > MAX_FORWARD_DATA_SIZE) {
   ------------------
-  |  |   25|    254|#define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
+  |  |   25|     52|#define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
   |  |  ------------------
-  |  |  |  |  140|    254|#define MAX_UDP_PACKET_SIZE 2048
+  |  |  |  |  140|     52|#define MAX_UDP_PACKET_SIZE 2048
   |  |  ------------------
   |  |               #define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
   |  |  ------------------
-  |  |  |  |   24|    254|#define MAX_SENDBACK_SIZE (0xff - 1)
+  |  |  |  |   24|     52|#define MAX_SENDBACK_SIZE (0xff - 1)
   |  |  ------------------
   ------------------
-  |  Branch (68:16): [True: 0, False: 254]
+  |  Branch (68:16): [True: 0, False: 52]
   ------------------
    69|      0|        return false;
    70|      0|    }
    71|       |
-   72|    254|    uint16_t offset = 0;
+   72|     52|    uint16_t offset = 0;
    73|       |
-   74|    519|    for (uint16_t j = 0; j < chain_length; ++j) {
+   74|    110|    for (uint16_t j = 0; j < chain_length; ++j) {
   ------------------
-  |  Branch (74:26): [True: 265, False: 254]
+  |  Branch (74:26): [True: 58, False: 52]
   ------------------
-   75|    265|        packet[offset] = NET_PACKET_FORWARD_REQUEST;
-   76|    265|        ++offset;
-   77|    265|        memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
+   75|     58|        packet[offset] = NET_PACKET_FORWARD_REQUEST;
+   76|     58|        ++offset;
+   77|     58|        memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   44|    265|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|     58|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
                       memcpy(packet + offset, chain_keys + j * CRYPTO_PUBLIC_KEY_SIZE, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   44|    265|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|     58|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-   78|    265|        offset += CRYPTO_PUBLIC_KEY_SIZE;
+   78|     58|        offset += CRYPTO_PUBLIC_KEY_SIZE;
   ------------------
-  |  |   44|    265|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|     58|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-   79|    265|    }
+   79|     58|    }
    80|       |
-   81|    254|    memcpy(packet + offset, data, data_length);
+   81|     52|    memcpy(packet + offset, data, data_length);
    82|       |    return true;
-   83|    254|}
+   83|     52|}
 forward_reply:
-  313|     28|{
-  314|     28|    if (sendback_length > MAX_SENDBACK_SIZE ||
+  313|     21|{
+  314|     21|    if (sendback_length > MAX_SENDBACK_SIZE ||
   ------------------
-  |  |   24|     56|#define MAX_SENDBACK_SIZE (0xff - 1)
+  |  |   24|     42|#define MAX_SENDBACK_SIZE (0xff - 1)
   ------------------
-  |  Branch (314:9): [True: 1, False: 27]
+  |  Branch (314:9): [True: 1, False: 20]
   ------------------
-  315|     27|            length > MAX_FORWARD_DATA_SIZE) {
+  315|     20|            length > MAX_FORWARD_DATA_SIZE) {
   ------------------
-  |  |   25|     27|#define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
+  |  |   25|     20|#define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
   |  |  ------------------
-  |  |  |  |  140|     27|#define MAX_UDP_PACKET_SIZE 2048
+  |  |  |  |  140|     20|#define MAX_UDP_PACKET_SIZE 2048
   |  |  ------------------
   |  |               #define MAX_FORWARD_DATA_SIZE (MAX_UDP_PACKET_SIZE - (1 + 1 + MAX_SENDBACK_SIZE))
   |  |  ------------------
-  |  |  |  |   24|     27|#define MAX_SENDBACK_SIZE (0xff - 1)
+  |  |  |  |   24|     20|#define MAX_SENDBACK_SIZE (0xff - 1)
   |  |  ------------------
   ------------------
-  |  Branch (315:13): [True: 1, False: 26]
+  |  Branch (315:13): [True: 1, False: 19]
   ------------------
   316|      2|        return false;
   317|      2|    }
   318|       |
-  319|     26|    const uint16_t len = 1 + 1 + sendback_length + length;
-  320|     26|    VLA(uint8_t, packet, len);
+  319|     19|    const uint16_t len = 1 + 1 + sendback_length + length;
+  320|     19|    VLA(uint8_t, packet, len);
   ------------------
-  |  |   59|     26|#define VLA ALLOC_VLA
+  |  |   59|     19|#define VLA ALLOC_VLA
   |  |  ------------------
-  |  |  |  |   28|     26|#define ALLOC_VLA(type, name, size) type name[size]
+  |  |  |  |   28|     19|#define ALLOC_VLA(type, name, size) type name[size]
   |  |  ------------------
   ------------------
-  321|     26|    packet[0] = NET_PACKET_FORWARD_REPLY;
-  322|     26|    packet[1] = (uint8_t) sendback_length;
-  323|     26|    memcpy(packet + 1 + 1, sendback, sendback_length);
-  324|     26|    memcpy(packet + 1 + 1 + sendback_length, data, length);
-  325|     26|    return sendpacket(net, forwarder, packet, len) == len;
-  326|     28|}
+  321|     19|    packet[0] = NET_PACKET_FORWARD_REPLY;
+  322|     19|    packet[1] = (uint8_t) sendback_length;
+  323|     19|    memcpy(packet + 1 + 1, sendback, sendback_length);
+  324|     19|    memcpy(packet + 1 + 1 + sendback_length, data, length);
+  325|     19|    return sendpacket(net, forwarder, packet, len) == len;
+  326|     21|}
 
 LLVMFuzzerTestOneInput:
-  111|    314|{
-  112|    314|    tox::test::fuzz_select_target<TestSendForwardRequest, TestForwardReply>(data, size);
-  113|    314|    return 0;
-  114|    314|}
+  111|    107|{
+  112|    107|    tox::test::fuzz_select_target<TestSendForwardRequest, TestForwardReply>(data, size);
+  113|    107|    return 0;
+  114|    107|}
 forwarding_fuzz_test.cc:_ZN12_GLOBAL__N_122TestSendForwardRequestERN3tox4test9Fuzz_DataE:
-   45|    265|{
-   46|    265|    CONSUME1_OR_RETURN(const uint16_t, chain_length, input);
+   45|     67|{
+   46|     67|    CONSUME1_OR_RETURN(const uint16_t, chain_length, input);
   ------------------
-  |  |   86|    265|    if ((INPUT).size() < sizeof(TYPE)) {      \
+  |  |  124|     67|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (86:9): [True: 1, False: 264]
+  |  |  |  Branch (124:9): [True: 1, False: 66]
   |  |  ------------------
-  |  |   87|      1|        return;                               \
-  |  |   88|      1|    }                                         \
-  |  |   89|    265|    TYPE NAME = (INPUT).consume1(__func__)
+  |  |  125|      1|        return;                               \
+  |  |  126|      1|    }                                         \
+  |  |  127|     67|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-   47|    264|    const uint16_t chain_keys_size = chain_length * CRYPTO_PUBLIC_KEY_SIZE;
+   47|     66|    const uint16_t chain_keys_size = chain_length * CRYPTO_PUBLIC_KEY_SIZE;
   ------------------
-  |  |   44|    264|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|     66|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-   48|    264|    CONSUME_OR_RETURN(const uint8_t *chain_keys, input, chain_keys_size);
+   48|     66|    CONSUME_OR_RETURN(const uint8_t *chain_keys, input, chain_keys_size);
   ------------------
-  |  |   98|    264|    if ((INPUT).size() < (SIZE)) {           \
+  |  |  136|     66|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (98:9): [True: 1, False: 263]
+  |  |  |  Branch (136:9): [True: 1, False: 65]
   |  |  ------------------
-  |  |   99|      1|        return;                              \
-  |  |  100|      1|    }                                        \
-  |  |  101|    264|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  137|      1|        return;                              \
+  |  |  138|      1|    }                                        \
+  |  |  139|     66|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
    49|       |
-   50|    263|    const auto prep = prepare(input);
-   51|    263|    if (!prep.has_value()) {
+   50|     65|    const auto prep = prepare(input);
+   51|     65|    if (!prep.has_value()) {
   ------------------
-  |  Branch (51:9): [True: 4, False: 259]
+  |  Branch (51:9): [True: 4, False: 61]
   ------------------
    52|      4|        return;
    53|      4|    }
-   54|    259|    const auto [ipp, forwarder, data, data_size] = prep.value();
+   54|     61|    const auto [ipp, forwarder, data, data_size] = prep.value();
    55|       |
-   56|    259|    SimulatedEnvironment env;
-   57|    259|    auto node = env.create_node(ipp.port);
-   58|    259|    configure_fuzz_memory_source(env.fake_memory(), input);
+   56|     61|    SimulatedEnvironment env;
+   57|     61|    auto node = env.create_node(ipp.port);
+   58|     61|    configure_fuzz_memory_source(env.fake_memory(), input);
    59|       |
-   60|    259|    const Ptr<Logger> logger(logger_new(&node->c_memory), logger_kill);
-   61|    259|    if (logger == nullptr) {
+   60|     61|    const Ptr<Logger> logger(logger_new(&node->c_memory), logger_kill);
+   61|     61|    if (logger == nullptr) {
   ------------------
-  |  Branch (61:9): [True: 1, False: 258]
+  |  Branch (61:9): [True: 5, False: 56]
   ------------------
-   62|      1|        return;
-   63|      1|    }
+   62|      5|        return;
+   63|      5|    }
    64|       |
-   65|    258|    const Ptr<Networking_Core> net(
-   66|    258|        new_networking_ex(logger.get(), &node->c_memory, &node->c_network, &ipp.ip, ipp.port,
-   67|    258|            ipp.port + 100, nullptr),
-   68|    258|        kill_networking);
-   69|    258|    if (net == nullptr) {
+   65|     56|    const Ptr<Networking_Core> net(
+   66|     56|        new_networking_ex(logger.get(), &node->c_memory, &node->c_network, &ipp.ip, ipp.port,
+   67|     56|            ipp.port + 100, nullptr),
+   68|     56|        kill_networking);
+   69|     56|    if (net == nullptr) {
   ------------------
-  |  Branch (69:9): [True: 1, False: 257]
+  |  Branch (69:9): [True: 1, False: 55]
   ------------------
    70|      1|        return;
    71|      1|    }
    72|       |
-   73|    257|    send_forward_request(net.get(), &forwarder, chain_keys, chain_length, data, data_size);
-   74|    257|}
+   73|     55|    send_forward_request(net.get(), &forwarder, chain_keys, chain_length, data, data_size);
+   74|     55|}
 forwarding_fuzz_test.cc:_ZN12_GLOBAL__N_17prepareERN3tox4test9Fuzz_DataE:
-   24|    309|{
-   25|    309|    CONSUME_OR_RETURN_VAL(const uint8_t *ipp_packed, input, SIZE_IP_PORT, std::nullopt);
+   24|    102|{
+   25|    102|    CONSUME_OR_RETURN_VAL(const uint8_t *ipp_packed, input, SIZE_IP_PORT, std::nullopt);
   ------------------
-  |  |  104|    309|    if ((INPUT).size() < (SIZE)) {                    \
+  |  |  142|    102|    if ((INPUT).size() < (SIZE)) {                    \
   |  |  ------------------
-  |  |  |  Branch (104:9): [True: 2, False: 307]
+  |  |  |  Branch (142:9): [True: 2, False: 100]
   |  |  ------------------
-  |  |  105|      2|        return (VAL);                                 \
-  |  |  106|      2|    }                                                 \
-  |  |  107|    309|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  143|      2|        return (VAL);                                 \
+  |  |  144|      2|    }                                                 \
+  |  |  145|    102|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   26|    307|    IP_Port ipp{};
-   27|    307|    unpack_ip_port(&ipp, ipp_packed, SIZE_IP6, true);
+   26|    100|    IP_Port ipp{};
+   27|    100|    unpack_ip_port(&ipp, ipp_packed, SIZE_IP6, true);
   ------------------
-  |  |   32|    307|#define SIZE_IP6 16
+  |  |   32|    100|#define SIZE_IP6 16
   ------------------
    28|       |
-   29|    307|    CONSUME_OR_RETURN_VAL(const uint8_t *forwarder_packed, input, SIZE_IP_PORT, std::nullopt);
+   29|    100|    CONSUME_OR_RETURN_VAL(const uint8_t *forwarder_packed, input, SIZE_IP_PORT, std::nullopt);
   ------------------
-  |  |  104|    307|    if ((INPUT).size() < (SIZE)) {                    \
+  |  |  142|    100|    if ((INPUT).size() < (SIZE)) {                    \
   |  |  ------------------
-  |  |  |  Branch (104:9): [True: 5, False: 302]
+  |  |  |  Branch (142:9): [True: 5, False: 95]
   |  |  ------------------
-  |  |  105|      5|        return (VAL);                                 \
-  |  |  106|      5|    }                                                 \
-  |  |  107|    307|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  143|      5|        return (VAL);                                 \
+  |  |  144|      5|    }                                                 \
+  |  |  145|    100|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   30|    302|    IP_Port forwarder{};
-   31|    302|    unpack_ip_port(&forwarder, forwarder_packed, SIZE_IP6, true);
+   30|     95|    IP_Port forwarder{};
+   31|     95|    unpack_ip_port(&forwarder, forwarder_packed, SIZE_IP6, true);
   ------------------
-  |  |   32|    302|#define SIZE_IP6 16
+  |  |   32|     95|#define SIZE_IP6 16
   ------------------
    32|       |
    33|       |    // 2 bytes: size of the request
-   34|    302|    CONSUME_OR_RETURN_VAL(const uint8_t *data_size_bytes, input, sizeof(uint16_t), std::nullopt);
+   34|     95|    CONSUME_OR_RETURN_VAL(const uint8_t *data_size_bytes, input, sizeof(uint16_t), std::nullopt);
   ------------------
-  |  |  104|    302|    if ((INPUT).size() < (SIZE)) {                    \
+  |  |  142|     95|    if ((INPUT).size() < (SIZE)) {                    \
   |  |  ------------------
-  |  |  |  Branch (104:9): [True: 6, False: 296]
+  |  |  |  Branch (142:9): [True: 6, False: 89]
   |  |  ------------------
-  |  |  105|      6|        return (VAL);                                 \
-  |  |  106|      6|    }                                                 \
-  |  |  107|    302|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  143|      6|        return (VAL);                                 \
+  |  |  144|      6|    }                                                 \
+  |  |  145|     95|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   35|    296|    uint16_t data_size;
-   36|    296|    std::memcpy(&data_size, data_size_bytes, sizeof(uint16_t));
+   35|     89|    uint16_t data_size;
+   36|     89|    std::memcpy(&data_size, data_size_bytes, sizeof(uint16_t));
    37|       |
    38|       |    // data bytes (max 64K)
-   39|    296|    CONSUME_OR_RETURN_VAL(const uint8_t *data, input, data_size, std::nullopt);
+   39|     89|    CONSUME_OR_RETURN_VAL(const uint8_t *data, input, data_size, std::nullopt);
   ------------------
-  |  |  104|    296|    if ((INPUT).size() < (SIZE)) {                    \
+  |  |  142|     89|    if ((INPUT).size() < (SIZE)) {                    \
   |  |  ------------------
-  |  |  |  Branch (104:9): [True: 2, False: 294]
+  |  |  |  Branch (142:9): [True: 2, False: 87]
   |  |  ------------------
-  |  |  105|      2|        return (VAL);                                 \
-  |  |  106|      2|    }                                                 \
-  |  |  107|    296|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  143|      2|        return (VAL);                                 \
+  |  |  144|      2|    }                                                 \
+  |  |  145|     89|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
    40|       |
-   41|    294|    return {{ipp, forwarder, data, data_size}};
-   42|    296|}
+   41|     87|    return {{ipp, forwarder, data, data_size}};
+   42|     89|}
 forwarding_fuzz_test.cc:_ZN12_GLOBAL__N_116TestForwardReplyERN3tox4test9Fuzz_DataE:
-   77|     48|{
-   78|     48|    CONSUME1_OR_RETURN(const uint16_t, sendback_length, input);
+   77|     39|{
+   78|     39|    CONSUME1_OR_RETURN(const uint16_t, sendback_length, input);
   ------------------
-  |  |   86|     48|    if ((INPUT).size() < sizeof(TYPE)) {      \
+  |  |  124|     39|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (86:9): [True: 1, False: 47]
+  |  |  |  Branch (124:9): [True: 1, False: 38]
   |  |  ------------------
-  |  |   87|      1|        return;                               \
-  |  |   88|      1|    }                                         \
-  |  |   89|     48|    TYPE NAME = (INPUT).consume1(__func__)
+  |  |  125|      1|        return;                               \
+  |  |  126|      1|    }                                         \
+  |  |  127|     39|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-   79|     47|    CONSUME_OR_RETURN(const uint8_t *sendback, input, sendback_length);
+   79|     38|    CONSUME_OR_RETURN(const uint8_t *sendback, input, sendback_length);
   ------------------
-  |  |   98|     47|    if ((INPUT).size() < (SIZE)) {           \
+  |  |  136|     38|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (98:9): [True: 1, False: 46]
+  |  |  |  Branch (136:9): [True: 1, False: 37]
   |  |  ------------------
-  |  |   99|      1|        return;                              \
-  |  |  100|      1|    }                                        \
-  |  |  101|     47|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  137|      1|        return;                              \
+  |  |  138|      1|    }                                        \
+  |  |  139|     38|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
    80|       |
-   81|     46|    const auto prep = prepare(input);
-   82|     46|    if (!prep.has_value()) {
+   81|     37|    const auto prep = prepare(input);
+   82|     37|    if (!prep.has_value()) {
   ------------------
-  |  Branch (82:9): [True: 11, False: 35]
+  |  Branch (82:9): [True: 11, False: 26]
   ------------------
    83|     11|        return;
    84|     11|    }
-   85|     35|    const auto [ipp, forwarder, data, data_size] = prep.value();
+   85|     26|    const auto [ipp, forwarder, data, data_size] = prep.value();
    86|       |
-   87|     35|    SimulatedEnvironment env;
-   88|     35|    auto node = env.create_node(ipp.port);
-   89|     35|    configure_fuzz_memory_source(env.fake_memory(), input);
+   87|     26|    SimulatedEnvironment env;
+   88|     26|    auto node = env.create_node(ipp.port);
+   89|     26|    configure_fuzz_memory_source(env.fake_memory(), input);
    90|       |
-   91|     35|    const Ptr<Logger> logger(logger_new(&node->c_memory), logger_kill);
-   92|     35|    if (logger == nullptr) {
+   91|     26|    const Ptr<Logger> logger(logger_new(&node->c_memory), logger_kill);
+   92|     26|    if (logger == nullptr) {
   ------------------
-  |  Branch (92:9): [True: 2, False: 33]
+  |  Branch (92:9): [True: 1, False: 25]
   ------------------
-   93|      2|        return;
-   94|      2|    }
+   93|      1|        return;
+   94|      1|    }
    95|       |
-   96|     33|    const Ptr<Networking_Core> net(
-   97|     33|        new_networking_ex(logger.get(), &node->c_memory, &node->c_network, &ipp.ip, ipp.port,
-   98|     33|            ipp.port + 100, nullptr),
-   99|     33|        kill_networking);
-  100|     33|    if (net == nullptr) {
+   96|     25|    const Ptr<Networking_Core> net(
+   97|     25|        new_networking_ex(logger.get(), &node->c_memory, &node->c_network, &ipp.ip, ipp.port,
+   98|     25|            ipp.port + 100, nullptr),
+   99|     25|        kill_networking);
+  100|     25|    if (net == nullptr) {
   ------------------
-  |  Branch (100:9): [True: 5, False: 28]
+  |  Branch (100:9): [True: 4, False: 21]
   ------------------
-  101|      5|        return;
-  102|      5|    }
+  101|      4|        return;
+  102|      4|    }
   103|       |
-  104|     28|    forward_reply(net.get(), &forwarder, sendback, sendback_length, data, data_size);
-  105|     28|}
+  104|     21|    forward_reply(net.get(), &forwarder, sendback, sendback_length, data, data_size);
+  105|     21|}
 
 logger_new:
-   33|    294|{
-   34|    294|    Logger *log = (Logger *)mem_alloc(mem, sizeof(Logger));
+   33|     87|{
+   34|     87|    Logger *log = (Logger *)mem_alloc(mem, sizeof(Logger));
    35|       |
-   36|    294|    if (log == nullptr) {
+   36|     87|    if (log == nullptr) {
   ------------------
-  |  |   63|    294|#define nullptr NULL
+  |  |   63|     87|#define nullptr NULL
   ------------------
-  |  Branch (36:9): [True: 3, False: 291]
+  |  Branch (36:9): [True: 6, False: 81]
   ------------------
-   37|      3|        return nullptr;
+   37|      6|        return nullptr;
   ------------------
-  |  |   63|      3|#define nullptr NULL
+  |  |   63|      6|#define nullptr NULL
   ------------------
-   38|      3|    }
+   38|      6|    }
    39|       |
-   40|    291|    log->mem = mem;
+   40|     81|    log->mem = mem;
    41|       |
-   42|    291|    return log;
-   43|    294|}
+   42|     81|    return log;
+   43|     87|}
 logger_kill:
-   46|    291|{
-   47|    291|    if (log == nullptr) {
+   46|     81|{
+   47|     81|    if (log == nullptr) {
   ------------------
-  |  |   63|    291|#define nullptr NULL
+  |  |   63|     81|#define nullptr NULL
   ------------------
-  |  Branch (47:9): [True: 0, False: 291]
+  |  Branch (47:9): [True: 0, False: 81]
   ------------------
    48|      0|        return;
    49|      0|    }
    50|       |
-   51|    291|    mem_delete(log->mem, log);
-   52|    291|}
+   51|     81|    mem_delete(log->mem, log);
+   52|     81|}
 logger_write:
-   64|     84|{
-   65|     84|    if (log == nullptr) {
+   64|     11|{
+   65|     11|    if (log == nullptr) {
   ------------------
-  |  |   63|     84|#define nullptr NULL
+  |  |   63|     11|#define nullptr NULL
   ------------------
-  |  Branch (65:9): [True: 0, False: 84]
+  |  Branch (65:9): [True: 0, False: 11]
   ------------------
    66|      0|        return;
    67|      0|    }
    68|       |
-   69|     84|    if (log->callback == nullptr) {
+   69|     11|    if (log->callback == nullptr) {
   ------------------
-  |  |   63|     84|#define nullptr NULL
+  |  |   63|     11|#define nullptr NULL
   ------------------
-  |  Branch (69:9): [True: 84, False: 0]
+  |  Branch (69:9): [True: 11, False: 0]
   ------------------
-   70|     84|        return;
-   71|     84|    }
+   70|     11|        return;
+   71|     11|    }
    72|       |
    73|       |    // Only pass the file name, not the entire file path, for privacy reasons.
    74|       |    // The full path may contain PII of the person compiling toxcore (their
@@ -1016,28 +1016,28 @@ logger_write:
    93|      0|}
 
 mem_alloc:
-   26|    869|{
-   27|    869|    void *const ptr = tox_memory_malloc(mem, size);
-   28|    869|    if (ptr != nullptr) {
+   26|    242|{
+   27|    242|    void *const ptr = tox_memory_malloc(mem, size);
+   28|    242|    if (ptr != nullptr) {
   ------------------
-  |  |   63|    869|#define nullptr NULL
+  |  |   63|    242|#define nullptr NULL
   ------------------
-  |  Branch (28:9): [True: 863, False: 6]
+  |  Branch (28:9): [True: 234, False: 8]
   ------------------
-   29|    863|        memset(ptr, 0, size);
-   30|    863|    }
-   31|    869|    return ptr;
-   32|    869|}
+   29|    234|        memset(ptr, 0, size);
+   30|    234|    }
+   31|    242|    return ptr;
+   32|    242|}
 mem_delete:
-   62|    861|{
-   63|    861|    tox_memory_dealloc(mem, ptr);
-   64|    861|}
+   62|    233|{
+   63|    233|    tox_memory_dealloc(mem, ptr);
+   64|    233|}
 
 net_log_data:
-  155|    175|{
-  156|    175|    if (res < 0) { /* Windows doesn't necessarily know `%zu` */
+  155|     58|{
+  156|     58|    if (res < 0) { /* Windows doesn't necessarily know `%zu` */
   ------------------
-  |  Branch (156:9): [True: 0, False: 175]
+  |  Branch (156:9): [True: 0, False: 58]
   ------------------
   157|      0|        Ip_Ntoa ip_str;
   158|      0|        const int error = net_error();
@@ -1065,39 +1065,39 @@ net_log_data:
   162|      0|                     min_u16(buflen, 999), 'E',
   163|      0|                     net_ip_ntoa(&ip_port->ip, &ip_str), net_ntohs(ip_port->port), error,
   164|      0|                     net_strerror(error, &error_str), data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
-  165|    175|    } else if ((res > 0) && ((size_t)res <= buflen)) {
+  165|     58|    } else if ((res > 0) && ((size_t)res <= buflen)) {
   ------------------
-  |  Branch (165:16): [True: 175, False: 0]
-  |  Branch (165:29): [True: 175, False: 0]
+  |  Branch (165:16): [True: 58, False: 0]
+  |  Branch (165:29): [True: 58, False: 0]
   ------------------
-  166|    175|        Ip_Ntoa ip_str;
-  167|    175|        LOGGER_TRACE(log, "[%02x = %-21s] %s %3u%c %s:%u (%d: %s) | %08x%08x...%02x",
+  166|     58|        Ip_Ntoa ip_str;
+  167|     58|        LOGGER_TRACE(log, "[%02x = %-21s] %s %3u%c %s:%u (%d: %s) | %08x%08x...%02x",
   ------------------
-  |  |   76|    175|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
+  |  |   76|     58|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|    175|    do {                                                                         \
-  |  |  |  |   70|    175|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|     58|    do {                                                                         \
+  |  |  |  |   70|     58|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|    350|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|    116|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [Folded, False: 175]
+  |  |  |  |  |  Branch (70:13): [Folded, False: 58]
   |  |  |  |  ------------------
   |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
   |  |  |  |  ------------------
   |  |  |  |  |  Branch (71:68): [True: 0, False: 0]
   |  |  |  |  ------------------
   |  |  |  |   72|      0|        }                                                                        \
-  |  |  |  |   73|    175|    } while (0)
+  |  |  |  |   73|     58|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 175]
+  |  |  |  |  |  Branch (73:14): [Folded, False: 58]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  168|    175|                     buffer[0], net_packet_type_name((Net_Packet_Type)buffer[0]), message,
-  169|    175|                     min_u16(res, 999), (size_t)res < buflen ? '<' : '=',
-  170|    175|                     net_ip_ntoa(&ip_port->ip, &ip_str), net_ntohs(ip_port->port), 0, "OK",
-  171|    175|                     data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
-  172|    175|    } else { /* empty or overwrite */
+  168|     58|                     buffer[0], net_packet_type_name((Net_Packet_Type)buffer[0]), message,
+  169|     58|                     min_u16(res, 999), (size_t)res < buflen ? '<' : '=',
+  170|     58|                     net_ip_ntoa(&ip_port->ip, &ip_str), net_ntohs(ip_port->port), 0, "OK",
+  171|     58|                     data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
+  172|     58|    } else { /* empty or overwrite */
   173|      0|        Ip_Ntoa ip_str;
   174|      0|        LOGGER_TRACE(log, "[%02x = %-21s] %s %ld%c%u %s:%u (%d: %s) | %08x%08x...%02x",
   ------------------
@@ -1126,171 +1126,171 @@ net_log_data:
   177|      0|                     net_ip_ntoa(&ip_port->ip, &ip_str), net_ntohs(ip_port->port), 0, "OK",
   178|      0|                     data_0(buflen, buffer), data_1(buflen, buffer), buffer[buflen - 1]);
   179|      0|    }
-  180|    175|}
+  180|     58|}
 
 netprof_record_packet:
-   72|    175|{
-   73|    175|    if (profile == nullptr) {
+   72|     58|{
+   73|     58|    if (profile == nullptr) {
   ------------------
-  |  |   63|    175|#define nullptr NULL
+  |  |   63|     58|#define nullptr NULL
   ------------------
-  |  Branch (73:9): [True: 0, False: 175]
+  |  Branch (73:9): [True: 0, False: 58]
   ------------------
    74|      0|        return;
    75|      0|    }
    76|       |
-   77|    175|    if (dir == PACKET_DIRECTION_SEND) {
+   77|     58|    if (dir == PACKET_DIRECTION_SEND) {
   ------------------
-  |  Branch (77:9): [True: 175, False: 0]
+  |  Branch (77:9): [True: 58, False: 0]
   ------------------
-   78|    175|        ++profile->total_packets_sent;
-   79|    175|        ++profile->packets_sent[id];
+   78|     58|        ++profile->total_packets_sent;
+   79|     58|        ++profile->packets_sent[id];
    80|       |
-   81|    175|        profile->total_bytes_sent += length;
-   82|    175|        profile->bytes_sent[id] += length;
-   83|    175|    } else {
+   81|     58|        profile->total_bytes_sent += length;
+   82|     58|        profile->bytes_sent[id] += length;
+   83|     58|    } else {
    84|      0|        ++profile->total_packets_recv;
    85|      0|        ++profile->packets_recv[id];
    86|       |
    87|      0|        profile->total_bytes_recv += length;
    88|      0|        profile->bytes_recv[id] += length;
    89|      0|    }
-   90|    175|}
+   90|     58|}
 netprof_new:
-  139|    287|{
-  140|    287|    Net_Profile *np = (Net_Profile *)mem_alloc(mem, sizeof(Net_Profile));
+  139|     77|{
+  140|     77|    Net_Profile *np = (Net_Profile *)mem_alloc(mem, sizeof(Net_Profile));
   141|       |
-  142|    287|    if (np == nullptr) {
+  142|     77|    if (np == nullptr) {
   ------------------
-  |  |   63|    287|#define nullptr NULL
+  |  |   63|     77|#define nullptr NULL
   ------------------
-  |  Branch (142:9): [True: 2, False: 285]
+  |  Branch (142:9): [True: 1, False: 76]
   ------------------
-  143|      2|        LOGGER_ERROR(log, "failed to allocate memory for net profiler");
+  143|      1|        LOGGER_ERROR(log, "failed to allocate memory for net profiler");
   ------------------
-  |  |   80|      2|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|      1|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|      2|    do {                                                                         \
-  |  |  |  |   70|      2|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      1|    do {                                                                         \
+  |  |  |  |   70|      1|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|      4|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|      2|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [True: 2, Folded]
+  |  |  |  |  |  Branch (70:13): [True: 1, Folded]
   |  |  |  |  ------------------
-  |  |  |  |   71|      2|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|      2|        }                                                                        \
-  |  |  |  |   73|      2|    } while (0)
+  |  |  |  |   71|      1|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      1|        }                                                                        \
+  |  |  |  |   73|      1|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 2]
+  |  |  |  |  |  Branch (73:14): [Folded, False: 1]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  144|      2|        return nullptr;
+  144|      1|        return nullptr;
   ------------------
-  |  |   63|      2|#define nullptr NULL
+  |  |   63|      1|#define nullptr NULL
   ------------------
-  145|      2|    }
+  145|      1|    }
   146|       |
-  147|    285|    return np;
-  148|    287|}
+  147|     76|    return np;
+  148|     77|}
 netprof_kill:
-  151|    285|{
-  152|    285|    if (net_profile != nullptr) {
+  151|     76|{
+  152|     76|    if (net_profile != nullptr) {
   ------------------
-  |  |   63|    285|#define nullptr NULL
+  |  |   63|     76|#define nullptr NULL
   ------------------
-  |  Branch (152:9): [True: 285, False: 0]
+  |  Branch (152:9): [True: 76, False: 0]
   ------------------
-  153|    285|        mem_delete(mem, net_profile);
-  154|    285|    }
-  155|    285|}
+  153|     76|        mem_delete(mem, net_profile);
+  154|     76|    }
+  155|     76|}
 
 net_socket_to_native:
-  366|  2.15k|{
-  367|  2.15k|    return (force int)sock.value;
-  368|  2.15k|}
+  366|    599|{
+  367|    599|    return (force int)sock.value;
+  368|    599|}
 net_socket_from_native:
-  371|    734|{
-  372|    734|    const Socket res = {(force Socket_Value)sock};
-  373|    734|    return res;
-  374|    734|}
+  371|    205|{
+  372|    205|    const Socket res = {(force Socket_Value)sock};
+  373|    205|    return res;
+  374|    205|}
 net_invalid_socket:
-  377|    285|{
-  378|    285|    return net_socket_from_native(INVALID_SOCKET);
+  377|     76|{
+  378|     76|    return net_socket_from_native(INVALID_SOCKET);
   ------------------
-  |  |  362|    285|#define INVALID_SOCKET (-1)
+  |  |  362|     76|#define INVALID_SOCKET (-1)
   ------------------
-  379|    285|}
+  379|     76|}
 net_family_ipv4:
-  387|  1.09k|{
-  388|  1.09k|    return family_ipv4;
-  389|  1.09k|}
+  387|    332|{
+  388|    332|    return family_ipv4;
+  389|    332|}
 net_family_ipv6:
   392|      3|{
   393|      3|    return family_ipv6;
   394|      3|}
 net_family_tcp_ipv4:
-  407|     83|{
-  408|     83|    return family_tcp_ipv4;
-  409|     83|}
+  407|     11|{
+  408|     11|    return family_tcp_ipv4;
+  409|     11|}
 net_family_tcp_ipv6:
   412|      5|{
   413|      5|    return family_tcp_ipv6;
   414|      5|}
 net_family_is_unspec:
-  427|    819|{
-  428|    819|    return family.value == family_unspec.value;
-  429|    819|}
+  427|    212|{
+  428|    212|    return family.value == family_unspec.value;
+  429|    212|}
 net_family_is_ipv4:
-  432|  1.51k|{
-  433|  1.51k|    return family.value == family_ipv4.value;
-  434|  1.51k|}
+  432|    410|{
+  433|    410|    return family.value == family_ipv4.value;
+  434|    410|}
 net_family_is_ipv6:
-  437|    923|{
-  438|    923|    return family.value == family_ipv6.value;
-  439|    923|}
+  437|    271|{
+  438|    271|    return family.value == family_ipv6.value;
+  439|    271|}
 net_family_is_tcp_ipv4:
-  452|     79|{
-  453|     79|    return family.value == family_tcp_ipv4.value;
-  454|     79|}
+  452|      7|{
+  453|      7|    return family.value == family_tcp_ipv4.value;
+  454|      7|}
 sock_valid:
-  472|    285|{
-  473|    285|    const Socket invalid_socket = net_invalid_socket();
-  474|    285|    return sock.value != invalid_socket.value;
-  475|    285|}
+  472|     76|{
+  473|     76|    const Socket invalid_socket = net_invalid_socket();
+  474|     76|    return sock.value != invalid_socket.value;
+  475|     76|}
 kill_sock:
-  824|    285|{
-  825|    285|    ns->funcs->close(ns->obj, sock);
-  826|    285|}
+  824|     76|{
+  825|     76|    ns->funcs->close(ns->obj, sock);
+  826|     76|}
 set_socket_nonblock:
-  829|    285|{
+  829|     76|{
   830|       |    return ns->funcs->socket_nonblock(ns->obj, sock, true) == 0;
-  831|    285|}
+  831|     76|}
 set_socket_nosigpipe:
-  834|    285|{
+  834|     76|{
   835|       |#if defined(__APPLE__)
   836|       |    int set = 1;
   837|       |    return net_setsockopt(ns, sock, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int)) == 0;
   838|       |#else
   839|       |    return true;
-  840|    285|#endif /* __APPLE__ */
-  841|    285|}
+  840|     76|#endif /* __APPLE__ */
+  841|     76|}
 net_send_packet:
-  900|    280|{
-  901|    280|    IP_Port ipp_copy = *ip_port;
+  900|     71|{
+  901|     71|    IP_Port ipp_copy = *ip_port;
   902|       |
-  903|    280|    if (net_family_is_unspec(ip_port->ip.family)) {
+  903|     71|    if (net_family_is_unspec(ip_port->ip.family)) {
   ------------------
-  |  Branch (903:9): [True: 26, False: 254]
+  |  Branch (903:9): [True: 6, False: 65]
   ------------------
   904|       |        // TODO(iphydf): Make this an error. Currently this fails sometimes when
   905|       |        // called from DHT.c:do_ping_and_sendnode_requests.
-  906|     26|        return -1;
-  907|     26|    }
+  906|      6|        return -1;
+  907|      6|    }
   908|       |
-  909|    254|    if (net_family_is_unspec(net->family)) { /* Socket not initialized */
+  909|     65|    if (net_family_is_unspec(net->family)) { /* Socket not initialized */
   ------------------
-  |  Branch (909:9): [True: 0, False: 254]
+  |  Branch (909:9): [True: 0, False: 65]
   ------------------
   910|       |        // TODO(iphydf): Make this an error. Currently, the onion client calls
   911|       |        // this via DHT nodes requests.
@@ -1317,41 +1317,41 @@ net_send_packet:
   914|      0|    }
   915|       |
   916|       |    /* socket TOX_AF_INET, but target IP NOT: can't send */
-  917|    254|    if (net_family_is_ipv4(net->family) && !net_family_is_ipv4(ipp_copy.ip.family)) {
+  917|     65|    if (net_family_is_ipv4(net->family) && !net_family_is_ipv4(ipp_copy.ip.family)) {
   ------------------
-  |  Branch (917:9): [True: 254, False: 0]
-  |  Branch (917:44): [True: 79, False: 175]
+  |  Branch (917:9): [True: 65, False: 0]
+  |  Branch (917:44): [True: 7, False: 58]
   ------------------
   918|       |        // TODO(iphydf): Make this an error. Occasionally we try to send to an
   919|       |        // all-zero ip_port.
-  920|     79|        Ip_Ntoa ip_str;
-  921|     79|        LOGGER_WARNING(net->log, "attempted to send message with network family %d (probably IPv6) on IPv4 socket (%s)",
+  920|      7|        Ip_Ntoa ip_str;
+  921|      7|        LOGGER_WARNING(net->log, "attempted to send message with network family %d (probably IPv6) on IPv4 socket (%s)",
   ------------------
-  |  |   79|     79|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
+  |  |   79|      7|#define LOGGER_WARNING(log, ...) LOGGER_WRITE(log, LOGGER_LEVEL_WARNING, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|     79|    do {                                                                         \
-  |  |  |  |   70|     79|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|      7|    do {                                                                         \
+  |  |  |  |   70|      7|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|    158|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|     14|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [True: 79, Folded]
+  |  |  |  |  |  Branch (70:13): [True: 7, Folded]
   |  |  |  |  ------------------
-  |  |  |  |   71|     79|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|     79|        }                                                                        \
-  |  |  |  |   73|     79|    } while (0)
+  |  |  |  |   71|      7|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|      7|        }                                                                        \
+  |  |  |  |   73|      7|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 79]
+  |  |  |  |  |  Branch (73:14): [Folded, False: 7]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  922|     79|                       ipp_copy.ip.family.value, net_ip_ntoa(&ipp_copy.ip, &ip_str));
-  923|     79|        return -1;
-  924|     79|    }
+  922|      7|                       ipp_copy.ip.family.value, net_ip_ntoa(&ipp_copy.ip, &ip_str));
+  923|      7|        return -1;
+  924|      7|    }
   925|       |
-  926|    175|    if (net_family_is_ipv4(ipp_copy.ip.family) && net_family_is_ipv6(net->family)) {
+  926|     58|    if (net_family_is_ipv4(ipp_copy.ip.family) && net_family_is_ipv6(net->family)) {
   ------------------
-  |  Branch (926:9): [True: 175, False: 0]
-  |  Branch (926:51): [True: 0, False: 175]
+  |  Branch (926:9): [True: 58, False: 0]
+  |  Branch (926:51): [True: 0, False: 58]
   ------------------
   927|       |        /* must convert to IPV4-in-IPV6 address */
   928|      0|        IP6 ip6;
@@ -1367,41 +1367,41 @@ net_send_packet:
   938|      0|        ipp_copy.ip.ip.v6 = ip6;
   939|      0|    }
   940|       |
-  941|    175|    const long res = net_sendto(net->ns, net->sock, packet.data, packet.length, &ipp_copy);
-  942|    175|    net_log_data(net->log, "O=>", packet.data, packet.length, ip_port, res);
+  941|     58|    const long res = net_sendto(net->ns, net->sock, packet.data, packet.length, &ipp_copy);
+  942|     58|    net_log_data(net->log, "O=>", packet.data, packet.length, ip_port, res);
   943|       |
-  944|    175|    assert(res <= INT_MAX);
+  944|     58|    assert(res <= INT_MAX);
   ------------------
-  |  Branch (944:5): [True: 175, False: 0]
+  |  Branch (944:5): [True: 58, False: 0]
   ------------------
   945|       |
-  946|    175|    if (res == packet.length && packet.data != nullptr) {
+  946|     58|    if (res == packet.length && packet.data != nullptr) {
   ------------------
-  |  |   63|    175|#define nullptr NULL
+  |  |   63|     58|#define nullptr NULL
   ------------------
-  |  Branch (946:9): [True: 175, False: 0]
-  |  Branch (946:33): [True: 175, False: 0]
+  |  Branch (946:9): [True: 58, False: 0]
+  |  Branch (946:33): [True: 58, False: 0]
   ------------------
-  947|    175|        netprof_record_packet(net->udp_net_profile, packet.data[0], packet.length, PACKET_DIRECTION_SEND);
-  948|    175|    }
+  947|     58|        netprof_record_packet(net->udp_net_profile, packet.data[0], packet.length, PACKET_DIRECTION_SEND);
+  948|     58|    }
   949|       |
-  950|    175|    return (int)res;
-  951|    175|}
+  950|     58|    return (int)res;
+  951|     58|}
 sendpacket:
-  959|    280|{
-  960|    280|    const Net_Packet packet = {data, length};
-  961|    280|    return net_send_packet(net, ip_port, packet);
-  962|    280|}
+  959|     71|{
+  960|     71|    const Net_Packet packet = {data, length};
+  961|     71|    return net_send_packet(net, ip_port, packet);
+  962|     71|}
 new_networking_ex:
- 1049|    291|{
+ 1049|     81|{
  1050|       |    /* If both from and to are 0, use default port range
  1051|       |     * If one is 0 and the other is non-0, use the non-0 value as only port
  1052|       |     * If from > to, swap
  1053|       |     */
- 1054|    291|    if (port_from == 0 && port_to == 0) {
+ 1054|     81|    if (port_from == 0 && port_to == 0) {
   ------------------
-  |  Branch (1054:9): [True: 128, False: 163]
-  |  Branch (1054:27): [True: 0, False: 128]
+  |  Branch (1054:9): [True: 32, False: 49]
+  |  Branch (1054:27): [True: 0, False: 32]
   ------------------
  1055|      0|        port_from = TOX_PORTRANGE_FROM;
   ------------------
@@ -1411,40 +1411,40 @@ new_networking_ex:
   ------------------
   |  |  192|      0|#define TOX_PORTRANGE_TO   33545
   ------------------
- 1057|    291|    } else if (port_from == 0 && port_to != 0) {
+ 1057|     81|    } else if (port_from == 0 && port_to != 0) {
   ------------------
-  |  Branch (1057:16): [True: 128, False: 163]
-  |  Branch (1057:34): [True: 128, False: 0]
+  |  Branch (1057:16): [True: 32, False: 49]
+  |  Branch (1057:34): [True: 32, False: 0]
   ------------------
- 1058|    128|        port_from = port_to;
- 1059|    163|    } else if (port_from != 0 && port_to == 0) {
+ 1058|     32|        port_from = port_to;
+ 1059|     49|    } else if (port_from != 0 && port_to == 0) {
   ------------------
-  |  Branch (1059:16): [True: 163, False: 0]
-  |  Branch (1059:34): [True: 1, False: 162]
+  |  Branch (1059:16): [True: 49, False: 0]
+  |  Branch (1059:34): [True: 1, False: 48]
   ------------------
  1060|      1|        port_to = port_from;
- 1061|    162|    } else if (port_from > port_to) {
+ 1061|     48|    } else if (port_from > port_to) {
   ------------------
-  |  Branch (1061:16): [True: 9, False: 153]
+  |  Branch (1061:16): [True: 1, False: 47]
   ------------------
- 1062|      9|        const uint16_t temp_port = port_from;
- 1063|      9|        port_from = port_to;
- 1064|      9|        port_to = temp_port;
- 1065|      9|    }
+ 1062|      1|        const uint16_t temp_port = port_from;
+ 1063|      1|        port_from = port_to;
+ 1064|      1|        port_to = temp_port;
+ 1065|      1|    }
  1066|       |
- 1067|    291|    if (error != nullptr) {
+ 1067|     81|    if (error != nullptr) {
   ------------------
-  |  |   63|    291|#define nullptr NULL
+  |  |   63|     81|#define nullptr NULL
   ------------------
-  |  Branch (1067:9): [True: 0, False: 291]
+  |  Branch (1067:9): [True: 0, False: 81]
   ------------------
  1068|      0|        *error = 2;
  1069|      0|    }
  1070|       |
  1071|       |    /* maybe check for invalid IPs like 224+.x.y.z? if there is any IP set ever */
- 1072|    291|    if (!net_family_is_ipv4(ip->family) && !net_family_is_ipv6(ip->family)) {
+ 1072|     81|    if (!net_family_is_ipv4(ip->family) && !net_family_is_ipv6(ip->family)) {
   ------------------
-  |  Branch (1072:9): [True: 3, False: 288]
+  |  Branch (1072:9): [True: 3, False: 78]
   |  Branch (1072:44): [True: 3, False: 0]
   ------------------
  1073|      3|        LOGGER_ERROR(log, "invalid address family: %u", ip->family.value);
@@ -1472,13 +1472,13 @@ new_networking_ex:
   ------------------
  1075|      3|    }
  1076|       |
- 1077|    288|    Networking_Core *temp = (Networking_Core *)mem_alloc(mem, sizeof(Networking_Core));
+ 1077|     78|    Networking_Core *temp = (Networking_Core *)mem_alloc(mem, sizeof(Networking_Core));
  1078|       |
- 1079|    288|    if (temp == nullptr) {
+ 1079|     78|    if (temp == nullptr) {
   ------------------
-  |  |   63|    288|#define nullptr NULL
+  |  |   63|     78|#define nullptr NULL
   ------------------
-  |  Branch (1079:9): [True: 1, False: 287]
+  |  Branch (1079:9): [True: 1, False: 77]
   ------------------
  1080|      1|        return nullptr;
   ------------------
@@ -1486,43 +1486,43 @@ new_networking_ex:
   ------------------
  1081|      1|    }
  1082|       |
- 1083|    287|    Net_Profile *np = netprof_new(log, mem);
+ 1083|     77|    Net_Profile *np = netprof_new(log, mem);
  1084|       |
- 1085|    287|    if (np == nullptr) {
+ 1085|     77|    if (np == nullptr) {
   ------------------
-  |  |   63|    287|#define nullptr NULL
+  |  |   63|     77|#define nullptr NULL
   ------------------
-  |  Branch (1085:9): [True: 2, False: 285]
+  |  Branch (1085:9): [True: 1, False: 76]
   ------------------
- 1086|      2|        free(temp);
- 1087|      2|        return nullptr;
+ 1086|      1|        free(temp);
+ 1087|      1|        return nullptr;
   ------------------
-  |  |   63|      2|#define nullptr NULL
+  |  |   63|      1|#define nullptr NULL
   ------------------
- 1088|      2|    }
+ 1088|      1|    }
  1089|       |
- 1090|    285|    temp->udp_net_profile = np;
- 1091|    285|    temp->ns = ns;
- 1092|    285|    temp->log = log;
- 1093|    285|    temp->mem = mem;
- 1094|    285|    temp->family = ip->family;
- 1095|    285|    temp->port = 0;
+ 1090|     76|    temp->udp_net_profile = np;
+ 1091|     76|    temp->ns = ns;
+ 1092|     76|    temp->log = log;
+ 1093|     76|    temp->mem = mem;
+ 1094|     76|    temp->family = ip->family;
+ 1095|     76|    temp->port = 0;
  1096|       |
  1097|       |    /* Initialize our socket. */
  1098|       |    /* add log message what we're creating */
- 1099|    285|    temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
+ 1099|     76|    temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
   ------------------
-  |  |  203|    285|#define TOX_SOCK_DGRAM 2
+  |  |  203|     76|#define TOX_SOCK_DGRAM 2
   ------------------
                   temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
   ------------------
-  |  |  206|    285|#define TOX_PROTO_UDP 2
+  |  |  206|     76|#define TOX_PROTO_UDP 2
   ------------------
  1100|       |
  1101|       |    /* Check for socket error. */
- 1102|    285|    if (!sock_valid(temp->sock)) {
+ 1102|     76|    if (!sock_valid(temp->sock)) {
   ------------------
-  |  Branch (1102:9): [True: 0, False: 285]
+  |  Branch (1102:9): [True: 0, False: 76]
   ------------------
  1103|      0|        const int neterror = net_error();
  1104|      0|        Net_Strerror error_str;
@@ -1565,11 +1565,11 @@ new_networking_ex:
  1115|       |
  1116|       |    /* Functions to increase the size of the send and receive UDP buffers.
  1117|       |     */
- 1118|    285|    int n = 1024 * 1024 * 2;
+ 1118|     76|    int n = 1024 * 1024 * 2;
  1119|       |
- 1120|    285|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n)) != 0) {
+ 1120|     76|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n)) != 0) {
   ------------------
-  |  Branch (1120:9): [True: 0, False: 285]
+  |  Branch (1120:9): [True: 0, False: 76]
   ------------------
  1121|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_RCVBUF);
   ------------------
@@ -1592,9 +1592,9 @@ new_networking_ex:
   ------------------
  1122|      0|    }
  1123|       |
- 1124|    285|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_SNDBUF, &n, sizeof(n)) != 0) {
+ 1124|     76|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_SNDBUF, &n, sizeof(n)) != 0) {
   ------------------
-  |  Branch (1124:9): [True: 0, False: 285]
+  |  Branch (1124:9): [True: 0, False: 76]
   ------------------
  1125|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_SNDBUF);
   ------------------
@@ -1618,11 +1618,11 @@ new_networking_ex:
  1126|      0|    }
  1127|       |
  1128|       |    /* Enable broadcast on socket */
- 1129|    285|    int broadcast = 1;
+ 1129|     76|    int broadcast = 1;
  1130|       |
- 1131|    285|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0) {
+ 1131|     76|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0) {
   ------------------
-  |  Branch (1131:9): [True: 0, False: 285]
+  |  Branch (1131:9): [True: 0, False: 76]
   ------------------
  1132|      0|        LOGGER_ERROR(log, "failed to set socket option %d", SO_BROADCAST);
   ------------------
@@ -1646,9 +1646,9 @@ new_networking_ex:
  1133|      0|    }
  1134|       |
  1135|       |    /* iOS UDP sockets are weird and apparently can SIGPIPE */
- 1136|    285|    if (!set_socket_nosigpipe(ns, temp->sock)) {
+ 1136|     76|    if (!set_socket_nosigpipe(ns, temp->sock)) {
   ------------------
-  |  Branch (1136:9): [True: 0, False: 285]
+  |  Branch (1136:9): [True: 0, False: 76]
   ------------------
  1137|      0|        kill_networking(temp);
  1138|       |
@@ -1668,9 +1668,9 @@ new_networking_ex:
  1144|      0|    }
  1145|       |
  1146|       |    /* Set socket nonblocking. */
- 1147|    285|    if (!set_socket_nonblock(ns, temp->sock)) {
+ 1147|     76|    if (!set_socket_nonblock(ns, temp->sock)) {
   ------------------
-  |  Branch (1147:9): [True: 0, False: 285]
+  |  Branch (1147:9): [True: 0, False: 76]
   ------------------
  1148|      0|        kill_networking(temp);
  1149|       |
@@ -1690,22 +1690,22 @@ new_networking_ex:
  1155|      0|    }
  1156|       |
  1157|       |    /* Bind our socket to port PORT and the given IP address (usually 0.0.0.0 or ::) */
- 1158|    285|    uint16_t *portptr = nullptr;
+ 1158|     76|    uint16_t *portptr = nullptr;
   ------------------
-  |  |   63|    285|#define nullptr NULL
+  |  |   63|     76|#define nullptr NULL
   ------------------
- 1159|    285|    IP_Port addr;
- 1160|    285|    ip_init(&addr.ip, net_family_is_ipv6(temp->family));
+ 1159|     76|    IP_Port addr;
+ 1160|     76|    ip_init(&addr.ip, net_family_is_ipv6(temp->family));
  1161|       |
- 1162|    285|    if (net_family_is_ipv4(temp->family) || net_family_is_ipv6(temp->family)) {
+ 1162|     76|    if (net_family_is_ipv4(temp->family) || net_family_is_ipv6(temp->family)) {
   ------------------
-  |  Branch (1162:9): [True: 285, False: 0]
+  |  Branch (1162:9): [True: 76, False: 0]
   |  Branch (1162:45): [True: 0, False: 0]
   ------------------
- 1163|    285|        ip_copy(&addr.ip, ip);
- 1164|    285|        addr.port = 0;
- 1165|    285|        portptr = &addr.port;
- 1166|    285|    } else {
+ 1163|     76|        ip_copy(&addr.ip, ip);
+ 1164|     76|        addr.port = 0;
+ 1165|     76|        portptr = &addr.port;
+ 1166|     76|    } else {
  1167|      0|        mem_delete(mem, temp);
  1168|      0|        return nullptr;
   ------------------
@@ -1713,9 +1713,9 @@ new_networking_ex:
   ------------------
  1169|      0|    }
  1170|       |
- 1171|    285|    if (net_family_is_ipv6(ip->family)) {
+ 1171|     76|    if (net_family_is_ipv6(ip->family)) {
   ------------------
-  |  Branch (1171:9): [True: 0, False: 285]
+  |  Branch (1171:9): [True: 0, False: 76]
   ------------------
  1172|      0|        const bool is_dualstack = set_socket_dualstack(ns, temp->sock);
  1173|       |
@@ -1840,76 +1840,76 @@ new_networking_ex:
  1214|       |     *   some clients might not test return of tox_new(), blindly assuming that
  1215|       |     *   it worked ok (which it did previously without a successful bind)
  1216|       |     */
- 1217|    285|    uint16_t port_to_try = port_from;
- 1218|    285|    *portptr = net_htons(port_to_try);
+ 1217|     76|    uint16_t port_to_try = port_from;
+ 1218|     76|    *portptr = net_htons(port_to_try);
  1219|       |
- 1220|    388|    for (uint16_t tries = port_from; tries <= port_to; ++tries) {
+ 1220|    108|    for (uint16_t tries = port_from; tries <= port_to; ++tries) {
   ------------------
-  |  Branch (1220:38): [True: 388, False: 0]
+  |  Branch (1220:38): [True: 108, False: 0]
   ------------------
- 1221|    388|        const int res = net_bind(ns, temp->sock, &addr);
+ 1221|    108|        const int res = net_bind(ns, temp->sock, &addr);
  1222|       |
- 1223|    388|        if (res == 0) {
+ 1223|    108|        if (res == 0) {
   ------------------
-  |  Branch (1223:13): [True: 285, False: 103]
+  |  Branch (1223:13): [True: 76, False: 32]
   ------------------
- 1224|    285|            temp->port = *portptr;
+ 1224|     76|            temp->port = *portptr;
  1225|       |
- 1226|    285|            Ip_Ntoa ip_str;
- 1227|    285|            LOGGER_DEBUG(log, "Bound successfully to %s:%u", net_ip_ntoa(ip, &ip_str),
+ 1226|     76|            Ip_Ntoa ip_str;
+ 1227|     76|            LOGGER_DEBUG(log, "Bound successfully to %s:%u", net_ip_ntoa(ip, &ip_str),
   ------------------
-  |  |   77|    285|#define LOGGER_DEBUG(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_DEBUG, __VA_ARGS__)
+  |  |   77|     76|#define LOGGER_DEBUG(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_DEBUG, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|    285|    do {                                                                         \
-  |  |  |  |   70|    285|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|     76|    do {                                                                         \
+  |  |  |  |   70|     76|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|    570|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|    152|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [Folded, False: 285]
+  |  |  |  |  |  Branch (70:13): [Folded, False: 76]
   |  |  |  |  ------------------
   |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
   |  |  |  |   72|      0|        }                                                                        \
-  |  |  |  |   73|    285|    } while (0)
+  |  |  |  |   73|     76|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 285]
+  |  |  |  |  |  Branch (73:14): [Folded, False: 76]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1228|    285|                         net_ntohs(temp->port));
+ 1228|     76|                         net_ntohs(temp->port));
  1229|       |
  1230|       |            /* errno isn't reset on success, only set on failure, the failed
  1231|       |             * binds with parallel clients yield a -EPERM to the outside if
  1232|       |             * errno isn't cleared here */
- 1233|    285|            if (tries > 0) {
+ 1233|     76|            if (tries > 0) {
   ------------------
-  |  Branch (1233:17): [True: 285, False: 0]
+  |  Branch (1233:17): [True: 76, False: 0]
   ------------------
- 1234|    285|                errno = 0;
- 1235|    285|            }
+ 1234|     76|                errno = 0;
+ 1235|     76|            }
  1236|       |
- 1237|    285|            if (error != nullptr) {
+ 1237|     76|            if (error != nullptr) {
   ------------------
-  |  |   63|    285|#define nullptr NULL
+  |  |   63|     76|#define nullptr NULL
   ------------------
-  |  Branch (1237:17): [True: 0, False: 285]
+  |  Branch (1237:17): [True: 0, False: 76]
   ------------------
  1238|      0|                *error = 0;
  1239|      0|            }
  1240|       |
- 1241|    285|            return temp;
- 1242|    285|        }
+ 1241|     76|            return temp;
+ 1242|     76|        }
  1243|       |
- 1244|    103|        ++port_to_try;
+ 1244|     32|        ++port_to_try;
  1245|       |
- 1246|    103|        if (port_to_try > port_to) {
+ 1246|     32|        if (port_to_try > port_to) {
   ------------------
-  |  Branch (1246:13): [True: 0, False: 103]
+  |  Branch (1246:13): [True: 0, False: 32]
   ------------------
  1247|      0|            port_to_try = port_from;
  1248|      0|        }
  1249|       |
- 1250|    103|        *portptr = net_htons(port_to_try);
- 1251|    103|    }
+ 1250|     32|        *portptr = net_htons(port_to_try);
+ 1251|     32|    }
  1252|       |
  1253|      0|    Ip_Ntoa ip_str;
  1254|      0|    const int neterror = net_error();
@@ -1949,140 +1949,140 @@ new_networking_ex:
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 1265|    285|}
+ 1265|     76|}
 kill_networking:
- 1285|    285|{
- 1286|    285|    if (net == nullptr) {
+ 1285|     76|{
+ 1286|     76|    if (net == nullptr) {
   ------------------
-  |  |   63|    285|#define nullptr NULL
+  |  |   63|     76|#define nullptr NULL
   ------------------
-  |  Branch (1286:9): [True: 0, False: 285]
+  |  Branch (1286:9): [True: 0, False: 76]
   ------------------
  1287|      0|        return;
  1288|      0|    }
  1289|       |
- 1290|    285|    if (!net_family_is_unspec(net->family)) {
+ 1290|     76|    if (!net_family_is_unspec(net->family)) {
   ------------------
-  |  Branch (1290:9): [True: 285, False: 0]
+  |  Branch (1290:9): [True: 76, False: 0]
   ------------------
  1291|       |        /* Socket is initialized, so we close it. */
- 1292|    285|        kill_sock(net->ns, net->sock);
- 1293|    285|    }
+ 1292|     76|        kill_sock(net->ns, net->sock);
+ 1293|     76|    }
  1294|       |
- 1295|    285|    netprof_kill(net->mem, net->udp_net_profile);
- 1296|    285|    mem_delete(net->mem, net);
- 1297|    285|}
+ 1295|     76|    netprof_kill(net->mem, net->udp_net_profile);
+ 1296|     76|    mem_delete(net->mem, net);
+ 1297|     76|}
 ip_reset:
- 1410|    624|{
- 1411|    624|    if (ip == nullptr) {
+ 1410|    187|{
+ 1411|    187|    if (ip == nullptr) {
   ------------------
-  |  |   63|    624|#define nullptr NULL
+  |  |   63|    187|#define nullptr NULL
   ------------------
-  |  Branch (1411:9): [True: 0, False: 624]
+  |  Branch (1411:9): [True: 0, False: 187]
   ------------------
  1412|      0|        return;
  1413|      0|    }
  1414|       |
- 1415|    624|    *ip = empty_ip;
- 1416|    624|}
+ 1415|    187|    *ip = empty_ip;
+ 1416|    187|}
 ipport_reset:
- 1422|    560|{
- 1423|    560|    if (ipport == nullptr) {
+ 1422|    164|{
+ 1423|    164|    if (ipport == nullptr) {
   ------------------
-  |  |   63|    560|#define nullptr NULL
+  |  |   63|    164|#define nullptr NULL
   ------------------
-  |  Branch (1423:9): [True: 0, False: 560]
+  |  Branch (1423:9): [True: 0, False: 164]
   ------------------
  1424|      0|        return;
  1425|      0|    }
  1426|       |
- 1427|    560|    *ipport = empty_ip_port;
- 1428|    560|}
+ 1427|    164|    *ipport = empty_ip_port;
+ 1428|    164|}
 ip_init:
- 1432|    624|{
- 1433|    624|    if (ip == nullptr) {
+ 1432|    187|{
+ 1433|    187|    if (ip == nullptr) {
   ------------------
-  |  |   63|    624|#define nullptr NULL
+  |  |   63|    187|#define nullptr NULL
   ------------------
-  |  Branch (1433:9): [True: 0, False: 624]
+  |  Branch (1433:9): [True: 0, False: 187]
   ------------------
  1434|      0|        return;
  1435|      0|    }
  1436|       |
- 1437|    624|    ip_reset(ip);
- 1438|    624|    ip->family = ipv6enabled ? net_family_ipv6() : net_family_ipv4();
+ 1437|    187|    ip_reset(ip);
+ 1438|    187|    ip->family = ipv6enabled ? net_family_ipv6() : net_family_ipv4();
   ------------------
-  |  Branch (1438:18): [True: 0, False: 624]
+  |  Branch (1438:18): [True: 0, False: 187]
   ------------------
- 1439|    624|}
+ 1439|    187|}
 ip_copy:
- 1467|    285|{
- 1468|    285|    if (source == nullptr || target == nullptr) {
+ 1467|     76|{
+ 1468|     76|    if (source == nullptr || target == nullptr) {
   ------------------
-  |  |   63|    570|#define nullptr NULL
+  |  |   63|    152|#define nullptr NULL
   ------------------
                   if (source == nullptr || target == nullptr) {
   ------------------
-  |  |   63|    285|#define nullptr NULL
+  |  |   63|     76|#define nullptr NULL
   ------------------
-  |  Branch (1468:9): [True: 0, False: 285]
-  |  Branch (1468:30): [True: 0, False: 285]
+  |  Branch (1468:9): [True: 0, False: 76]
+  |  Branch (1468:30): [True: 0, False: 76]
   ------------------
  1469|      0|        return;
  1470|      0|    }
  1471|       |
- 1472|    285|    *target = *source;
- 1473|    285|}
+ 1472|     76|    *target = *source;
+ 1473|     76|}
 unpack_ip_port:
- 1568|    609|{
- 1569|    609|    if (data == nullptr) {
+ 1568|    195|{
+ 1569|    195|    if (data == nullptr) {
   ------------------
-  |  |   63|    609|#define nullptr NULL
+  |  |   63|    195|#define nullptr NULL
   ------------------
-  |  Branch (1569:9): [True: 0, False: 609]
+  |  Branch (1569:9): [True: 0, False: 195]
   ------------------
  1570|      0|        return -1;
  1571|      0|    }
  1572|       |
- 1573|    609|    bool is_ipv4;
- 1574|    609|    Family host_family;
+ 1573|    195|    bool is_ipv4;
+ 1574|    195|    Family host_family;
  1575|       |
- 1576|    609|    if (data[0] == TOX_AF_INET) {
+ 1576|    195|    if (data[0] == TOX_AF_INET) {
   ------------------
-  |  |  197|    609|#define TOX_AF_INET 2
+  |  |  197|    195|#define TOX_AF_INET 2
   ------------------
-  |  Branch (1576:9): [True: 469, False: 140]
+  |  Branch (1576:9): [True: 145, False: 50]
   ------------------
- 1577|    469|        is_ipv4 = true;
- 1578|    469|        host_family = net_family_ipv4();
- 1579|    469|    } else if (data[0] == TOX_TCP_INET) {
+ 1577|    145|        is_ipv4 = true;
+ 1578|    145|        host_family = net_family_ipv4();
+ 1579|    145|    } else if (data[0] == TOX_TCP_INET) {
   ------------------
-  |  |  199|    140|#define TOX_TCP_INET 130
+  |  |  199|     50|#define TOX_TCP_INET 130
   ------------------
-  |  Branch (1579:16): [True: 83, False: 57]
+  |  Branch (1579:16): [True: 11, False: 39]
   ------------------
- 1580|     83|        if (!tcp_enabled) {
+ 1580|     11|        if (!tcp_enabled) {
   ------------------
-  |  Branch (1580:13): [True: 0, False: 83]
+  |  Branch (1580:13): [True: 0, False: 11]
   ------------------
  1581|      0|            return -1;
  1582|      0|        }
  1583|       |
- 1584|     83|        is_ipv4 = true;
- 1585|     83|        host_family = net_family_tcp_ipv4();
- 1586|     83|    } else if (data[0] == TOX_AF_INET6) {
+ 1584|     11|        is_ipv4 = true;
+ 1585|     11|        host_family = net_family_tcp_ipv4();
+ 1586|     39|    } else if (data[0] == TOX_AF_INET6) {
   ------------------
-  |  |  198|     57|#define TOX_AF_INET6 10
+  |  |  198|     39|#define TOX_AF_INET6 10
   ------------------
-  |  Branch (1586:16): [True: 3, False: 54]
+  |  Branch (1586:16): [True: 3, False: 36]
   ------------------
  1587|      3|        is_ipv4 = false;
  1588|      3|        host_family = net_family_ipv6();
- 1589|     54|    } else if (data[0] == TOX_TCP_INET6) {
+ 1589|     36|    } else if (data[0] == TOX_TCP_INET6) {
   ------------------
-  |  |  200|     54|#define TOX_TCP_INET6 138
+  |  |  200|     36|#define TOX_TCP_INET6 138
   ------------------
-  |  Branch (1589:16): [True: 5, False: 49]
+  |  Branch (1589:16): [True: 5, False: 31]
   ------------------
  1590|      5|        if (!tcp_enabled) {
   ------------------
@@ -2093,39 +2093,39 @@ unpack_ip_port:
  1593|       |
  1594|      5|        is_ipv4 = false;
  1595|      5|        host_family = net_family_tcp_ipv6();
- 1596|     49|    } else {
- 1597|     49|        return -1;
- 1598|     49|    }
+ 1596|     31|    } else {
+ 1597|     31|        return -1;
+ 1598|     31|    }
  1599|       |
- 1600|    560|    ipport_reset(ip_port);
+ 1600|    164|    ipport_reset(ip_port);
  1601|       |
- 1602|    560|    if (is_ipv4) {
+ 1602|    164|    if (is_ipv4) {
   ------------------
-  |  Branch (1602:9): [True: 552, False: 8]
+  |  Branch (1602:9): [True: 156, False: 8]
   ------------------
- 1603|    552|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+ 1603|    156|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
   ------------------
-  |  |   31|    552|#define SIZE_IP4 4
+  |  |   31|    156|#define SIZE_IP4 4
   ------------------
  1604|       |
- 1605|    552|        if (size > length) {
+ 1605|    156|        if (size > length) {
   ------------------
-  |  Branch (1605:13): [True: 0, False: 552]
+  |  Branch (1605:13): [True: 0, False: 156]
   ------------------
  1606|      0|            return -1;
  1607|      0|        }
  1608|       |
- 1609|    552|        ip_port->ip.family = host_family;
- 1610|    552|        memcpy(ip_port->ip.ip.v4.uint8, data + 1, SIZE_IP4);
+ 1609|    156|        ip_port->ip.family = host_family;
+ 1610|    156|        memcpy(ip_port->ip.ip.v4.uint8, data + 1, SIZE_IP4);
   ------------------
-  |  |   31|    552|#define SIZE_IP4 4
+  |  |   31|    156|#define SIZE_IP4 4
   ------------------
- 1611|    552|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
+ 1611|    156|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
   ------------------
-  |  |   31|    552|#define SIZE_IP4 4
+  |  |   31|    156|#define SIZE_IP4 4
   ------------------
- 1612|    552|        return size;
- 1613|    552|    } else {
+ 1612|    156|        return size;
+ 1613|    156|    } else {
  1614|      8|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
   ------------------
   |  |   32|      8|#define SIZE_IP6 16
@@ -2149,30 +2149,30 @@ unpack_ip_port:
   ------------------
  1623|      0|        return size;
  1624|      8|    }
- 1625|    560|}
+ 1625|    164|}
 net_ip_ntoa:
- 1628|     79|{
- 1629|     79|    assert(ip_str != nullptr);
+ 1628|      7|{
+ 1629|      7|    assert(ip_str != nullptr);
   ------------------
-  |  Branch (1629:5): [True: 79, False: 0]
+  |  Branch (1629:5): [True: 7, False: 0]
   ------------------
  1630|       |
- 1631|     79|    ip_str->ip_is_valid = false;
+ 1631|      7|    ip_str->ip_is_valid = false;
  1632|       |
- 1633|     79|    if (ip == nullptr) {
+ 1633|      7|    if (ip == nullptr) {
   ------------------
-  |  |   63|     79|#define nullptr NULL
+  |  |   63|      7|#define nullptr NULL
   ------------------
-  |  Branch (1633:9): [True: 0, False: 79]
+  |  Branch (1633:9): [True: 0, False: 7]
   ------------------
  1634|      0|        snprintf(ip_str->buf, sizeof(ip_str->buf), "(IP invalid: NULL)");
  1635|      0|        ip_str->length = (uint16_t)strlen(ip_str->buf);
  1636|      0|        return ip_str->buf;
  1637|      0|    }
  1638|       |
- 1639|     79|    if (!ip_parse_addr(ip, ip_str->buf, sizeof(ip_str->buf))) {
+ 1639|      7|    if (!ip_parse_addr(ip, ip_str->buf, sizeof(ip_str->buf))) {
   ------------------
-  |  Branch (1639:9): [True: 0, False: 79]
+  |  Branch (1639:9): [True: 0, False: 7]
   ------------------
  1640|      0|        snprintf(ip_str->buf, sizeof(ip_str->buf), "(IP invalid, family %u)", ip->family.value);
  1641|      0|        ip_str->length = (uint16_t)strlen(ip_str->buf);
@@ -2180,44 +2180,44 @@ net_ip_ntoa:
  1643|      0|    }
  1644|       |
  1645|       |    /* brute force protection against lacking termination */
- 1646|     79|    ip_str->buf[sizeof(ip_str->buf) - 1] = '\0';
- 1647|     79|    ip_str->length = (uint16_t)strlen(ip_str->buf);
- 1648|     79|    ip_str->ip_is_valid = true;
+ 1646|      7|    ip_str->buf[sizeof(ip_str->buf) - 1] = '\0';
+ 1647|      7|    ip_str->length = (uint16_t)strlen(ip_str->buf);
+ 1648|      7|    ip_str->ip_is_valid = true;
  1649|       |
- 1650|     79|    return ip_str->buf;
- 1651|     79|}
+ 1650|      7|    return ip_str->buf;
+ 1651|      7|}
 ip_parse_addr:
- 1654|     79|{
- 1655|     79|    if (address == nullptr || ip == nullptr) {
+ 1654|      7|{
+ 1655|      7|    if (address == nullptr || ip == nullptr) {
   ------------------
-  |  |   63|    158|#define nullptr NULL
+  |  |   63|     14|#define nullptr NULL
   ------------------
                   if (address == nullptr || ip == nullptr) {
   ------------------
-  |  |   63|     79|#define nullptr NULL
+  |  |   63|      7|#define nullptr NULL
   ------------------
-  |  Branch (1655:9): [True: 0, False: 79]
-  |  Branch (1655:31): [True: 0, False: 79]
+  |  Branch (1655:9): [True: 0, False: 7]
+  |  Branch (1655:31): [True: 0, False: 7]
   ------------------
  1656|      0|        return false;
  1657|      0|    }
  1658|       |
- 1659|     79|    if (net_family_is_ipv4(ip->family) || net_family_is_tcp_ipv4(ip->family)) {
+ 1659|      7|    if (net_family_is_ipv4(ip->family) || net_family_is_tcp_ipv4(ip->family)) {
   ------------------
-  |  Branch (1659:9): [True: 0, False: 79]
-  |  Branch (1659:43): [True: 79, False: 0]
+  |  Branch (1659:9): [True: 0, False: 7]
+  |  Branch (1659:43): [True: 7, False: 0]
   ------------------
- 1660|     79|        struct in_addr addr;
- 1661|     79|        assert(make_family(ip->family) == AF_INET);
+ 1660|      7|        struct in_addr addr;
+ 1661|      7|        assert(make_family(ip->family) == AF_INET);
   ------------------
-  |  Branch (1661:9): [True: 79, False: 0]
+  |  Branch (1661:9): [True: 7, False: 0]
   ------------------
- 1662|     79|        fill_addr4(&ip->ip.v4, &addr);
- 1663|     79|        return inet_ntop4(&addr, address, length) != nullptr;
+ 1662|      7|        fill_addr4(&ip->ip.v4, &addr);
+ 1663|      7|        return inet_ntop4(&addr, address, length) != nullptr;
   ------------------
-  |  |   63|     79|#define nullptr NULL
+  |  |   63|      7|#define nullptr NULL
   ------------------
- 1664|     79|    }
+ 1664|      7|    }
  1665|       |
  1666|      0|    if (net_family_is_ipv6(ip->family) || net_family_is_tcp_ipv6(ip->family)) {
   ------------------
@@ -2239,57 +2239,61 @@ ip_parse_addr:
  1673|      0|    return false;
  1674|      0|}
 net_socket:
- 1941|    285|{
- 1942|    285|    const int platform_domain = make_family(domain);
- 1943|    285|    const int platform_type = make_socktype(type);
- 1944|    285|    const int platform_prot = make_proto(protocol);
- 1945|    285|    return ns->funcs->socket(ns->obj, platform_domain, platform_type, platform_prot);
- 1946|    285|}
+ 1941|     76|{
+ 1942|     76|    const int platform_domain = make_family(domain);
+ 1943|     76|    const int platform_type = make_socktype(type);
+ 1944|     76|    const int platform_prot = make_proto(protocol);
+ 1945|     76|    return ns->funcs->socket(ns->obj, platform_domain, platform_type, platform_prot);
+ 1946|     76|}
+net_htonl:
+ 1955|     58|{
+ 1956|       |    return htonl(hostlong);
+ 1957|     58|}
 net_htons:
- 1960|    388|{
+ 1960|    108|{
  1961|       |    return htons(hostshort);
- 1962|    388|}
+ 1962|    108|}
 network.c:net_setsockopt:
-  767|    855|{
-  768|    855|    return ns->funcs->setsockopt(ns->obj, sock, level, optname, optval, optlen);
-  769|    855|}
+  767|    228|{
+  768|    228|    return ns->funcs->setsockopt(ns->obj, sock, level, optname, optval, optlen);
+  769|    228|}
 network.c:net_sendto:
-  790|    175|{
-  791|    175|    return ns->funcs->sendto(ns->obj, sock, buf, len, ip_port);
-  792|    175|}
+  790|     58|{
+  791|     58|    return ns->funcs->sendto(ns->obj, sock, buf, len, ip_port);
+  792|     58|}
 network.c:net_bind:
-  813|    388|{
-  814|    388|    return ns->funcs->bind(ns->obj, sock, addr);
-  815|    388|}
+  813|    108|{
+  814|    108|    return ns->funcs->bind(ns->obj, sock, addr);
+  815|    108|}
 network.c:fill_addr4:
-  319|     79|{
-  320|     79|    addr->s_addr = ip->uint32;
-  321|     79|}
+  319|      7|{
+  320|      7|    addr->s_addr = ip->uint32;
+  321|      7|}
 network.c:make_family:
-  257|    364|{
-  258|    364|    switch (tox_family.value) {
-  259|    285|        case TOX_AF_INET:
+  257|     83|{
+  258|     83|    switch (tox_family.value) {
+  259|     76|        case TOX_AF_INET:
   ------------------
-  |  |  197|    285|#define TOX_AF_INET 2
+  |  |  197|     76|#define TOX_AF_INET 2
   ------------------
-  |  Branch (259:9): [True: 285, False: 79]
+  |  Branch (259:9): [True: 76, False: 7]
   ------------------
-  260|    364|        case TCP_INET:
+  260|     83|        case TCP_INET:
   ------------------
-  |  |  210|    364|#define TCP_INET (TOX_AF_INET6 + 2)
+  |  |  210|     83|#define TCP_INET (TOX_AF_INET6 + 2)
   |  |  ------------------
-  |  |  |  |  198|    364|#define TOX_AF_INET6 10
+  |  |  |  |  198|     83|#define TOX_AF_INET6 10
   |  |  ------------------
   ------------------
-  |  Branch (260:9): [True: 79, False: 285]
+  |  Branch (260:9): [True: 7, False: 76]
   ------------------
-  261|    364|            return AF_INET;
+  261|     83|            return AF_INET;
   262|       |
   263|      0|        case TOX_AF_INET6:
   ------------------
   |  |  198|      0|#define TOX_AF_INET6 10
   ------------------
-  |  Branch (263:9): [True: 0, False: 364]
+  |  Branch (263:9): [True: 0, False: 83]
   ------------------
   264|      0|        case TCP_INET6:
   ------------------
@@ -2298,7 +2302,7 @@ network.c:make_family:
   |  |  |  |  198|      0|#define TOX_AF_INET6 10
   |  |  ------------------
   ------------------
-  |  Branch (264:9): [True: 0, False: 364]
+  |  Branch (264:9): [True: 0, False: 83]
   ------------------
   265|      0|            return AF_INET6;
   266|       |
@@ -2306,81 +2310,81 @@ network.c:make_family:
   ------------------
   |  |  196|      0|#define TOX_AF_UNSPEC 0
   ------------------
-  |  Branch (267:9): [True: 0, False: 364]
+  |  Branch (267:9): [True: 0, False: 83]
   ------------------
   268|      0|            return AF_UNSPEC;
   269|       |
   270|      0|        default:
   ------------------
-  |  Branch (270:9): [True: 0, False: 364]
+  |  Branch (270:9): [True: 0, False: 83]
   ------------------
   271|      0|            return tox_family.value;
-  272|    364|    }
-  273|    364|}
+  272|     83|    }
+  273|     83|}
 network.c:inet_ntop4:
-  123|     79|{
+  123|      7|{
   124|       |    return inet_ntop(AF_INET, addr, buf, bufsize);
-  125|     79|}
+  125|      7|}
 network.c:make_socktype:
-  243|    285|{
-  244|    285|    switch (type) {
+  243|     76|{
+  244|     76|    switch (type) {
   245|      0|        case TOX_SOCK_STREAM:
   ------------------
   |  |  202|      0|#define TOX_SOCK_STREAM 1
   ------------------
-  |  Branch (245:9): [True: 0, False: 285]
+  |  Branch (245:9): [True: 0, False: 76]
   ------------------
   246|      0|            return SOCK_STREAM;
   247|       |
-  248|    285|        case TOX_SOCK_DGRAM:
+  248|     76|        case TOX_SOCK_DGRAM:
   ------------------
-  |  |  203|    285|#define TOX_SOCK_DGRAM 2
+  |  |  203|     76|#define TOX_SOCK_DGRAM 2
   ------------------
-  |  Branch (248:9): [True: 285, False: 0]
+  |  Branch (248:9): [True: 76, False: 0]
   ------------------
-  249|    285|            return SOCK_DGRAM;
+  249|     76|            return SOCK_DGRAM;
   250|       |
   251|      0|        default:
   ------------------
-  |  Branch (251:9): [True: 0, False: 285]
+  |  Branch (251:9): [True: 0, False: 76]
   ------------------
   252|      0|            return type;
-  253|    285|    }
-  254|    285|}
+  253|     76|    }
+  254|     76|}
 network.c:make_proto:
-  229|    285|{
-  230|    285|    switch (proto) {
+  229|     76|{
+  230|     76|    switch (proto) {
   231|      0|        case TOX_PROTO_TCP:
   ------------------
   |  |  205|      0|#define TOX_PROTO_TCP 1
   ------------------
-  |  Branch (231:9): [True: 0, False: 285]
+  |  Branch (231:9): [True: 0, False: 76]
   ------------------
   232|      0|            return IPPROTO_TCP;
   233|       |
-  234|    285|        case TOX_PROTO_UDP:
+  234|     76|        case TOX_PROTO_UDP:
   ------------------
-  |  |  206|    285|#define TOX_PROTO_UDP 2
+  |  |  206|     76|#define TOX_PROTO_UDP 2
   ------------------
-  |  Branch (234:9): [True: 285, False: 0]
+  |  Branch (234:9): [True: 76, False: 0]
   ------------------
-  235|    285|            return IPPROTO_UDP;
+  235|     76|            return IPPROTO_UDP;
   236|       |
   237|      0|        default:
   ------------------
-  |  Branch (237:9): [True: 0, False: 285]
+  |  Branch (237:9): [True: 0, False: 76]
   ------------------
   238|      0|            return proto;
-  239|    285|    }
-  240|    285|}
+  239|     76|    }
+  240|     76|}
 
 tox_memory_malloc:
-   37|    869|{
-   38|    869|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
-   39|    869|    return ptr;
-   40|    869|}
+   37|    242|{
+   38|    242|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
+   39|    242|    return ptr;
+   40|    242|}
 tox_memory_dealloc:
-   58|    861|{
-   59|    861|    mem->funcs->dealloc_callback(mem->user_data, ptr);
-   60|    861|}
+   58|    233|{
+   59|    233|    mem->funcs->dealloc_callback(mem->user_data, ptr);
+   60|    233|}
 

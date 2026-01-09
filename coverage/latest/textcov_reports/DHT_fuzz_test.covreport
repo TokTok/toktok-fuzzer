@@ -4,122 +4,122 @@ _ZN3tox4test15NetworkUniverseD2Ev:
    10|     23|NetworkUniverse::~NetworkUniverse() { }
 
 _ZNK3tox4test9Fuzz_Data4sizeEv:
-   61|    164|    std::size_t size() const { return size_; }
+   99|    164|    std::size_t size() const { return size_; }
 _ZN3tox4test9Fuzz_Data7consumeEPKcm:
-   67|     50|    {
-   68|     50|        if (count > size_)
+  105|     50|    {
+  106|     50|        if (count > size_)
   ------------------
-  |  Branch (68:13): [True: 0, False: 50]
+  |  Branch (106:13): [True: 0, False: 50]
   ------------------
-   69|      0|            return nullptr;
-   70|     50|        const uint8_t *val = data_;
-   71|     50|        if (FUZZ_DEBUG) {
+  107|      0|            return nullptr;
+  108|     50|        const uint8_t *val = data_;
+  109|     50|        if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (71:13): [Folded, False: 50]
+  |  Branch (109:13): [Folded, False: 50]
   ------------------
-   72|      0|            if (count == 1) {
+  110|      0|            if (count == 1) {
   ------------------
-  |  Branch (72:17): [True: 0, False: 0]
+  |  Branch (110:17): [True: 0, False: 0]
   ------------------
-   73|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
-   74|      0|            } else if (count != 0) {
+  111|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
+  112|      0|            } else if (count != 0) {
   ------------------
-  |  Branch (74:24): [True: 0, False: 0]
+  |  Branch (112:24): [True: 0, False: 0]
   ------------------
-   75|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
-   76|      0|                    val[count - 1], count);
-   77|      0|            }
-   78|      0|        }
-   79|     50|        data_ += count;
-   80|     50|        size_ -= count;
-   81|     50|        return val;
-   82|     50|    }
+  113|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
+  114|      0|                    val[count - 1], count);
+  115|      0|            }
+  116|      0|        }
+  117|     50|        data_ += count;
+  118|     50|        size_ -= count;
+  119|     50|        return val;
+  120|     50|    }
 _ZNK3tox4test9Fuzz_Data4dataEv:
-   63|     37|    const uint8_t *data() const { return data_; }
+  101|     37|    const uint8_t *data() const { return data_; }
 _ZN3tox4test9Fuzz_Data8consume1EPKc:
-   60|     74|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   61|     74|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN3tox4test9Fuzz_Data8ConsumercvbEv:
-   36|     33|        {
-   37|     33|            if (fd.empty())
+   37|     33|        {
+   38|     33|            if (fd.empty())
   ------------------
-  |  Branch (37:17): [True: 0, False: 33]
+  |  Branch (38:17): [True: 0, False: 33]
   ------------------
-   38|      0|                return false;
-   39|     33|            const bool val = fd.data_[0];
-   40|     33|            if (FUZZ_DEBUG) {
+   39|      0|                return false;
+   40|     33|            const bool val = fd.data_[0];
+   41|     33|            if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (40:17): [Folded, False: 33]
+  |  Branch (41:17): [Folded, False: 33]
   ------------------
-   41|      0|                std::printf("consume@%zu(%s): bool %s\n", fd.pos(), func, val ? "true" : "false");
+   42|      0|                std::printf("consume@%zu(%s): bool %s\n", fd.pos(), func, val ? "true" : "false");
   ------------------
-  |  Branch (41:75): [True: 0, False: 0]
+  |  Branch (42:75): [True: 0, False: 0]
   ------------------
-   42|      0|            }
-   43|     33|            ++fd.data_;
-   44|     33|            --fd.size_;
-   45|     33|            return val;
-   46|     33|        }
+   43|      0|            }
+   44|     33|            ++fd.data_;
+   45|     33|            --fd.size_;
+   46|     33|            return val;
+   47|     33|        }
 _ZNK3tox4test9Fuzz_Data5emptyEv:
-   64|     33|    bool empty() const { return size_ == 0; }
+  102|     33|    bool empty() const { return size_ == 0; }
 DHT_fuzz_test.cc:_ZN3tox4test18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_117TestHandleRequestERNS0_9Fuzz_DataEEEXadL_ZNS2_15TestUnpackNodesES4_EEEEEvPKhm:
-  136|     41|{
-  137|     41|    Fuzz_Data input{data, size};
-  138|       |
-  139|     41|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  174|     41|{
+  175|     41|    Fuzz_Data input{data, size};
+  176|       |
+  177|     41|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
   ------------------
-  |  |   86|     41|    if ((INPUT).size() < sizeof(TYPE)) {      \
+  |  |  124|     41|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (86:9): [True: 0, False: 41]
+  |  |  |  Branch (124:9): [True: 0, False: 41]
   |  |  ------------------
-  |  |   87|      0|        return;                               \
-  |  |   88|      0|    }                                         \
-  |  |   89|     41|    TYPE NAME = (INPUT).consume1(__func__)
+  |  |  125|      0|        return;                               \
+  |  |  126|      0|    }                                         \
+  |  |  127|     41|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-  140|     41|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  141|     41|}
+  178|     41|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  179|     41|}
 _ZN3tox4test9Fuzz_DataC2EPKhm:
-   22|     41|        : data_(input_data)
-   23|     41|        , base_(input_data)
-   24|     41|        , size_(input_size)
-   25|     41|    {
-   26|     41|    }
+   23|     41|        : data_(input_data)
+   24|     41|        , base_(input_data)
+   25|     41|        , size_(input_size)
+   26|     41|    {
+   27|     41|    }
 _ZN3tox4test9Fuzz_Data8ConsumercvT_IhEEv:
-   50|     41|        {
-   51|     41|            if (sizeof(T) > fd.size())
+   51|     41|        {
+   52|     41|            if (sizeof(T) > fd.size())
   ------------------
-  |  Branch (51:17): [True: 0, False: 41]
+  |  Branch (52:17): [True: 0, False: 41]
   ------------------
-   52|      0|                return T{};
-   53|     41|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   54|     41|            T val;
-   55|     41|            std::memcpy(&val, bytes, sizeof(T));
-   56|     41|            return val;
-   57|     41|        }
+   53|      0|                return T{};
+   54|     41|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   55|     41|            T val;
+   56|     41|            std::memcpy(&val, bytes, sizeof(T));
+   57|     41|            return val;
+   58|     41|        }
 DHT_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_117TestHandleRequestERNS0_9Fuzz_DataEEEXadL_ZNS2_15TestUnpackNodesES4_EEEE6selectEhS4_:
-  117|     41|    {
-  118|     41|        if (selector == sizeof...(Args)) {
+  155|     41|    {
+  156|     41|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (118:13): [True: 6, False: 35]
+  |  Branch (156:13): [True: 6, False: 35]
   ------------------
-  119|      6|            return Arg(input);
-  120|      6|        }
-  121|     35|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  122|     41|    }
+  157|      6|            return Arg(input);
+  158|      6|        }
+  159|     35|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  160|     41|    }
 DHT_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_115TestUnpackNodesERNS0_9Fuzz_DataEEEEE6selectEhS4_:
-  117|     35|    {
-  118|     35|        if (selector == sizeof...(Args)) {
+  155|     35|    {
+  156|     35|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (118:13): [True: 34, False: 1]
+  |  Branch (156:13): [True: 34, False: 1]
   ------------------
-  119|     34|            return Arg(input);
-  120|     34|        }
-  121|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  122|     35|    }
+  157|     34|            return Arg(input);
+  158|     34|        }
+  159|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  160|     35|    }
 _ZN3tox4test20Fuzz_Target_SelectorIJEE6selectEhRNS0_9Fuzz_DataE:
-  128|      1|    {
-  129|       |        // The selector selected no function, so we do nothing and rely on the
-  130|       |        // fuzzer to come up with a better selector.
-  131|      1|    }
+  166|      1|    {
+  167|       |        // The selector selected no function, so we do nothing and rely on the
+  168|       |        // fuzzer to come up with a better selector.
+  169|      1|    }
 
 _ZN3tox4test11ClockSystemD2Ev:
     5|     23|ClockSystem::~ClockSystem() = default;
@@ -450,23 +450,23 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_117TestHandleRequestERN3tox4test9Fuzz_DataE:
    20|       |
    21|      6|    CONSUME_OR_RETURN(const uint8_t *self_public_key, input, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   98|      6|    if ((INPUT).size() < (SIZE)) {           \
+  |  |  136|      6|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (98:9): [True: 1, False: 5]
+  |  |  |  Branch (136:9): [True: 1, False: 5]
   |  |  ------------------
-  |  |   99|      1|        return;                              \
-  |  |  100|      1|    }                                        \
-  |  |  101|      6|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  137|      1|        return;                              \
+  |  |  138|      1|    }                                        \
+  |  |  139|      6|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
    22|      5|    CONSUME_OR_RETURN(const uint8_t *self_secret_key, input, CRYPTO_SECRET_KEY_SIZE);
   ------------------
-  |  |   98|      5|    if ((INPUT).size() < (SIZE)) {           \
+  |  |  136|      5|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (98:9): [True: 1, False: 4]
+  |  |  |  Branch (136:9): [True: 1, False: 4]
   |  |  ------------------
-  |  |   99|      1|        return;                              \
-  |  |  100|      1|    }                                        \
-  |  |  101|      5|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  137|      1|        return;                              \
+  |  |  138|      1|    }                                        \
+  |  |  139|      5|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
    23|       |
    24|      4|    uint8_t public_key[CRYPTO_PUBLIC_KEY_SIZE];
@@ -479,13 +479,13 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
    32|     34|{
    33|     34|    CONSUME1_OR_RETURN(const bool, tcp_enabled, input);
   ------------------
-  |  |   86|     34|    if ((INPUT).size() < sizeof(TYPE)) {      \
+  |  |  124|     34|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (86:9): [True: 1, False: 33]
+  |  |  |  Branch (124:9): [True: 1, False: 33]
   |  |  ------------------
-  |  |   87|      1|        return;                               \
-  |  |   88|      1|    }                                         \
-  |  |   89|     34|    TYPE NAME = (INPUT).consume1(__func__)
+  |  |  125|      1|        return;                               \
+  |  |  126|      1|    }                                         \
+  |  |  127|     34|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
    34|       |
    35|     33|    const uint16_t node_count = 5;
