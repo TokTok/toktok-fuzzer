@@ -1,23 +1,23 @@
 _ZN3tox4test16FakeNetworkStackC2ERNS0_15NetworkUniverseE:
-   59|     43|    : universe_(universe)
-   60|     43|{
-   61|     43|}
+   59|     41|    : universe_(universe)
+   60|     41|{
+   61|     41|}
 _ZN3tox4test16FakeNetworkStackD2Ev:
-   63|     43|FakeNetworkStack::~FakeNetworkStack() = default;
+   63|     41|FakeNetworkStack::~FakeNetworkStack() = default;
 _ZN3tox4test16FakeNetworkStack13get_c_networkEv:
-   65|     43|struct Network FakeNetworkStack::get_c_network() { return Network{&kVtable, this}; }
+   65|     41|struct Network FakeNetworkStack::get_c_network() { return Network{&kVtable, this}; }
 _ZN3tox4test16FakeNetworkStack6socketEiii:
-   68|     83|{
-   69|     83|    std::lock_guard<std::mutex> lock(mutex_);
-   70|     83|    int fd = next_fd_++;
+   68|     79|{
+   69|     79|    std::lock_guard<std::mutex> lock(mutex_);
+   70|     79|    int fd = next_fd_++;
    71|       |
-   72|     83|    std::unique_ptr<FakeSocket> sock;
-   73|     83|    if (type == SOCK_DGRAM) {
+   72|     79|    std::unique_ptr<FakeSocket> sock;
+   73|     79|    if (type == SOCK_DGRAM) {
   ------------------
-  |  Branch (73:9): [True: 83, False: 0]
+  |  Branch (73:9): [True: 79, False: 0]
   ------------------
-   74|     83|        sock = std::make_unique<FakeUdpSocket>(universe_);
-   75|     83|    } else if (type == SOCK_STREAM) {
+   74|     79|        sock = std::make_unique<FakeUdpSocket>(universe_);
+   75|     79|    } else if (type == SOCK_STREAM) {
   ------------------
   |  Branch (75:16): [True: 0, False: 0]
   ------------------
@@ -27,210 +27,210 @@ _ZN3tox4test16FakeNetworkStack6socketEiii:
    79|      0|        return net_socket_from_native(-1);
    80|      0|    }
    81|       |
-   82|     83|    sockets_[fd] = std::move(sock);
-   83|     83|    return net_socket_from_native(fd);
-   84|     83|}
+   82|     79|    sockets_[fd] = std::move(sock);
+   83|     79|    return net_socket_from_native(fd);
+   84|     79|}
 _ZN3tox4test16FakeNetworkStack8get_sockE6Socket:
-   87|  2.16k|{
-   88|  2.16k|    std::lock_guard<std::mutex> lock(mutex_);
-   89|  2.16k|    auto it = sockets_.find(net_socket_to_native(sock));
-   90|  2.16k|    if (it != sockets_.end()) {
+   87|  2.14k|{
+   88|  2.14k|    std::lock_guard<std::mutex> lock(mutex_);
+   89|  2.14k|    auto it = sockets_.find(net_socket_to_native(sock));
+   90|  2.14k|    if (it != sockets_.end()) {
   ------------------
-  |  Branch (90:9): [True: 2.16k, False: 0]
+  |  Branch (90:9): [True: 2.14k, False: 0]
   ------------------
-   91|  2.16k|        return it->second.get();
-   92|  2.16k|    }
+   91|  2.14k|        return it->second.get();
+   92|  2.14k|    }
    93|      0|    return nullptr;
-   94|  2.16k|}
+   94|  2.14k|}
 _ZN3tox4test16FakeNetworkStack5closeE6Socket:
-   97|     40|{
-   98|     40|    std::lock_guard<std::mutex> lock(mutex_);
-   99|     40|    int fd = net_socket_to_native(sock);
-  100|     40|    auto it = sockets_.find(fd);
-  101|     40|    if (it == sockets_.end()) {
+   97|     38|{
+   98|     38|    std::lock_guard<std::mutex> lock(mutex_);
+   99|     38|    int fd = net_socket_to_native(sock);
+  100|     38|    auto it = sockets_.find(fd);
+  101|     38|    if (it == sockets_.end()) {
   ------------------
-  |  Branch (101:9): [True: 0, False: 40]
+  |  Branch (101:9): [True: 0, False: 38]
   ------------------
   102|      0|        errno = EBADF;
   103|      0|        return -1;
   104|      0|    }
-  105|     40|    it->second->close();
-  106|     40|    sockets_.erase(it);
-  107|     40|    return 0;
-  108|     40|}
+  105|     38|    it->second->close();
+  106|     38|    sockets_.erase(it);
+  107|     38|    return 0;
+  108|     38|}
 _ZN3tox4test16FakeNetworkStack4bindE6SocketPK7IP_Port:
-  112|     83|{
-  113|     83|    if (auto *s = get_sock(sock))
+  112|     79|{
+  113|     79|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (113:15): [True: 83, False: 0]
+  |  Branch (113:15): [True: 79, False: 0]
   ------------------
-  114|     83|        return s->bind(addr);
-  115|     83|    errno = EBADF;
+  114|     79|        return s->bind(addr);
+  115|     79|    errno = EBADF;
   116|      0|    return -1;
-  117|     83|}
+  117|     79|}
 _ZN3tox4test16FakeNetworkStack8recvfromE6SocketPhmP7IP_Port:
-  194|  1.84k|{
-  195|  1.84k|    if (auto *s = get_sock(sock))
+  194|  1.83k|{
+  195|  1.83k|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (195:15): [True: 1.84k, False: 0]
+  |  Branch (195:15): [True: 1.83k, False: 0]
   ------------------
-  196|  1.84k|        return s->recvfrom(buf, len, addr);
-  197|  1.84k|    errno = EBADF;
+  196|  1.83k|        return s->recvfrom(buf, len, addr);
+  197|  1.83k|    errno = EBADF;
   198|      0|    return -1;
-  199|  1.84k|}
+  199|  1.83k|}
 _ZN3tox4test16FakeNetworkStack15socket_nonblockE6Socketb:
-  202|     40|{
-  203|     40|    if (auto *s = get_sock(sock))
+  202|     38|{
+  203|     38|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (203:15): [True: 40, False: 0]
+  |  Branch (203:15): [True: 38, False: 0]
   ------------------
-  204|     40|        return s->socket_nonblock(nonblock);
-  205|     40|    errno = EBADF;
+  204|     38|        return s->socket_nonblock(nonblock);
+  205|     38|    errno = EBADF;
   206|      0|    return -1;
-  207|     40|}
+  207|     38|}
 _ZN3tox4test16FakeNetworkStack10getsockoptE6SocketiiPvPm:
-  210|     40|{
-  211|     40|    if (auto *s = get_sock(sock))
+  210|     38|{
+  211|     38|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (211:15): [True: 40, False: 0]
+  |  Branch (211:15): [True: 38, False: 0]
   ------------------
-  212|     40|        return s->getsockopt(level, optname, optval, optlen);
-  213|     40|    errno = EBADF;
+  212|     38|        return s->getsockopt(level, optname, optval, optlen);
+  213|     38|    errno = EBADF;
   214|      0|    return -1;
-  215|     40|}
+  215|     38|}
 _ZN3tox4test16FakeNetworkStack10setsockoptE6SocketiiPKvm:
-  219|    160|{
-  220|    160|    if (auto *s = get_sock(sock))
+  219|    152|{
+  220|    152|    if (auto *s = get_sock(sock))
   ------------------
-  |  Branch (220:15): [True: 160, False: 0]
+  |  Branch (220:15): [True: 152, False: 0]
   ------------------
-  221|    160|        return s->setsockopt(level, optname, optval, optlen);
-  222|    160|    errno = EBADF;
+  221|    152|        return s->setsockopt(level, optname, optval, optlen);
+  222|    152|    errno = EBADF;
   223|      0|    return -1;
-  224|    160|}
+  224|    152|}
 _ZN3tox4test16FakeNetworkStack21get_bound_udp_socketsEv:
-  237|     43|{
-  238|     43|    std::lock_guard<std::mutex> lock(mutex_);
-  239|     43|    std::vector<FakeUdpSocket *> result;
-  240|     43|    for (const auto &pair : sockets_) {
+  237|     41|{
+  238|     41|    std::lock_guard<std::mutex> lock(mutex_);
+  239|     41|    std::vector<FakeUdpSocket *> result;
+  240|     41|    for (const auto &pair : sockets_) {
   ------------------
-  |  Branch (240:27): [True: 43, False: 43]
+  |  Branch (240:27): [True: 41, False: 41]
   ------------------
-  241|     43|        FakeSocket *s = pair.second.get();
-  242|     43|        if (s->type() == SOCK_DGRAM && s->local_port() != 0) {
+  241|     41|        FakeSocket *s = pair.second.get();
+  242|     41|        if (s->type() == SOCK_DGRAM && s->local_port() != 0) {
   ------------------
-  |  Branch (242:13): [True: 43, False: 0]
-  |  Branch (242:40): [True: 43, False: 0]
+  |  Branch (242:13): [True: 41, False: 0]
+  |  Branch (242:40): [True: 41, False: 0]
   ------------------
-  243|     43|            result.push_back(static_cast<FakeUdpSocket *>(s));
-  244|     43|        }
-  245|     43|    }
-  246|     43|    return result;
-  247|     43|}
+  243|     41|            result.push_back(static_cast<FakeUdpSocket *>(s));
+  244|     41|        }
+  245|     41|    }
+  246|     41|    return result;
+  247|     41|}
 fake_network_stack.cc:_ZNK3tox4test3$_0clEPv6Socket:
-    9|     40|    = [](void *obj, Socket sock) { return static_cast<FakeNetworkStack *>(obj)->close(sock); },
+    9|     38|    = [](void *obj, Socket sock) { return static_cast<FakeNetworkStack *>(obj)->close(sock); },
 fake_network_stack.cc:_ZNK3tox4test3$_2clEPv6SocketPK7IP_Port:
-   14|     40|          const IP_Port *addr) { return static_cast<FakeNetworkStack *>(obj)->bind(sock, addr); },
+   14|     38|          const IP_Port *addr) { return static_cast<FakeNetworkStack *>(obj)->bind(sock, addr); },
 fake_network_stack.cc:_ZNK3tox4test3$_7clEPv6SocketPhmP7IP_Port:
-   27|  1.84k|        [](void *obj, Socket sock, uint8_t *buf, size_t len, IP_Port *addr) {
-   28|  1.84k|            return static_cast<FakeNetworkStack *>(obj)->recvfrom(sock, buf, len, addr);
-   29|  1.84k|        },
+   27|  1.83k|        [](void *obj, Socket sock, uint8_t *buf, size_t len, IP_Port *addr) {
+   28|  1.83k|            return static_cast<FakeNetworkStack *>(obj)->recvfrom(sock, buf, len, addr);
+   29|  1.83k|        },
 fake_network_stack.cc:_ZNK3tox4test4$_10clEPviii:
-   38|     40|          int proto) { return static_cast<FakeNetworkStack *>(obj)->socket(domain, type, proto); },
+   38|     38|          int proto) { return static_cast<FakeNetworkStack *>(obj)->socket(domain, type, proto); },
 fake_network_stack.cc:_ZNK3tox4test4$_11clEPv6Socketb:
-   40|     40|        [](void *obj, Socket sock, bool nonblock) {
-   41|     40|            return static_cast<FakeNetworkStack *>(obj)->socket_nonblock(sock, nonblock);
-   42|     40|        },
+   40|     38|        [](void *obj, Socket sock, bool nonblock) {
+   41|     38|            return static_cast<FakeNetworkStack *>(obj)->socket_nonblock(sock, nonblock);
+   42|     38|        },
 fake_network_stack.cc:_ZNK3tox4test4$_12clEPv6SocketiiS2_Pm:
-   44|     40|        [](void *obj, Socket sock, int level, int optname, void *optval, size_t *optlen) {
-   45|     40|            return static_cast<FakeNetworkStack *>(obj)->getsockopt(
-   46|     40|                sock, level, optname, optval, optlen);
-   47|     40|        },
+   44|     38|        [](void *obj, Socket sock, int level, int optname, void *optval, size_t *optlen) {
+   45|     38|            return static_cast<FakeNetworkStack *>(obj)->getsockopt(
+   46|     38|                sock, level, optname, optval, optlen);
+   47|     38|        },
 fake_network_stack.cc:_ZNK3tox4test4$_13clEPv6SocketiiPKvm:
-   49|    160|        [](void *obj, Socket sock, int level, int optname, const void *optval, size_t optlen) {
-   50|    160|            return static_cast<FakeNetworkStack *>(obj)->setsockopt(
-   51|    160|                sock, level, optname, optval, optlen);
-   52|    160|        },
+   49|    152|        [](void *obj, Socket sock, int level, int optname, const void *optval, size_t optlen) {
+   50|    152|            return static_cast<FakeNetworkStack *>(obj)->setsockopt(
+   51|    152|                sock, level, optname, optval, optlen);
+   52|    152|        },
 
 _ZN3tox4test10FakeSocketC2ERNS0_15NetworkUniverseEi:
-   15|     83|    : universe_(universe)
-   16|     83|    , type_(type)
-   17|     83|{
-   18|     83|}
+   15|     79|    : universe_(universe)
+   16|     79|    , type_(type)
+   17|     79|{
+   18|     79|}
 _ZN3tox4test10FakeSocketD2Ev:
-   20|     83|FakeSocket::~FakeSocket() = default;
+   20|     79|FakeSocket::~FakeSocket() = default;
 _ZN3tox4test10FakeSocket10getsockoptEiiPvPm:
-   28|     40|int FakeSocket::getsockopt(int level, int optname, void *optval, size_t *optlen) { return 0; }
+   28|     38|int FakeSocket::getsockopt(int level, int optname, void *optval, size_t *optlen) { return 0; }
 _ZN3tox4test10FakeSocket10setsockoptEiiPKvm:
-   29|    160|int FakeSocket::setsockopt(int level, int optname, const void *optval, size_t optlen) { return 0; }
+   29|    152|int FakeSocket::setsockopt(int level, int optname, const void *optval, size_t optlen) { return 0; }
 _ZN3tox4test10FakeSocket15socket_nonblockEb:
-   31|     40|{
-   32|     40|    nonblocking_ = nonblock;
-   33|     40|    return 0;
-   34|     40|}
+   31|     38|{
+   32|     38|    nonblocking_ = nonblock;
+   33|     38|    return 0;
+   34|     38|}
 _ZN3tox4test13FakeUdpSocketC2ERNS0_15NetworkUniverseE:
-   39|     83|    : FakeSocket(universe, SOCK_DGRAM)
-   40|     83|{
-   41|     83|}
+   39|     79|    : FakeSocket(universe, SOCK_DGRAM)
+   40|     79|{
+   41|     79|}
 _ZN3tox4test13FakeUdpSocketD2Ev:
-   43|     83|FakeUdpSocket::~FakeUdpSocket() { close_impl(); }
+   43|     79|FakeUdpSocket::~FakeUdpSocket() { close_impl(); }
 _ZN3tox4test13FakeUdpSocket5closeEv:
-   46|     40|{
-   47|     40|    std::lock_guard<std::mutex> lock(mutex_);
-   48|     40|    close_impl();
-   49|     40|    return 0;
-   50|     40|}
+   46|     38|{
+   47|     38|    std::lock_guard<std::mutex> lock(mutex_);
+   48|     38|    close_impl();
+   49|     38|    return 0;
+   50|     38|}
 _ZN3tox4test13FakeUdpSocket10close_implEv:
-   53|    123|{
-   54|    123|    if (local_port_ != 0) {
+   53|    117|{
+   54|    117|    if (local_port_ != 0) {
   ------------------
-  |  Branch (54:9): [True: 83, False: 40]
+  |  Branch (54:9): [True: 79, False: 38]
   ------------------
-   55|     83|        universe_.unbind_udp(local_port_);
-   56|     83|        local_port_ = 0;
-   57|     83|    }
-   58|    123|}
+   55|     79|        universe_.unbind_udp(local_port_);
+   56|     79|        local_port_ = 0;
+   57|     79|    }
+   58|    117|}
 _ZN3tox4test13FakeUdpSocket4bindEPK7IP_Port:
-   61|     83|{
-   62|     83|    std::lock_guard<std::mutex> lock(mutex_);
-   63|     83|    if (local_port_ != 0)
+   61|     79|{
+   62|     79|    std::lock_guard<std::mutex> lock(mutex_);
+   63|     79|    if (local_port_ != 0)
   ------------------
-  |  Branch (63:9): [True: 0, False: 83]
+  |  Branch (63:9): [True: 0, False: 79]
   ------------------
    64|      0|        return -1;  // Already bound
    65|       |
-   66|     83|    uint16_t port = addr->port;
-   67|     83|    if (port == 0) {
+   66|     79|    uint16_t port = addr->port;
+   67|     79|    if (port == 0) {
   ------------------
-  |  Branch (67:9): [True: 0, False: 83]
+  |  Branch (67:9): [True: 0, False: 79]
   ------------------
    68|      0|        port = universe_.find_free_port();
    69|      0|    }
    70|       |
-   71|     83|    if (universe_.bind_udp(port, this)) {
+   71|     79|    if (universe_.bind_udp(port, this)) {
   ------------------
-  |  Branch (71:9): [True: 83, False: 0]
+  |  Branch (71:9): [True: 79, False: 0]
   ------------------
-   72|     83|        local_port_ = port;
-   73|     83|        return 0;
-   74|     83|    }
-   75|     83|    errno = EADDRINUSE;
+   72|     79|        local_port_ = port;
+   73|     79|        return 0;
+   74|     79|    }
+   75|     79|    errno = EADDRINUSE;
    76|      0|    return -1;
-   77|     83|}
+   77|     79|}
 _ZN3tox4test13FakeUdpSocket8recvfromEPhmP7IP_Port:
-  139|  1.84k|{
-  140|  1.84k|    RecvObserver observer_copy;
-  141|  1.84k|    std::vector<uint8_t> data_copy;
-  142|  1.84k|    IP_Port from_copy;
-  143|  1.84k|    size_t copy_len = 0;
+  139|  1.83k|{
+  140|  1.83k|    RecvObserver observer_copy;
+  141|  1.83k|    std::vector<uint8_t> data_copy;
+  142|  1.83k|    IP_Port from_copy;
+  143|  1.83k|    size_t copy_len = 0;
   144|       |
-  145|  1.84k|    {
-  146|  1.84k|        std::lock_guard<std::mutex> lock(mutex_);
+  145|  1.83k|    {
+  146|  1.83k|        std::lock_guard<std::mutex> lock(mutex_);
   147|       |
-  148|  1.84k|        if (recv_queue_.empty() && packet_source_) {
+  148|  1.83k|        if (recv_queue_.empty() && packet_source_) {
   ------------------
-  |  Branch (148:13): [True: 1.84k, False: 0]
-  |  Branch (148:36): [True: 0, False: 1.84k]
+  |  Branch (148:13): [True: 1.83k, False: 0]
+  |  Branch (148:36): [True: 0, False: 1.83k]
   ------------------
   149|       |            // NOTE: We call packet_source_ with lock held.
   150|       |            // Be careful not to call back into socket methods from packet_source_.
@@ -244,13 +244,13 @@ _ZN3tox4test13FakeUdpSocket8recvfromEPhmP7IP_Port:
   155|      0|            }
   156|      0|        }
   157|       |
-  158|  1.84k|        if (recv_queue_.empty()) {
+  158|  1.83k|        if (recv_queue_.empty()) {
   ------------------
-  |  Branch (158:13): [True: 1.84k, False: 0]
+  |  Branch (158:13): [True: 1.83k, False: 0]
   ------------------
-  159|  1.84k|            errno = EWOULDBLOCK;
-  160|  1.84k|            return -1;
-  161|  1.84k|        }
+  159|  1.83k|            errno = EWOULDBLOCK;
+  160|  1.83k|            return -1;
+  161|  1.83k|        }
   162|       |
   163|      0|        auto &p = recv_queue_.front();
   164|      0|        copy_len = std::min(len, p.data.size());
@@ -277,47 +277,47 @@ _ZN3tox4test13FakeUdpSocket8recvfromEPhmP7IP_Port:
   179|      0|    }
   180|       |
   181|      0|    return copy_len;
-  182|  1.84k|}
+  182|  1.83k|}
 
 _ZNK3tox4test10FakeSocket4typeEv:
-   56|     43|    int type() const { return type_; }
+   56|     41|    int type() const { return type_; }
 _ZNK3tox4test10FakeSocket10local_portEv:
-   57|     43|    uint16_t local_port() const { return local_port_; }
+   57|     41|    uint16_t local_port() const { return local_port_; }
 
 _ZN3tox4test15NetworkUniverseC2Ev:
-    9|     43|NetworkUniverse::NetworkUniverse() { }
+    9|     41|NetworkUniverse::NetworkUniverse() { }
 _ZN3tox4test15NetworkUniverseD2Ev:
-   10|     43|NetworkUniverse::~NetworkUniverse() { }
+   10|     41|NetworkUniverse::~NetworkUniverse() { }
 _ZN3tox4test15NetworkUniverse8bind_udpEtPNS0_13FakeUdpSocketE:
-   13|     83|{
-   14|     83|    std::lock_guard<std::mutex> lock(mutex_);
-   15|     83|    if (udp_bindings_.count(port))
+   13|     79|{
+   14|     79|    std::lock_guard<std::mutex> lock(mutex_);
+   15|     79|    if (udp_bindings_.count(port))
   ------------------
-  |  Branch (15:9): [True: 0, False: 83]
+  |  Branch (15:9): [True: 0, False: 79]
   ------------------
    16|      0|        return false;
-   17|     83|    udp_bindings_[port] = socket;
-   18|     83|    return true;
-   19|     83|}
+   17|     79|    udp_bindings_[port] = socket;
+   18|     79|    return true;
+   19|     79|}
 _ZN3tox4test15NetworkUniverse10unbind_udpEt:
-   22|     83|{
-   23|     83|    std::lock_guard<std::mutex> lock(mutex_);
-   24|     83|    udp_bindings_.erase(port);
-   25|     83|}
+   22|     79|{
+   23|     79|    std::lock_guard<std::mutex> lock(mutex_);
+   24|     79|    udp_bindings_.erase(port);
+   25|     79|}
 _ZN3tox4test15NetworkUniverse14process_eventsEm:
-   66|  1.84k|{
-   67|  1.84k|    while (true) {
+   66|  1.83k|{
+   67|  1.83k|    while (true) {
   ------------------
-  |  Branch (67:12): [True: 1.84k, Folded]
+  |  Branch (67:12): [True: 1.83k, Folded]
   ------------------
-   68|  1.84k|        Packet packet;
-   69|  1.84k|        bool has_packet = false;
+   68|  1.83k|        Packet packet;
+   69|  1.83k|        bool has_packet = false;
    70|       |
-   71|  1.84k|        {
-   72|  1.84k|            std::lock_guard<std::mutex> lock(mutex_);
-   73|  1.84k|            if (!event_queue_.empty()) {
+   71|  1.83k|        {
+   72|  1.83k|            std::lock_guard<std::mutex> lock(mutex_);
+   73|  1.83k|            if (!event_queue_.empty()) {
   ------------------
-  |  Branch (73:17): [True: 0, False: 1.84k]
+  |  Branch (73:17): [True: 0, False: 1.83k]
   ------------------
    74|      0|                const auto &p = event_queue_.top();
    75|      0|                if (p.delivery_time <= current_time_ms) {
@@ -329,13 +329,13 @@ _ZN3tox4test15NetworkUniverse14process_eventsEm:
    78|      0|                    has_packet = true;
    79|      0|                }
    80|      0|            }
-   81|  1.84k|        }
+   81|  1.83k|        }
    82|       |
-   83|  1.84k|        if (!has_packet)
+   83|  1.83k|        if (!has_packet)
   ------------------
-  |  Branch (83:13): [True: 1.84k, False: 0]
+  |  Branch (83:13): [True: 1.83k, False: 0]
   ------------------
-   84|  1.84k|            break;
+   84|  1.83k|            break;
    85|       |
    86|      0|        if (packet.is_tcp) {
   ------------------
@@ -413,42 +413,42 @@ _ZN3tox4test15NetworkUniverse14process_eventsEm:
   129|      0|            }
   130|      0|        }
   131|      0|    }
-  132|  1.84k|}
+  132|  1.83k|}
 _ZN3tox4test15NetworkUniverse14find_free_portEt:
-  141|     43|{
-  142|     43|    std::lock_guard<std::mutex> lock(mutex_);
-  143|     43|    for (uint16_t p = start; p < 65535; ++p) {
+  141|     41|{
+  142|     41|    std::lock_guard<std::mutex> lock(mutex_);
+  143|     41|    for (uint16_t p = start; p < 65535; ++p) {
   ------------------
-  |  Branch (143:30): [True: 43, False: 0]
+  |  Branch (143:30): [True: 41, False: 0]
   ------------------
-  144|     43|        if (udp_bindings_.find(p) == udp_bindings_.end()
+  144|     41|        if (udp_bindings_.find(p) == udp_bindings_.end()
   ------------------
-  |  Branch (144:13): [True: 43, False: 0]
-  |  Branch (144:13): [True: 43, False: 0]
+  |  Branch (144:13): [True: 41, False: 0]
+  |  Branch (144:13): [True: 41, False: 0]
   ------------------
-  145|     43|            && tcp_bindings_.find(p) == tcp_bindings_.end()) {
+  145|     41|            && tcp_bindings_.find(p) == tcp_bindings_.end()) {
   ------------------
-  |  Branch (145:16): [True: 43, False: 0]
+  |  Branch (145:16): [True: 41, False: 0]
   ------------------
-  146|     43|            return p;
-  147|     43|        }
-  148|     43|    }
+  146|     41|            return p;
+  147|     41|        }
+  148|     41|    }
   149|      0|    return 0;
-  150|     43|}
+  150|     41|}
 
 _ZNK3tox4test9Fuzz_Data4sizeEv:
-   99|    856|    std::size_t size() const { return size_; }
+   99|    806|    std::size_t size() const { return size_; }
 _ZN3tox4test9Fuzz_Data7consumeEPKcm:
-  105|    425|    {
-  106|    425|        if (count > size_)
+  105|    404|    {
+  106|    404|        if (count > size_)
   ------------------
-  |  Branch (106:13): [True: 0, False: 425]
+  |  Branch (106:13): [True: 0, False: 404]
   ------------------
   107|      0|            return nullptr;
-  108|    425|        const uint8_t *val = data_;
-  109|    425|        if (FUZZ_DEBUG) {
+  108|    404|        const uint8_t *val = data_;
+  109|    404|        if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (109:13): [Folded, False: 425]
+  |  Branch (109:13): [Folded, False: 404]
   ------------------
   110|      0|            if (count == 1) {
   ------------------
@@ -463,56 +463,56 @@ _ZN3tox4test9Fuzz_Data7consumeEPKcm:
   114|      0|                    val[count - 1], count);
   115|      0|            }
   116|      0|        }
-  117|    425|        data_ += count;
-  118|    425|        size_ -= count;
-  119|    425|        return val;
-  120|    425|    }
+  117|    404|        data_ += count;
+  118|    404|        size_ -= count;
+  119|    404|        return val;
+  120|    404|    }
 net_crypto_fuzz_test.cc:_ZN3tox4test18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_113TestNetCryptoERNS0_9Fuzz_DataEEEEEEvPKhm:
-  174|     45|{
-  175|     45|    Fuzz_Data input{data, size};
+  174|     43|{
+  175|     43|    Fuzz_Data input{data, size};
   176|       |
-  177|     45|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  177|     43|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
   ------------------
-  |  |  124|     45|    if ((INPUT).size() < sizeof(TYPE)) {      \
+  |  |  124|     43|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (124:9): [True: 0, False: 45]
+  |  |  |  Branch (124:9): [True: 0, False: 43]
   |  |  ------------------
   |  |  125|      0|        return;                               \
   |  |  126|      0|    }                                         \
-  |  |  127|     45|    TYPE NAME = (INPUT).consume1(__func__)
+  |  |  127|     43|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-  178|     45|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  179|     45|}
+  178|     43|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  179|     43|}
 _ZN3tox4test9Fuzz_DataC2EPKhm:
-   23|     45|        : data_(input_data)
-   24|     45|        , base_(input_data)
-   25|     45|        , size_(input_size)
-   26|     45|    {
-   27|     45|    }
+   23|     43|        : data_(input_data)
+   24|     43|        , base_(input_data)
+   25|     43|        , size_(input_size)
+   26|     43|    {
+   27|     43|    }
 _ZN3tox4test9Fuzz_Data8consume1EPKc:
-   61|     45|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   61|     43|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
 _ZN3tox4test9Fuzz_Data8ConsumercvT_IhEEv:
-   51|     45|        {
-   52|     45|            if (sizeof(T) > fd.size())
+   51|     43|        {
+   52|     43|            if (sizeof(T) > fd.size())
   ------------------
-  |  Branch (52:17): [True: 0, False: 45]
+  |  Branch (52:17): [True: 0, False: 43]
   ------------------
    53|      0|                return T{};
-   54|     45|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   55|     45|            T val;
-   56|     45|            std::memcpy(&val, bytes, sizeof(T));
-   57|     45|            return val;
-   58|     45|        }
+   54|     43|            const uint8_t *bytes = fd.consume(func, sizeof(T));
+   55|     43|            T val;
+   56|     43|            std::memcpy(&val, bytes, sizeof(T));
+   57|     43|            return val;
+   58|     43|        }
 net_crypto_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_113TestNetCryptoERNS0_9Fuzz_DataEEEEE6selectEhS4_:
-  155|     45|    {
-  156|     45|        if (selector == sizeof...(Args)) {
+  155|     43|    {
+  156|     43|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (156:13): [True: 44, False: 1]
+  |  Branch (156:13): [True: 42, False: 1]
   ------------------
-  157|     44|            return Arg(input);
-  158|     44|        }
+  157|     42|            return Arg(input);
+  158|     42|        }
   159|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  160|     45|    }
+  160|     43|    }
 _ZN3tox4test20Fuzz_Target_SelectorIJEE6selectEhRNS0_9Fuzz_DataE:
   166|      1|    {
   167|       |        // The selector selected no function, so we do nothing and rely on the
@@ -520,277 +520,277 @@ _ZN3tox4test20Fuzz_Target_SelectorIJEE6selectEhRNS0_9Fuzz_DataE:
   169|      1|    }
 
 _ZN3tox4test10Simulation5clockEv:
-   46|    126|    FakeClock &clock() { return *clock_; }
+   46|    120|    FakeClock &clock() { return *clock_; }
 _ZN3tox4test10Simulation3netEv:
-   47|     86|    NetworkUniverse &net() { return *net_; }
+   47|     82|    NetworkUniverse &net() { return *net_; }
 _ZN3tox4test13SimulatedNode12fake_networkEv:
-   73|     86|    FakeNetworkStack &fake_network() { return *network_; }
+   73|     82|    FakeNetworkStack &fake_network() { return *network_; }
 _ZN3tox4test13SimulatedNode13get_c_networkEv:
-   88|     43|    struct Network get_c_network() { return network_->get_c_network(); }
+   88|     41|    struct Network get_c_network() { return network_->get_c_network(); }
 
 _ZN3tox4test11ClockSystemD2Ev:
-    5|     43|ClockSystem::~ClockSystem() = default;
+    5|     41|ClockSystem::~ClockSystem() = default;
 
 _ZN3tox4test11EnvironmentD2Ev:
-    5|     86|Environment::~Environment() = default;
+    5|     82|Environment::~Environment() = default;
 
 _ZN3tox4test9FakeClockC2Em:
-    6|     43|    : now_ms_(start_time_ms)
-    7|     43|{
-    8|     43|}
+    6|     41|    : now_ms_(start_time_ms)
+    7|     41|{
+    8|     41|}
 _ZNK3tox4test9FakeClock15current_time_msEv:
-   10|  3.73k|uint64_t FakeClock::current_time_ms() const { return now_ms_; }
+   10|  3.70k|uint64_t FakeClock::current_time_ms() const { return now_ms_; }
 _ZN3tox4test9FakeClock7advanceEm:
-   14|  1.88k|void FakeClock::advance(uint64_t ms) { now_ms_ += ms; }
+   14|  1.87k|void FakeClock::advance(uint64_t ms) { now_ms_ += ms; }
 
 _ZN3tox4test10FakeMemoryC2Ev:
-   23|     86|FakeMemory::FakeMemory() = default;
+   23|     82|FakeMemory::FakeMemory() = default;
 _ZN3tox4test10FakeMemoryD2Ev:
-   24|     86|FakeMemory::~FakeMemory() = default;
+   24|     82|FakeMemory::~FakeMemory() = default;
 _ZN3tox4test10FakeMemory6mallocEm:
-   27|    618|{
-   28|    618|    bool fail = failure_injector_ && failure_injector_(size);
+   27|    582|{
+   28|    582|    bool fail = failure_injector_ && failure_injector_(size);
   ------------------
-  |  Branch (28:17): [True: 618, False: 0]
-  |  Branch (28:38): [True: 17, False: 601]
+  |  Branch (28:17): [True: 582, False: 0]
+  |  Branch (28:38): [True: 17, False: 565]
   ------------------
    29|       |
-   30|    618|    if (observer_) {
+   30|    582|    if (observer_) {
   ------------------
-  |  Branch (30:9): [True: 0, False: 618]
+  |  Branch (30:9): [True: 0, False: 582]
   ------------------
    31|      0|        observer_(!fail);
    32|      0|    }
    33|       |
-   34|    618|    if (fail) {
+   34|    582|    if (fail) {
   ------------------
-  |  Branch (34:9): [True: 17, False: 601]
+  |  Branch (34:9): [True: 17, False: 565]
   ------------------
    35|     17|        return nullptr;
    36|     17|    }
-   37|    601|    return std::malloc(size);
-   38|    618|}
+   37|    565|    return std::malloc(size);
+   38|    582|}
 _ZN3tox4test10FakeMemory7reallocEPvm:
-   41|    104|{
-   42|    104|    bool fail = failure_injector_ && failure_injector_(size);
+   41|     96|{
+   42|     96|    bool fail = failure_injector_ && failure_injector_(size);
   ------------------
-  |  Branch (42:17): [True: 104, False: 0]
-  |  Branch (42:38): [True: 4, False: 100]
+  |  Branch (42:17): [True: 96, False: 0]
+  |  Branch (42:38): [True: 4, False: 92]
   ------------------
    43|       |
-   44|    104|    if (observer_) {
+   44|     96|    if (observer_) {
   ------------------
-  |  Branch (44:9): [True: 0, False: 104]
+  |  Branch (44:9): [True: 0, False: 96]
   ------------------
    45|      0|        observer_(!fail);
    46|      0|    }
    47|       |
-   48|    104|    if (fail) {
+   48|     96|    if (fail) {
   ------------------
-  |  Branch (48:9): [True: 4, False: 100]
+  |  Branch (48:9): [True: 4, False: 92]
   ------------------
    49|       |        // If realloc fails, original block is left untouched.
    50|      4|        return nullptr;
    51|      4|    }
-   52|    100|    return std::realloc(ptr, size);
-   53|    104|}
+   52|     92|    return std::realloc(ptr, size);
+   53|     96|}
 _ZN3tox4test10FakeMemory4freeEPv:
-   55|    770|void FakeMemory::free(void *ptr) { std::free(ptr); }
+   55|    722|void FakeMemory::free(void *ptr) { std::free(ptr); }
 _ZN3tox4test10FakeMemory20set_failure_injectorENSt3__18functionIFbmEEE:
-   58|     43|{
-   59|     43|    failure_injector_ = std::move(injector);
-   60|     43|}
+   58|     41|{
+   59|     41|    failure_injector_ = std::move(injector);
+   60|     41|}
 _ZN3tox4test10FakeMemory12get_c_memoryEv:
-   64|     43|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+   64|     41|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
 fake_memory.cc:_ZNK3tox4test3$_0clEPvj:
-   14|    618|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
+   14|    582|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
 fake_memory.cc:_ZNK3tox4test3$_1clEPvS2_j:
-   17|    104|          uint32_t size) { return static_cast<FakeMemory *>(obj)->realloc(ptr, size); },
+   17|     96|          uint32_t size) { return static_cast<FakeMemory *>(obj)->realloc(ptr, size); },
 fake_memory.cc:_ZNK3tox4test3$_2clEPvS2_:
-   18|    770|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
+   18|    722|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
 
 _ZN3tox4test10FakeRandomC2Em:
-   21|     86|    : rng_(seed)
-   22|     86|{
-   23|     86|}
+   21|     82|    : rng_(seed)
+   22|     82|{
+   23|     82|}
 _ZN3tox4test10FakeRandom5bytesEPhm:
-   48|    194|{
-   49|    194|    if (entropy_source_) {
+   48|    180|{
+   49|    180|    if (entropy_source_) {
   ------------------
-  |  Branch (49:9): [True: 0, False: 194]
+  |  Branch (49:9): [True: 0, False: 180]
   ------------------
    50|      0|        entropy_source_(out, count);
-   51|    194|    } else {
-   52|    194|        std::uniform_int_distribution<uint16_t> dist(0, 255);
-   53|    194|        std::generate_n(out, count, [&]() { return static_cast<uint8_t>(dist(rng_)); });
-   54|    194|    }
+   51|    180|    } else {
+   52|    180|        std::uniform_int_distribution<uint16_t> dist(0, 255);
+   53|    180|        std::generate_n(out, count, [&]() { return static_cast<uint8_t>(dist(rng_)); });
+   54|    180|    }
    55|       |
-   56|    194|    if (observer_) {
+   56|    180|    if (observer_) {
   ------------------
-  |  Branch (56:9): [True: 0, False: 194]
+  |  Branch (56:9): [True: 0, False: 180]
   ------------------
    57|      0|        observer_(out, count);
    58|      0|    }
-   59|    194|}
+   59|    180|}
 _ZN3tox4test10FakeRandom12get_c_randomEv:
-   61|     43|struct Tox_Random FakeRandom::get_c_random() { return Tox_Random{&kFakeRandomVtable, this}; }
+   61|     41|struct Tox_Random FakeRandom::get_c_random() { return Tox_Random{&kFakeRandomVtable, this}; }
 fake_random.cc:_ZZN3tox4test10FakeRandom5bytesEPhmENK3$_0clEv:
-   53|  4.88k|        std::generate_n(out, count, [&]() { return static_cast<uint8_t>(dist(rng_)); });
+   53|  4.53k|        std::generate_n(out, count, [&]() { return static_cast<uint8_t>(dist(rng_)); });
 fake_random.cc:_ZNK3tox4test3$_1clEPvPhj:
-   14|    194|          uint32_t length) { static_cast<FakeRandom *>(obj)->bytes(bytes, length); },
+   14|    180|          uint32_t length) { static_cast<FakeRandom *>(obj)->bytes(bytes, length); },
 
 _ZN3tox4test28configure_fuzz_memory_sourceERNS0_10FakeMemoryERNS0_9Fuzz_DataE:
-   44|     43|{
-   45|     43|    memory.set_failure_injector([&input](size_t size) -> bool {
-   46|     43|        if (input.size() < 1) {
+   44|     41|{
+   45|     41|    memory.set_failure_injector([&input](size_t size) -> bool {
+   46|     41|        if (input.size() < 1) {
    47|       |            // Legacy behavior: if input runs out, allocation succeeds.
-   48|     43|            return false;
-   49|     43|        }
+   48|     41|            return false;
+   49|     41|        }
    50|       |
-   51|     43|        const uint8_t *b = input.consume("malloc_decision", 1);
-   52|     43|        bool succeed = (b && *b);
-   53|     43|        return !succeed;  // Return true to fail
-   54|     43|    });
-   55|     43|}
+   51|     41|        const uint8_t *b = input.consume("malloc_decision", 1);
+   52|     41|        bool succeed = (b && *b);
+   53|     41|        return !succeed;  // Return true to fail
+   54|     41|    });
+   55|     41|}
 fuzz_helpers.cc:_ZZN3tox4test28configure_fuzz_memory_sourceERNS0_10FakeMemoryERNS0_9Fuzz_DataEENK3$_0clEm:
-   45|    722|    memory.set_failure_injector([&input](size_t size) -> bool {
-   46|    722|        if (input.size() < 1) {
+   45|    678|    memory.set_failure_injector([&input](size_t size) -> bool {
+   46|    678|        if (input.size() < 1) {
   ------------------
-  |  Branch (46:13): [True: 385, False: 337]
+  |  Branch (46:13): [True: 358, False: 320]
   ------------------
    47|       |            // Legacy behavior: if input runs out, allocation succeeds.
-   48|    385|            return false;
-   49|    385|        }
+   48|    358|            return false;
+   49|    358|        }
    50|       |
-   51|    337|        const uint8_t *b = input.consume("malloc_decision", 1);
-   52|    337|        bool succeed = (b && *b);
+   51|    320|        const uint8_t *b = input.consume("malloc_decision", 1);
+   52|    320|        bool succeed = (b && *b);
   ------------------
-  |  Branch (52:25): [True: 337, False: 0]
-  |  Branch (52:30): [True: 316, False: 21]
+  |  Branch (52:25): [True: 320, False: 0]
+  |  Branch (52:30): [True: 299, False: 21]
   ------------------
-   53|    337|        return !succeed;  // Return true to fail
-   54|    722|    });
+   53|    320|        return !succeed;  // Return true to fail
+   54|    678|    });
 
 _ZN3tox4test12MemorySystemD2Ev:
-    5|     86|MemorySystem::~MemorySystem() = default;
+    5|     82|MemorySystem::~MemorySystem() = default;
 
 _ZN3tox4test13NetworkSystemD2Ev:
-    5|     43|NetworkSystem::~NetworkSystem() = default;
+    5|     41|NetworkSystem::~NetworkSystem() = default;
 
 _ZN3tox4test12RandomSystemD2Ev:
-    5|     86|RandomSystem::~RandomSystem() = default;
+    5|     82|RandomSystem::~RandomSystem() = default;
 
 _ZN3tox4test20SimulatedEnvironmentC2Ev:
-    8|     43|    : sim_(std::make_unique<Simulation>())
-    9|     43|    , global_random_(std::make_unique<FakeRandom>(12345))
-   10|     43|    , global_memory_(std::make_unique<FakeMemory>())
-   11|     43|{
-   12|     43|}
+    8|     41|    : sim_(std::make_unique<Simulation>())
+    9|     41|    , global_random_(std::make_unique<FakeRandom>(12345))
+   10|     41|    , global_memory_(std::make_unique<FakeMemory>())
+   11|     41|{
+   12|     41|}
 _ZN3tox4test20SimulatedEnvironmentD2Ev:
-   14|     43|SimulatedEnvironment::~SimulatedEnvironment() = default;
+   14|     41|SimulatedEnvironment::~SimulatedEnvironment() = default;
 _ZN3tox4test20SimulatedEnvironment10fake_clockEv:
-   30|     83|FakeClock &SimulatedEnvironment::fake_clock() { return sim_->clock(); }
+   30|     79|FakeClock &SimulatedEnvironment::fake_clock() { return sim_->clock(); }
 _ZN3tox4test20SimulatedEnvironment11fake_memoryEv:
-   32|     43|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
+   32|     41|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
 _ZN3tox4test20SimulatedEnvironment11create_nodeEt:
-   35|     43|{
-   36|     43|    auto scoped = std::make_unique<ScopedToxSystem>();
-   37|     43|    scoped->node = sim_->create_node();
+   35|     41|{
+   36|     41|    auto scoped = std::make_unique<ScopedToxSystem>();
+   37|     41|    scoped->node = sim_->create_node();
    38|       |
    39|       |    // Bind port
-   40|     43|    if (port != 0) {
+   40|     41|    if (port != 0) {
   ------------------
-  |  Branch (40:9): [True: 43, False: 0]
+  |  Branch (40:9): [True: 41, False: 0]
   ------------------
-   41|     43|        Socket s = scoped->node->fake_network().socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-   42|     43|        IP_Port addr;
-   43|     43|        ip_init(&addr.ip, false);
-   44|     43|        addr.ip.ip.v4.uint32 = 0;
-   45|     43|        addr.port = port;
-   46|     43|        scoped->node->fake_network().bind(s, &addr);
-   47|     43|    }
+   41|     41|        Socket s = scoped->node->fake_network().socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+   42|     41|        IP_Port addr;
+   43|     41|        ip_init(&addr.ip, false);
+   44|     41|        addr.ip.ip.v4.uint32 = 0;
+   45|     41|        addr.port = port;
+   46|     41|        scoped->node->fake_network().bind(s, &addr);
+   47|     41|    }
    48|       |
    49|       |    // Get Primary Endpoint for Fuzzer
-   50|     43|    scoped->endpoint = scoped->node->get_primary_socket();
+   50|     41|    scoped->endpoint = scoped->node->get_primary_socket();
    51|       |
    52|       |    // Use global Random and Memory for legacy compatibility.
-   53|     43|    scoped->c_random = global_random_->get_c_random();
-   54|     43|    scoped->c_memory = global_memory_->get_c_memory();
+   53|     41|    scoped->c_random = global_random_->get_c_random();
+   54|     41|    scoped->c_memory = global_memory_->get_c_memory();
    55|       |
    56|       |    // Use Node's Network
-   57|     43|    scoped->c_network = scoped->node->get_c_network();
+   57|     41|    scoped->c_network = scoped->node->get_c_network();
    58|       |
    59|       |    // Setup System
-   60|     43|    scoped->system.mem = &scoped->c_memory;
-   61|     43|    scoped->system.ns = &scoped->c_network;
-   62|     43|    scoped->system.rng = &scoped->c_random;
+   60|     41|    scoped->system.mem = &scoped->c_memory;
+   61|     41|    scoped->system.ns = &scoped->c_network;
+   62|     41|    scoped->system.rng = &scoped->c_random;
    63|       |
-   64|     43|    scoped->system.mono_time_user_data = &sim_->clock();
-   65|     43|    scoped->system.mono_time_callback = [](void *user_data) -> uint64_t {
-   66|     43|        return static_cast<FakeClock *>(user_data)->current_time_ms();
-   67|     43|    };
+   64|     41|    scoped->system.mono_time_user_data = &sim_->clock();
+   65|     41|    scoped->system.mono_time_callback = [](void *user_data) -> uint64_t {
+   66|     41|        return static_cast<FakeClock *>(user_data)->current_time_ms();
+   67|     41|    };
    68|       |
-   69|     43|    return scoped;
-   70|     43|}
+   69|     41|    return scoped;
+   70|     41|}
 _ZN3tox4test20SimulatedEnvironment12advance_timeEm:
-   72|  1.84k|void SimulatedEnvironment::advance_time(uint64_t ms) { sim_->advance_time(ms); }
+   72|  1.83k|void SimulatedEnvironment::advance_time(uint64_t ms) { sim_->advance_time(ms); }
 
 _ZN3tox4test10SimulationC2Ev:
-   10|     43|    : clock_(std::make_unique<FakeClock>())
-   11|     43|    , net_(std::make_unique<NetworkUniverse>())
-   12|     43|{
-   13|     43|}
+   10|     41|    : clock_(std::make_unique<FakeClock>())
+   11|     41|    , net_(std::make_unique<NetworkUniverse>())
+   12|     41|{
+   13|     41|}
 _ZN3tox4test10SimulationD2Ev:
-   15|     43|Simulation::~Simulation() = default;
+   15|     41|Simulation::~Simulation() = default;
 _ZN3tox4test10Simulation12advance_timeEm:
-   18|  1.84k|{
-   19|  1.84k|    clock_->advance(ms);
-   20|  1.84k|    net_->process_events(clock_->current_time_ms());
-   21|  1.84k|}
+   18|  1.83k|{
+   19|  1.83k|    clock_->advance(ms);
+   20|  1.83k|    net_->process_events(clock_->current_time_ms());
+   21|  1.83k|}
 _ZN3tox4test10Simulation11create_nodeEv:
-   35|     43|{
-   36|     43|    return std::make_unique<SimulatedNode>(*this);
-   37|     43|}
+   35|     41|{
+   36|     41|    return std::make_unique<SimulatedNode>(*this);
+   37|     41|}
 _ZN3tox4test13SimulatedNodeC2ERNS0_10SimulationE:
-   42|     43|    : sim_(sim)
-   43|     43|    , network_(std::make_unique<FakeNetworkStack>(sim.net()))
+   42|     41|    : sim_(sim)
+   43|     41|    , network_(std::make_unique<FakeNetworkStack>(sim.net()))
    44|       |    , random_(
-   45|     43|          std::make_unique<FakeRandom>(12345 + sim.net().find_free_port(0)))  // Pseudo-random seed
-   46|     43|    , memory_(std::make_unique<FakeMemory>())
-   47|     43|{
-   48|     43|}
+   45|     41|          std::make_unique<FakeRandom>(12345 + sim.net().find_free_port(0)))  // Pseudo-random seed
+   46|     41|    , memory_(std::make_unique<FakeMemory>())
+   47|     41|{
+   48|     41|}
 _ZN3tox4test13SimulatedNodeD2Ev:
-   50|     43|SimulatedNode::~SimulatedNode() = default;
+   50|     41|SimulatedNode::~SimulatedNode() = default;
 _ZN3tox4test13SimulatedNode18get_primary_socketEv:
-  101|     43|{
-  102|     43|    auto sockets = network_->get_bound_udp_sockets();
-  103|     43|    if (sockets.empty())
+  101|     41|{
+  102|     41|    auto sockets = network_->get_bound_udp_sockets();
+  103|     41|    if (sockets.empty())
   ------------------
-  |  Branch (103:9): [True: 0, False: 43]
+  |  Branch (103:9): [True: 0, False: 41]
   ------------------
   104|      0|        return nullptr;
-  105|     43|    return sockets.front();  // Return the first one bound
-  106|     43|}
+  105|     41|    return sockets.front();  // Return the first one bound
+  106|     41|}
 
 dht_get_self_secret_key:
-  150|     25|{
-  151|     25|    return dht->self_secret_key;
-  152|     25|}
+  150|     23|{
+  151|     23|    return dht->self_secret_key;
+  152|     23|}
 get_close_nodes:
-  739|     55|{
-  740|     55|    return get_somewhat_close_nodes(
-  741|     55|               dht->cur_time, public_key, nodes_list,
-  742|     55|               sa_family, dht->close_clientlist,
-  743|     55|               dht->friends_list, dht->num_friends,
-  744|     55|               is_lan, want_announce);
-  745|     55|}
+  739|     51|{
+  740|     51|    return get_somewhat_close_nodes(
+  741|     51|               dht->cur_time, public_key, nodes_list,
+  742|     51|               sa_family, dht->close_clientlist,
+  743|     51|               dht->friends_list, dht->num_friends,
+  744|     51|               is_lan, want_announce);
+  745|     51|}
 dht_addfriend:
- 1577|     57|{
- 1578|     57|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
+ 1577|     53|{
+ 1578|     53|    const uint32_t friend_num = index_of_friend_pk(dht->friends_list, dht->num_friends, public_key);
  1579|       |
- 1580|     57|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
+ 1580|     53|    if (friend_num != UINT32_MAX) { /* Is friend already in DHT? */
   ------------------
-  |  Branch (1580:9): [True: 0, False: 57]
+  |  Branch (1580:9): [True: 0, False: 53]
   ------------------
  1581|      0|        DHT_Friend *const dht_friend = &dht->friends_list[friend_num];
  1582|      0|        const uint32_t tmp_lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
@@ -805,51 +805,51 @@ dht_addfriend:
  1588|      0|        return 0;
  1589|      0|    }
  1590|       |
- 1591|     57|    DHT_Friend *const temp = (DHT_Friend *)mem_vrealloc(dht->mem, dht->friends_list, dht->num_friends + 1, sizeof(DHT_Friend));
+ 1591|     53|    DHT_Friend *const temp = (DHT_Friend *)mem_vrealloc(dht->mem, dht->friends_list, dht->num_friends + 1, sizeof(DHT_Friend));
  1592|       |
- 1593|     57|    if (temp == nullptr) {
+ 1593|     53|    if (temp == nullptr) {
   ------------------
-  |  |   63|     57|#define nullptr NULL
+  |  |   63|     53|#define nullptr NULL
   ------------------
-  |  Branch (1593:9): [True: 2, False: 55]
+  |  Branch (1593:9): [True: 2, False: 51]
   ------------------
  1594|      2|        return -1;
  1595|      2|    }
  1596|       |
- 1597|     55|    dht->friends_list = temp;
- 1598|     55|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
- 1599|     55|    *dht_friend = empty_dht_friend;
- 1600|     55|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
+ 1597|     51|    dht->friends_list = temp;
+ 1598|     51|    DHT_Friend *const dht_friend = &dht->friends_list[dht->num_friends];
+ 1599|     51|    *dht_friend = empty_dht_friend;
+ 1600|     51|    memcpy(dht_friend->public_key, public_key, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |   44|     55|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|     51|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
  1601|       |
- 1602|     55|    dht_friend->nat.nat_ping_id = random_u64(dht->rng);
- 1603|     55|    ++dht->num_friends;
+ 1602|     51|    dht_friend->nat.nat_ping_id = random_u64(dht->rng);
+ 1603|     51|    ++dht->num_friends;
  1604|       |
- 1605|     55|    *lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
- 1606|     55|    assert(*lock_token != 0); // Friend was newly allocated
+ 1605|     51|    *lock_token = dht_friend_lock(dht_friend, ip_callback, data, number);
+ 1606|     51|    assert(*lock_token != 0); // Friend was newly allocated
   ------------------
-  |  Branch (1606:5): [True: 55, False: 0]
+  |  Branch (1606:5): [True: 51, False: 0]
   ------------------
  1607|       |
- 1608|     55|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec(),
- 1609|     55|                                   true, false);
+ 1608|     51|    dht_friend->num_to_bootstrap = get_close_nodes(dht, dht_friend->public_key, dht_friend->to_bootstrap, net_family_unspec(),
+ 1609|     51|                                   true, false);
  1610|       |
- 1611|     55|    return 0;
- 1612|     55|}
+ 1611|     51|    return 0;
+ 1612|     51|}
 cryptopacket_registerhandler:
- 2418|     71|{
- 2419|     71|    dht->cryptopackethandlers[byte].function = cb;
- 2420|     71|    dht->cryptopackethandlers[byte].object = object;
- 2421|     71|}
+ 2418|     67|{
+ 2419|     67|    dht->cryptopackethandlers[byte].function = cb;
+ 2420|     67|    dht->cryptopackethandlers[byte].object = object;
+ 2421|     67|}
 new_dht:
- 2495|     38|{
- 2496|     38|    if (net == nullptr) {
+ 2495|     36|{
+ 2496|     36|    if (net == nullptr) {
   ------------------
-  |  |   63|     38|#define nullptr NULL
+  |  |   63|     36|#define nullptr NULL
   ------------------
-  |  Branch (2496:9): [True: 0, False: 38]
+  |  Branch (2496:9): [True: 0, False: 36]
   ------------------
  2497|      0|        return nullptr;
   ------------------
@@ -857,13 +857,13 @@ new_dht:
   ------------------
  2498|      0|    }
  2499|       |
- 2500|     38|    DHT *const dht = (DHT *)mem_alloc(mem, sizeof(DHT));
+ 2500|     36|    DHT *const dht = (DHT *)mem_alloc(mem, sizeof(DHT));
  2501|       |
- 2502|     38|    if (dht == nullptr) {
+ 2502|     36|    if (dht == nullptr) {
   ------------------
-  |  |   63|     38|#define nullptr NULL
+  |  |   63|     36|#define nullptr NULL
   ------------------
-  |  Branch (2502:9): [True: 1, False: 37]
+  |  Branch (2502:9): [True: 1, False: 35]
   ------------------
  2503|      1|        LOGGER_ERROR(log, "failed to allocate DHT struct (%lu bytes)", (unsigned long)sizeof(DHT));
   ------------------
@@ -890,24 +890,24 @@ new_dht:
   ------------------
  2505|      1|    }
  2506|       |
- 2507|     37|    dht->ns = ns;
- 2508|     37|    dht->mono_time = mono_time;
- 2509|     37|    dht->cur_time = mono_time_get(mono_time);
- 2510|     37|    dht->log = log;
- 2511|     37|    dht->net = net;
- 2512|     37|    dht->rng = rng;
- 2513|     37|    dht->mem = mem;
+ 2507|     35|    dht->ns = ns;
+ 2508|     35|    dht->mono_time = mono_time;
+ 2509|     35|    dht->cur_time = mono_time_get(mono_time);
+ 2510|     35|    dht->log = log;
+ 2511|     35|    dht->net = net;
+ 2512|     35|    dht->rng = rng;
+ 2513|     35|    dht->mem = mem;
  2514|       |
- 2515|     37|    dht->hole_punching_enabled = hole_punching_enabled;
- 2516|     37|    dht->lan_discovery_enabled = lan_discovery_enabled;
+ 2515|     35|    dht->hole_punching_enabled = hole_punching_enabled;
+ 2516|     35|    dht->lan_discovery_enabled = lan_discovery_enabled;
  2517|       |
- 2518|     37|    struct Ping *temp_ping = ping_new(mem, mono_time, rng, dht, net);
+ 2518|     35|    struct Ping *temp_ping = ping_new(mem, mono_time, rng, dht, net);
  2519|       |
- 2520|     37|    if (temp_ping == nullptr) {
+ 2520|     35|    if (temp_ping == nullptr) {
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
-  |  Branch (2520:9): [True: 3, False: 34]
+  |  Branch (2520:9): [True: 3, False: 32]
   ------------------
  2521|      3|        LOGGER_ERROR(log, "failed to initialise ping");
   ------------------
@@ -935,37 +935,37 @@ new_dht:
   ------------------
  2524|      3|    }
  2525|       |
- 2526|     34|    dht->ping = temp_ping;
+ 2526|     32|    dht->ping = temp_ping;
  2527|       |
- 2528|     34|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, &handle_nodes_request, dht);
- 2529|     34|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, &handle_nodes_response, dht);
- 2530|     34|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
- 2531|     34|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_lan_discovery, dht);
- 2532|     34|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_nat_ping, dht);
+ 2528|     32|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, &handle_nodes_request, dht);
+ 2529|     32|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, &handle_nodes_response, dht);
+ 2530|     32|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, &cryptopacket_handle, dht);
+ 2531|     32|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_lan_discovery, dht);
+ 2532|     32|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_nat_ping, dht);
   ------------------
-  |  |   68|     34|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
+  |  |   68|     32|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
   ------------------
  2533|       |
- 2534|     34|#ifdef CHECK_ANNOUNCE_NODE
- 2535|     34|    networking_registerhandler(dht->net, NET_PACKET_DATA_SEARCH_RESPONSE, &handle_data_search_response, dht);
- 2536|     34|#endif /* CHECK_ANNOUNCE_NODE */
+ 2534|     32|#ifdef CHECK_ANNOUNCE_NODE
+ 2535|     32|    networking_registerhandler(dht->net, NET_PACKET_DATA_SEARCH_RESPONSE, &handle_data_search_response, dht);
+ 2536|     32|#endif /* CHECK_ANNOUNCE_NODE */
  2537|       |
- 2538|     34|    crypto_new_keypair(rng, dht->self_public_key, dht->self_secret_key);
+ 2538|     32|    crypto_new_keypair(rng, dht->self_public_key, dht->self_secret_key);
  2539|       |
- 2540|     34|    Shared_Key_Cache *const temp_shared_keys_recv = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
+ 2540|     32|    Shared_Key_Cache *const temp_shared_keys_recv = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
   ------------------
-  |  |   56|     34|#define KEYS_TIMEOUT 600
+  |  |   56|     32|#define KEYS_TIMEOUT 600
   ------------------
                   Shared_Key_Cache *const temp_shared_keys_recv = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
   ------------------
-  |  |   55|     34|#define MAX_KEYS_PER_SLOT 4
+  |  |   55|     32|#define MAX_KEYS_PER_SLOT 4
   ------------------
  2541|       |
- 2542|     34|    if (temp_shared_keys_recv == nullptr) {
+ 2542|     32|    if (temp_shared_keys_recv == nullptr) {
   ------------------
-  |  |   63|     34|#define nullptr NULL
+  |  |   63|     32|#define nullptr NULL
   ------------------
-  |  Branch (2542:9): [True: 2, False: 32]
+  |  Branch (2542:9): [True: 2, False: 30]
   ------------------
  2543|      2|        LOGGER_ERROR(log, "failed to initialise shared key cache");
   ------------------
@@ -993,22 +993,22 @@ new_dht:
   ------------------
  2546|      2|    }
  2547|       |
- 2548|     32|    dht->shared_keys_recv = temp_shared_keys_recv;
+ 2548|     30|    dht->shared_keys_recv = temp_shared_keys_recv;
  2549|       |
- 2550|     32|    Shared_Key_Cache *const temp_shared_keys_sent = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
+ 2550|     30|    Shared_Key_Cache *const temp_shared_keys_sent = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
   ------------------
-  |  |   56|     32|#define KEYS_TIMEOUT 600
+  |  |   56|     30|#define KEYS_TIMEOUT 600
   ------------------
                   Shared_Key_Cache *const temp_shared_keys_sent = shared_key_cache_new(log, mono_time, mem, dht->self_secret_key, KEYS_TIMEOUT, MAX_KEYS_PER_SLOT);
   ------------------
-  |  |   55|     32|#define MAX_KEYS_PER_SLOT 4
+  |  |   55|     30|#define MAX_KEYS_PER_SLOT 4
   ------------------
  2551|       |
- 2552|     32|    if (temp_shared_keys_sent == nullptr) {
+ 2552|     30|    if (temp_shared_keys_sent == nullptr) {
   ------------------
-  |  |   63|     32|#define nullptr NULL
+  |  |   63|     30|#define nullptr NULL
   ------------------
-  |  Branch (2552:9): [True: 2, False: 30]
+  |  Branch (2552:9): [True: 2, False: 28]
   ------------------
  2553|      2|        LOGGER_ERROR(log, "failed to initialise shared key cache");
   ------------------
@@ -1036,22 +1036,22 @@ new_dht:
   ------------------
  2556|      2|    }
  2557|       |
- 2558|     30|    dht->shared_keys_sent = temp_shared_keys_sent;
+ 2558|     28|    dht->shared_keys_sent = temp_shared_keys_sent;
  2559|       |
- 2560|     30|    Ping_Array *const temp_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
+ 2560|     28|    Ping_Array *const temp_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
   ------------------
-  |  |   46|     30|#define DHT_PING_ARRAY_SIZE 512
+  |  |   46|     28|#define DHT_PING_ARRAY_SIZE 512
   ------------------
                   Ping_Array *const temp_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
   ------------------
-  |  |   43|     30|#define PING_TIMEOUT 5
+  |  |   43|     28|#define PING_TIMEOUT 5
   ------------------
  2561|       |
- 2562|     30|    if (temp_ping_array == nullptr) {
+ 2562|     28|    if (temp_ping_array == nullptr) {
   ------------------
-  |  |   63|     30|#define nullptr NULL
+  |  |   63|     28|#define nullptr NULL
   ------------------
-  |  Branch (2562:9): [True: 1, False: 29]
+  |  Branch (2562:9): [True: 1, False: 27]
   ------------------
  2563|      1|        LOGGER_ERROR(log, "failed to initialise ping array");
   ------------------
@@ -1079,29 +1079,29 @@ new_dht:
   ------------------
  2566|      1|    }
  2567|       |
- 2568|     29|    dht->dht_ping_array = temp_ping_array;
+ 2568|     27|    dht->dht_ping_array = temp_ping_array;
  2569|       |
- 2570|     84|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
+ 2570|     78|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
   ------------------
-  |  |   61|     84|#define DHT_FAKE_FRIEND_NUMBER 2
+  |  |   61|     78|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
-  |  Branch (2570:26): [True: 57, False: 27]
+  |  Branch (2570:26): [True: 53, False: 25]
   ------------------
- 2571|     57|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
- 2572|     57|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
+ 2571|     53|        uint8_t random_public_key_bytes[CRYPTO_PUBLIC_KEY_SIZE];
+ 2572|     53|        uint8_t random_secret_key_bytes[CRYPTO_SECRET_KEY_SIZE];
  2573|       |
- 2574|     57|        crypto_new_keypair(rng, random_public_key_bytes, random_secret_key_bytes);
+ 2574|     53|        crypto_new_keypair(rng, random_public_key_bytes, random_secret_key_bytes);
  2575|       |
- 2576|     57|        uint32_t token; // We don't intend to delete these ever, but need to pass the token
- 2577|     57|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, &token) != 0) {
+ 2576|     53|        uint32_t token; // We don't intend to delete these ever, but need to pass the token
+ 2577|     53|        if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, &token) != 0) {
   ------------------
-  |  |   63|     57|#define nullptr NULL
+  |  |   63|     53|#define nullptr NULL
   ------------------
                       if (dht_addfriend(dht, random_public_key_bytes, nullptr, nullptr, 0, &token) != 0) {
   ------------------
-  |  |   63|     57|#define nullptr NULL
+  |  |   63|     53|#define nullptr NULL
   ------------------
-  |  Branch (2577:13): [True: 2, False: 55]
+  |  Branch (2577:13): [True: 2, False: 51]
   ------------------
  2578|      2|            LOGGER_ERROR(log, "failed to add initial random seed DHT friends");
   ------------------
@@ -1128,13 +1128,13 @@ new_dht:
   |  |   63|      2|#define nullptr NULL
   ------------------
  2581|      2|        }
- 2582|     57|    }
+ 2582|     53|    }
  2583|       |
- 2584|     27|    if (dht->num_friends != DHT_FAKE_FRIEND_NUMBER) {
+ 2584|     25|    if (dht->num_friends != DHT_FAKE_FRIEND_NUMBER) {
   ------------------
-  |  |   61|     27|#define DHT_FAKE_FRIEND_NUMBER 2
+  |  |   61|     25|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
-  |  Branch (2584:9): [True: 0, False: 27]
+  |  Branch (2584:9): [True: 0, False: 25]
   ------------------
  2585|      0|        LOGGER_ERROR(log, "the RNG provided seems to be broken: it generated the same keypair twice");
   ------------------
@@ -1162,18 +1162,18 @@ new_dht:
   ------------------
  2588|      0|    }
  2589|       |
- 2590|     27|    return dht;
- 2591|     27|}
+ 2590|     25|    return dht;
+ 2591|     25|}
 do_dht:
- 2594|  1.84k|{
- 2595|  1.84k|    const uint64_t cur_time = mono_time_get(dht->mono_time);
+ 2594|  1.83k|{
+ 2595|  1.83k|    const uint64_t cur_time = mono_time_get(dht->mono_time);
  2596|       |
- 2597|  1.84k|    if (dht->cur_time == cur_time) {
+ 2597|  1.83k|    if (dht->cur_time == cur_time) {
   ------------------
-  |  Branch (2597:9): [True: 1.84k, False: 0]
+  |  Branch (2597:9): [True: 1.83k, False: 0]
   ------------------
- 2598|  1.84k|        return;
- 2599|  1.84k|    }
+ 2598|  1.83k|        return;
+ 2599|  1.83k|    }
  2600|       |
  2601|      0|    dht->cur_time = cur_time;
  2602|       |
@@ -1191,165 +1191,165 @@ do_dht:
  2611|      0|    ping_iterate(dht->ping);
  2612|      0|}
 kill_dht:
- 2615|     37|{
- 2616|     37|    if (dht == nullptr) {
+ 2615|     35|{
+ 2616|     35|    if (dht == nullptr) {
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
-  |  Branch (2616:9): [True: 0, False: 37]
+  |  Branch (2616:9): [True: 0, False: 35]
   ------------------
  2617|      0|        return;
  2618|      0|    }
  2619|       |
- 2620|     37|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, nullptr, nullptr);
+ 2620|     35|    networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
                   networking_registerhandler(dht->net, NET_PACKET_NODES_REQUEST, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
- 2621|     37|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, nullptr, nullptr);
+ 2621|     35|    networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
                   networking_registerhandler(dht->net, NET_PACKET_NODES_RESPONSE, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
- 2622|     37|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
+ 2622|     35|    networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
                   networking_registerhandler(dht->net, NET_PACKET_CRYPTO, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
- 2623|     37|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
+ 2623|     35|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
                   networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
- 2624|     37|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
+ 2624|     35|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
   ------------------
-  |  |   68|     37|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
-  ------------------
-                  cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
-  ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   68|     35|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
   ------------------
                   cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
+  ------------------
+                  cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
+  ------------------
+  |  |   63|     35|#define nullptr NULL
   ------------------
  2625|       |
- 2626|     37|    shared_key_cache_free(dht->shared_keys_recv);
- 2627|     37|    shared_key_cache_free(dht->shared_keys_sent);
- 2628|     37|    ping_array_kill(dht->dht_ping_array);
- 2629|     37|    ping_kill(dht->mem, dht->ping);
- 2630|     37|    mem_delete(dht->mem, dht->friends_list);
- 2631|     37|    mem_delete(dht->mem, dht->loaded_nodes_list);
- 2632|     37|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
- 2633|     37|    mem_delete(dht->mem, dht);
- 2634|     37|}
+ 2626|     35|    shared_key_cache_free(dht->shared_keys_recv);
+ 2627|     35|    shared_key_cache_free(dht->shared_keys_sent);
+ 2628|     35|    ping_array_kill(dht->dht_ping_array);
+ 2629|     35|    ping_kill(dht->mem, dht->ping);
+ 2630|     35|    mem_delete(dht->mem, dht->friends_list);
+ 2631|     35|    mem_delete(dht->mem, dht->loaded_nodes_list);
+ 2632|     35|    crypto_memzero(dht->self_secret_key, sizeof(dht->self_secret_key));
+ 2633|     35|    mem_delete(dht->mem, dht);
+ 2634|     35|}
 DHT.c:get_somewhat_close_nodes:
-  710|     55|{
-  711|    275|    for (uint16_t i = 0; i < MAX_SENT_NODES; ++i) {
+  710|     51|{
+  711|    255|    for (uint16_t i = 0; i < MAX_SENT_NODES; ++i) {
   ------------------
-  |  |   40|    275|#define MAX_SENT_NODES 4
+  |  |   40|    255|#define MAX_SENT_NODES 4
   ------------------
-  |  Branch (711:26): [True: 220, False: 55]
+  |  Branch (711:26): [True: 204, False: 51]
   ------------------
-  712|    220|        nodes_list[i] = empty_node_format;
-  713|    220|    }
+  712|    204|        nodes_list[i] = empty_node_format;
+  713|    204|    }
   714|       |
-  715|     55|    uint32_t num_nodes = 0;
-  716|     55|    get_close_nodes_inner(
-  717|     55|        cur_time, public_key,
-  718|     55|        nodes_list, &num_nodes,
-  719|     55|        sa_family, close_clientlist, LCLIENT_LIST,
+  715|     51|    uint32_t num_nodes = 0;
+  716|     51|    get_close_nodes_inner(
+  717|     51|        cur_time, public_key,
+  718|     51|        nodes_list, &num_nodes,
+  719|     51|        sa_family, close_clientlist, LCLIENT_LIST,
   ------------------
-  |  |   35|     55|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
+  |  |   35|     51|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
-  |  |  |  |   32|     55|#define LCLIENT_LENGTH 128
+  |  |  |  |   32|     51|#define LCLIENT_LENGTH 128
   |  |  ------------------
   |  |               #define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
-  |  |  |  |   31|     55|#define LCLIENT_NODES MAX_FRIEND_CLIENTS
+  |  |  |  |   31|     51|#define LCLIENT_NODES MAX_FRIEND_CLIENTS
   |  |  |  |  ------------------
-  |  |  |  |  |  |   29|     55|#define MAX_FRIEND_CLIENTS 8
+  |  |  |  |  |  |   29|     51|#define MAX_FRIEND_CLIENTS 8
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  720|     55|        is_lan, want_announce);
+  720|     51|        is_lan, want_announce);
   721|       |
-  722|    137|    for (uint16_t i = 0; i < friends_list_size; ++i) {
+  722|    127|    for (uint16_t i = 0; i < friends_list_size; ++i) {
   ------------------
-  |  Branch (722:26): [True: 82, False: 55]
+  |  Branch (722:26): [True: 76, False: 51]
   ------------------
-  723|     82|        const DHT_Friend *dht_friend = &friends_list[i];
+  723|     76|        const DHT_Friend *dht_friend = &friends_list[i];
   724|       |
-  725|     82|        get_close_nodes_inner(
-  726|     82|            cur_time, public_key,
-  727|     82|            nodes_list, &num_nodes,
-  728|     82|            sa_family, dht_friend->client_list, MAX_FRIEND_CLIENTS,
+  725|     76|        get_close_nodes_inner(
+  726|     76|            cur_time, public_key,
+  727|     76|            nodes_list, &num_nodes,
+  728|     76|            sa_family, dht_friend->client_list, MAX_FRIEND_CLIENTS,
   ------------------
-  |  |   29|     82|#define MAX_FRIEND_CLIENTS 8
+  |  |   29|     76|#define MAX_FRIEND_CLIENTS 8
   ------------------
-  729|     82|            is_lan, want_announce);
-  730|     82|    }
+  729|     76|            is_lan, want_announce);
+  730|     76|    }
   731|       |
-  732|     55|    return num_nodes;
-  733|     55|}
+  732|     51|    return num_nodes;
+  733|     51|}
 DHT.c:get_close_nodes_inner:
-  644|    137|{
-  645|    137|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
+  644|    127|{
+  645|    127|    if (!net_family_is_ipv4(sa_family) && !net_family_is_ipv6(sa_family) && !net_family_is_unspec(sa_family)) {
   ------------------
-  |  Branch (645:9): [True: 137, False: 0]
-  |  Branch (645:43): [True: 137, False: 0]
-  |  Branch (645:77): [True: 0, False: 137]
+  |  Branch (645:9): [True: 127, False: 0]
+  |  Branch (645:43): [True: 127, False: 0]
+  |  Branch (645:77): [True: 0, False: 127]
   ------------------
   646|      0|        return;
   647|      0|    }
   648|       |
-  649|    137|    uint32_t num_nodes = *num_nodes_ptr;
+  649|    127|    uint32_t num_nodes = *num_nodes_ptr;
   650|       |
-  651|  57.1k|    for (uint32_t i = 0; i < client_list_length; ++i) {
+  651|  52.9k|    for (uint32_t i = 0; i < client_list_length; ++i) {
   ------------------
-  |  Branch (651:26): [True: 56.9k, False: 137]
+  |  Branch (651:26): [True: 52.8k, False: 127]
   ------------------
-  652|  56.9k|        const Client_data *const client = &client_list[i];
-  653|  56.9k|        const IPPTsPng *ipptp;
+  652|  52.8k|        const Client_data *const client = &client_list[i];
+  653|  52.8k|        const IPPTsPng *ipptp;
   654|       |
-  655|  56.9k|        if (net_family_is_ipv4(sa_family)) {
+  655|  52.8k|        if (net_family_is_ipv4(sa_family)) {
   ------------------
-  |  Branch (655:13): [True: 0, False: 56.9k]
+  |  Branch (655:13): [True: 0, False: 52.8k]
   ------------------
   656|      0|            ipptp = &client->assoc4;
-  657|  56.9k|        } else if (net_family_is_ipv6(sa_family)) {
+  657|  52.8k|        } else if (net_family_is_ipv6(sa_family)) {
   ------------------
-  |  Branch (657:20): [True: 0, False: 56.9k]
+  |  Branch (657:20): [True: 0, False: 52.8k]
   ------------------
   658|      0|            ipptp = &client->assoc6;
-  659|  56.9k|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
+  659|  52.8k|        } else if (client->assoc4.timestamp >= client->assoc6.timestamp) {
   ------------------
-  |  Branch (659:20): [True: 56.9k, False: 0]
+  |  Branch (659:20): [True: 52.8k, False: 0]
   ------------------
-  660|  56.9k|            ipptp = &client->assoc4;
-  661|  56.9k|        } else {
+  660|  52.8k|            ipptp = &client->assoc4;
+  661|  52.8k|        } else {
   662|      0|            ipptp = &client->assoc6;
   663|      0|        }
   664|       |
   665|       |        /* node not in a good condition? */
-  666|  56.9k|        if (assoc_timeout(cur_time, ipptp)) {
+  666|  52.8k|        if (assoc_timeout(cur_time, ipptp)) {
   ------------------
-  |  Branch (666:13): [True: 56.9k, False: 0]
+  |  Branch (666:13): [True: 52.8k, False: 0]
   ------------------
-  667|  56.9k|            continue;
-  668|  56.9k|        }
+  667|  52.8k|            continue;
+  668|  52.8k|        }
   669|       |
   670|       |        /* don't send LAN ips to non LAN peers */
   671|      0|        if (ip_is_lan(&ipptp->ip_port.ip) && !is_lan) {
@@ -1402,130 +1402,130 @@ DHT.c:get_close_nodes_inner:
   696|      0|        }
   697|      0|    }
   698|       |
-  699|    137|    *num_nodes_ptr = num_nodes;
-  700|    137|}
+  699|    127|    *num_nodes_ptr = num_nodes;
+  700|    127|}
 DHT.c:index_of_friend_pk:
-  473|     57|{
-  474|     57|    assert(size == 0 || array != nullptr);
+  473|     53|{
+  474|     53|    assert(size == 0 || array != nullptr);
   ------------------
-  |  Branch (474:5): [True: 29, False: 28]
-  |  Branch (474:5): [True: 28, False: 0]
+  |  Branch (474:5): [True: 27, False: 26]
+  |  Branch (474:5): [True: 26, False: 0]
   ------------------
-  475|     85|    for (uint32_t i = 0; i < size; ++i) {
+  475|     79|    for (uint32_t i = 0; i < size; ++i) {
   ------------------
-  |  Branch (475:26): [True: 28, False: 57]
+  |  Branch (475:26): [True: 26, False: 53]
   ------------------
-  476|     28|        if (pk_equal(array[i].public_key, pk)) {
+  476|     26|        if (pk_equal(array[i].public_key, pk)) {
   ------------------
-  |  Branch (476:13): [True: 0, False: 28]
+  |  Branch (476:13): [True: 0, False: 26]
   ------------------
   477|      0|            return i;
   478|      0|        }
-  479|     28|    }
+  479|     26|    }
   480|       |
-  481|     57|    return UINT32_MAX;
-  482|     57|}
+  481|     53|    return UINT32_MAX;
+  482|     53|}
 DHT.c:dht_friend_lock:
- 1523|     55|{
+ 1523|     51|{
  1524|       |    // find first free slot
- 1525|     55|    uint8_t lock_num;
- 1526|     55|    uint32_t lock_token = 0;
- 1527|     55|    for (lock_num = 0; lock_num < DHT_FRIEND_MAX_LOCKS; ++lock_num) {
+ 1525|     51|    uint8_t lock_num;
+ 1526|     51|    uint32_t lock_token = 0;
+ 1527|     51|    for (lock_num = 0; lock_num < DHT_FRIEND_MAX_LOCKS; ++lock_num) {
   ------------------
-  |  |   52|     55|#define DHT_FRIEND_MAX_LOCKS 32
+  |  |   52|     51|#define DHT_FRIEND_MAX_LOCKS 32
   ------------------
-  |  Branch (1527:24): [True: 55, False: 0]
+  |  Branch (1527:24): [True: 51, False: 0]
   ------------------
- 1528|     55|        lock_token = UINT32_C(1) << lock_num;
- 1529|     55|        if ((dht_friend->lock_flags & lock_token) == 0) {
+ 1528|     51|        lock_token = UINT32_C(1) << lock_num;
+ 1529|     51|        if ((dht_friend->lock_flags & lock_token) == 0) {
   ------------------
-  |  Branch (1529:13): [True: 55, False: 0]
+  |  Branch (1529:13): [True: 51, False: 0]
   ------------------
- 1530|     55|            break;
- 1531|     55|        }
- 1532|     55|    }
+ 1530|     51|            break;
+ 1531|     51|        }
+ 1532|     51|    }
  1533|       |
  1534|       |    // One of the conditions would be enough, but static analyzers don't get that
- 1535|     55|    if (lock_token == 0 || lock_num == DHT_FRIEND_MAX_LOCKS) {
+ 1535|     51|    if (lock_token == 0 || lock_num == DHT_FRIEND_MAX_LOCKS) {
   ------------------
-  |  |   52|     55|#define DHT_FRIEND_MAX_LOCKS 32
+  |  |   52|     51|#define DHT_FRIEND_MAX_LOCKS 32
   ------------------
-  |  Branch (1535:9): [True: 0, False: 55]
-  |  Branch (1535:28): [True: 0, False: 55]
+  |  Branch (1535:9): [True: 0, False: 51]
+  |  Branch (1535:28): [True: 0, False: 51]
   ------------------
  1536|      0|        return 0;
  1537|      0|    }
  1538|       |
  1539|       |    // Claim that slot
- 1540|     55|    dht_friend->lock_flags |= lock_token;
+ 1540|     51|    dht_friend->lock_flags |= lock_token;
  1541|       |
- 1542|     55|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
- 1543|     55|    dht_friend->callbacks[lock_num].data = data;
- 1544|     55|    dht_friend->callbacks[lock_num].number = number;
+ 1542|     51|    dht_friend->callbacks[lock_num].ip_callback = ip_callback;
+ 1543|     51|    dht_friend->callbacks[lock_num].data = data;
+ 1544|     51|    dht_friend->callbacks[lock_num].number = number;
  1545|       |
- 1546|     55|    return lock_token;
- 1547|     55|}
+ 1546|     51|    return lock_token;
+ 1547|     51|}
 DHT.c:assoc_timeout:
-  193|  56.9k|{
-  194|  56.9k|    return (assoc->timestamp + BAD_NODE_TIMEOUT) <= cur_time;
+  193|  52.8k|{
+  194|  52.8k|    return (assoc->timestamp + BAD_NODE_TIMEOUT) <= cur_time;
   ------------------
-  |  |   54|  56.9k|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |   54|  52.8k|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  ------------------
-  |  |  |  |   49|  56.9k|#define PING_INTERVAL 60
-  |  |  ------------------
-  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
-  |  |  ------------------
-  |  |  |  |   52|  56.9k|#define PINGS_MISSED_NODE_GOES_BAD 1
+  |  |  |  |   49|  52.8k|#define PING_INTERVAL 60
   |  |  ------------------
   |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  ------------------
-  |  |  |  |   49|  56.9k|#define PING_INTERVAL 60
+  |  |  |  |   52|  52.8k|#define PINGS_MISSED_NODE_GOES_BAD 1
   |  |  ------------------
   |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  ------------------
-  |  |  |  |   53|  56.9k|#define PING_ROUNDTRIP 2
+  |  |  |  |   49|  52.8k|#define PING_INTERVAL 60
+  |  |  ------------------
+  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  ------------------
+  |  |  |  |   53|  52.8k|#define PING_ROUNDTRIP 2
   |  |  ------------------
   ------------------
-  195|  56.9k|}
+  195|  52.8k|}
 
 set_packet_tcp_connection_callback:
-  571|     24|{
-  572|     24|    tcp_c->tcp_data_callback = tcp_data_callback;
-  573|     24|    tcp_c->tcp_data_callback_object = object;
-  574|     24|}
+  571|     22|{
+  572|     22|    tcp_c->tcp_data_callback = tcp_data_callback;
+  573|     22|    tcp_c->tcp_data_callback_object = object;
+  574|     22|}
 set_oob_packet_tcp_connection_callback:
-  578|     24|{
-  579|     24|    tcp_c->tcp_oob_callback = tcp_oob_callback;
-  580|     24|    tcp_c->tcp_oob_callback_object = object;
-  581|     24|}
+  578|     22|{
+  579|     22|    tcp_c->tcp_oob_callback = tcp_oob_callback;
+  580|     22|    tcp_c->tcp_oob_callback_object = object;
+  581|     22|}
 new_tcp_connections:
- 1623|     25|{
- 1624|     25|    assert(logger != nullptr);
+ 1623|     23|{
+ 1624|     23|    assert(logger != nullptr);
   ------------------
-  |  Branch (1624:5): [True: 25, False: 0]
+  |  Branch (1624:5): [True: 23, False: 0]
   ------------------
- 1625|     25|    assert(mem != nullptr);
+ 1625|     23|    assert(mem != nullptr);
   ------------------
-  |  Branch (1625:5): [True: 25, False: 0]
+  |  Branch (1625:5): [True: 23, False: 0]
   ------------------
- 1626|     25|    assert(rng != nullptr);
+ 1626|     23|    assert(rng != nullptr);
   ------------------
-  |  Branch (1626:5): [True: 25, False: 0]
+  |  Branch (1626:5): [True: 23, False: 0]
   ------------------
- 1627|     25|    assert(ns != nullptr);
+ 1627|     23|    assert(ns != nullptr);
   ------------------
-  |  Branch (1627:5): [True: 25, False: 0]
+  |  Branch (1627:5): [True: 23, False: 0]
   ------------------
- 1628|     25|    assert(mono_time != nullptr);
+ 1628|     23|    assert(mono_time != nullptr);
   ------------------
-  |  Branch (1628:5): [True: 25, False: 0]
+  |  Branch (1628:5): [True: 23, False: 0]
   ------------------
  1629|       |
- 1630|     25|    if (secret_key == nullptr) {
+ 1630|     23|    if (secret_key == nullptr) {
   ------------------
-  |  |   63|     25|#define nullptr NULL
+  |  |   63|     23|#define nullptr NULL
   ------------------
-  |  Branch (1630:9): [True: 0, False: 25]
+  |  Branch (1630:9): [True: 0, False: 23]
   ------------------
  1631|      0|        return nullptr;
   ------------------
@@ -1533,13 +1533,13 @@ new_tcp_connections:
   ------------------
  1632|      0|    }
  1633|       |
- 1634|     25|    TCP_Connections *temp = (TCP_Connections *)mem_alloc(mem, sizeof(TCP_Connections));
+ 1634|     23|    TCP_Connections *temp = (TCP_Connections *)mem_alloc(mem, sizeof(TCP_Connections));
  1635|       |
- 1636|     25|    if (temp == nullptr) {
+ 1636|     23|    if (temp == nullptr) {
   ------------------
-  |  |   63|     25|#define nullptr NULL
+  |  |   63|     23|#define nullptr NULL
   ------------------
-  |  Branch (1636:9): [True: 1, False: 24]
+  |  Branch (1636:9): [True: 1, False: 22]
   ------------------
  1637|      1|        return nullptr;
   ------------------
@@ -1547,56 +1547,56 @@ new_tcp_connections:
   ------------------
  1638|      1|    }
  1639|       |
- 1640|     24|    temp->net_profile = tcp_np;
- 1641|     24|    temp->logger = logger;
- 1642|     24|    temp->mem = mem;
- 1643|     24|    temp->rng = rng;
- 1644|     24|    temp->mono_time = mono_time;
- 1645|     24|    temp->ns = ns;
+ 1640|     22|    temp->net_profile = tcp_np;
+ 1641|     22|    temp->logger = logger;
+ 1642|     22|    temp->mem = mem;
+ 1643|     22|    temp->rng = rng;
+ 1644|     22|    temp->mono_time = mono_time;
+ 1645|     22|    temp->ns = ns;
  1646|       |
- 1647|     24|    memcpy(temp->self_secret_key, secret_key, CRYPTO_SECRET_KEY_SIZE);
+ 1647|     22|    memcpy(temp->self_secret_key, secret_key, CRYPTO_SECRET_KEY_SIZE);
   ------------------
-  |  |   49|     24|#define CRYPTO_SECRET_KEY_SIZE         32
+  |  |   49|     22|#define CRYPTO_SECRET_KEY_SIZE         32
   ------------------
- 1648|     24|    crypto_derive_public_key(temp->self_public_key, temp->self_secret_key);
- 1649|     24|    temp->proxy_info = *proxy_info;
+ 1648|     22|    crypto_derive_public_key(temp->self_public_key, temp->self_secret_key);
+ 1649|     22|    temp->proxy_info = *proxy_info;
  1650|       |
- 1651|     24|    return temp;
- 1652|     25|}
+ 1651|     22|    return temp;
+ 1652|     23|}
 do_tcp_connections:
- 1751|  1.84k|{
- 1752|  1.84k|    do_tcp_conns(logger, tcp_c, userdata);
- 1753|  1.84k|    kill_nonused_tcp(tcp_c);
- 1754|  1.84k|}
+ 1751|  1.83k|{
+ 1752|  1.83k|    do_tcp_conns(logger, tcp_c, userdata);
+ 1753|  1.83k|    kill_nonused_tcp(tcp_c);
+ 1754|  1.83k|}
 kill_tcp_connections:
- 1757|     24|{
- 1758|     24|    if (tcp_c == nullptr) {
+ 1757|     22|{
+ 1758|     22|    if (tcp_c == nullptr) {
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
-  |  Branch (1758:9): [True: 0, False: 24]
+  |  Branch (1758:9): [True: 0, False: 22]
   ------------------
  1759|      0|        return;
  1760|      0|    }
  1761|       |
- 1762|     24|    for (uint32_t i = 0; i < tcp_c->tcp_connections_length; ++i) {
+ 1762|     22|    for (uint32_t i = 0; i < tcp_c->tcp_connections_length; ++i) {
   ------------------
-  |  Branch (1762:26): [True: 0, False: 24]
+  |  Branch (1762:26): [True: 0, False: 22]
   ------------------
  1763|      0|        kill_tcp_connection(tcp_c->tcp_connections[i].connection);
  1764|      0|    }
  1765|       |
- 1766|     24|    crypto_memzero(tcp_c->self_secret_key, sizeof(tcp_c->self_secret_key));
+ 1766|     22|    crypto_memzero(tcp_c->self_secret_key, sizeof(tcp_c->self_secret_key));
  1767|       |
- 1768|     24|    mem_delete(tcp_c->mem, tcp_c->tcp_connections);
- 1769|     24|    mem_delete(tcp_c->mem, tcp_c->connections);
- 1770|     24|    mem_delete(tcp_c->mem, tcp_c);
- 1771|     24|}
+ 1768|     22|    mem_delete(tcp_c->mem, tcp_c->tcp_connections);
+ 1769|     22|    mem_delete(tcp_c->mem, tcp_c->connections);
+ 1770|     22|    mem_delete(tcp_c->mem, tcp_c);
+ 1771|     22|}
 TCP_connection.c:do_tcp_conns:
- 1655|  1.84k|{
- 1656|  1.84k|    for (uint32_t i = 0; i < tcp_c->tcp_connections_length; ++i) {
+ 1655|  1.83k|{
+ 1656|  1.83k|    for (uint32_t i = 0; i < tcp_c->tcp_connections_length; ++i) {
   ------------------
-  |  Branch (1656:26): [True: 0, False: 1.84k]
+  |  Branch (1656:26): [True: 0, False: 1.83k]
   ------------------
  1657|      0|        TCP_con *tcp_con = get_tcp_connection(tcp_c, i);
  1658|      0|        if (tcp_con == nullptr) {
@@ -1772,29 +1772,29 @@ TCP_connection.c:do_tcp_conns:
  1706|      0|            unsleep_tcp_relay_connection(tcp_c, i);
  1707|      0|        }
  1708|      0|    }
- 1709|  1.84k|}
+ 1709|  1.83k|}
 TCP_connection.c:kill_nonused_tcp:
- 1712|  1.84k|{
- 1713|  1.84k|    if (tcp_c == nullptr) {
+ 1712|  1.83k|{
+ 1713|  1.83k|    if (tcp_c == nullptr) {
   ------------------
-  |  |   63|  1.84k|#define nullptr NULL
+  |  |   63|  1.83k|#define nullptr NULL
   ------------------
-  |  Branch (1713:9): [True: 0, False: 1.84k]
+  |  Branch (1713:9): [True: 0, False: 1.83k]
   ------------------
  1714|      0|        return;
  1715|      0|    }
  1716|       |
- 1717|  1.84k|    if (tcp_c->tcp_connections_length <= RECOMMENDED_FRIEND_TCP_CONNECTIONS) {
+ 1717|  1.83k|    if (tcp_c->tcp_connections_length <= RECOMMENDED_FRIEND_TCP_CONNECTIONS) {
   ------------------
-  |  |   48|  1.84k|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
+  |  |   48|  1.83k|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
   |  |  ------------------
-  |  |  |  |   40|  1.84k|#define MAX_FRIEND_TCP_CONNECTIONS 6
+  |  |  |  |   40|  1.83k|#define MAX_FRIEND_TCP_CONNECTIONS 6
   |  |  ------------------
   ------------------
-  |  Branch (1717:9): [True: 1.84k, False: 0]
+  |  Branch (1717:9): [True: 1.83k, False: 0]
   ------------------
- 1718|  1.84k|        return;
- 1719|  1.84k|    }
+ 1718|  1.83k|        return;
+ 1719|  1.83k|    }
  1720|       |
  1721|      0|    const uint32_t num_online = tcp_connected_relays_count(tcp_c);
  1722|       |
@@ -1866,182 +1866,182 @@ TCP_connection.c:kill_nonused_tcp:
  1748|      0|}
 
 crypto_memzero:
-  115|    147|{
-  116|    147|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
-  117|    147|    memzero((uint8_t *)data, length);
+  115|    137|{
+  116|    137|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+  117|    137|    memzero((uint8_t *)data, length);
   118|       |#else
   119|       |    sodium_memzero(data, length);
   120|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  121|    147|}
+  121|    137|}
 crypto_memlock:
-  124|     62|{
-  125|     62|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
-  126|     62|    return false;
+  124|     58|{
+  125|     58|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+  126|     58|    return false;
   127|       |#else
   128|       |
   129|       |    return sodium_mlock(data, length) == 0;
   130|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  131|     62|}
+  131|     58|}
 crypto_memunlock:
-  134|     62|{
-  135|     62|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
-  136|     62|    return false;
+  134|     58|{
+  135|     58|#if defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
+  136|     58|    return false;
   137|       |#else
   138|       |
   139|       |    return sodium_munlock(data, length) == 0;
   140|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
-  141|     62|}
+  141|     58|}
 pk_equal:
-  144|     28|{
-  145|     28|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
+  144|     26|{
+  145|     26|    return memcmp(pk1, pk2, CRYPTO_PUBLIC_KEY_SIZE) == 0;
   ------------------
-  |  |   44|     28|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|     26|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  146|     28|}
+  146|     26|}
 random_u64:
-  190|     55|{
-  191|     55|    uint64_t randnum;
-  192|     55|    random_bytes(rng, (uint8_t *)&randnum, sizeof(randnum));
-  193|     55|    return randnum;
-  194|     55|}
+  190|     51|{
+  191|     51|    uint64_t randnum;
+  192|     51|    random_bytes(rng, (uint8_t *)&randnum, sizeof(randnum));
+  193|     51|    return randnum;
+  194|     51|}
 new_symmetric_key:
-  421|     24|{
-  422|     24|    random_bytes(rng, key, CRYPTO_SYMMETRIC_KEY_SIZE);
+  421|     22|{
+  422|     22|    random_bytes(rng, key, CRYPTO_SYMMETRIC_KEY_SIZE);
   ------------------
-  |  |   59|     24|#define CRYPTO_SYMMETRIC_KEY_SIZE      CRYPTO_SHARED_KEY_SIZE
+  |  |   59|     22|#define CRYPTO_SYMMETRIC_KEY_SIZE      CRYPTO_SHARED_KEY_SIZE
   |  |  ------------------
-  |  |  |  |   54|     24|#define CRYPTO_SHARED_KEY_SIZE         32
+  |  |  |  |   54|     22|#define CRYPTO_SHARED_KEY_SIZE         32
   |  |  ------------------
   ------------------
-  423|     24|}
+  423|     22|}
 crypto_new_keypair:
-  428|    115|{
-  429|    115|    random_bytes(rng, secret_key, CRYPTO_SECRET_KEY_SIZE);
+  428|    107|{
+  429|    107|    random_bytes(rng, secret_key, CRYPTO_SECRET_KEY_SIZE);
   ------------------
-  |  |   49|    115|#define CRYPTO_SECRET_KEY_SIZE         32
+  |  |   49|    107|#define CRYPTO_SECRET_KEY_SIZE         32
   ------------------
-  430|    115|    memzero(public_key, CRYPTO_PUBLIC_KEY_SIZE);  // Make MSAN happy
+  430|    107|    memzero(public_key, CRYPTO_PUBLIC_KEY_SIZE);  // Make MSAN happy
   ------------------
-  |  |   44|    115|#define CRYPTO_PUBLIC_KEY_SIZE         32
+  |  |   44|    107|#define CRYPTO_PUBLIC_KEY_SIZE         32
   ------------------
-  431|    115|    crypto_derive_public_key(public_key, secret_key);
-  432|    115|    return 0;
-  433|    115|}
+  431|    107|    crypto_derive_public_key(public_key, secret_key);
+  432|    107|    return 0;
+  433|    107|}
 crypto_derive_public_key:
-  437|    139|{
-  438|    139|    crypto_scalarmult_curve25519_base(public_key, secret_key);
-  439|    139|}
+  437|    129|{
+  438|    129|    crypto_scalarmult_curve25519_base(public_key, secret_key);
+  439|    129|}
 random_bytes:
-  488|    194|{
-  489|    194|    tox_random_bytes(rng, bytes, length);
-  490|    194|}
+  488|    180|{
+  489|    180|    tox_random_bytes(rng, bytes, length);
+  490|    180|}
 
 bs_list_init:
-  136|     24|{
-  137|     24|    list->mem = mem;
+  136|     22|{
+  137|     22|    list->mem = mem;
   138|       |
   139|       |    // set initial values
-  140|     24|    list->n = 0;
-  141|     24|    list->element_size = element_size;
-  142|     24|    list->capacity = 0;
-  143|     24|    list->data = nullptr;
+  140|     22|    list->n = 0;
+  141|     22|    list->element_size = element_size;
+  142|     22|    list->capacity = 0;
+  143|     22|    list->data = nullptr;
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
-  144|     24|    list->ids = nullptr;
+  144|     22|    list->ids = nullptr;
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
-  145|     24|    list->cmp_callback = cmp_callback;
+  145|     22|    list->cmp_callback = cmp_callback;
   146|       |
-  147|     24|    if (initial_capacity != 0) {
+  147|     22|    if (initial_capacity != 0) {
   ------------------
-  |  Branch (147:9): [True: 24, False: 0]
+  |  Branch (147:9): [True: 22, False: 0]
   ------------------
-  148|     24|        if (!resize(list, initial_capacity)) {
+  148|     22|        if (!resize(list, initial_capacity)) {
   ------------------
-  |  Branch (148:13): [True: 2, False: 22]
+  |  Branch (148:13): [True: 2, False: 20]
   ------------------
   149|      2|            return 0;
   150|      2|        }
-  151|     24|    }
+  151|     22|    }
   152|       |
-  153|     22|    list->capacity = initial_capacity;
+  153|     20|    list->capacity = initial_capacity;
   154|       |
-  155|     22|    return 1;
-  156|     24|}
+  155|     20|    return 1;
+  156|     22|}
 bs_list_free:
-  159|     24|{
-  160|     24|    if (list == nullptr) {
+  159|     22|{
+  160|     22|    if (list == nullptr) {
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
-  |  Branch (160:9): [True: 0, False: 24]
+  |  Branch (160:9): [True: 0, False: 22]
   ------------------
   161|      0|        return;
   162|      0|    }
   163|       |
   164|       |    // free both arrays
-  165|     24|    mem_delete(list->mem, list->data);
-  166|     24|    list->data = nullptr;
+  165|     22|    mem_delete(list->mem, list->data);
+  166|     22|    list->data = nullptr;
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
   167|       |
-  168|     24|    mem_delete(list->mem, list->ids);
+  168|     22|    mem_delete(list->mem, list->ids);
   169|       |    list->ids = nullptr;
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
-  170|     24|}
+  170|     22|}
 list.c:resize:
-  110|     24|{
-  111|     24|    if (new_size == 0) {
+  110|     22|{
+  111|     22|    if (new_size == 0) {
   ------------------
-  |  Branch (111:9): [True: 0, False: 24]
+  |  Branch (111:9): [True: 0, False: 22]
   ------------------
   112|      0|        bs_list_free(list);
   113|      0|        return true;
   114|      0|    }
   115|       |
-  116|     24|    uint8_t *data = (uint8_t *)mem_brealloc(list->mem, list->data, new_size * list->element_size);
+  116|     22|    uint8_t *data = (uint8_t *)mem_brealloc(list->mem, list->data, new_size * list->element_size);
   117|       |
-  118|     24|    if (data == nullptr) {
+  118|     22|    if (data == nullptr) {
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
-  |  Branch (118:9): [True: 1, False: 23]
+  |  Branch (118:9): [True: 1, False: 21]
   ------------------
   119|      1|        return false;
   120|      1|    }
   121|       |
-  122|     23|    list->data = data;
+  122|     21|    list->data = data;
   123|       |
-  124|     23|    int *ids = (int *)mem_vrealloc(list->mem, list->ids, new_size, sizeof(int));
+  124|     21|    int *ids = (int *)mem_vrealloc(list->mem, list->ids, new_size, sizeof(int));
   125|       |
-  126|     23|    if (ids == nullptr) {
+  126|     21|    if (ids == nullptr) {
   ------------------
-  |  |   63|     23|#define nullptr NULL
+  |  |   63|     21|#define nullptr NULL
   ------------------
-  |  Branch (126:9): [True: 1, False: 22]
+  |  Branch (126:9): [True: 1, False: 20]
   ------------------
   127|      1|        return false;
   128|      1|    }
   129|       |
-  130|     22|    list->ids = ids;
+  130|     20|    list->ids = ids;
   131|       |
   132|       |    return true;
-  133|     23|}
+  133|     21|}
 
 logger_new:
-   33|     43|{
-   34|     43|    Logger *log = (Logger *)mem_alloc(mem, sizeof(Logger));
+   33|     41|{
+   34|     41|    Logger *log = (Logger *)mem_alloc(mem, sizeof(Logger));
    35|       |
-   36|     43|    if (log == nullptr) {
+   36|     41|    if (log == nullptr) {
   ------------------
-  |  |   63|     43|#define nullptr NULL
+  |  |   63|     41|#define nullptr NULL
   ------------------
-  |  Branch (36:9): [True: 1, False: 42]
+  |  Branch (36:9): [True: 1, False: 40]
   ------------------
    37|      1|        return nullptr;
   ------------------
@@ -2049,23 +2049,23 @@ logger_new:
   ------------------
    38|      1|    }
    39|       |
-   40|     42|    log->mem = mem;
+   40|     40|    log->mem = mem;
    41|       |
-   42|     42|    return log;
-   43|     43|}
+   42|     40|    return log;
+   43|     41|}
 logger_kill:
-   46|     42|{
-   47|     42|    if (log == nullptr) {
+   46|     40|{
+   47|     40|    if (log == nullptr) {
   ------------------
-  |  |   63|     42|#define nullptr NULL
+  |  |   63|     40|#define nullptr NULL
   ------------------
-  |  Branch (47:9): [True: 0, False: 42]
+  |  Branch (47:9): [True: 0, False: 40]
   ------------------
    48|      0|        return;
    49|      0|    }
    50|       |
-   51|     42|    mem_delete(log->mem, log);
-   52|     42|}
+   51|     40|    mem_delete(log->mem, log);
+   52|     40|}
 logger_write:
    64|     13|{
    65|     13|    if (log == nullptr) {
@@ -2114,31 +2114,31 @@ logger_write:
    93|      0|}
 
 mem_brealloc:
-   20|     24|{
-   21|     24|    void *const new_ptr = tox_memory_realloc(mem, ptr, size);
-   22|     24|    return new_ptr;
-   23|     24|}
+   20|     22|{
+   21|     22|    void *const new_ptr = tox_memory_realloc(mem, ptr, size);
+   22|     22|    return new_ptr;
+   23|     22|}
 mem_alloc:
-   26|    490|{
-   27|    490|    void *const ptr = tox_memory_malloc(mem, size);
-   28|    490|    if (ptr != nullptr) {
+   26|    462|{
+   27|    462|    void *const ptr = tox_memory_malloc(mem, size);
+   28|    462|    if (ptr != nullptr) {
   ------------------
-  |  |   63|    490|#define nullptr NULL
+  |  |   63|    462|#define nullptr NULL
   ------------------
-  |  Branch (28:9): [True: 476, False: 14]
+  |  Branch (28:9): [True: 448, False: 14]
   ------------------
-   29|    476|        memset(ptr, 0, size);
-   30|    476|    }
-   31|    490|    return ptr;
-   32|    490|}
+   29|    448|        memset(ptr, 0, size);
+   30|    448|    }
+   31|    462|    return ptr;
+   32|    462|}
 mem_valloc:
-   35|    128|{
-   36|    128|    const uint32_t bytes = nmemb * size;
+   35|    120|{
+   36|    120|    const uint32_t bytes = nmemb * size;
    37|       |
-   38|    128|    if (size != 0 && bytes / size != nmemb) {
+   38|    120|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (38:9): [True: 128, False: 0]
-  |  Branch (38:22): [True: 0, False: 128]
+  |  Branch (38:9): [True: 120, False: 0]
+  |  Branch (38:22): [True: 0, False: 120]
   ------------------
    39|      0|        return nullptr;
   ------------------
@@ -2146,25 +2146,25 @@ mem_valloc:
   ------------------
    40|      0|    }
    41|       |
-   42|    128|    void *const ptr = tox_memory_malloc(mem, bytes);
-   43|    128|    if (ptr != nullptr) {
+   42|    120|    void *const ptr = tox_memory_malloc(mem, bytes);
+   43|    120|    if (ptr != nullptr) {
   ------------------
-  |  |   63|    128|#define nullptr NULL
+  |  |   63|    120|#define nullptr NULL
   ------------------
-  |  Branch (43:9): [True: 125, False: 3]
+  |  Branch (43:9): [True: 117, False: 3]
   ------------------
-   44|    125|        memset(ptr, 0, bytes);
-   45|    125|    }
-   46|    128|    return ptr;
-   47|    128|}
+   44|    117|        memset(ptr, 0, bytes);
+   45|    117|    }
+   46|    120|    return ptr;
+   47|    120|}
 mem_vrealloc:
-   50|     80|{
-   51|     80|    const uint32_t bytes = nmemb * size;
+   50|     74|{
+   51|     74|    const uint32_t bytes = nmemb * size;
    52|       |
-   53|     80|    if (size != 0 && bytes / size != nmemb) {
+   53|     74|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (53:9): [True: 80, False: 0]
-  |  Branch (53:22): [True: 0, False: 80]
+  |  Branch (53:9): [True: 74, False: 0]
+  |  Branch (53:22): [True: 0, False: 74]
   ------------------
    54|      0|        return nullptr;
   ------------------
@@ -2172,23 +2172,23 @@ mem_vrealloc:
   ------------------
    55|      0|    }
    56|       |
-   57|     80|    void *const new_ptr = tox_memory_realloc(mem, ptr, bytes);
-   58|     80|    return new_ptr;
-   59|     80|}
+   57|     74|    void *const new_ptr = tox_memory_realloc(mem, ptr, bytes);
+   58|     74|    return new_ptr;
+   59|     74|}
 mem_delete:
-   62|    770|{
-   63|    770|    tox_memory_dealloc(mem, ptr);
-   64|    770|}
+   62|    722|{
+   63|    722|    tox_memory_dealloc(mem, ptr);
+   64|    722|}
 
 mono_time_new:
-  111|     40|{
-  112|     40|    Mono_Time *mono_time = (Mono_Time *)mem_alloc(mem, sizeof(Mono_Time));
+  111|     38|{
+  112|     38|    Mono_Time *mono_time = (Mono_Time *)mem_alloc(mem, sizeof(Mono_Time));
   113|       |
-  114|     40|    if (mono_time == nullptr) {
+  114|     38|    if (mono_time == nullptr) {
   ------------------
-  |  |   63|     40|#define nullptr NULL
+  |  |   63|     38|#define nullptr NULL
   ------------------
-  |  Branch (114:9): [True: 1, False: 39]
+  |  Branch (114:9): [True: 1, False: 37]
   ------------------
   115|      1|        return nullptr;
   ------------------
@@ -2196,14 +2196,14 @@ mono_time_new:
   ------------------
   116|      1|    }
   117|       |
-  118|     39|#ifndef ESP_PLATFORM
-  119|     39|    pthread_rwlock_t *const rwlock = (pthread_rwlock_t *)mem_alloc(mem, sizeof(pthread_rwlock_t));
+  118|     37|#ifndef ESP_PLATFORM
+  119|     37|    pthread_rwlock_t *const rwlock = (pthread_rwlock_t *)mem_alloc(mem, sizeof(pthread_rwlock_t));
   120|       |
-  121|     39|    if (rwlock == nullptr) {
+  121|     37|    if (rwlock == nullptr) {
   ------------------
-  |  |   63|     39|#define nullptr NULL
+  |  |   63|     37|#define nullptr NULL
   ------------------
-  |  Branch (121:9): [True: 1, False: 38]
+  |  Branch (121:9): [True: 1, False: 36]
   ------------------
   122|      1|        mem_delete(mem, mono_time);
   123|      1|        return nullptr;
@@ -2212,11 +2212,11 @@ mono_time_new:
   ------------------
   124|      1|    }
   125|       |
-  126|     38|    if (pthread_rwlock_init(rwlock, nullptr) != 0) {
+  126|     36|    if (pthread_rwlock_init(rwlock, nullptr) != 0) {
   ------------------
-  |  |   63|     38|#define nullptr NULL
+  |  |   63|     36|#define nullptr NULL
   ------------------
-  |  Branch (126:9): [True: 0, False: 38]
+  |  Branch (126:9): [True: 0, False: 36]
   ------------------
   127|      0|        mem_delete(mem, rwlock);
   128|      0|        mem_delete(mem, mono_time);
@@ -2226,121 +2226,121 @@ mono_time_new:
   ------------------
   130|      0|    }
   131|       |
-  132|     38|    mono_time->time_update_lock = rwlock;
-  133|     38|#endif /* ESP_PLATFORM */
+  132|     36|    mono_time->time_update_lock = rwlock;
+  133|     36|#endif /* ESP_PLATFORM */
   134|       |
-  135|     38|    mono_time_set_current_time_callback(mono_time, current_time_callback, user_data);
+  135|     36|    mono_time_set_current_time_callback(mono_time, current_time_callback, user_data);
   136|       |
-  137|     38|    mono_time->cur_time = 0;
-  138|     38|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+  137|     36|    mono_time->cur_time = 0;
+  138|     36|#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
   139|       |    // Maximum reproducibility. Never return time = 0.
-  140|     38|    mono_time->base_time = 1000000000;
+  140|     36|    mono_time->base_time = 1000000000;
   141|       |#else
   142|       |    // Never return time = 0 in case time() returns 0 (e.g. on microcontrollers
   143|       |    // without battery-powered RTC or ones where NTP didn't initialise it yet).
   144|       |    mono_time->base_time = max_u64(1, (uint64_t)time(nullptr)) * UINT64_C(1000) - current_time_monotonic(mono_time);
   145|       |#endif /* FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION */
   146|       |
-  147|     38|    mono_time_update(mono_time);
+  147|     36|    mono_time_update(mono_time);
   148|       |
-  149|     38|    return mono_time;
-  150|     38|}
+  149|     36|    return mono_time;
+  150|     36|}
 mono_time_free:
-  153|     38|{
-  154|     38|    if (mono_time == nullptr) {
+  153|     36|{
+  154|     36|    if (mono_time == nullptr) {
   ------------------
-  |  |   63|     38|#define nullptr NULL
+  |  |   63|     36|#define nullptr NULL
   ------------------
-  |  Branch (154:9): [True: 0, False: 38]
+  |  Branch (154:9): [True: 0, False: 36]
   ------------------
   155|      0|        return;
   156|      0|    }
-  157|     38|#ifndef ESP_PLATFORM
-  158|     38|    pthread_rwlock_destroy(mono_time->time_update_lock);
-  159|     38|    mem_delete(mem, mono_time->time_update_lock);
-  160|     38|#endif /* ESP_PLATFORM */
-  161|     38|    mem_delete(mem, mono_time);
-  162|     38|}
+  157|     36|#ifndef ESP_PLATFORM
+  158|     36|    pthread_rwlock_destroy(mono_time->time_update_lock);
+  159|     36|    mem_delete(mem, mono_time->time_update_lock);
+  160|     36|#endif /* ESP_PLATFORM */
+  161|     36|    mem_delete(mem, mono_time);
+  162|     36|}
 mono_time_update:
-  165|     38|{
-  166|     38|    const uint64_t cur_time =
-  167|     38|        mono_time->base_time + mono_time->current_time_callback(mono_time->user_data);
+  165|     36|{
+  166|     36|    const uint64_t cur_time =
+  167|     36|        mono_time->base_time + mono_time->current_time_callback(mono_time->user_data);
   168|       |
-  169|     38|#ifndef ESP_PLATFORM
-  170|     38|    pthread_rwlock_wrlock(mono_time->time_update_lock);
-  171|     38|#endif /* ESP_PLATFORM */
-  172|     38|    mono_time->cur_time = cur_time;
-  173|     38|#ifndef ESP_PLATFORM
-  174|     38|    pthread_rwlock_unlock(mono_time->time_update_lock);
-  175|     38|#endif /* ESP_PLATFORM */
-  176|     38|}
+  169|     36|#ifndef ESP_PLATFORM
+  170|     36|    pthread_rwlock_wrlock(mono_time->time_update_lock);
+  171|     36|#endif /* ESP_PLATFORM */
+  172|     36|    mono_time->cur_time = cur_time;
+  173|     36|#ifndef ESP_PLATFORM
+  174|     36|    pthread_rwlock_unlock(mono_time->time_update_lock);
+  175|     36|#endif /* ESP_PLATFORM */
+  176|     36|}
 mono_time_get_ms:
-  179|  1.97k|{
+  179|  1.95k|{
   180|       |#if !defined(ESP_PLATFORM) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
   181|       |    // Fuzzing is only single thread for now, no locking needed */
   182|       |    pthread_rwlock_rdlock(mono_time->time_update_lock);
   183|       |#endif /* !ESP_PLATFORM */
-  184|  1.97k|    const uint64_t cur_time = mono_time->cur_time;
+  184|  1.95k|    const uint64_t cur_time = mono_time->cur_time;
   185|       |#if !defined(ESP_PLATFORM) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
   186|       |    pthread_rwlock_unlock(mono_time->time_update_lock);
   187|       |#endif /* !ESP_PLATFORM */
-  188|  1.97k|    return cur_time;
-  189|  1.97k|}
+  188|  1.95k|    return cur_time;
+  189|  1.95k|}
 mono_time_get:
-  192|  1.94k|{
+  192|  1.93k|{
   193|       |    return mono_time_get_ms(mono_time) / UINT64_C(1000);
-  194|  1.94k|}
+  194|  1.93k|}
 mono_time_set_current_time_callback:
-  203|     38|{
-  204|     38|    if (current_time_callback == nullptr) {
+  203|     36|{
+  204|     36|    if (current_time_callback == nullptr) {
   ------------------
-  |  |   63|     38|#define nullptr NULL
+  |  |   63|     36|#define nullptr NULL
   ------------------
-  |  Branch (204:9): [True: 0, False: 38]
+  |  Branch (204:9): [True: 0, False: 36]
   ------------------
   205|      0|        mono_time->current_time_callback = current_time_monotonic_default;
   206|      0|        mono_time->user_data = mono_time;
-  207|     38|    } else {
-  208|     38|        mono_time->current_time_callback = current_time_callback;
-  209|     38|        mono_time->user_data = user_data;
-  210|     38|    }
-  211|     38|}
+  207|     36|    } else {
+  208|     36|        mono_time->current_time_callback = current_time_callback;
+  209|     36|        mono_time->user_data = user_data;
+  210|     36|    }
+  211|     36|}
 current_time_monotonic:
-  219|  1.84k|{
-  220|  1.84k|    return mono_time->current_time_callback(mono_time->user_data);
-  221|  1.84k|}
+  219|  1.83k|{
+  220|  1.83k|    return mono_time->current_time_callback(mono_time->user_data);
+  221|  1.83k|}
 
 new_keys:
- 2936|     24|{
- 2937|     24|    crypto_new_keypair(c->rng, c->self_public_key, c->self_secret_key);
- 2938|     24|}
+ 2936|     22|{
+ 2937|     22|    crypto_new_keypair(c->rng, c->self_public_key, c->self_secret_key);
+ 2938|     22|}
 new_net_crypto:
- 2965|     26|{
- 2966|     26|    if (dht == nullptr || dht_funcs == nullptr || dht_funcs->get_shared_key_sent == nullptr || dht_funcs->get_self_public_key == nullptr || dht_funcs->get_self_secret_key == nullptr) {
+ 2965|     24|{
+ 2966|     24|    if (dht == nullptr || dht_funcs == nullptr || dht_funcs->get_shared_key_sent == nullptr || dht_funcs->get_self_public_key == nullptr || dht_funcs->get_self_secret_key == nullptr) {
   ------------------
-  |  |   63|     52|#define nullptr NULL
-  ------------------
-                  if (dht == nullptr || dht_funcs == nullptr || dht_funcs->get_shared_key_sent == nullptr || dht_funcs->get_self_public_key == nullptr || dht_funcs->get_self_secret_key == nullptr) {
-  ------------------
-  |  |   63|     52|#define nullptr NULL
+  |  |   63|     48|#define nullptr NULL
   ------------------
                   if (dht == nullptr || dht_funcs == nullptr || dht_funcs->get_shared_key_sent == nullptr || dht_funcs->get_self_public_key == nullptr || dht_funcs->get_self_secret_key == nullptr) {
   ------------------
-  |  |   63|     52|#define nullptr NULL
+  |  |   63|     48|#define nullptr NULL
   ------------------
                   if (dht == nullptr || dht_funcs == nullptr || dht_funcs->get_shared_key_sent == nullptr || dht_funcs->get_self_public_key == nullptr || dht_funcs->get_self_secret_key == nullptr) {
   ------------------
-  |  |   63|     52|#define nullptr NULL
+  |  |   63|     48|#define nullptr NULL
   ------------------
                   if (dht == nullptr || dht_funcs == nullptr || dht_funcs->get_shared_key_sent == nullptr || dht_funcs->get_self_public_key == nullptr || dht_funcs->get_self_secret_key == nullptr) {
   ------------------
-  |  |   63|     26|#define nullptr NULL
+  |  |   63|     48|#define nullptr NULL
   ------------------
-  |  Branch (2966:9): [True: 0, False: 26]
-  |  Branch (2966:27): [True: 0, False: 26]
-  |  Branch (2966:51): [True: 0, False: 26]
-  |  Branch (2966:96): [True: 0, False: 26]
-  |  Branch (2966:141): [True: 0, False: 26]
+                  if (dht == nullptr || dht_funcs == nullptr || dht_funcs->get_shared_key_sent == nullptr || dht_funcs->get_self_public_key == nullptr || dht_funcs->get_self_secret_key == nullptr) {
+  ------------------
+  |  |   63|     24|#define nullptr NULL
+  ------------------
+  |  Branch (2966:9): [True: 0, False: 24]
+  |  Branch (2966:27): [True: 0, False: 24]
+  |  Branch (2966:51): [True: 0, False: 24]
+  |  Branch (2966:96): [True: 0, False: 24]
+  |  Branch (2966:141): [True: 0, False: 24]
   ------------------
  2967|      0|        return nullptr;
   ------------------
@@ -2348,13 +2348,13 @@ new_net_crypto:
   ------------------
  2968|      0|    }
  2969|       |
- 2970|     26|    Net_Crypto *temp = (Net_Crypto *)mem_alloc(mem, sizeof(Net_Crypto));
+ 2970|     24|    Net_Crypto *temp = (Net_Crypto *)mem_alloc(mem, sizeof(Net_Crypto));
  2971|       |
- 2972|     26|    if (temp == nullptr) {
+ 2972|     24|    if (temp == nullptr) {
   ------------------
-  |  |   63|     26|#define nullptr NULL
+  |  |   63|     24|#define nullptr NULL
   ------------------
-  |  Branch (2972:9): [True: 1, False: 25]
+  |  Branch (2972:9): [True: 1, False: 23]
   ------------------
  2973|      1|        return nullptr;
   ------------------
@@ -2362,23 +2362,23 @@ new_net_crypto:
   ------------------
  2974|      1|    }
  2975|       |
- 2976|     25|    temp->log = log;
- 2977|     25|    temp->mem = mem;
- 2978|     25|    temp->rng = rng;
- 2979|     25|    temp->mono_time = mono_time;
- 2980|     25|    temp->ns = ns;
- 2981|     25|    temp->net = net;
+ 2976|     23|    temp->log = log;
+ 2977|     23|    temp->mem = mem;
+ 2978|     23|    temp->rng = rng;
+ 2979|     23|    temp->mono_time = mono_time;
+ 2980|     23|    temp->ns = ns;
+ 2981|     23|    temp->net = net;
  2982|       |
- 2983|     25|    temp->dht = dht;
- 2984|     25|    temp->dht_funcs = dht_funcs;
+ 2983|     23|    temp->dht = dht;
+ 2984|     23|    temp->dht_funcs = dht_funcs;
  2985|       |
- 2986|     25|    TCP_Connections *const tcp_c = new_tcp_connections(log, mem, rng, ns, mono_time, dht_funcs->get_self_secret_key(dht), proxy_info, tcp_np);
+ 2986|     23|    TCP_Connections *const tcp_c = new_tcp_connections(log, mem, rng, ns, mono_time, dht_funcs->get_self_secret_key(dht), proxy_info, tcp_np);
  2987|       |
- 2988|     25|    if (tcp_c == nullptr) {
+ 2988|     23|    if (tcp_c == nullptr) {
   ------------------
-  |  |   63|     25|#define nullptr NULL
+  |  |   63|     23|#define nullptr NULL
   ------------------
-  |  Branch (2988:9): [True: 1, False: 24]
+  |  Branch (2988:9): [True: 1, False: 22]
   ------------------
  2989|      1|        mem_delete(mem, temp);
  2990|      1|        return nullptr;
@@ -2387,102 +2387,102 @@ new_net_crypto:
   ------------------
  2991|      1|    }
  2992|       |
- 2993|     24|    temp->tcp_c = tcp_c;
+ 2993|     22|    temp->tcp_c = tcp_c;
  2994|       |
- 2995|     24|    set_packet_tcp_connection_callback(temp->tcp_c, &tcp_data_callback, temp);
- 2996|     24|    set_oob_packet_tcp_connection_callback(temp->tcp_c, &tcp_oob_callback, temp);
+ 2995|     22|    set_packet_tcp_connection_callback(temp->tcp_c, &tcp_data_callback, temp);
+ 2996|     22|    set_oob_packet_tcp_connection_callback(temp->tcp_c, &tcp_oob_callback, temp);
  2997|       |
- 2998|     24|    new_keys(temp);
- 2999|     24|    new_symmetric_key(rng, temp->secret_symmetric_key);
+ 2998|     22|    new_keys(temp);
+ 2999|     22|    new_symmetric_key(rng, temp->secret_symmetric_key);
  3000|       |
- 3001|     24|    temp->current_sleep_time = CRYPTO_SEND_PACKET_INTERVAL;
+ 3001|     22|    temp->current_sleep_time = CRYPTO_SEND_PACKET_INTERVAL;
   ------------------
-  |  |  106|     24|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  106|     22|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
  3002|       |
- 3003|     24|    networking_registerhandler(net, NET_PACKET_COOKIE_REQUEST, &udp_handle_cookie_request, temp);
- 3004|     24|    networking_registerhandler(net, NET_PACKET_COOKIE_RESPONSE, &udp_handle_packet, temp);
- 3005|     24|    networking_registerhandler(net, NET_PACKET_CRYPTO_HS, &udp_handle_packet, temp);
- 3006|     24|    networking_registerhandler(net, NET_PACKET_CRYPTO_DATA, &udp_handle_packet, temp);
+ 3003|     22|    networking_registerhandler(net, NET_PACKET_COOKIE_REQUEST, &udp_handle_cookie_request, temp);
+ 3004|     22|    networking_registerhandler(net, NET_PACKET_COOKIE_RESPONSE, &udp_handle_packet, temp);
+ 3005|     22|    networking_registerhandler(net, NET_PACKET_CRYPTO_HS, &udp_handle_packet, temp);
+ 3006|     22|    networking_registerhandler(net, NET_PACKET_CRYPTO_DATA, &udp_handle_packet, temp);
  3007|       |
- 3008|     24|    bs_list_init(&temp->ip_port_list, mem, sizeof(IP_Port), 8, ipport_cmp_handler);
+ 3008|     22|    bs_list_init(&temp->ip_port_list, mem, sizeof(IP_Port), 8, ipport_cmp_handler);
  3009|       |
- 3010|     24|    temp->cookie_request_tokens = COOKIE_REQUEST_MAX_TOKENS;
+ 3010|     22|    temp->cookie_request_tokens = COOKIE_REQUEST_MAX_TOKENS;
   ------------------
-  |  |  212|     24|#define COOKIE_REQUEST_MAX_TOKENS 10
+  |  |  212|     22|#define COOKIE_REQUEST_MAX_TOKENS 10
   ------------------
- 3011|     24|    temp->cookie_request_last_time = mono_time_get_ms(mono_time);
+ 3011|     22|    temp->cookie_request_last_time = mono_time_get_ms(mono_time);
  3012|       |
- 3013|     24|    return temp;
- 3014|     25|}
+ 3013|     22|    return temp;
+ 3014|     23|}
 do_net_crypto:
- 3052|  1.84k|{
- 3053|  1.84k|    kill_timedout(c, userdata);
- 3054|  1.84k|    do_tcp(c, userdata);
- 3055|  1.84k|    send_crypto_packets(c);
- 3056|  1.84k|}
+ 3052|  1.83k|{
+ 3053|  1.83k|    kill_timedout(c, userdata);
+ 3054|  1.83k|    do_tcp(c, userdata);
+ 3055|  1.83k|    send_crypto_packets(c);
+ 3056|  1.83k|}
 kill_net_crypto:
- 3059|     24|{
- 3060|     24|    if (c == nullptr) {
+ 3059|     22|{
+ 3060|     22|    if (c == nullptr) {
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
-  |  Branch (3060:9): [True: 0, False: 24]
+  |  Branch (3060:9): [True: 0, False: 22]
   ------------------
  3061|      0|        return;
  3062|      0|    }
  3063|       |
- 3064|     24|    const Memory *mem = c->mem;
+ 3064|     22|    const Memory *mem = c->mem;
  3065|       |
- 3066|     24|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
+ 3066|     22|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
   ------------------
-  |  Branch (3066:26): [True: 0, False: 24]
+  |  Branch (3066:26): [True: 0, False: 22]
   ------------------
  3067|      0|        crypto_kill(c, i);
  3068|      0|    }
  3069|       |
- 3070|     24|    kill_tcp_connections(c->tcp_c);
- 3071|     24|    bs_list_free(&c->ip_port_list);
- 3072|     24|    networking_registerhandler(c->net, NET_PACKET_COOKIE_REQUEST, nullptr, nullptr);
+ 3070|     22|    kill_tcp_connections(c->tcp_c);
+ 3071|     22|    bs_list_free(&c->ip_port_list);
+ 3072|     22|    networking_registerhandler(c->net, NET_PACKET_COOKIE_REQUEST, nullptr, nullptr);
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
                   networking_registerhandler(c->net, NET_PACKET_COOKIE_REQUEST, nullptr, nullptr);
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
- 3073|     24|    networking_registerhandler(c->net, NET_PACKET_COOKIE_RESPONSE, nullptr, nullptr);
+ 3073|     22|    networking_registerhandler(c->net, NET_PACKET_COOKIE_RESPONSE, nullptr, nullptr);
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
                   networking_registerhandler(c->net, NET_PACKET_COOKIE_RESPONSE, nullptr, nullptr);
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
- 3074|     24|    networking_registerhandler(c->net, NET_PACKET_CRYPTO_HS, nullptr, nullptr);
+ 3074|     22|    networking_registerhandler(c->net, NET_PACKET_CRYPTO_HS, nullptr, nullptr);
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
                   networking_registerhandler(c->net, NET_PACKET_CRYPTO_HS, nullptr, nullptr);
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
- 3075|     24|    networking_registerhandler(c->net, NET_PACKET_CRYPTO_DATA, nullptr, nullptr);
+ 3075|     22|    networking_registerhandler(c->net, NET_PACKET_CRYPTO_DATA, nullptr, nullptr);
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
                   networking_registerhandler(c->net, NET_PACKET_CRYPTO_DATA, nullptr, nullptr);
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     22|#define nullptr NULL
   ------------------
- 3076|     24|    crypto_memzero(c, sizeof(Net_Crypto));
- 3077|     24|    mem_delete(mem, c);
- 3078|     24|}
+ 3076|     22|    crypto_memzero(c, sizeof(Net_Crypto));
+ 3077|     22|    mem_delete(mem, c);
+ 3078|     22|}
 net_crypto.c:kill_timedout:
- 3017|  1.84k|{
- 3018|  1.84k|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
+ 3017|  1.83k|{
+ 3018|  1.83k|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
   ------------------
-  |  Branch (3018:26): [True: 0, False: 1.84k]
+  |  Branch (3018:26): [True: 0, False: 1.83k]
   ------------------
  3019|      0|        const Crypto_Connection *conn = get_crypto_connection(c, i);
  3020|      0|        if (conn == nullptr) {
@@ -2524,14 +2524,14 @@ net_crypto.c:kill_timedout:
  3039|       |
  3040|       |#endif /* 0 */
  3041|      0|    }
- 3042|  1.84k|}
+ 3042|  1.83k|}
 net_crypto.c:do_tcp:
- 2294|  1.84k|{
- 2295|  1.84k|    do_tcp_connections(c->log, c->tcp_c, userdata);
+ 2294|  1.83k|{
+ 2295|  1.83k|    do_tcp_connections(c->log, c->tcp_c, userdata);
  2296|       |
- 2297|  1.84k|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
+ 2297|  1.83k|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
   ------------------
-  |  Branch (2297:26): [True: 0, False: 1.84k]
+  |  Branch (2297:26): [True: 0, False: 1.83k]
   ------------------
  2298|      0|        const Crypto_Connection *conn = get_crypto_connection(c, i);
  2299|       |
@@ -2564,16 +2564,16 @@ net_crypto.c:do_tcp:
  2313|       |
  2314|      0|        set_tcp_connection_to_status(c->tcp_c, conn->connection_number_tcp, !direct_connected);
  2315|      0|    }
- 2316|  1.84k|}
+ 2316|  1.83k|}
 net_crypto.c:send_crypto_packets:
- 2496|  1.84k|{
- 2497|  1.84k|    const uint64_t temp_time = current_time_monotonic(c->mono_time);
- 2498|  1.84k|    double total_send_rate = 0;
- 2499|  1.84k|    uint32_t peak_request_packet_interval = -1;
+ 2496|  1.83k|{
+ 2497|  1.83k|    const uint64_t temp_time = current_time_monotonic(c->mono_time);
+ 2498|  1.83k|    double total_send_rate = 0;
+ 2499|  1.83k|    uint32_t peak_request_packet_interval = -1;
  2500|       |
- 2501|  1.84k|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
+ 2501|  1.83k|    for (uint32_t i = 0; i < c->crypto_connections_length; ++i) {
   ------------------
-  |  Branch (2501:26): [True: 0, False: 1.84k]
+  |  Branch (2501:26): [True: 0, False: 1.83k]
   ------------------
  2502|      0|        Crypto_Connection *conn = get_crypto_connection(c, i);
  2503|       |
@@ -3010,21 +3010,21 @@ net_crypto.c:send_crypto_packets:
  2706|      0|        }
  2707|      0|    }
  2708|       |
- 2709|  1.84k|    c->current_sleep_time = -1;
- 2710|  1.84k|    uint32_t sleep_time = peak_request_packet_interval;
+ 2709|  1.83k|    c->current_sleep_time = -1;
+ 2710|  1.83k|    uint32_t sleep_time = peak_request_packet_interval;
  2711|       |
- 2712|  1.84k|    if (c->current_sleep_time > sleep_time) {
+ 2712|  1.83k|    if (c->current_sleep_time > sleep_time) {
   ------------------
-  |  Branch (2712:9): [True: 0, False: 1.84k]
+  |  Branch (2712:9): [True: 0, False: 1.83k]
   ------------------
  2713|      0|        c->current_sleep_time = sleep_time;
  2714|      0|    }
  2715|       |
- 2716|  1.84k|    if (total_send_rate > CRYPTO_PACKET_MIN_RATE) {
+ 2716|  1.83k|    if (total_send_rate > CRYPTO_PACKET_MIN_RATE) {
   ------------------
-  |  |   92|  1.84k|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   92|  1.83k|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
-  |  Branch (2716:9): [True: 0, False: 1.84k]
+  |  Branch (2716:9): [True: 0, False: 1.83k]
   ------------------
  2717|      0|        sleep_time = 1000.0 / total_send_rate;
  2718|       |
@@ -3036,155 +3036,155 @@ net_crypto.c:send_crypto_packets:
  2721|      0|        }
  2722|      0|    }
  2723|       |
- 2724|  1.84k|    sleep_time = CRYPTO_SEND_PACKET_INTERVAL;
+ 2724|  1.83k|    sleep_time = CRYPTO_SEND_PACKET_INTERVAL;
   ------------------
-  |  |  106|  1.84k|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  106|  1.83k|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
  2725|       |
- 2726|  1.84k|    if (c->current_sleep_time > sleep_time) {
+ 2726|  1.83k|    if (c->current_sleep_time > sleep_time) {
   ------------------
-  |  Branch (2726:9): [True: 1.84k, False: 0]
+  |  Branch (2726:9): [True: 1.83k, False: 0]
   ------------------
- 2727|  1.84k|        c->current_sleep_time = sleep_time;
- 2728|  1.84k|    }
- 2729|  1.84k|}
+ 2727|  1.83k|        c->current_sleep_time = sleep_time;
+ 2728|  1.83k|    }
+ 2729|  1.83k|}
 
 LLVMFuzzerTestOneInput:
-  123|     45|{
-  124|     45|    tox::test::fuzz_select_target<TestNetCrypto>(data, size);
-  125|     45|    return 0;
-  126|     45|}
+  123|     43|{
+  124|     43|    tox::test::fuzz_select_target<TestNetCrypto>(data, size);
+  125|     43|    return 0;
+  126|     43|}
 net_crypto_fuzz_test.cc:_ZN12_GLOBAL__N_113TestNetCryptoERN3tox4test9Fuzz_DataE:
-   48|     44|{
-   49|     44|    const auto prep = prepare(input);
-   50|     44|    if (!prep.has_value()) {
+   48|     42|{
+   49|     42|    const auto prep = prepare(input);
+   50|     42|    if (!prep.has_value()) {
   ------------------
-  |  Branch (50:9): [True: 1, False: 43]
+  |  Branch (50:9): [True: 1, False: 41]
   ------------------
    51|      1|        return;
    52|      1|    }
-   53|     43|    const auto [ipp, iterations] = prep.value();
+   53|     41|    const auto [ipp, iterations] = prep.value();
    54|       |
-   55|     43|    SimulatedEnvironment env;
-   56|     43|    env.fake_clock().advance(1000000000);  // Start clock high to match legacy behavior
-   57|     43|    auto node = env.create_node(ipp.port);
-   58|     43|    configure_fuzz_memory_source(env.fake_memory(), input);
+   55|     41|    SimulatedEnvironment env;
+   56|     41|    env.fake_clock().advance(1000000000);  // Start clock high to match legacy behavior
+   57|     41|    auto node = env.create_node(ipp.port);
+   58|     41|    configure_fuzz_memory_source(env.fake_memory(), input);
    59|       |
-   60|     43|    const Ptr<Logger> logger(logger_new(&node->c_memory), logger_kill);
-   61|     43|    if (logger == nullptr) {
+   60|     41|    const Ptr<Logger> logger(logger_new(&node->c_memory), logger_kill);
+   61|     41|    if (logger == nullptr) {
   ------------------
-  |  Branch (61:9): [True: 1, False: 42]
+  |  Branch (61:9): [True: 1, False: 40]
   ------------------
    62|      1|        return;
    63|      1|    }
    64|       |
-   65|     42|    const Ptr<Networking_Core> net(
-   66|     42|        new_networking_ex(logger.get(), &node->c_memory, &node->c_network, &ipp.ip, ipp.port,
-   67|     42|            ipp.port + 100, nullptr),
-   68|     42|        kill_networking);
-   69|     42|    if (net == nullptr) {
+   65|     40|    const Ptr<Networking_Core> net(
+   66|     40|        new_networking_ex(logger.get(), &node->c_memory, &node->c_network, &ipp.ip, ipp.port,
+   67|     40|            ipp.port + 100, nullptr),
+   68|     40|        kill_networking);
+   69|     40|    if (net == nullptr) {
   ------------------
-  |  Branch (69:9): [True: 2, False: 40]
+  |  Branch (69:9): [True: 2, False: 38]
   ------------------
    70|      2|        return;
    71|      2|    }
    72|       |
-   73|     40|    const std::unique_ptr<Mono_Time, std::function<void(Mono_Time *)>> mono_time(
-   74|     40|        mono_time_new(
-   75|     40|            &node->c_memory,
-   76|     40|            [](void *user_data) { return static_cast<FakeClock *>(user_data)->current_time_ms(); },
-   77|     40|            &env.fake_clock()),
-   78|     40|        [&node](Mono_Time *ptr) { mono_time_free(&node->c_memory, ptr); });
+   73|     38|    const std::unique_ptr<Mono_Time, std::function<void(Mono_Time *)>> mono_time(
+   74|     38|        mono_time_new(
+   75|     38|            &node->c_memory,
+   76|     38|            [](void *user_data) { return static_cast<FakeClock *>(user_data)->current_time_ms(); },
+   77|     38|            &env.fake_clock()),
+   78|     38|        [&node](Mono_Time *ptr) { mono_time_free(&node->c_memory, ptr); });
    79|       |
-   80|     40|    if (mono_time == nullptr) {
+   80|     38|    if (mono_time == nullptr) {
   ------------------
-  |  Branch (80:9): [True: 2, False: 38]
+  |  Branch (80:9): [True: 2, False: 36]
   ------------------
    81|      2|        return;
    82|      2|    }
    83|       |
-   84|     38|    const Ptr<DHT> dht(new_dht(logger.get(), &node->c_memory, &node->c_random, &node->c_network,
-   85|     38|                           mono_time.get(), net.get(), false, false),
-   86|     38|        kill_dht);
-   87|     38|    if (dht == nullptr) {
+   84|     36|    const Ptr<DHT> dht(new_dht(logger.get(), &node->c_memory, &node->c_random, &node->c_network,
+   85|     36|                           mono_time.get(), net.get(), false, false),
+   86|     36|        kill_dht);
+   87|     36|    if (dht == nullptr) {
   ------------------
-  |  Branch (87:9): [True: 11, False: 27]
+  |  Branch (87:9): [True: 11, False: 25]
   ------------------
    88|     11|        return;
    89|     11|    }
    90|       |
-   91|     27|    Net_Profile *tcp_np = netprof_new(logger.get(), &node->c_memory);
+   91|     25|    Net_Profile *tcp_np = netprof_new(logger.get(), &node->c_memory);
    92|       |
-   93|     27|    if (tcp_np == nullptr) {
+   93|     25|    if (tcp_np == nullptr) {
   ------------------
-  |  Branch (93:9): [True: 1, False: 26]
+  |  Branch (93:9): [True: 1, False: 24]
   ------------------
    94|      1|        return;
    95|      1|    }
    96|       |
-   97|     26|    const TCP_Proxy_Info proxy_info = {0};
+   97|     24|    const TCP_Proxy_Info proxy_info = {0};
    98|       |
-   99|     26|    const Ptr<Net_Crypto> net_crypto(
-  100|     26|        new_net_crypto(logger.get(), &node->c_memory, &node->c_random, &node->c_network,
-  101|     26|            mono_time.get(), net.get(), dht.get(), &dht_funcs, &proxy_info, tcp_np),
-  102|     26|        kill_net_crypto);
-  103|     26|    if (net_crypto == nullptr) {
+   99|     24|    const Ptr<Net_Crypto> net_crypto(
+  100|     24|        new_net_crypto(logger.get(), &node->c_memory, &node->c_random, &node->c_network,
+  101|     24|            mono_time.get(), net.get(), dht.get(), &dht_funcs, &proxy_info, tcp_np),
+  102|     24|        kill_net_crypto);
+  103|     24|    if (net_crypto == nullptr) {
   ------------------
-  |  Branch (103:9): [True: 2, False: 24]
+  |  Branch (103:9): [True: 2, False: 22]
   ------------------
   104|      2|        netprof_kill(&node->c_memory, tcp_np);
   105|      2|        return;
   106|      2|    }
   107|       |
-  108|  1.87k|    for (uint8_t i = 0; i < iterations; ++i) {
+  108|  1.85k|    for (uint8_t i = 0; i < iterations; ++i) {
   ------------------
-  |  Branch (108:25): [True: 1.84k, False: 24]
+  |  Branch (108:25): [True: 1.83k, False: 22]
   ------------------
-  109|  1.84k|        networking_poll(net.get(), nullptr);
-  110|  1.84k|        do_dht(dht.get());
-  111|  1.84k|        do_net_crypto(net_crypto.get(), nullptr);
+  109|  1.83k|        networking_poll(net.get(), nullptr);
+  110|  1.83k|        do_dht(dht.get());
+  111|  1.83k|        do_net_crypto(net_crypto.get(), nullptr);
   112|       |
-  113|  1.84k|        env.advance_time(200);
-  114|  1.84k|    }
+  113|  1.83k|        env.advance_time(200);
+  114|  1.83k|    }
   115|       |
-  116|     24|    netprof_kill(&node->c_memory, tcp_np);
-  117|     24|}
+  116|     22|    netprof_kill(&node->c_memory, tcp_np);
+  117|     22|}
 net_crypto_fuzz_test.cc:_ZN12_GLOBAL__N_17prepareERN3tox4test9Fuzz_DataE:
-   28|     44|{
-   29|     44|    IP_Port ipp;
-   30|     44|    ip_init(&ipp.ip, true);
-   31|     44|    ipp.port = 33445;
+   28|     42|{
+   29|     42|    IP_Port ipp;
+   30|     42|    ip_init(&ipp.ip, true);
+   31|     42|    ipp.port = 33445;
    32|       |
-   33|     44|    CONSUME_OR_RETURN_VAL(const uint8_t *iterations_packed, input, 1, std::nullopt);
+   33|     42|    CONSUME_OR_RETURN_VAL(const uint8_t *iterations_packed, input, 1, std::nullopt);
   ------------------
-  |  |  142|     44|    if ((INPUT).size() < (SIZE)) {                    \
+  |  |  142|     42|    if ((INPUT).size() < (SIZE)) {                    \
   |  |  ------------------
-  |  |  |  Branch (142:9): [True: 1, False: 43]
+  |  |  |  Branch (142:9): [True: 1, False: 41]
   |  |  ------------------
   |  |  143|      1|        return (VAL);                                 \
   |  |  144|      1|    }                                                 \
-  |  |  145|     44|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  145|     42|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   34|     43|    uint8_t iterations = *iterations_packed;
+   34|     41|    uint8_t iterations = *iterations_packed;
    35|       |
-   36|     43|    return {{ipp, iterations}};
-   37|     44|}
+   36|     41|    return {{ipp, iterations}};
+   37|     42|}
 net_crypto_fuzz_test.cc:_ZZN12_GLOBAL__N_113TestNetCryptoERN3tox4test9Fuzz_DataEENK3$_1clEPv:
-   76|  1.88k|            [](void *user_data) { return static_cast<FakeClock *>(user_data)->current_time_ms(); },
+   76|  1.87k|            [](void *user_data) { return static_cast<FakeClock *>(user_data)->current_time_ms(); },
 net_crypto_fuzz_test.cc:_ZZN12_GLOBAL__N_113TestNetCryptoERN3tox4test9Fuzz_DataEENK3$_0clEP9Mono_Time:
-   78|     38|        [&node](Mono_Time *ptr) { mono_time_free(&node->c_memory, ptr); });
+   78|     36|        [&node](Mono_Time *ptr) { mono_time_free(&node->c_memory, ptr); });
 net_crypto_fuzz_test.cc:_ZNK12_GLOBAL__N_13$_4clEPKv:
-   44|     25|    [](const void *dht) { return dht_get_self_secret_key(static_cast<const DHT *>(dht)); },
+   44|     23|    [](const void *dht) { return dht_get_self_secret_key(static_cast<const DHT *>(dht)); },
 
 netprof_new:
-  139|     68|{
-  140|     68|    Net_Profile *np = (Net_Profile *)mem_alloc(mem, sizeof(Net_Profile));
+  139|     64|{
+  140|     64|    Net_Profile *np = (Net_Profile *)mem_alloc(mem, sizeof(Net_Profile));
   141|       |
-  142|     68|    if (np == nullptr) {
+  142|     64|    if (np == nullptr) {
   ------------------
-  |  |   63|     68|#define nullptr NULL
+  |  |   63|     64|#define nullptr NULL
   ------------------
-  |  Branch (142:9): [True: 2, False: 66]
+  |  Branch (142:9): [True: 2, False: 62]
   ------------------
   143|      2|        LOGGER_ERROR(log, "failed to allocate memory for net profiler");
   ------------------
@@ -3211,121 +3211,121 @@ netprof_new:
   ------------------
   145|      2|    }
   146|       |
-  147|     66|    return np;
-  148|     68|}
+  147|     62|    return np;
+  148|     64|}
 netprof_kill:
-  151|     66|{
-  152|     66|    if (net_profile != nullptr) {
+  151|     62|{
+  152|     62|    if (net_profile != nullptr) {
   ------------------
-  |  |   63|     66|#define nullptr NULL
+  |  |   63|     62|#define nullptr NULL
   ------------------
-  |  Branch (152:9): [True: 66, False: 0]
+  |  Branch (152:9): [True: 62, False: 0]
   ------------------
-  153|     66|        mem_delete(mem, net_profile);
-  154|     66|    }
-  155|     66|}
+  153|     62|        mem_delete(mem, net_profile);
+  154|     62|    }
+  155|     62|}
 
 net_socket_to_native:
-  366|  2.20k|{
-  367|  2.20k|    return (force int)sock.value;
-  368|  2.20k|}
+  366|  2.18k|{
+  367|  2.18k|    return (force int)sock.value;
+  368|  2.18k|}
 net_socket_from_native:
-  371|    123|{
-  372|    123|    const Socket res = {(force Socket_Value)sock};
-  373|    123|    return res;
-  374|    123|}
+  371|    117|{
+  372|    117|    const Socket res = {(force Socket_Value)sock};
+  373|    117|    return res;
+  374|    117|}
 net_invalid_socket:
-  377|     40|{
-  378|     40|    return net_socket_from_native(INVALID_SOCKET);
+  377|     38|{
+  378|     38|    return net_socket_from_native(INVALID_SOCKET);
   ------------------
-  |  |  362|     40|#define INVALID_SOCKET (-1)
+  |  |  362|     38|#define INVALID_SOCKET (-1)
   ------------------
-  379|     40|}
+  379|     38|}
 net_family_unspec:
-  382|     55|{
-  383|     55|    return family_unspec;
-  384|     55|}
+  382|     51|{
+  383|     51|    return family_unspec;
+  384|     51|}
 net_family_ipv4:
-  387|     43|{
-  388|     43|    return family_ipv4;
-  389|     43|}
+  387|     41|{
+  388|     41|    return family_ipv4;
+  389|     41|}
 net_family_ipv6:
-  392|     84|{
-  393|     84|    return family_ipv6;
-  394|     84|}
+  392|     80|{
+  393|     80|    return family_ipv6;
+  394|     80|}
 net_family_is_unspec:
-  427|  2.02k|{
-  428|  2.02k|    return family.value == family_unspec.value;
-  429|  2.02k|}
+  427|  2.00k|{
+  428|  2.00k|    return family.value == family_unspec.value;
+  429|  2.00k|}
 net_family_is_ipv4:
-  432|  57.1k|{
-  433|  57.1k|    return family.value == family_ipv4.value;
-  434|  57.1k|}
+  432|  53.0k|{
+  433|  53.0k|    return family.value == family_ipv4.value;
+  434|  53.0k|}
 net_family_is_ipv6:
-  437|  57.2k|{
-  438|  57.2k|    return family.value == family_ipv6.value;
-  439|  57.2k|}
+  437|  53.1k|{
+  438|  53.1k|    return family.value == family_ipv6.value;
+  439|  53.1k|}
 sock_valid:
-  472|     40|{
-  473|     40|    const Socket invalid_socket = net_invalid_socket();
-  474|     40|    return sock.value != invalid_socket.value;
-  475|     40|}
+  472|     38|{
+  473|     38|    const Socket invalid_socket = net_invalid_socket();
+  474|     38|    return sock.value != invalid_socket.value;
+  475|     38|}
 kill_sock:
-  824|     40|{
-  825|     40|    ns->funcs->close(ns->obj, sock);
-  826|     40|}
+  824|     38|{
+  825|     38|    ns->funcs->close(ns->obj, sock);
+  826|     38|}
 set_socket_nonblock:
-  829|     40|{
+  829|     38|{
   830|       |    return ns->funcs->socket_nonblock(ns->obj, sock, true) == 0;
-  831|     40|}
+  831|     38|}
 set_socket_nosigpipe:
-  834|     40|{
+  834|     38|{
   835|       |#if defined(__APPLE__)
   836|       |    int set = 1;
   837|       |    return net_setsockopt(ns, sock, SOL_SOCKET, SO_NOSIGPIPE, &set, sizeof(int)) == 0;
   838|       |#else
   839|       |    return true;
-  840|     40|#endif /* __APPLE__ */
-  841|     40|}
+  840|     38|#endif /* __APPLE__ */
+  841|     38|}
 set_socket_dualstack:
-  854|     40|{
-  855|     40|    int ipv6only = 0;
-  856|     40|    size_t optsize = sizeof(ipv6only);
-  857|     40|    const int res = net_getsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, &optsize);
+  854|     38|{
+  855|     38|    int ipv6only = 0;
+  856|     38|    size_t optsize = sizeof(ipv6only);
+  857|     38|    const int res = net_getsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, &optsize);
   858|       |
-  859|     40|    if ((res == 0) && (ipv6only == 0)) {
+  859|     38|    if ((res == 0) && (ipv6only == 0)) {
   ------------------
-  |  Branch (859:9): [True: 40, False: 0]
-  |  Branch (859:23): [True: 40, False: 0]
+  |  Branch (859:9): [True: 38, False: 0]
+  |  Branch (859:23): [True: 38, False: 0]
   ------------------
-  860|     40|        return true;
-  861|     40|    }
+  860|     38|        return true;
+  861|     38|    }
   862|       |
   863|      0|    ipv6only = 0;
   864|      0|    return net_setsockopt(ns, sock, IPPROTO_IPV6, IPV6_V6ONLY, &ipv6only, sizeof(ipv6only)) == 0;
-  865|     40|}
+  865|     38|}
 networking_registerhandler:
- 1000|    646|{
- 1001|    646|    net->packethandlers[byte].function = cb;
- 1002|    646|    net->packethandlers[byte].object = object;
- 1003|    646|}
+ 1000|    604|{
+ 1001|    604|    net->packethandlers[byte].function = cb;
+ 1002|    604|    net->packethandlers[byte].object = object;
+ 1003|    604|}
 networking_poll:
- 1006|  1.84k|{
- 1007|  1.84k|    if (net_family_is_unspec(net->family)) {
+ 1006|  1.83k|{
+ 1007|  1.83k|    if (net_family_is_unspec(net->family)) {
   ------------------
-  |  Branch (1007:9): [True: 0, False: 1.84k]
+  |  Branch (1007:9): [True: 0, False: 1.83k]
   ------------------
  1008|       |        /* Socket not initialized */
  1009|      0|        return;
  1010|      0|    }
  1011|       |
- 1012|  1.84k|    IP_Port ip_port;
- 1013|  1.84k|    uint8_t data[MAX_UDP_PACKET_SIZE] = {0};
- 1014|  1.84k|    uint32_t length;
+ 1012|  1.83k|    IP_Port ip_port;
+ 1013|  1.83k|    uint8_t data[MAX_UDP_PACKET_SIZE] = {0};
+ 1014|  1.83k|    uint32_t length;
  1015|       |
- 1016|  1.84k|    while (receivepacket(net->ns, net->log, net->sock, &ip_port, data, &length) != -1) {
+ 1016|  1.83k|    while (receivepacket(net->ns, net->log, net->sock, &ip_port, data, &length) != -1) {
   ------------------
-  |  Branch (1016:12): [True: 0, False: 1.84k]
+  |  Branch (1016:12): [True: 0, False: 1.83k]
   ------------------
  1017|      0|        if (length < 1) {
   ------------------
@@ -3370,16 +3370,16 @@ networking_poll:
  1031|       |
  1032|      0|        handler->function(handler->object, &ip_port, data, length, userdata);
  1033|      0|    }
- 1034|  1.84k|}
+ 1034|  1.83k|}
 new_networking_ex:
- 1049|     42|{
+ 1049|     40|{
  1050|       |    /* If both from and to are 0, use default port range
  1051|       |     * If one is 0 and the other is non-0, use the non-0 value as only port
  1052|       |     * If from > to, swap
  1053|       |     */
- 1054|     42|    if (port_from == 0 && port_to == 0) {
+ 1054|     40|    if (port_from == 0 && port_to == 0) {
   ------------------
-  |  Branch (1054:9): [True: 0, False: 42]
+  |  Branch (1054:9): [True: 0, False: 40]
   |  Branch (1054:27): [True: 0, False: 0]
   ------------------
  1055|      0|        port_from = TOX_PORTRANGE_FROM;
@@ -3390,41 +3390,41 @@ new_networking_ex:
   ------------------
   |  |  192|      0|#define TOX_PORTRANGE_TO   33545
   ------------------
- 1057|     42|    } else if (port_from == 0 && port_to != 0) {
+ 1057|     40|    } else if (port_from == 0 && port_to != 0) {
   ------------------
-  |  Branch (1057:16): [True: 0, False: 42]
+  |  Branch (1057:16): [True: 0, False: 40]
   |  Branch (1057:34): [True: 0, False: 0]
   ------------------
  1058|      0|        port_from = port_to;
- 1059|     42|    } else if (port_from != 0 && port_to == 0) {
+ 1059|     40|    } else if (port_from != 0 && port_to == 0) {
   ------------------
-  |  Branch (1059:16): [True: 42, False: 0]
-  |  Branch (1059:34): [True: 0, False: 42]
+  |  Branch (1059:16): [True: 40, False: 0]
+  |  Branch (1059:34): [True: 0, False: 40]
   ------------------
  1060|      0|        port_to = port_from;
- 1061|     42|    } else if (port_from > port_to) {
+ 1061|     40|    } else if (port_from > port_to) {
   ------------------
-  |  Branch (1061:16): [True: 0, False: 42]
+  |  Branch (1061:16): [True: 0, False: 40]
   ------------------
  1062|      0|        const uint16_t temp_port = port_from;
  1063|      0|        port_from = port_to;
  1064|      0|        port_to = temp_port;
  1065|      0|    }
  1066|       |
- 1067|     42|    if (error != nullptr) {
+ 1067|     40|    if (error != nullptr) {
   ------------------
-  |  |   63|     42|#define nullptr NULL
+  |  |   63|     40|#define nullptr NULL
   ------------------
-  |  Branch (1067:9): [True: 0, False: 42]
+  |  Branch (1067:9): [True: 0, False: 40]
   ------------------
  1068|      0|        *error = 2;
  1069|      0|    }
  1070|       |
  1071|       |    /* maybe check for invalid IPs like 224+.x.y.z? if there is any IP set ever */
- 1072|     42|    if (!net_family_is_ipv4(ip->family) && !net_family_is_ipv6(ip->family)) {
+ 1072|     40|    if (!net_family_is_ipv4(ip->family) && !net_family_is_ipv6(ip->family)) {
   ------------------
-  |  Branch (1072:9): [True: 42, False: 0]
-  |  Branch (1072:44): [True: 0, False: 42]
+  |  Branch (1072:9): [True: 40, False: 0]
+  |  Branch (1072:44): [True: 0, False: 40]
   ------------------
  1073|      0|        LOGGER_ERROR(log, "invalid address family: %u", ip->family.value);
   ------------------
@@ -3451,13 +3451,13 @@ new_networking_ex:
   ------------------
  1075|      0|    }
  1076|       |
- 1077|     42|    Networking_Core *temp = (Networking_Core *)mem_alloc(mem, sizeof(Networking_Core));
+ 1077|     40|    Networking_Core *temp = (Networking_Core *)mem_alloc(mem, sizeof(Networking_Core));
  1078|       |
- 1079|     42|    if (temp == nullptr) {
+ 1079|     40|    if (temp == nullptr) {
   ------------------
-  |  |   63|     42|#define nullptr NULL
+  |  |   63|     40|#define nullptr NULL
   ------------------
-  |  Branch (1079:9): [True: 1, False: 41]
+  |  Branch (1079:9): [True: 1, False: 39]
   ------------------
  1080|      1|        return nullptr;
   ------------------
@@ -3465,13 +3465,13 @@ new_networking_ex:
   ------------------
  1081|      1|    }
  1082|       |
- 1083|     41|    Net_Profile *np = netprof_new(log, mem);
+ 1083|     39|    Net_Profile *np = netprof_new(log, mem);
  1084|       |
- 1085|     41|    if (np == nullptr) {
+ 1085|     39|    if (np == nullptr) {
   ------------------
-  |  |   63|     41|#define nullptr NULL
+  |  |   63|     39|#define nullptr NULL
   ------------------
-  |  Branch (1085:9): [True: 1, False: 40]
+  |  Branch (1085:9): [True: 1, False: 38]
   ------------------
  1086|      1|        free(temp);
  1087|      1|        return nullptr;
@@ -3480,28 +3480,28 @@ new_networking_ex:
   ------------------
  1088|      1|    }
  1089|       |
- 1090|     40|    temp->udp_net_profile = np;
- 1091|     40|    temp->ns = ns;
- 1092|     40|    temp->log = log;
- 1093|     40|    temp->mem = mem;
- 1094|     40|    temp->family = ip->family;
- 1095|     40|    temp->port = 0;
+ 1090|     38|    temp->udp_net_profile = np;
+ 1091|     38|    temp->ns = ns;
+ 1092|     38|    temp->log = log;
+ 1093|     38|    temp->mem = mem;
+ 1094|     38|    temp->family = ip->family;
+ 1095|     38|    temp->port = 0;
  1096|       |
  1097|       |    /* Initialize our socket. */
  1098|       |    /* add log message what we're creating */
- 1099|     40|    temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
+ 1099|     38|    temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
   ------------------
-  |  |  203|     40|#define TOX_SOCK_DGRAM 2
+  |  |  203|     38|#define TOX_SOCK_DGRAM 2
   ------------------
                   temp->sock = net_socket(ns, temp->family, TOX_SOCK_DGRAM, TOX_PROTO_UDP);
   ------------------
-  |  |  206|     40|#define TOX_PROTO_UDP 2
+  |  |  206|     38|#define TOX_PROTO_UDP 2
   ------------------
  1100|       |
  1101|       |    /* Check for socket error. */
- 1102|     40|    if (!sock_valid(temp->sock)) {
+ 1102|     38|    if (!sock_valid(temp->sock)) {
   ------------------
-  |  Branch (1102:9): [True: 0, False: 40]
+  |  Branch (1102:9): [True: 0, False: 38]
   ------------------
  1103|      0|        const int neterror = net_error();
  1104|      0|        Net_Strerror error_str;
@@ -3544,11 +3544,11 @@ new_networking_ex:
  1115|       |
  1116|       |    /* Functions to increase the size of the send and receive UDP buffers.
  1117|       |     */
- 1118|     40|    int n = 1024 * 1024 * 2;
+ 1118|     38|    int n = 1024 * 1024 * 2;
  1119|       |
- 1120|     40|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n)) != 0) {
+ 1120|     38|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n)) != 0) {
   ------------------
-  |  Branch (1120:9): [True: 0, False: 40]
+  |  Branch (1120:9): [True: 0, False: 38]
   ------------------
  1121|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_RCVBUF);
   ------------------
@@ -3571,9 +3571,9 @@ new_networking_ex:
   ------------------
  1122|      0|    }
  1123|       |
- 1124|     40|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_SNDBUF, &n, sizeof(n)) != 0) {
+ 1124|     38|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_SNDBUF, &n, sizeof(n)) != 0) {
   ------------------
-  |  Branch (1124:9): [True: 0, False: 40]
+  |  Branch (1124:9): [True: 0, False: 38]
   ------------------
  1125|      0|        LOGGER_WARNING(log, "failed to set socket option %d", SO_SNDBUF);
   ------------------
@@ -3597,11 +3597,11 @@ new_networking_ex:
  1126|      0|    }
  1127|       |
  1128|       |    /* Enable broadcast on socket */
- 1129|     40|    int broadcast = 1;
+ 1129|     38|    int broadcast = 1;
  1130|       |
- 1131|     40|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0) {
+ 1131|     38|    if (net_setsockopt(ns, temp->sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast)) != 0) {
   ------------------
-  |  Branch (1131:9): [True: 0, False: 40]
+  |  Branch (1131:9): [True: 0, False: 38]
   ------------------
  1132|      0|        LOGGER_ERROR(log, "failed to set socket option %d", SO_BROADCAST);
   ------------------
@@ -3625,9 +3625,9 @@ new_networking_ex:
  1133|      0|    }
  1134|       |
  1135|       |    /* iOS UDP sockets are weird and apparently can SIGPIPE */
- 1136|     40|    if (!set_socket_nosigpipe(ns, temp->sock)) {
+ 1136|     38|    if (!set_socket_nosigpipe(ns, temp->sock)) {
   ------------------
-  |  Branch (1136:9): [True: 0, False: 40]
+  |  Branch (1136:9): [True: 0, False: 38]
   ------------------
  1137|      0|        kill_networking(temp);
  1138|       |
@@ -3647,9 +3647,9 @@ new_networking_ex:
  1144|      0|    }
  1145|       |
  1146|       |    /* Set socket nonblocking. */
- 1147|     40|    if (!set_socket_nonblock(ns, temp->sock)) {
+ 1147|     38|    if (!set_socket_nonblock(ns, temp->sock)) {
   ------------------
-  |  Branch (1147:9): [True: 0, False: 40]
+  |  Branch (1147:9): [True: 0, False: 38]
   ------------------
  1148|      0|        kill_networking(temp);
  1149|       |
@@ -3669,22 +3669,22 @@ new_networking_ex:
  1155|      0|    }
  1156|       |
  1157|       |    /* Bind our socket to port PORT and the given IP address (usually 0.0.0.0 or ::) */
- 1158|     40|    uint16_t *portptr = nullptr;
+ 1158|     38|    uint16_t *portptr = nullptr;
   ------------------
-  |  |   63|     40|#define nullptr NULL
+  |  |   63|     38|#define nullptr NULL
   ------------------
- 1159|     40|    IP_Port addr;
- 1160|     40|    ip_init(&addr.ip, net_family_is_ipv6(temp->family));
+ 1159|     38|    IP_Port addr;
+ 1160|     38|    ip_init(&addr.ip, net_family_is_ipv6(temp->family));
  1161|       |
- 1162|     40|    if (net_family_is_ipv4(temp->family) || net_family_is_ipv6(temp->family)) {
+ 1162|     38|    if (net_family_is_ipv4(temp->family) || net_family_is_ipv6(temp->family)) {
   ------------------
-  |  Branch (1162:9): [True: 0, False: 40]
-  |  Branch (1162:45): [True: 40, False: 0]
+  |  Branch (1162:9): [True: 0, False: 38]
+  |  Branch (1162:45): [True: 38, False: 0]
   ------------------
- 1163|     40|        ip_copy(&addr.ip, ip);
- 1164|     40|        addr.port = 0;
- 1165|     40|        portptr = &addr.port;
- 1166|     40|    } else {
+ 1163|     38|        ip_copy(&addr.ip, ip);
+ 1164|     38|        addr.port = 0;
+ 1165|     38|        portptr = &addr.port;
+ 1166|     38|    } else {
  1167|      0|        mem_delete(mem, temp);
  1168|      0|        return nullptr;
   ------------------
@@ -3692,36 +3692,36 @@ new_networking_ex:
   ------------------
  1169|      0|    }
  1170|       |
- 1171|     40|    if (net_family_is_ipv6(ip->family)) {
+ 1171|     38|    if (net_family_is_ipv6(ip->family)) {
   ------------------
-  |  Branch (1171:9): [True: 40, False: 0]
+  |  Branch (1171:9): [True: 38, False: 0]
   ------------------
- 1172|     40|        const bool is_dualstack = set_socket_dualstack(ns, temp->sock);
+ 1172|     38|        const bool is_dualstack = set_socket_dualstack(ns, temp->sock);
  1173|       |
- 1174|     40|        if (is_dualstack) {
+ 1174|     38|        if (is_dualstack) {
   ------------------
-  |  Branch (1174:13): [True: 40, False: 0]
+  |  Branch (1174:13): [True: 38, False: 0]
   ------------------
- 1175|     40|            LOGGER_TRACE(log, "Dual-stack socket: enabled");
+ 1175|     38|            LOGGER_TRACE(log, "Dual-stack socket: enabled");
   ------------------
-  |  |   76|     40|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
+  |  |   76|     38|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|     40|    do {                                                                         \
-  |  |  |  |   70|     40|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|     38|    do {                                                                         \
+  |  |  |  |   70|     38|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     80|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|     76|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [Folded, False: 40]
+  |  |  |  |  |  Branch (70:13): [Folded, False: 38]
   |  |  |  |  ------------------
   |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
   |  |  |  |   72|      0|        }                                                                        \
-  |  |  |  |   73|     40|    } while (0)
+  |  |  |  |   73|     38|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 40]
+  |  |  |  |  |  Branch (73:14): [Folded, False: 38]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1176|     40|        } else {
+ 1176|     38|        } else {
  1177|      0|            LOGGER_ERROR(log, "Dual-stack socket failed to enable, won't be able to receive from/send to IPv4 addresses");
   ------------------
   |  |   80|      0|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
@@ -3743,22 +3743,22 @@ new_networking_ex:
   ------------------
  1178|      0|        }
  1179|       |
- 1180|     40|#ifndef ESP_PLATFORM
+ 1180|     38|#ifndef ESP_PLATFORM
  1181|       |        /* multicast local nodes */
- 1182|     40|        struct ipv6_mreq mreq = {{{{0}}}};
- 1183|     40|        mreq.ipv6mr_multiaddr.s6_addr[0] = 0xFF;
- 1184|     40|        mreq.ipv6mr_multiaddr.s6_addr[1] = 0x02;
- 1185|     40|        mreq.ipv6mr_multiaddr.s6_addr[15] = 0x01;
- 1186|     40|        mreq.ipv6mr_interface = 0;
+ 1182|     38|        struct ipv6_mreq mreq = {{{{0}}}};
+ 1183|     38|        mreq.ipv6mr_multiaddr.s6_addr[0] = 0xFF;
+ 1184|     38|        mreq.ipv6mr_multiaddr.s6_addr[1] = 0x02;
+ 1185|     38|        mreq.ipv6mr_multiaddr.s6_addr[15] = 0x01;
+ 1186|     38|        mreq.ipv6mr_interface = 0;
  1187|       |
- 1188|     40|        const int res = net_setsockopt(ns, temp->sock, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, &mreq, sizeof(mreq));
+ 1188|     38|        const int res = net_setsockopt(ns, temp->sock, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, &mreq, sizeof(mreq));
  1189|       |
- 1190|     40|        const int neterror = net_error();
- 1191|     40|        Net_Strerror error_str;
+ 1190|     38|        const int neterror = net_error();
+ 1191|     38|        Net_Strerror error_str;
  1192|       |
- 1193|     40|        if (res < 0) {
+ 1193|     38|        if (res < 0) {
   ------------------
-  |  Branch (1193:13): [True: 0, False: 40]
+  |  Branch (1193:13): [True: 0, False: 38]
   ------------------
  1194|      0|            LOGGER_INFO(log, "Failed to activate local multicast membership in FF02::1. (%d, %s)", neterror, net_strerror(neterror, &error_str));
   ------------------
@@ -3779,29 +3779,29 @@ new_networking_ex:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1195|     40|        } else {
- 1196|     40|            LOGGER_TRACE(log, "Local multicast group joined successfully. (%d, %s)", neterror, net_strerror(neterror, &error_str));
+ 1195|     38|        } else {
+ 1196|     38|            LOGGER_TRACE(log, "Local multicast group joined successfully. (%d, %s)", neterror, net_strerror(neterror, &error_str));
   ------------------
-  |  |   76|     40|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
+  |  |   76|     38|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|     40|    do {                                                                         \
-  |  |  |  |   70|     40|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|     38|    do {                                                                         \
+  |  |  |  |   70|     38|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     80|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|     76|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [Folded, False: 40]
+  |  |  |  |  |  Branch (70:13): [Folded, False: 38]
   |  |  |  |  ------------------
   |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
   |  |  |  |   72|      0|        }                                                                        \
-  |  |  |  |   73|     40|    } while (0)
+  |  |  |  |   73|     38|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 40]
+  |  |  |  |  |  Branch (73:14): [Folded, False: 38]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1197|     40|        }
- 1198|     40|#endif /* ESP_PLATFORM */
- 1199|     40|    }
+ 1197|     38|        }
+ 1198|     38|#endif /* ESP_PLATFORM */
+ 1199|     38|    }
  1200|       |
  1201|       |    /* A hanging program or a different user might block the standard port.
  1202|       |     * As long as it isn't a parameter coming from the commandline,
@@ -3819,64 +3819,64 @@ new_networking_ex:
  1214|       |     *   some clients might not test return of tox_new(), blindly assuming that
  1215|       |     *   it worked ok (which it did previously without a successful bind)
  1216|       |     */
- 1217|     40|    uint16_t port_to_try = port_from;
- 1218|     40|    *portptr = net_htons(port_to_try);
+ 1217|     38|    uint16_t port_to_try = port_from;
+ 1218|     38|    *portptr = net_htons(port_to_try);
  1219|       |
- 1220|     40|    for (uint16_t tries = port_from; tries <= port_to; ++tries) {
+ 1220|     38|    for (uint16_t tries = port_from; tries <= port_to; ++tries) {
   ------------------
-  |  Branch (1220:38): [True: 40, False: 0]
+  |  Branch (1220:38): [True: 38, False: 0]
   ------------------
- 1221|     40|        const int res = net_bind(ns, temp->sock, &addr);
+ 1221|     38|        const int res = net_bind(ns, temp->sock, &addr);
  1222|       |
- 1223|     40|        if (res == 0) {
+ 1223|     38|        if (res == 0) {
   ------------------
-  |  Branch (1223:13): [True: 40, False: 0]
+  |  Branch (1223:13): [True: 38, False: 0]
   ------------------
- 1224|     40|            temp->port = *portptr;
+ 1224|     38|            temp->port = *portptr;
  1225|       |
- 1226|     40|            Ip_Ntoa ip_str;
- 1227|     40|            LOGGER_DEBUG(log, "Bound successfully to %s:%u", net_ip_ntoa(ip, &ip_str),
+ 1226|     38|            Ip_Ntoa ip_str;
+ 1227|     38|            LOGGER_DEBUG(log, "Bound successfully to %s:%u", net_ip_ntoa(ip, &ip_str),
   ------------------
-  |  |   77|     40|#define LOGGER_DEBUG(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_DEBUG, __VA_ARGS__)
+  |  |   77|     38|#define LOGGER_DEBUG(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_DEBUG, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|     40|    do {                                                                         \
-  |  |  |  |   70|     40|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|     38|    do {                                                                         \
+  |  |  |  |   70|     38|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     80|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|     76|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [Folded, False: 40]
+  |  |  |  |  |  Branch (70:13): [Folded, False: 38]
   |  |  |  |  ------------------
   |  |  |  |   71|      0|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
   |  |  |  |   72|      0|        }                                                                        \
-  |  |  |  |   73|     40|    } while (0)
+  |  |  |  |   73|     38|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 40]
+  |  |  |  |  |  Branch (73:14): [Folded, False: 38]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1228|     40|                         net_ntohs(temp->port));
+ 1228|     38|                         net_ntohs(temp->port));
  1229|       |
  1230|       |            /* errno isn't reset on success, only set on failure, the failed
  1231|       |             * binds with parallel clients yield a -EPERM to the outside if
  1232|       |             * errno isn't cleared here */
- 1233|     40|            if (tries > 0) {
+ 1233|     38|            if (tries > 0) {
   ------------------
-  |  Branch (1233:17): [True: 40, False: 0]
+  |  Branch (1233:17): [True: 38, False: 0]
   ------------------
- 1234|     40|                errno = 0;
- 1235|     40|            }
+ 1234|     38|                errno = 0;
+ 1235|     38|            }
  1236|       |
- 1237|     40|            if (error != nullptr) {
+ 1237|     38|            if (error != nullptr) {
   ------------------
-  |  |   63|     40|#define nullptr NULL
+  |  |   63|     38|#define nullptr NULL
   ------------------
-  |  Branch (1237:17): [True: 0, False: 40]
+  |  Branch (1237:17): [True: 0, False: 38]
   ------------------
  1238|      0|                *error = 0;
  1239|      0|            }
  1240|       |
- 1241|     40|            return temp;
- 1242|     40|        }
+ 1241|     38|            return temp;
+ 1242|     38|        }
  1243|       |
  1244|      0|        ++port_to_try;
  1245|       |
@@ -3928,123 +3928,123 @@ new_networking_ex:
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
- 1265|     40|}
+ 1265|     38|}
 kill_networking:
- 1285|     40|{
- 1286|     40|    if (net == nullptr) {
+ 1285|     38|{
+ 1286|     38|    if (net == nullptr) {
   ------------------
-  |  |   63|     40|#define nullptr NULL
+  |  |   63|     38|#define nullptr NULL
   ------------------
-  |  Branch (1286:9): [True: 0, False: 40]
+  |  Branch (1286:9): [True: 0, False: 38]
   ------------------
  1287|      0|        return;
  1288|      0|    }
  1289|       |
- 1290|     40|    if (!net_family_is_unspec(net->family)) {
+ 1290|     38|    if (!net_family_is_unspec(net->family)) {
   ------------------
-  |  Branch (1290:9): [True: 40, False: 0]
+  |  Branch (1290:9): [True: 38, False: 0]
   ------------------
  1291|       |        /* Socket is initialized, so we close it. */
- 1292|     40|        kill_sock(net->ns, net->sock);
- 1293|     40|    }
+ 1292|     38|        kill_sock(net->ns, net->sock);
+ 1293|     38|    }
  1294|       |
- 1295|     40|    netprof_kill(net->mem, net->udp_net_profile);
- 1296|     40|    mem_delete(net->mem, net);
- 1297|     40|}
+ 1295|     38|    netprof_kill(net->mem, net->udp_net_profile);
+ 1296|     38|    mem_delete(net->mem, net);
+ 1297|     38|}
 ip_reset:
- 1410|    127|{
- 1411|    127|    if (ip == nullptr) {
+ 1410|    121|{
+ 1411|    121|    if (ip == nullptr) {
   ------------------
-  |  |   63|    127|#define nullptr NULL
+  |  |   63|    121|#define nullptr NULL
   ------------------
-  |  Branch (1411:9): [True: 0, False: 127]
+  |  Branch (1411:9): [True: 0, False: 121]
   ------------------
  1412|      0|        return;
  1413|      0|    }
  1414|       |
- 1415|    127|    *ip = empty_ip;
- 1416|    127|}
+ 1415|    121|    *ip = empty_ip;
+ 1416|    121|}
 ip_init:
- 1432|    127|{
- 1433|    127|    if (ip == nullptr) {
+ 1432|    121|{
+ 1433|    121|    if (ip == nullptr) {
   ------------------
-  |  |   63|    127|#define nullptr NULL
+  |  |   63|    121|#define nullptr NULL
   ------------------
-  |  Branch (1433:9): [True: 0, False: 127]
+  |  Branch (1433:9): [True: 0, False: 121]
   ------------------
  1434|      0|        return;
  1435|      0|    }
  1436|       |
- 1437|    127|    ip_reset(ip);
- 1438|    127|    ip->family = ipv6enabled ? net_family_ipv6() : net_family_ipv4();
+ 1437|    121|    ip_reset(ip);
+ 1438|    121|    ip->family = ipv6enabled ? net_family_ipv6() : net_family_ipv4();
   ------------------
-  |  Branch (1438:18): [True: 84, False: 43]
+  |  Branch (1438:18): [True: 80, False: 41]
   ------------------
- 1439|    127|}
+ 1439|    121|}
 ip_copy:
- 1467|     40|{
- 1468|     40|    if (source == nullptr || target == nullptr) {
+ 1467|     38|{
+ 1468|     38|    if (source == nullptr || target == nullptr) {
   ------------------
-  |  |   63|     80|#define nullptr NULL
+  |  |   63|     76|#define nullptr NULL
   ------------------
                   if (source == nullptr || target == nullptr) {
   ------------------
-  |  |   63|     40|#define nullptr NULL
+  |  |   63|     38|#define nullptr NULL
   ------------------
-  |  Branch (1468:9): [True: 0, False: 40]
-  |  Branch (1468:30): [True: 0, False: 40]
+  |  Branch (1468:9): [True: 0, False: 38]
+  |  Branch (1468:30): [True: 0, False: 38]
   ------------------
  1469|      0|        return;
  1470|      0|    }
  1471|       |
- 1472|     40|    *target = *source;
- 1473|     40|}
+ 1472|     38|    *target = *source;
+ 1473|     38|}
 net_socket:
- 1941|     40|{
- 1942|     40|    const int platform_domain = make_family(domain);
- 1943|     40|    const int platform_type = make_socktype(type);
- 1944|     40|    const int platform_prot = make_proto(protocol);
- 1945|     40|    return ns->funcs->socket(ns->obj, platform_domain, platform_type, platform_prot);
- 1946|     40|}
+ 1941|     38|{
+ 1942|     38|    const int platform_domain = make_family(domain);
+ 1943|     38|    const int platform_type = make_socktype(type);
+ 1944|     38|    const int platform_prot = make_proto(protocol);
+ 1945|     38|    return ns->funcs->socket(ns->obj, platform_domain, platform_type, platform_prot);
+ 1946|     38|}
 net_htons:
- 1960|     40|{
+ 1960|     38|{
  1961|       |    return htons(hostshort);
- 1962|     40|}
+ 1962|     38|}
 net_error:
- 2045|  1.88k|{
+ 2045|  1.87k|{
  2046|       |#ifdef OS_WIN32
  2047|       |    return WSAGetLastError();
  2048|       |#else
  2049|       |    return errno;
- 2050|  1.88k|#endif /* OS_WIN32 */
- 2051|  1.88k|}
+ 2050|  1.87k|#endif /* OS_WIN32 */
+ 2051|  1.87k|}
 network.c:net_setsockopt:
-  767|    160|{
-  768|    160|    return ns->funcs->setsockopt(ns->obj, sock, level, optname, optval, optlen);
-  769|    160|}
+  767|    152|{
+  768|    152|    return ns->funcs->setsockopt(ns->obj, sock, level, optname, optval, optlen);
+  769|    152|}
 network.c:net_getsockopt:
-  772|     40|{
-  773|     40|    return ns->funcs->getsockopt(ns->obj, sock, level, optname, optval, optlen);
-  774|     40|}
+  772|     38|{
+  773|     38|    return ns->funcs->getsockopt(ns->obj, sock, level, optname, optval, optlen);
+  774|     38|}
 network.c:receivepacket:
-  970|  1.84k|{
-  971|  1.84k|    memset(ip_port, 0, sizeof(IP_Port));
-  972|  1.84k|    *length = 0;
+  970|  1.83k|{
+  971|  1.83k|    memset(ip_port, 0, sizeof(IP_Port));
+  972|  1.83k|    *length = 0;
   973|       |
-  974|  1.84k|    const int fail_or_len = net_recvfrom(ns, sock, data, MAX_UDP_PACKET_SIZE, ip_port);
+  974|  1.83k|    const int fail_or_len = net_recvfrom(ns, sock, data, MAX_UDP_PACKET_SIZE, ip_port);
   ------------------
-  |  |  140|  1.84k|#define MAX_UDP_PACKET_SIZE 2048
+  |  |  140|  1.83k|#define MAX_UDP_PACKET_SIZE 2048
   ------------------
   975|       |
-  976|  1.84k|    if (fail_or_len < 0) {
+  976|  1.83k|    if (fail_or_len < 0) {
   ------------------
-  |  Branch (976:9): [True: 1.84k, False: 0]
+  |  Branch (976:9): [True: 1.83k, False: 0]
   ------------------
-  977|  1.84k|        const int error = net_error();
+  977|  1.83k|        const int error = net_error();
   978|       |
-  979|  1.84k|        if (!should_ignore_recv_error(error)) {
+  979|  1.83k|        if (!should_ignore_recv_error(error)) {
   ------------------
-  |  Branch (979:13): [True: 0, False: 1.84k]
+  |  Branch (979:13): [True: 0, False: 1.83k]
   ------------------
   980|      0|            Net_Strerror error_str;
   981|      0|            LOGGER_ERROR(log, "unexpected error reading from socket: %u, %s", (unsigned int)error, net_strerror(error, &error_str));
@@ -4068,8 +4068,8 @@ network.c:receivepacket:
   ------------------
   982|      0|        }
   983|       |
-  984|  1.84k|        return -1; /* Nothing received. */
-  985|  1.84k|    }
+  984|  1.83k|        return -1; /* Nothing received. */
+  985|  1.83k|    }
   986|       |
   987|      0|    *length = (uint32_t)fail_or_len;
   988|       |
@@ -4088,27 +4088,27 @@ network.c:receivepacket:
   ------------------
   995|       |
   996|      0|    return 0;
-  997|  1.84k|}
+  997|  1.83k|}
 network.c:net_recvfrom:
-  803|  1.84k|{
-  804|  1.84k|    return ns->funcs->recvfrom(ns->obj, sock, buf, len, addr);
-  805|  1.84k|}
+  803|  1.83k|{
+  804|  1.83k|    return ns->funcs->recvfrom(ns->obj, sock, buf, len, addr);
+  805|  1.83k|}
 network.c:should_ignore_recv_error:
-  113|  1.84k|{
+  113|  1.83k|{
   114|       |    return err == EWOULDBLOCK;
-  115|  1.84k|}
+  115|  1.83k|}
 network.c:net_bind:
-  813|     40|{
-  814|     40|    return ns->funcs->bind(ns->obj, sock, addr);
-  815|     40|}
+  813|     38|{
+  814|     38|    return ns->funcs->bind(ns->obj, sock, addr);
+  815|     38|}
 network.c:make_family:
-  257|     40|{
-  258|     40|    switch (tox_family.value) {
+  257|     38|{
+  258|     38|    switch (tox_family.value) {
   259|      0|        case TOX_AF_INET:
   ------------------
   |  |  197|      0|#define TOX_AF_INET 2
   ------------------
-  |  Branch (259:9): [True: 0, False: 40]
+  |  Branch (259:9): [True: 0, False: 38]
   ------------------
   260|      0|        case TCP_INET:
   ------------------
@@ -4117,104 +4117,104 @@ network.c:make_family:
   |  |  |  |  198|      0|#define TOX_AF_INET6 10
   |  |  ------------------
   ------------------
-  |  Branch (260:9): [True: 0, False: 40]
+  |  Branch (260:9): [True: 0, False: 38]
   ------------------
   261|      0|            return AF_INET;
   262|       |
-  263|     40|        case TOX_AF_INET6:
+  263|     38|        case TOX_AF_INET6:
   ------------------
-  |  |  198|     40|#define TOX_AF_INET6 10
+  |  |  198|     38|#define TOX_AF_INET6 10
   ------------------
-  |  Branch (263:9): [True: 40, False: 0]
+  |  Branch (263:9): [True: 38, False: 0]
   ------------------
-  264|     40|        case TCP_INET6:
+  264|     38|        case TCP_INET6:
   ------------------
-  |  |  211|     40|#define TCP_INET6 (TOX_AF_INET6 + 3)
+  |  |  211|     38|#define TCP_INET6 (TOX_AF_INET6 + 3)
   |  |  ------------------
-  |  |  |  |  198|     40|#define TOX_AF_INET6 10
+  |  |  |  |  198|     38|#define TOX_AF_INET6 10
   |  |  ------------------
   ------------------
-  |  Branch (264:9): [True: 0, False: 40]
+  |  Branch (264:9): [True: 0, False: 38]
   ------------------
-  265|     40|            return AF_INET6;
+  265|     38|            return AF_INET6;
   266|       |
   267|      0|        case TOX_AF_UNSPEC:
   ------------------
   |  |  196|      0|#define TOX_AF_UNSPEC 0
   ------------------
-  |  Branch (267:9): [True: 0, False: 40]
+  |  Branch (267:9): [True: 0, False: 38]
   ------------------
   268|      0|            return AF_UNSPEC;
   269|       |
   270|      0|        default:
   ------------------
-  |  Branch (270:9): [True: 0, False: 40]
+  |  Branch (270:9): [True: 0, False: 38]
   ------------------
   271|      0|            return tox_family.value;
-  272|     40|    }
-  273|     40|}
+  272|     38|    }
+  273|     38|}
 network.c:make_socktype:
-  243|     40|{
-  244|     40|    switch (type) {
+  243|     38|{
+  244|     38|    switch (type) {
   245|      0|        case TOX_SOCK_STREAM:
   ------------------
   |  |  202|      0|#define TOX_SOCK_STREAM 1
   ------------------
-  |  Branch (245:9): [True: 0, False: 40]
+  |  Branch (245:9): [True: 0, False: 38]
   ------------------
   246|      0|            return SOCK_STREAM;
   247|       |
-  248|     40|        case TOX_SOCK_DGRAM:
+  248|     38|        case TOX_SOCK_DGRAM:
   ------------------
-  |  |  203|     40|#define TOX_SOCK_DGRAM 2
+  |  |  203|     38|#define TOX_SOCK_DGRAM 2
   ------------------
-  |  Branch (248:9): [True: 40, False: 0]
+  |  Branch (248:9): [True: 38, False: 0]
   ------------------
-  249|     40|            return SOCK_DGRAM;
+  249|     38|            return SOCK_DGRAM;
   250|       |
   251|      0|        default:
   ------------------
-  |  Branch (251:9): [True: 0, False: 40]
+  |  Branch (251:9): [True: 0, False: 38]
   ------------------
   252|      0|            return type;
-  253|     40|    }
-  254|     40|}
+  253|     38|    }
+  254|     38|}
 network.c:make_proto:
-  229|     40|{
-  230|     40|    switch (proto) {
+  229|     38|{
+  230|     38|    switch (proto) {
   231|      0|        case TOX_PROTO_TCP:
   ------------------
   |  |  205|      0|#define TOX_PROTO_TCP 1
   ------------------
-  |  Branch (231:9): [True: 0, False: 40]
+  |  Branch (231:9): [True: 0, False: 38]
   ------------------
   232|      0|            return IPPROTO_TCP;
   233|       |
-  234|     40|        case TOX_PROTO_UDP:
+  234|     38|        case TOX_PROTO_UDP:
   ------------------
-  |  |  206|     40|#define TOX_PROTO_UDP 2
+  |  |  206|     38|#define TOX_PROTO_UDP 2
   ------------------
-  |  Branch (234:9): [True: 40, False: 0]
+  |  Branch (234:9): [True: 38, False: 0]
   ------------------
-  235|     40|            return IPPROTO_UDP;
+  235|     38|            return IPPROTO_UDP;
   236|       |
   237|      0|        default:
   ------------------
-  |  Branch (237:9): [True: 0, False: 40]
+  |  Branch (237:9): [True: 0, False: 38]
   ------------------
   238|      0|            return proto;
-  239|     40|    }
-  240|     40|}
+  239|     38|    }
+  240|     38|}
 
 ping_new:
-  329|     37|{
-  330|     37|    Ping *ping = (Ping *)mem_alloc(mem, sizeof(Ping));
+  329|     35|{
+  330|     35|    Ping *ping = (Ping *)mem_alloc(mem, sizeof(Ping));
   331|       |
-  332|     37|    if (ping == nullptr) {
+  332|     35|    if (ping == nullptr) {
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
-  |  Branch (332:9): [True: 1, False: 36]
+  |  Branch (332:9): [True: 1, False: 34]
   ------------------
   333|      1|        return nullptr;
   ------------------
@@ -4222,20 +4222,20 @@ ping_new:
   ------------------
   334|      1|    }
   335|       |
-  336|     36|    Ping_Array *const ping_array = ping_array_new(mem, PING_NUM_MAX, PING_TIMEOUT);
+  336|     34|    Ping_Array *const ping_array = ping_array_new(mem, PING_NUM_MAX, PING_TIMEOUT);
   ------------------
-  |  |   23|     36|#define PING_NUM_MAX 512
+  |  |   23|     34|#define PING_NUM_MAX 512
   ------------------
                   Ping_Array *const ping_array = ping_array_new(mem, PING_NUM_MAX, PING_TIMEOUT);
   ------------------
-  |  |   43|     36|#define PING_TIMEOUT 5
+  |  |   43|     34|#define PING_TIMEOUT 5
   ------------------
   337|       |
-  338|     36|    if (ping_array == nullptr) {
+  338|     34|    if (ping_array == nullptr) {
   ------------------
-  |  |   63|     36|#define nullptr NULL
+  |  |   63|     34|#define nullptr NULL
   ------------------
-  |  Branch (338:9): [True: 2, False: 34]
+  |  Branch (338:9): [True: 2, False: 32]
   ------------------
   339|      2|        mem_delete(mem, ping);
   340|      2|        return nullptr;
@@ -4243,56 +4243,56 @@ ping_new:
   |  |   63|      2|#define nullptr NULL
   ------------------
   341|      2|    }
-  342|     34|    ping->ping_array = ping_array;
+  342|     32|    ping->ping_array = ping_array;
   343|       |
-  344|     34|    ping->mono_time = mono_time;
-  345|     34|    ping->rng = rng;
-  346|     34|    ping->mem = mem;
-  347|     34|    ping->dht = dht;
-  348|     34|    ping->net = net;
-  349|     34|    networking_registerhandler(ping->net, NET_PACKET_PING_REQUEST, &handle_ping_request, dht);
-  350|     34|    networking_registerhandler(ping->net, NET_PACKET_PING_RESPONSE, &handle_ping_response, dht);
+  344|     32|    ping->mono_time = mono_time;
+  345|     32|    ping->rng = rng;
+  346|     32|    ping->mem = mem;
+  347|     32|    ping->dht = dht;
+  348|     32|    ping->net = net;
+  349|     32|    networking_registerhandler(ping->net, NET_PACKET_PING_REQUEST, &handle_ping_request, dht);
+  350|     32|    networking_registerhandler(ping->net, NET_PACKET_PING_RESPONSE, &handle_ping_response, dht);
   351|       |
-  352|     34|    return ping;
-  353|     36|}
+  352|     32|    return ping;
+  353|     34|}
 ping_kill:
-  356|     37|{
-  357|     37|    if (ping == nullptr) {
+  356|     35|{
+  357|     35|    if (ping == nullptr) {
   ------------------
-  |  |   63|     37|#define nullptr NULL
+  |  |   63|     35|#define nullptr NULL
   ------------------
-  |  Branch (357:9): [True: 3, False: 34]
+  |  Branch (357:9): [True: 3, False: 32]
   ------------------
   358|      3|        return;
   359|      3|    }
   360|       |
-  361|     34|    networking_registerhandler(ping->net, NET_PACKET_PING_REQUEST, nullptr, nullptr);
+  361|     32|    networking_registerhandler(ping->net, NET_PACKET_PING_REQUEST, nullptr, nullptr);
   ------------------
-  |  |   63|     34|#define nullptr NULL
+  |  |   63|     32|#define nullptr NULL
   ------------------
                   networking_registerhandler(ping->net, NET_PACKET_PING_REQUEST, nullptr, nullptr);
   ------------------
-  |  |   63|     34|#define nullptr NULL
+  |  |   63|     32|#define nullptr NULL
   ------------------
-  362|     34|    networking_registerhandler(ping->net, NET_PACKET_PING_RESPONSE, nullptr, nullptr);
+  362|     32|    networking_registerhandler(ping->net, NET_PACKET_PING_RESPONSE, nullptr, nullptr);
   ------------------
-  |  |   63|     34|#define nullptr NULL
+  |  |   63|     32|#define nullptr NULL
   ------------------
                   networking_registerhandler(ping->net, NET_PACKET_PING_RESPONSE, nullptr, nullptr);
   ------------------
-  |  |   63|     34|#define nullptr NULL
+  |  |   63|     32|#define nullptr NULL
   ------------------
-  363|     34|    ping_array_kill(ping->ping_array);
+  363|     32|    ping_array_kill(ping->ping_array);
   364|       |
-  365|     34|    mem_delete(mem, ping);
-  366|     34|}
+  365|     32|    mem_delete(mem, ping);
+  366|     32|}
 
 ping_array_new:
-   37|     66|{
-   38|     66|    if (size == 0 || timeout == 0) {
+   37|     62|{
+   38|     62|    if (size == 0 || timeout == 0) {
   ------------------
-  |  Branch (38:9): [True: 0, False: 66]
-  |  Branch (38:22): [True: 0, False: 66]
+  |  Branch (38:9): [True: 0, False: 62]
+  |  Branch (38:22): [True: 0, False: 62]
   ------------------
    39|      0|        return nullptr;
   ------------------
@@ -4300,9 +4300,9 @@ ping_array_new:
   ------------------
    40|      0|    }
    41|       |
-   42|     66|    if ((size & (size - 1)) != 0) {
+   42|     62|    if ((size & (size - 1)) != 0) {
   ------------------
-  |  Branch (42:9): [True: 0, False: 66]
+  |  Branch (42:9): [True: 0, False: 62]
   ------------------
    43|       |        // Not a power of 2.
    44|      0|        return nullptr;
@@ -4311,13 +4311,13 @@ ping_array_new:
   ------------------
    45|      0|    }
    46|       |
-   47|     66|    Ping_Array *const empty_array = (Ping_Array *)mem_alloc(mem, sizeof(Ping_Array));
+   47|     62|    Ping_Array *const empty_array = (Ping_Array *)mem_alloc(mem, sizeof(Ping_Array));
    48|       |
-   49|     66|    if (empty_array == nullptr) {
+   49|     62|    if (empty_array == nullptr) {
   ------------------
-  |  |   63|     66|#define nullptr NULL
+  |  |   63|     62|#define nullptr NULL
   ------------------
-  |  Branch (49:9): [True: 2, False: 64]
+  |  Branch (49:9): [True: 2, False: 60]
   ------------------
    50|      2|        return nullptr;
   ------------------
@@ -4325,13 +4325,13 @@ ping_array_new:
   ------------------
    51|      2|    }
    52|       |
-   53|     64|    Ping_Array_Entry *const entries = (Ping_Array_Entry *)mem_valloc(mem, size, sizeof(Ping_Array_Entry));
+   53|     60|    Ping_Array_Entry *const entries = (Ping_Array_Entry *)mem_valloc(mem, size, sizeof(Ping_Array_Entry));
    54|       |
-   55|     64|    if (entries == nullptr) {
+   55|     60|    if (entries == nullptr) {
   ------------------
-  |  |   63|     64|#define nullptr NULL
+  |  |   63|     60|#define nullptr NULL
   ------------------
-  |  Branch (55:9): [True: 1, False: 63]
+  |  Branch (55:9): [True: 1, False: 59]
   ------------------
    56|      1|        mem_delete(mem, empty_array);
    57|      1|        return nullptr;
@@ -4339,53 +4339,53 @@ ping_array_new:
   |  |   63|      1|#define nullptr NULL
   ------------------
    58|      1|    }
-   59|     63|    empty_array->entries = entries;
+   59|     59|    empty_array->entries = entries;
    60|       |
-   61|     63|    empty_array->mem = mem;
-   62|     63|    empty_array->last_deleted = 0;
-   63|     63|    empty_array->last_added = 0;
-   64|     63|    empty_array->total_size = size;
-   65|     63|    empty_array->timeout = timeout;
-   66|     63|    return empty_array;
-   67|     64|}
+   61|     59|    empty_array->mem = mem;
+   62|     59|    empty_array->last_deleted = 0;
+   63|     59|    empty_array->last_added = 0;
+   64|     59|    empty_array->total_size = size;
+   65|     59|    empty_array->timeout = timeout;
+   66|     59|    return empty_array;
+   67|     60|}
 ping_array_kill:
-   77|     71|{
-   78|     71|    if (array == nullptr) {
+   77|     67|{
+   78|     67|    if (array == nullptr) {
   ------------------
-  |  |   63|     71|#define nullptr NULL
+  |  |   63|     67|#define nullptr NULL
   ------------------
-  |  Branch (78:9): [True: 8, False: 63]
+  |  Branch (78:9): [True: 8, False: 59]
   ------------------
    79|      8|        return;
    80|      8|    }
    81|       |
-   82|     63|    while (array->last_deleted != array->last_added) {
+   82|     59|    while (array->last_deleted != array->last_added) {
   ------------------
-  |  Branch (82:12): [True: 0, False: 63]
+  |  Branch (82:12): [True: 0, False: 59]
   ------------------
    83|      0|        const uint32_t index = array->last_deleted % array->total_size;
    84|      0|        clear_entry(array, index);
    85|      0|        ++array->last_deleted;
    86|      0|    }
    87|       |
-   88|     63|    mem_delete(array->mem, array->entries);
-   89|     63|    mem_delete(array->mem, array);
-   90|     63|}
+   88|     59|    mem_delete(array->mem, array->entries);
+   89|     59|    mem_delete(array->mem, array);
+   90|     59|}
 
 shared_key_cache_new:
-   50|     66|{
-   51|     66|    if (mono_time == nullptr || self_secret_key == nullptr || timeout == 0 || keys_per_slot == 0) {
+   50|     62|{
+   51|     62|    if (mono_time == nullptr || self_secret_key == nullptr || timeout == 0 || keys_per_slot == 0) {
   ------------------
-  |  |   63|    132|#define nullptr NULL
+  |  |   63|    124|#define nullptr NULL
   ------------------
                   if (mono_time == nullptr || self_secret_key == nullptr || timeout == 0 || keys_per_slot == 0) {
   ------------------
-  |  |   63|    132|#define nullptr NULL
+  |  |   63|    124|#define nullptr NULL
   ------------------
-  |  Branch (51:9): [True: 0, False: 66]
-  |  Branch (51:33): [True: 0, False: 66]
-  |  Branch (51:63): [True: 0, False: 66]
-  |  Branch (51:79): [True: 0, False: 66]
+  |  Branch (51:9): [True: 0, False: 62]
+  |  Branch (51:33): [True: 0, False: 62]
+  |  Branch (51:63): [True: 0, False: 62]
+  |  Branch (51:79): [True: 0, False: 62]
   ------------------
    52|      0|        return nullptr;
   ------------------
@@ -4394,9 +4394,9 @@ shared_key_cache_new:
    53|      0|    }
    54|       |
    55|       |    // Time must not be zero, since we use that as special value for empty slots
-   56|     66|    if (mono_time_get(mono_time) == 0) {
+   56|     62|    if (mono_time_get(mono_time) == 0) {
   ------------------
-  |  Branch (56:9): [True: 0, False: 66]
+  |  Branch (56:9): [True: 0, False: 62]
   ------------------
    57|       |        // Fail loudly in debug environments
    58|      0|        LOGGER_FATAL(log, "time must not be zero (mono_time not initialised?)");
@@ -4433,12 +4433,12 @@ shared_key_cache_new:
   ------------------
    60|      0|    }
    61|       |
-   62|     66|    Shared_Key_Cache *res = (Shared_Key_Cache *)mem_alloc(mem, sizeof(Shared_Key_Cache));
-   63|     66|    if (res == nullptr) {
+   62|     62|    Shared_Key_Cache *res = (Shared_Key_Cache *)mem_alloc(mem, sizeof(Shared_Key_Cache));
+   63|     62|    if (res == nullptr) {
   ------------------
-  |  |   63|     66|#define nullptr NULL
+  |  |   63|     62|#define nullptr NULL
   ------------------
-  |  Branch (63:9): [True: 2, False: 64]
+  |  Branch (63:9): [True: 2, False: 60]
   ------------------
    64|      2|        return nullptr;
   ------------------
@@ -4446,21 +4446,21 @@ shared_key_cache_new:
   ------------------
    65|      2|    }
    66|       |
-   67|     64|    res->self_secret_key = self_secret_key;
-   68|     64|    res->mono_time = mono_time;
-   69|     64|    res->mem = mem;
-   70|     64|    res->log = log;
-   71|     64|    res->keys_per_slot = keys_per_slot;
+   67|     60|    res->self_secret_key = self_secret_key;
+   68|     60|    res->mono_time = mono_time;
+   69|     60|    res->mem = mem;
+   70|     60|    res->log = log;
+   71|     60|    res->keys_per_slot = keys_per_slot;
    72|       |
    73|       |    // We take one byte from the public key for each bucket and store keys_per_slot elements there
-   74|     64|    const size_t cache_size = 256 * keys_per_slot;
-   75|     64|    Shared_Key *keys = (Shared_Key *)mem_valloc(mem, cache_size, sizeof(Shared_Key));
+   74|     60|    const size_t cache_size = 256 * keys_per_slot;
+   75|     60|    Shared_Key *keys = (Shared_Key *)mem_valloc(mem, cache_size, sizeof(Shared_Key));
    76|       |
-   77|     64|    if (keys == nullptr) {
+   77|     60|    if (keys == nullptr) {
   ------------------
-  |  |   63|     64|#define nullptr NULL
+  |  |   63|     60|#define nullptr NULL
   ------------------
-  |  Branch (77:9): [True: 2, False: 62]
+  |  Branch (77:9): [True: 2, False: 58]
   ------------------
    78|      2|        mem_delete(mem, res);
    79|      2|        return nullptr;
@@ -4469,63 +4469,63 @@ shared_key_cache_new:
   ------------------
    80|      2|    }
    81|       |
-   82|     62|    crypto_memlock(keys, cache_size * sizeof(Shared_Key));
+   82|     58|    crypto_memlock(keys, cache_size * sizeof(Shared_Key));
    83|       |
-   84|     62|    res->keys = keys;
+   84|     58|    res->keys = keys;
    85|       |
-   86|     62|    return res;
-   87|     64|}
+   86|     58|    return res;
+   87|     60|}
 shared_key_cache_free:
-   90|     74|{
-   91|     74|    if (cache == nullptr) {
+   90|     70|{
+   91|     70|    if (cache == nullptr) {
   ------------------
-  |  |   63|     74|#define nullptr NULL
+  |  |   63|     70|#define nullptr NULL
   ------------------
-  |  Branch (91:9): [True: 12, False: 62]
+  |  Branch (91:9): [True: 12, False: 58]
   ------------------
    92|     12|        return;
    93|     12|    }
    94|       |
-   95|     62|    const size_t cache_size = 256 * cache->keys_per_slot;
+   95|     58|    const size_t cache_size = 256 * cache->keys_per_slot;
    96|       |    // Don't leave key material in memory
-   97|     62|    crypto_memzero(cache->keys, cache_size * sizeof(Shared_Key));
-   98|     62|    crypto_memunlock(cache->keys, cache_size * sizeof(Shared_Key));
-   99|     62|    mem_delete(cache->mem, cache->keys);
-  100|     62|    mem_delete(cache->mem, cache);
-  101|     62|}
+   97|     58|    crypto_memzero(cache->keys, cache_size * sizeof(Shared_Key));
+   98|     58|    crypto_memunlock(cache->keys, cache_size * sizeof(Shared_Key));
+   99|     58|    mem_delete(cache->mem, cache->keys);
+  100|     58|    mem_delete(cache->mem, cache);
+  101|     58|}
 
 tox_memory_malloc:
-   37|    618|{
-   38|    618|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
-   39|    618|    return ptr;
-   40|    618|}
+   37|    582|{
+   38|    582|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
+   39|    582|    return ptr;
+   40|    582|}
 tox_memory_realloc:
-   52|    104|{
-   53|    104|    void *const new_ptr = mem->funcs->realloc_callback(mem->user_data, ptr, size);
-   54|    104|    return new_ptr;
-   55|    104|}
+   52|     96|{
+   53|     96|    void *const new_ptr = mem->funcs->realloc_callback(mem->user_data, ptr, size);
+   54|     96|    return new_ptr;
+   55|     96|}
 tox_memory_dealloc:
-   58|    770|{
-   59|    770|    mem->funcs->dealloc_callback(mem->user_data, ptr);
-   60|    770|}
+   58|    722|{
+   59|    722|    mem->funcs->dealloc_callback(mem->user_data, ptr);
+   60|    722|}
 
 tox_random_bytes:
-   35|    194|{
-   36|    194|    rng->funcs->bytes_callback(rng->user_data, bytes, length);
-   37|    194|}
+   35|    180|{
+   36|    180|    rng->funcs->bytes_callback(rng->user_data, bytes, length);
+   37|    180|}
 
 memzero:
-   99|    262|{
-  100|    262|    if (data == nullptr || data_size == 0) {
+   99|    244|{
+  100|    244|    if (data == nullptr || data_size == 0) {
   ------------------
-  |  |   63|    524|#define nullptr NULL
+  |  |   63|    488|#define nullptr NULL
   ------------------
-  |  Branch (100:9): [True: 0, False: 262]
-  |  Branch (100:28): [True: 0, False: 262]
+  |  Branch (100:9): [True: 0, False: 244]
+  |  Branch (100:28): [True: 0, False: 244]
   ------------------
   101|      0|        return;
   102|      0|    }
   103|       |
-  104|    262|    memset(data, 0, data_size);
-  105|    262|}
+  104|    244|    memset(data, 0, data_size);
+  105|    244|}
 
