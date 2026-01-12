@@ -1,7 +1,7 @@
 _ZN3tox4test15NetworkUniverseC2Ev:
-    9|     23|NetworkUniverse::NetworkUniverse() { }
+   24|     23|NetworkUniverse::NetworkUniverse() { }
 _ZN3tox4test15NetworkUniverseD2Ev:
-   10|     23|NetworkUniverse::~NetworkUniverse() { }
+   25|     23|NetworkUniverse::~NetworkUniverse() { }
 
 _ZNK3tox4test9Fuzz_Data4sizeEv:
    99|    164|    std::size_t size() const { return size_; }
@@ -133,40 +133,98 @@ _ZN3tox4test9FakeClockC2Em:
     8|     23|}
 
 _ZN3tox4test10FakeMemoryC2Ev:
-   23|     23|FakeMemory::FakeMemory() = default;
+   24|     23|FakeMemory::FakeMemory() = default;
 _ZN3tox4test10FakeMemoryD2Ev:
-   24|     23|FakeMemory::~FakeMemory() = default;
+   25|     23|FakeMemory::~FakeMemory() = default;
 _ZN3tox4test10FakeMemory6mallocEm:
-   27|     17|{
-   28|     17|    bool fail = failure_injector_ && failure_injector_(size);
+   28|     17|{
+   29|     17|    bool fail = failure_injector_ && failure_injector_(size);
   ------------------
-  |  Branch (28:17): [True: 0, False: 17]
-  |  Branch (28:38): [True: 0, False: 0]
+  |  Branch (29:17): [True: 0, False: 17]
+  |  Branch (29:38): [True: 0, False: 0]
   ------------------
-   29|       |
-   30|     17|    if (observer_) {
+   30|       |
+   31|     17|    if (observer_) {
   ------------------
-  |  Branch (30:9): [True: 0, False: 17]
+  |  Branch (31:9): [True: 0, False: 17]
   ------------------
-   31|      0|        observer_(!fail);
-   32|      0|    }
-   33|       |
-   34|     17|    if (fail) {
+   32|      0|        observer_(!fail);
+   33|      0|    }
+   34|       |
+   35|     17|    if (fail) {
   ------------------
-  |  Branch (34:9): [True: 0, False: 17]
+  |  Branch (35:9): [True: 0, False: 17]
   ------------------
-   35|      0|        return nullptr;
-   36|      0|    }
-   37|     17|    return std::malloc(size);
-   38|     17|}
+   36|      0|        return nullptr;
+   37|      0|    }
+   38|       |
+   39|     17|    void *ptr = std::malloc(size + sizeof(Header));
+   40|     17|    if (!ptr) {
+  ------------------
+  |  Branch (40:9): [True: 0, False: 17]
+  ------------------
+   41|      0|        return nullptr;
+   42|      0|    }
+   43|       |
+   44|     17|    Header *header = static_cast<Header *>(ptr);
+   45|     17|    header->size = size;
+   46|     17|    header->magic = kMagic;
+   47|       |
+   48|     17|    on_allocation(size);
+   49|       |
+   50|     17|    return header + 1;
+   51|     17|}
 _ZN3tox4test10FakeMemory4freeEPv:
-   55|     17|void FakeMemory::free(void *ptr) { std::free(ptr); }
+   99|     17|{
+  100|     17|    if (!ptr) {
+  ------------------
+  |  Branch (100:9): [True: 0, False: 17]
+  ------------------
+  101|      0|        return;
+  102|      0|    }
+  103|       |
+  104|     17|    Header *header = static_cast<Header *>(ptr) - 1;
+  105|     17|    if (header->magic != kMagic) {
+  ------------------
+  |  Branch (105:9): [True: 0, False: 17]
+  ------------------
+  106|      0|        if (header->magic == kFreeMagic) {
+  ------------------
+  |  Branch (106:13): [True: 0, False: 0]
+  ------------------
+  107|      0|            std::cerr << "[FakeMemory] free: Double free detected at " << ptr
+  108|      0|                      << " (header=" << header << ")" << std::endl;
+  109|      0|        } else {
+  110|      0|            std::cerr << "[FakeMemory] free: Invalid pointer (wrong magic 0x" << std::hex
+  111|      0|                      << header->magic << ") at " << ptr << " (header=" << header << ")"
+  112|      0|                      << std::endl;
+  113|      0|        }
+  114|      0|        std::abort();
+  115|      0|    }
+  116|       |
+  117|     17|    size_t size = header->size;
+  118|     17|    on_deallocation(size);
+  119|     17|    header->magic = kFreeMagic;  // Mark as free
+  120|     17|    std::free(header);
+  121|     17|}
 _ZN3tox4test10FakeMemory12get_c_memoryEv:
-   64|     23|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+  130|     23|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+_ZN3tox4test10FakeMemory13on_allocationEm:
+  137|     17|{
+  138|     17|    size_t current = current_allocation_.fetch_add(size) + size;
+  139|     17|    size_t max = max_allocation_.load(std::memory_order_relaxed);
+  140|     17|    while (current > max && !max_allocation_.compare_exchange_weak(max, current)) { }
+  ------------------
+  |  Branch (140:12): [True: 17, False: 0]
+  |  Branch (140:29): [True: 0, False: 17]
+  ------------------
+  141|     17|}
+_ZN3tox4test10FakeMemory15on_deallocationEm:
+  143|     17|void FakeMemory::on_deallocation(size_t size) { current_allocation_.fetch_sub(size); }
 fake_memory.cc:_ZNK3tox4test3$_0clEPvj:
-   14|     17|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
+   15|     17|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
 fake_memory.cc:_ZNK3tox4test3$_2clEPvS2_:
-   18|     17|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
+   19|     17|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
 
 _ZN3tox4test10FakeRandomC2Em:
    21|     23|    : rng_(seed)
@@ -188,15 +246,15 @@ _ZN3tox4test20SimulatedEnvironmentC2Ev:
 _ZN3tox4test20SimulatedEnvironmentD2Ev:
    14|     23|SimulatedEnvironment::~SimulatedEnvironment() = default;
 _ZN3tox4test20SimulatedEnvironment11fake_memoryEv:
-   32|     23|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
+   34|     23|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
 
 _ZN3tox4test10SimulationC2Ev:
-   10|     23|    : clock_(std::make_unique<FakeClock>())
-   11|     23|    , net_(std::make_unique<NetworkUniverse>())
-   12|     23|{
-   13|     23|}
+   13|     23|    : clock_(std::make_unique<FakeClock>())
+   14|     23|    , net_(std::make_unique<NetworkUniverse>())
+   15|     23|{
+   16|     23|}
 _ZN3tox4test10SimulationD2Ev:
-   15|     23|Simulation::~Simulation() = default;
+   18|     23|Simulation::~Simulation() = default;
 
 cmp_init:
   837|     34|                                         cmp_writer *write) {
