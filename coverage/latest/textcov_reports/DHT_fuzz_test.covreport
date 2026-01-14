@@ -207,8 +207,8 @@ _ZN3tox4test10FakeMemory4freeEPv:
   119|     17|    header->magic = kFreeMagic;  // Mark as free
   120|     17|    std::free(header);
   121|     17|}
-_ZN3tox4test10FakeMemory12get_c_memoryEv:
-  130|     23|struct Tox_Memory FakeMemory::get_c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+_ZN3tox4test10FakeMemory8c_memoryEv:
+  130|     23|struct Tox_Memory FakeMemory::c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
 _ZN3tox4test10FakeMemory13on_allocationEm:
   137|     17|{
   138|     17|    size_t current = current_allocation_.fetch_add(size) + size;
@@ -314,7 +314,7 @@ handle_request:
   ------------------
                   if (packet_length <= CRYPTO_SIZE + CRYPTO_MAC_SIZE || packet_length > MAX_CRYPTO_REQUEST_SIZE) {
   ------------------
-  |  |   64|      3|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   65|      3|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   |  Branch (317:9): [True: 1, False: 3]
   |  Branch (317:59): [True: 1, False: 2]
@@ -373,7 +373,7 @@ handle_request:
   ------------------
   332|      0|        crypto_memzero(temp, MAX_CRYPTO_REQUEST_SIZE);
   ------------------
-  |  |   64|      0|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   65|      0|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   333|      0|        return -1;
   334|      0|    }
@@ -393,7 +393,7 @@ handle_request:
   342|      1|    memcpy(data, temp + 1, len1);
   343|      1|    crypto_memzero(temp, MAX_CRYPTO_REQUEST_SIZE);
   ------------------
-  |  |   64|      1|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   65|      1|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   344|      1|    return len1;
   345|      1|}
@@ -504,9 +504,9 @@ LLVMFuzzerTestOneInput:
 DHT_fuzz_test.cc:_ZN12_GLOBAL__N_117TestHandleRequestERN3tox4test9Fuzz_DataE:
    17|      6|{
    18|      6|    SimulatedEnvironment env;
-   19|      6|    auto c_mem = env.fake_memory().get_c_memory();
+   19|      6|    auto c_mem = env.fake_memory().c_memory();
    20|       |
-   21|      6|    CONSUME_OR_RETURN(const uint8_t *self_public_key, input, CRYPTO_PUBLIC_KEY_SIZE);
+   21|      6|    CONSUME_OR_RETURN(const std::uint8_t *self_public_key, input, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
   |  |  136|      6|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
@@ -516,7 +516,7 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_117TestHandleRequestERN3tox4test9Fuzz_DataE:
   |  |  138|      1|    }                                        \
   |  |  139|      6|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   22|      5|    CONSUME_OR_RETURN(const uint8_t *self_secret_key, input, CRYPTO_SECRET_KEY_SIZE);
+   22|      5|    CONSUME_OR_RETURN(const std::uint8_t *self_secret_key, input, CRYPTO_SECRET_KEY_SIZE);
   ------------------
   |  |  136|      5|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
@@ -527,9 +527,9 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_117TestHandleRequestERN3tox4test9Fuzz_DataE:
   |  |  139|      5|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
    23|       |
-   24|      4|    uint8_t public_key[CRYPTO_PUBLIC_KEY_SIZE];
-   25|      4|    uint8_t request[MAX_CRYPTO_REQUEST_SIZE];
-   26|      4|    uint8_t request_id;
+   24|      4|    std::uint8_t public_key[CRYPTO_PUBLIC_KEY_SIZE];
+   25|      4|    std::uint8_t request[MAX_CRYPTO_REQUEST_SIZE];
+   26|      4|    std::uint8_t request_id;
    27|      4|    handle_request(&c_mem, self_public_key, self_secret_key, public_key, request, &request_id,
    28|      4|        input.data(), input.size());
    29|      4|}
@@ -546,9 +546,9 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
   |  |  127|     34|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
    34|       |
-   35|     33|    const uint16_t node_count = 5;
+   35|     33|    const std::uint16_t node_count = 5;
    36|     33|    Node_format nodes[node_count];
-   37|     33|    uint16_t processed_data_len;
+   37|     33|    std::uint16_t processed_data_len;
    38|     33|    const int packed_count = unpack_nodes(
    39|     33|        nodes, node_count, &processed_data_len, input.data(), input.size(), tcp_enabled);
    40|     33|    if (packed_count > 0) {
@@ -556,11 +556,11 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
   |  Branch (40:9): [True: 17, False: 16]
   ------------------
    41|     17|        SimulatedEnvironment env;
-   42|     17|        auto c_mem = env.fake_memory().get_c_memory();
+   42|     17|        auto c_mem = env.fake_memory().c_memory();
    43|     17|        Logger *logger = logger_new(&c_mem);
-   44|     17|        std::vector<uint8_t> packed(packed_count * PACKED_NODE_SIZE_IP6);
+   44|     17|        std::vector<std::uint8_t> packed(packed_count * PACKED_NODE_SIZE_IP6);
   ------------------
-  |  |   72|     17|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
+  |  |   73|     17|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
   |  |  ------------------
   |  |  |  |   32|     17|#define SIZE_IP6 16
   |  |  ------------------
@@ -637,7 +637,7 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
    51|       |        // Check that packed nodes can be unpacked again and result in the
    52|       |        // original unpacked nodes.
    53|     17|        Node_format nodes2[node_count];
-   54|     17|        uint16_t processed_data_len2;
+   54|     17|        std::uint16_t processed_data_len2;
    55|     17|        const int packed_count2 = unpack_nodes(
    56|     17|            nodes2, node_count, &processed_data_len2, packed.data(), packed.size(), tcp_enabled);
    57|     17|        (void)packed_count2;
@@ -645,7 +645,7 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
    59|       |        assert(processed_data_len2 == processed_data_len);
    60|       |        assert(packed_count2 == packed_count);
    61|       |#endif
-   62|       |        assert(memcmp(nodes, nodes2, sizeof(Node_format) * packed_count) == 0);
+   62|       |        assert(std::memcmp(nodes, nodes2, sizeof(Node_format) * packed_count) == 0);
   ------------------
   |  Branch (62:9): [True: 17, False: 0]
   ------------------
