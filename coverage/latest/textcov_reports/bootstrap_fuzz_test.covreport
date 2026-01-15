@@ -170,11 +170,11 @@ bootstrap_fuzz_test.cc:_ZN12_GLOBAL__N_113TestBootstrapERN3tox4test9Fuzz_DataE:
   219|     52|    tox_kill(tox);
   220|     52|}
 bootstrap_fuzz_test.cc:_ZZN12_GLOBAL__N_113TestBootstrapERN3tox4test9Fuzz_DataEENK3$_0clEP3Tox13Tox_Log_LevelPKcjS9_S9_Pv:
-  127|    145|            const char *message, void *user_data) {
+  127|    146|            const char *message, void *user_data) {
   128|       |            // Log to stdout.
-  129|    145|            if (Fuzz_Data::FUZZ_DEBUG) {
+  129|    146|            if (Fuzz_Data::FUZZ_DEBUG) {
   ------------------
-  |  Branch (129:17): [Folded, False: 145]
+  |  Branch (129:17): [Folded, False: 146]
   ------------------
   130|       |                // Approximate level name mapping
   131|      0|                char level_char = '?';
@@ -215,7 +215,7 @@ bootstrap_fuzz_test.cc:_ZZN12_GLOBAL__N_113TestBootstrapERN3tox4test9Fuzz_DataEE
   148|      0|                }
   149|      0|                std::printf("[tox1] %c %s:%u(%s): %s\n", level_char, file, line, func, message);
   150|      0|            }
-  151|    145|        });
+  151|    146|        });
 bootstrap_fuzz_test.cc:_ZN12_GLOBAL__N_115setup_callbacksEP12Tox_Dispatch:
    25|     52|{
    26|     52|    tox_events_callback_conference_connected(
@@ -1174,7 +1174,7 @@ _ZN3tox4test10FakeMemory6mallocEm:
    29|  4.30k|    bool fail = failure_injector_ && failure_injector_(size);
   ------------------
   |  Branch (29:17): [True: 4.23k, False: 70]
-  |  Branch (29:38): [True: 304, False: 3.92k]
+  |  Branch (29:38): [True: 306, False: 3.92k]
   ------------------
    30|       |
    31|  4.30k|    if (observer_) {
@@ -1186,10 +1186,10 @@ _ZN3tox4test10FakeMemory6mallocEm:
    34|       |
    35|  4.30k|    if (fail) {
   ------------------
-  |  Branch (35:9): [True: 304, False: 3.99k]
+  |  Branch (35:9): [True: 306, False: 3.99k]
   ------------------
-   36|    304|        return nullptr;
-   37|    304|    }
+   36|    306|        return nullptr;
+   37|    306|    }
    38|       |
    39|  3.99k|    void *ptr = std::malloc(size + sizeof(Header));
    40|  3.99k|    if (!ptr) {
@@ -1208,13 +1208,13 @@ _ZN3tox4test10FakeMemory6mallocEm:
    50|  3.99k|    return header + 1;
    51|  3.99k|}
 _ZN3tox4test10FakeMemory7reallocEPvm:
-   54|    799|{
-   55|    799|    if (!ptr) {
+   54|    798|{
+   55|    798|    if (!ptr) {
   ------------------
-  |  Branch (55:9): [True: 391, False: 408]
+  |  Branch (55:9): [True: 390, False: 408]
   ------------------
-   56|    391|        return malloc(size);
-   57|    391|    }
+   56|    390|        return malloc(size);
+   57|    390|    }
    58|       |
    59|    408|    Header *old_header = static_cast<Header *>(ptr) - 1;
    60|    408|    if (old_header->magic != kMagic) {
@@ -1311,7 +1311,7 @@ _ZN3tox4test10FakeMemory20set_failure_injectorENSt3__18functionIFbmEEE:
   125|    113|    failure_injector_ = std::move(injector);
   126|    113|}
 _ZN3tox4test10FakeMemory8c_memoryEv:
-  130|    452|struct Tox_Memory FakeMemory::c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+  130|    452|struct Memory FakeMemory::c_memory() { return Memory{&kFakeMemoryVtable, this}; }
 _ZN3tox4test10FakeMemory13on_allocationEm:
   137|  4.36k|{
   138|  4.36k|    size_t current = current_allocation_.fetch_add(size) + size;
@@ -1327,7 +1327,7 @@ _ZN3tox4test10FakeMemory15on_deallocationEm:
 fake_memory.cc:_ZNK3tox4test3$_0clEPvj:
    15|  3.91k|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
 fake_memory.cc:_ZNK3tox4test3$_1clEPvS2_j:
-   18|    799|          uint32_t size) { return static_cast<FakeMemory *>(obj)->realloc(ptr, size); },
+   18|    798|          uint32_t size) { return static_cast<FakeMemory *>(obj)->realloc(ptr, size); },
 fake_memory.cc:_ZNK3tox4test3$_2clEPvS2_:
    19|  20.7k|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
 
@@ -1355,7 +1355,7 @@ _ZN3tox4test10FakeRandom5bytesEPhm:
    58|      0|    }
    59|  1.21k|}
 _ZN3tox4test10FakeRandom8c_randomEv:
-   61|    452|struct Tox_Random FakeRandom::c_random() { return Tox_Random{&kFakeRandomVtable, this}; }
+   61|    452|struct Random FakeRandom::c_random() { return Random{&kFakeRandomVtable, this}; }
 fake_random.cc:_ZZN3tox4test10FakeRandom5bytesEPhmENK3$_0clEv:
    53|  31.6k|        std::generate_n(out, count, [&]() { return static_cast<uint8_t>(dist(rng_)); });
 fake_random.cc:_ZNK3tox4test3$_1clEPvPhj:
@@ -1421,7 +1421,7 @@ fuzz_helpers.cc:_ZZN3tox4test28configure_fuzz_memory_sourceERNS0_10FakeMemoryERN
    52|  4.01k|        bool succeed = (b && *b);
   ------------------
   |  Branch (52:25): [True: 4.01k, False: 0]
-  |  Branch (52:30): [True: 3.67k, False: 345]
+  |  Branch (52:30): [True: 3.66k, False: 347]
   ------------------
    53|  4.01k|        return !succeed;  // Return true to fail
    54|  4.64k|    });
@@ -1924,17 +1924,17 @@ randfriends_nodes:
  2392|       |    // Only gather nodes from the initial 2 fake friends.
  2393|     81|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
   ------------------
-  |  |   62|     81|#define DHT_FAKE_FRIEND_NUMBER 2
+  |  |   63|     81|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
   |  Branch (2393:26): [True: 54, False: 27]
   ------------------
  2394|     54|        count += list_nodes(dht->rng, dht->friends_list[(i + r) % DHT_FAKE_FRIEND_NUMBER].client_list,
   ------------------
-  |  |   62|     54|#define DHT_FAKE_FRIEND_NUMBER 2
+  |  |   63|     54|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
  2395|     54|                            MAX_FRIEND_CLIENTS, dht->cur_time,
   ------------------
-  |  |   30|     54|#define MAX_FRIEND_CLIENTS 8
+  |  |   31|     54|#define MAX_FRIEND_CLIENTS 8
   ------------------
  2396|     54|                            nodes + count, max_num - count);
  2397|       |
@@ -2057,7 +2057,7 @@ new_dht:
  2531|     95|    networking_registerhandler(dht->net, NET_PACKET_LAN_DISCOVERY, &handle_lan_discovery, dht);
  2532|     95|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, &handle_nat_ping, dht);
   ------------------
-  |  |   69|     95|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
+  |  |   70|     95|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
   ------------------
  2533|       |
  2534|     95|#ifdef CHECK_ANNOUNCE_NODE
@@ -2154,11 +2154,11 @@ new_dht:
  2559|       |
  2560|     91|    Ping_Array *const temp_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
   ------------------
-  |  |   47|     91|#define DHT_PING_ARRAY_SIZE 512
+  |  |   48|     91|#define DHT_PING_ARRAY_SIZE 512
   ------------------
                   Ping_Array *const temp_ping_array = ping_array_new(mem, DHT_PING_ARRAY_SIZE, PING_TIMEOUT);
   ------------------
-  |  |   44|     91|#define PING_TIMEOUT 5
+  |  |   45|     91|#define PING_TIMEOUT 5
   ------------------
  2561|       |
  2562|     91|    if (temp_ping_array == nullptr) {
@@ -2197,7 +2197,7 @@ new_dht:
  2569|       |
  2570|    267|    for (uint32_t i = 0; i < DHT_FAKE_FRIEND_NUMBER; ++i) {
   ------------------
-  |  |   62|    267|#define DHT_FAKE_FRIEND_NUMBER 2
+  |  |   63|    267|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
   |  Branch (2570:26): [True: 179, False: 88]
   ------------------
@@ -2246,7 +2246,7 @@ new_dht:
  2583|       |
  2584|     88|    if (dht->num_friends != DHT_FAKE_FRIEND_NUMBER) {
   ------------------
-  |  |   62|     88|#define DHT_FAKE_FRIEND_NUMBER 2
+  |  |   63|     88|#define DHT_FAKE_FRIEND_NUMBER 2
   ------------------
   |  Branch (2584:9): [True: 0, False: 88]
   ------------------
@@ -2349,7 +2349,7 @@ kill_dht:
   ------------------
  2624|     98|    cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
   ------------------
-  |  |   69|     98|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
+  |  |   70|     98|#define CRYPTO_PACKET_NAT_PING      254 // NAT ping crypto packet ID.
   ------------------
                   cryptopacket_registerhandler(dht, CRYPTO_PACKET_NAT_PING, nullptr, nullptr);
   ------------------
@@ -2373,15 +2373,15 @@ dht_non_lan_connected:
  2855|     27|{
  2856|  27.6k|    for (uint32_t i = 0; i < LCLIENT_LIST; ++i) {
   ------------------
-  |  |   36|  27.6k|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
+  |  |   37|  27.6k|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
-  |  |  |  |   33|  27.6k|#define LCLIENT_LENGTH 128
+  |  |  |  |   34|  27.6k|#define LCLIENT_LENGTH 128
   |  |  ------------------
   |  |               #define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
-  |  |  |  |   32|  27.6k|#define LCLIENT_NODES MAX_FRIEND_CLIENTS
+  |  |  |  |   33|  27.6k|#define LCLIENT_NODES MAX_FRIEND_CLIENTS
   |  |  |  |  ------------------
-  |  |  |  |  |  |   30|  27.6k|#define MAX_FRIEND_CLIENTS 8
+  |  |  |  |  |  |   31|  27.6k|#define MAX_FRIEND_CLIENTS 8
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
@@ -2432,7 +2432,7 @@ DHT.c:get_somewhat_close_nodes:
   710|    177|{
   711|    885|    for (uint16_t i = 0; i < MAX_SENT_NODES; ++i) {
   ------------------
-  |  |   41|    885|#define MAX_SENT_NODES 4
+  |  |   42|    885|#define MAX_SENT_NODES 4
   ------------------
   |  Branch (711:26): [True: 708, False: 177]
   ------------------
@@ -2445,15 +2445,15 @@ DHT.c:get_somewhat_close_nodes:
   718|    177|        nodes_list, &num_nodes,
   719|    177|        sa_family, close_clientlist, LCLIENT_LIST,
   ------------------
-  |  |   36|    177|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
+  |  |   37|    177|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
-  |  |  |  |   33|    177|#define LCLIENT_LENGTH 128
+  |  |  |  |   34|    177|#define LCLIENT_LENGTH 128
   |  |  ------------------
   |  |               #define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
-  |  |  |  |   32|    177|#define LCLIENT_NODES MAX_FRIEND_CLIENTS
+  |  |  |  |   33|    177|#define LCLIENT_NODES MAX_FRIEND_CLIENTS
   |  |  |  |  ------------------
-  |  |  |  |  |  |   30|    177|#define MAX_FRIEND_CLIENTS 8
+  |  |  |  |  |  |   31|    177|#define MAX_FRIEND_CLIENTS 8
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
@@ -2470,7 +2470,7 @@ DHT.c:get_somewhat_close_nodes:
   727|    265|            nodes_list, &num_nodes,
   728|    265|            sa_family, dht_friend->client_list, MAX_FRIEND_CLIENTS,
   ------------------
-  |  |   30|    265|#define MAX_FRIEND_CLIENTS 8
+  |  |   31|    265|#define MAX_FRIEND_CLIENTS 8
   ------------------
   729|    265|            is_lan, want_announce);
   730|    265|    }
@@ -2555,7 +2555,7 @@ DHT.c:get_close_nodes_inner:
   687|       |
   688|      0|        if (num_nodes < MAX_SENT_NODES) {
   ------------------
-  |  |   41|      0|#define MAX_SENT_NODES 4
+  |  |   42|      0|#define MAX_SENT_NODES 4
   ------------------
   |  Branch (688:13): [True: 0, False: 0]
   ------------------
@@ -2570,7 +2570,7 @@ DHT.c:get_close_nodes_inner:
   694|       |            // using a version of add_to_list which works with a sorted list.
   695|      0|            add_to_list(nodes_list, MAX_SENT_NODES, client->public_key, &ipptp->ip_port, public_key);
   ------------------
-  |  |   41|      0|#define MAX_SENT_NODES 4
+  |  |   42|      0|#define MAX_SENT_NODES 4
   ------------------
   696|      0|        }
   697|      0|    }
@@ -2642,21 +2642,21 @@ DHT.c:assoc_timeout:
   193|   239k|{
   194|   239k|    return (assoc->timestamp + BAD_NODE_TIMEOUT) <= cur_time;
   ------------------
-  |  |   55|   239k|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |   56|   239k|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  ------------------
-  |  |  |  |   50|   239k|#define PING_INTERVAL 60
-  |  |  ------------------
-  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
-  |  |  ------------------
-  |  |  |  |   53|   239k|#define PINGS_MISSED_NODE_GOES_BAD 1
+  |  |  |  |   51|   239k|#define PING_INTERVAL 60
   |  |  ------------------
   |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  ------------------
-  |  |  |  |   50|   239k|#define PING_INTERVAL 60
+  |  |  |  |   54|   239k|#define PINGS_MISSED_NODE_GOES_BAD 1
   |  |  ------------------
   |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  ------------------
-  |  |  |  |   54|   239k|#define PING_ROUNDTRIP 2
+  |  |  |  |   51|   239k|#define PING_INTERVAL 60
+  |  |  ------------------
+  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  ------------------
+  |  |  |  |   55|   239k|#define PING_ROUNDTRIP 2
   |  |  ------------------
   ------------------
   195|   239k|}
@@ -2794,13 +2794,13 @@ lan_discovery_kill:
   ------------------
   |  |   63|     78|#define nullptr NULL
   ------------------
-  |  Branch (411:9): [True: 10, False: 68]
+  |  Branch (411:9): [True: 11, False: 67]
   ------------------
-  412|     10|        return;
-  413|     10|    }
+  412|     11|        return;
+  413|     11|    }
   414|       |
-  415|     68|    mem_delete(broadcast->mem, broadcast);
-  416|     68|}
+  415|     67|    mem_delete(broadcast->mem, broadcast);
+  416|     67|}
 LAN_discovery.c:send_broadcasts:
   243|    253|{
   244|    253|    if (broadcast->count == 0) {
@@ -2868,17 +2868,17 @@ LAN_discovery.c:fetch_broadcast_info:
   ------------------
   |  |   63|     78|#define nullptr NULL
   ------------------
-  |  Branch (226:9): [True: 10, False: 68]
+  |  Branch (226:9): [True: 11, False: 67]
   ------------------
-  227|     10|        return nullptr;
+  227|     11|        return nullptr;
   ------------------
-  |  |   63|     10|#define nullptr NULL
+  |  |   63|     11|#define nullptr NULL
   ------------------
-  228|     10|    }
+  228|     11|    }
   229|       |
-  230|     68|    broadcast->mem = mem;
+  230|     67|    broadcast->mem = mem;
   231|       |
-  232|     68|    return broadcast;
+  232|     67|    return broadcast;
   233|     78|}
 
 m_callback_friendrequest:
@@ -3019,15 +3019,15 @@ do_messenger:
  2566|       |
  2567|  27.6k|        for (uint32_t client = 0; client < LCLIENT_LIST; ++client) {
   ------------------
-  |  |   36|  27.6k|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
+  |  |   37|  27.6k|#define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
-  |  |  |  |   33|  27.6k|#define LCLIENT_LENGTH 128
+  |  |  |  |   34|  27.6k|#define LCLIENT_LENGTH 128
   |  |  ------------------
   |  |               #define LCLIENT_LIST (LCLIENT_LENGTH * LCLIENT_NODES)
   |  |  ------------------
-  |  |  |  |   32|  27.6k|#define LCLIENT_NODES MAX_FRIEND_CLIENTS
+  |  |  |  |   33|  27.6k|#define LCLIENT_NODES MAX_FRIEND_CLIENTS
   |  |  |  |  ------------------
-  |  |  |  |  |  |   30|  27.6k|#define MAX_FRIEND_CLIENTS 8
+  |  |  |  |  |  |   31|  27.6k|#define MAX_FRIEND_CLIENTS 8
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
@@ -3244,7 +3244,7 @@ do_messenger:
  2638|       |
  2639|    486|            for (uint32_t client = 0; client < MAX_FRIEND_CLIENTS; ++client) {
   ------------------
-  |  |   30|    486|#define MAX_FRIEND_CLIENTS 8
+  |  |   31|    486|#define MAX_FRIEND_CLIENTS 8
   ------------------
   |  Branch (2639:39): [True: 432, False: 54]
   ------------------
@@ -4438,7 +4438,7 @@ new_tcp_connection:
   697|       |
   698|     46|    temp->kill_at = mono_time_get(mono_time) + TCP_CONNECTION_TIMEOUT;
   ------------------
-  |  |   27|     46|#define TCP_CONNECTION_TIMEOUT 10
+  |  |   28|     46|#define TCP_CONNECTION_TIMEOUT 10
   ------------------
   699|       |
   700|     46|    return temp;
@@ -4676,13 +4676,13 @@ TCP_client.c:proxy_http_generate_connection_request:
   148|     14|    const uint16_t port = net_ntohs(tcp_conn->ip_port.port);
   149|     14|    const int written = snprintf((char *)tcp_conn->con.last_packet, MAX_PACKET_SIZE, "%s%s:%hu%s%s:%hu%s", one, ip, port,
   ------------------
-  |  |   55|     14|#define MAX_PACKET_SIZE 2048
+  |  |   56|     14|#define MAX_PACKET_SIZE 2048
   ------------------
   150|     14|                                 two, ip, port, three);
   151|       |
   152|     14|    if (written < 0 || MAX_PACKET_SIZE < written) {
   ------------------
-  |  |   55|     14|#define MAX_PACKET_SIZE 2048
+  |  |   56|     14|#define MAX_PACKET_SIZE 2048
   ------------------
   |  Branch (152:9): [True: 0, False: 14]
   |  Branch (152:24): [True: 0, False: 14]
@@ -4929,7 +4929,7 @@ set_tcp_onion_status:
   ------------------
  1566|     24|                if (tcp_con->status == TCP_CONN_CONNECTED && !tcp_con->onion) {
   ------------------
-  |  |   31|     48|#define TCP_CONN_CONNECTED 2
+  |  |   32|     48|#define TCP_CONN_CONNECTED 2
   ------------------
   |  Branch (1566:21): [True: 0, False: 24]
   |  Branch (1566:62): [True: 0, False: 0]
@@ -4941,11 +4941,11 @@ set_tcp_onion_status:
  1571|       |
  1572|     27|            if (tcp_c->onion_num_conns >= NUM_ONION_TCP_CONNECTIONS) {
   ------------------
-  |  |   51|     27|#define NUM_ONION_TCP_CONNECTIONS RECOMMENDED_FRIEND_TCP_CONNECTIONS
+  |  |   52|     27|#define NUM_ONION_TCP_CONNECTIONS RECOMMENDED_FRIEND_TCP_CONNECTIONS
   |  |  ------------------
-  |  |  |  |   48|     27|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
+  |  |  |  |   49|     27|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
   |  |  |  |  ------------------
-  |  |  |  |  |  |   40|     27|#define MAX_FRIEND_TCP_CONNECTIONS 6
+  |  |  |  |  |  |   41|     27|#define MAX_FRIEND_TCP_CONNECTIONS 6
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
@@ -4957,11 +4957,11 @@ set_tcp_onion_status:
  1576|       |
  1577|     27|        if (tcp_c->onion_num_conns < NUM_ONION_TCP_CONNECTIONS) {
   ------------------
-  |  |   51|     27|#define NUM_ONION_TCP_CONNECTIONS RECOMMENDED_FRIEND_TCP_CONNECTIONS
+  |  |   52|     27|#define NUM_ONION_TCP_CONNECTIONS RECOMMENDED_FRIEND_TCP_CONNECTIONS
   |  |  ------------------
-  |  |  |  |   48|     27|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
+  |  |  |  |   49|     27|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
   |  |  |  |  ------------------
-  |  |  |  |  |  |   40|     27|#define MAX_FRIEND_TCP_CONNECTIONS 6
+  |  |  |  |  |  |   41|     27|#define MAX_FRIEND_TCP_CONNECTIONS 6
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
@@ -4969,11 +4969,11 @@ set_tcp_onion_status:
   ------------------
  1578|     27|            const unsigned int wakeup = NUM_ONION_TCP_CONNECTIONS - tcp_c->onion_num_conns;
   ------------------
-  |  |   51|     27|#define NUM_ONION_TCP_CONNECTIONS RECOMMENDED_FRIEND_TCP_CONNECTIONS
+  |  |   52|     27|#define NUM_ONION_TCP_CONNECTIONS RECOMMENDED_FRIEND_TCP_CONNECTIONS
   |  |  ------------------
-  |  |  |  |   48|     27|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
+  |  |  |  |   49|     27|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
   |  |  |  |  ------------------
-  |  |  |  |  |  |   40|     27|#define MAX_FRIEND_TCP_CONNECTIONS 6
+  |  |  |  |  |  |   41|     27|#define MAX_FRIEND_TCP_CONNECTIONS 6
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
@@ -4992,7 +4992,7 @@ set_tcp_onion_status:
   ------------------
  1584|     24|                    if (tcp_con->status == TCP_CONN_SLEEPING) {
   ------------------
-  |  |   34|     24|#define TCP_CONN_SLEEPING 3
+  |  |   35|     24|#define TCP_CONN_SLEEPING 3
   ------------------
   |  Branch (1584:25): [True: 0, False: 24]
   ------------------
@@ -5166,7 +5166,7 @@ TCP_connection.c:tcp_connections_number_is_valid:
   150|       |
   151|    134|    return tcp_c->tcp_connections[tcp_connections_number].status != TCP_CONN_NONE;
   ------------------
-  |  |   27|    134|#define TCP_CONN_NONE 0
+  |  |   28|    134|#define TCP_CONN_NONE 0
   ------------------
   152|    134|}
 TCP_connection.c:find_tcp_connection_relay:
@@ -5185,7 +5185,7 @@ TCP_connection.c:find_tcp_connection_relay:
   ------------------
   653|      9|            if (tcp_con->status == TCP_CONN_SLEEPING) {
   ------------------
-  |  |   34|      9|#define TCP_CONN_SLEEPING 3
+  |  |   35|      9|#define TCP_CONN_SLEEPING 3
   ------------------
   |  Branch (653:17): [True: 0, False: 9]
   ------------------
@@ -5314,7 +5314,7 @@ TCP_connection.c:add_tcp_relay_instance:
  1348|       |
  1349|     46|    tcp_con->status = TCP_CONN_VALID;
   ------------------
-  |  |   28|     46|#define TCP_CONN_VALID 1
+  |  |   29|     46|#define TCP_CONN_VALID 1
   ------------------
  1350|       |
  1351|     46|    return tcp_connections_number;
@@ -5327,7 +5327,7 @@ TCP_connection.c:create_tcp_connection:
   ------------------
   186|     12|        if (tcp_c->tcp_connections[i].status == TCP_CONN_NONE) {
   ------------------
-  |  |   27|     12|#define TCP_CONN_NONE 0
+  |  |   28|     12|#define TCP_CONN_NONE 0
   ------------------
   |  Branch (186:13): [True: 3, False: 9]
   ------------------
@@ -5366,7 +5366,7 @@ TCP_connection.c:do_tcp_conns:
  1661|       |
  1662|     32|        if (tcp_con->status != TCP_CONN_SLEEPING) {
   ------------------
-  |  |   34|     32|#define TCP_CONN_SLEEPING 3
+  |  |   35|     32|#define TCP_CONN_SLEEPING 3
   ------------------
   |  Branch (1662:13): [True: 32, False: 0]
   ------------------
@@ -5441,7 +5441,7 @@ TCP_connection.c:do_tcp_conns:
   ------------------
  1680|      0|                if (tcp_con->status == TCP_CONN_CONNECTED) {
   ------------------
-  |  |   31|      0|#define TCP_CONN_CONNECTED 2
+  |  |   32|      0|#define TCP_CONN_CONNECTED 2
   ------------------
   |  Branch (1680:21): [True: 0, False: 0]
   ------------------
@@ -5482,7 +5482,7 @@ TCP_connection.c:do_tcp_conns:
  1692|      0|            }
  1693|     32|            if (tcp_con->status == TCP_CONN_VALID && tcp_con_status(tcp_con->connection) == TCP_CLIENT_CONFIRMED) {
   ------------------
-  |  |   28|     64|#define TCP_CONN_VALID 1
+  |  |   29|     64|#define TCP_CONN_VALID 1
   ------------------
   |  Branch (1693:17): [True: 32, False: 0]
   |  Branch (1693:54): [True: 0, False: 32]
@@ -5492,7 +5492,7 @@ TCP_connection.c:do_tcp_conns:
  1696|       |
  1697|     32|            if (tcp_con->status == TCP_CONN_CONNECTED
   ------------------
-  |  |   31|     64|#define TCP_CONN_CONNECTED 2
+  |  |   32|     64|#define TCP_CONN_CONNECTED 2
   ------------------
   |  Branch (1697:17): [True: 0, False: 32]
   ------------------
@@ -5507,9 +5507,9 @@ TCP_connection.c:do_tcp_conns:
   ------------------
  1700|      0|                    && mono_time_is_timeout(tcp_c->mono_time, tcp_con->connected_time, TCP_CONNECTION_ANNOUNCE_TIMEOUT)) {
   ------------------
-  |  |   43|      0|#define TCP_CONNECTION_ANNOUNCE_TIMEOUT TCP_CONNECTION_TIMEOUT
+  |  |   44|      0|#define TCP_CONNECTION_ANNOUNCE_TIMEOUT TCP_CONNECTION_TIMEOUT
   |  |  ------------------
-  |  |  |  |   27|      0|#define TCP_CONNECTION_TIMEOUT 10
+  |  |  |  |   28|      0|#define TCP_CONNECTION_TIMEOUT 10
   |  |  ------------------
   ------------------
   |  Branch (1700:24): [True: 0, False: 0]
@@ -5520,7 +5520,7 @@ TCP_connection.c:do_tcp_conns:
  1704|       |
  1705|     32|        if (tcp_con->status == TCP_CONN_SLEEPING && tcp_con->unsleep) {
   ------------------
-  |  |   34|     64|#define TCP_CONN_SLEEPING 3
+  |  |   35|     64|#define TCP_CONN_SLEEPING 3
   ------------------
   |  Branch (1705:13): [True: 0, False: 32]
   |  Branch (1705:53): [True: 0, False: 0]
@@ -5542,9 +5542,9 @@ TCP_connection.c:kill_nonused_tcp:
  1716|       |
  1717|     35|    if (tcp_c->tcp_connections_length <= RECOMMENDED_FRIEND_TCP_CONNECTIONS) {
   ------------------
-  |  |   48|     35|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
+  |  |   49|     35|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
   |  |  ------------------
-  |  |  |  |   40|     35|#define MAX_FRIEND_TCP_CONNECTIONS 6
+  |  |  |  |   41|     35|#define MAX_FRIEND_TCP_CONNECTIONS 6
   |  |  ------------------
   ------------------
   |  Branch (1717:9): [True: 35, False: 0]
@@ -5556,9 +5556,9 @@ TCP_connection.c:kill_nonused_tcp:
  1722|       |
  1723|      0|    if (num_online <= RECOMMENDED_FRIEND_TCP_CONNECTIONS) {
   ------------------
-  |  |   48|      0|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
+  |  |   49|      0|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
   |  |  ------------------
-  |  |  |  |   40|      0|#define MAX_FRIEND_TCP_CONNECTIONS 6
+  |  |  |  |   41|      0|#define MAX_FRIEND_TCP_CONNECTIONS 6
   |  |  ------------------
   ------------------
   |  Branch (1723:9): [True: 0, False: 0]
@@ -5568,9 +5568,9 @@ TCP_connection.c:kill_nonused_tcp:
  1726|       |
  1727|      0|    const uint32_t max_kill_count = num_online - RECOMMENDED_FRIEND_TCP_CONNECTIONS;
   ------------------
-  |  |   48|      0|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
+  |  |   49|      0|#define RECOMMENDED_FRIEND_TCP_CONNECTIONS (MAX_FRIEND_TCP_CONNECTIONS / 2)
   |  |  ------------------
-  |  |  |  |   40|      0|#define MAX_FRIEND_TCP_CONNECTIONS 6
+  |  |  |  |   41|      0|#define MAX_FRIEND_TCP_CONNECTIONS 6
   |  |  ------------------
   ------------------
  1728|      0|    uint32_t kill_count = 0;
@@ -5593,7 +5593,7 @@ TCP_connection.c:kill_nonused_tcp:
  1736|       |
  1737|      0|        if (tcp_con->status == TCP_CONN_CONNECTED) {
   ------------------
-  |  |   31|      0|#define TCP_CONN_CONNECTED 2
+  |  |   32|      0|#define TCP_CONN_CONNECTED 2
   ------------------
   |  Branch (1737:13): [True: 0, False: 0]
   ------------------
@@ -5607,9 +5607,9 @@ TCP_connection.c:kill_nonused_tcp:
  1741|       |
  1742|      0|            if (mono_time_is_timeout(tcp_c->mono_time, tcp_con->connected_time, TCP_CONNECTION_ANNOUNCE_TIMEOUT)) {
   ------------------
-  |  |   43|      0|#define TCP_CONNECTION_ANNOUNCE_TIMEOUT TCP_CONNECTION_TIMEOUT
+  |  |   44|      0|#define TCP_CONNECTION_ANNOUNCE_TIMEOUT TCP_CONNECTION_TIMEOUT
   |  |  ------------------
-  |  |  |  |   27|      0|#define TCP_CONNECTION_TIMEOUT 10
+  |  |  |  |   28|      0|#define TCP_CONNECTION_TIMEOUT 10
   |  |  ------------------
   ------------------
   |  Branch (1742:17): [True: 0, False: 0]
@@ -5945,7 +5945,7 @@ kill_tcp_server:
  1396|       |
  1397|  6.42k|    for (uint32_t i = 0; i < MAX_INCOMING_CONNECTIONS; ++i) {
   ------------------
-  |  |   29|  6.42k|#define MAX_INCOMING_CONNECTIONS 256
+  |  |   30|  6.42k|#define MAX_INCOMING_CONNECTIONS 256
   ------------------
   |  Branch (1397:26): [True: 6.40k, False: 25]
   ------------------
@@ -6017,9 +6017,9 @@ TCP_server.c:new_listening_tcp_socket:
   916|       |
   917|     25|    ok = ok && bind_to_port(ns, sock, family, port) && (net_listen(ns, sock, TCP_MAX_BACKLOG) == 0);
   ------------------
-  |  |   31|     25|#define TCP_MAX_BACKLOG MAX_INCOMING_CONNECTIONS
+  |  |   32|     25|#define TCP_MAX_BACKLOG MAX_INCOMING_CONNECTIONS
   |  |  ------------------
-  |  |  |  |   29|     25|#define MAX_INCOMING_CONNECTIONS 256
+  |  |  |  |   30|     25|#define MAX_INCOMING_CONNECTIONS 256
   |  |  ------------------
   ------------------
   |  Branch (917:10): [True: 25, False: 0]
@@ -6086,7 +6086,7 @@ TCP_server.c:do_tcp_accept_new:
  1043|       |
  1044|     27|        for (uint32_t connection_idx = 0; connection_idx < MAX_INCOMING_CONNECTIONS; ++connection_idx) {
   ------------------
-  |  |   29|     27|#define MAX_INCOMING_CONNECTIONS 256
+  |  |   30|     27|#define MAX_INCOMING_CONNECTIONS 256
   ------------------
   |  Branch (1044:43): [True: 27, False: 0]
   ------------------
@@ -6128,7 +6128,7 @@ TCP_server.c:accept_connection:
   877|       |
   878|      0|    const uint16_t index = tcp_server->incoming_connection_queue_index % MAX_INCOMING_CONNECTIONS;
   ------------------
-  |  |   29|      0|#define MAX_INCOMING_CONNECTIONS 256
+  |  |   30|      0|#define MAX_INCOMING_CONNECTIONS 256
   ------------------
   879|       |
   880|      0|    TCP_Secure_Connection *conn = &tcp_server->incoming_connection_queue[index];
@@ -6173,7 +6173,7 @@ TCP_server.c:do_tcp_incoming:
  1154|     27|{
  1155|  6.93k|    for (uint32_t i = 0; i < MAX_INCOMING_CONNECTIONS; ++i) {
   ------------------
-  |  |   29|  6.93k|#define MAX_INCOMING_CONNECTIONS 256
+  |  |   30|  6.93k|#define MAX_INCOMING_CONNECTIONS 256
   ------------------
   |  Branch (1155:26): [True: 6.91k, False: 27]
   ------------------
@@ -6249,7 +6249,7 @@ TCP_server.c:do_incoming:
  1076|       |
  1077|      0|    const int index_new = tcp_server->unconfirmed_connection_queue_index % MAX_INCOMING_CONNECTIONS;
   ------------------
-  |  |   29|      0|#define MAX_INCOMING_CONNECTIONS 256
+  |  |   30|      0|#define MAX_INCOMING_CONNECTIONS 256
   ------------------
  1078|      0|    TCP_Secure_Connection *conn_old = conn;
  1079|      0|    TCP_Secure_Connection *conn_new = &tcp_server->unconfirmed_connection_queue[index_new];
@@ -6289,7 +6289,7 @@ TCP_server.c:do_tcp_unconfirmed:
  1161|     27|{
  1162|  6.93k|    for (uint32_t i = 0; i < MAX_INCOMING_CONNECTIONS; ++i) {
   ------------------
-  |  |   29|  6.93k|#define MAX_INCOMING_CONNECTIONS 256
+  |  |   30|  6.93k|#define MAX_INCOMING_CONNECTIONS 256
   ------------------
   |  Branch (1162:26): [True: 6.91k, False: 27]
   ------------------
@@ -6374,7 +6374,7 @@ TCP_server.c:do_tcp_confirmed:
  1185|       |
  1186|      0|        if (mono_time_is_timeout(mono_time, conn->last_pinged, TCP_PING_FREQUENCY)) {
   ------------------
-  |  |   52|      0|#define TCP_PING_FREQUENCY 30
+  |  |   53|      0|#define TCP_PING_FREQUENCY 30
   ------------------
   |  Branch (1186:13): [True: 0, False: 0]
   ------------------
@@ -6401,11 +6401,11 @@ TCP_server.c:do_tcp_confirmed:
  1201|      0|            } else {
  1202|      0|                if (mono_time_is_timeout(mono_time, conn->last_pinged, TCP_PING_FREQUENCY + TCP_PING_TIMEOUT)) {
   ------------------
-  |  |   52|      0|#define TCP_PING_FREQUENCY 30
+  |  |   53|      0|#define TCP_PING_FREQUENCY 30
   ------------------
                               if (mono_time_is_timeout(mono_time, conn->last_pinged, TCP_PING_FREQUENCY + TCP_PING_TIMEOUT)) {
   ------------------
-  |  |   53|      0|#define TCP_PING_TIMEOUT 10
+  |  |   54|      0|#define TCP_PING_TIMEOUT 10
   ------------------
   |  Branch (1202:21): [True: 0, False: 0]
   ------------------
@@ -6417,7 +6417,7 @@ TCP_server.c:do_tcp_confirmed:
  1208|       |
  1209|      0|        if (conn->ping_id != 0 && mono_time_is_timeout(mono_time, conn->last_pinged, TCP_PING_TIMEOUT)) {
   ------------------
-  |  |   53|      0|#define TCP_PING_TIMEOUT 10
+  |  |   54|      0|#define TCP_PING_TIMEOUT 10
   ------------------
   |  Branch (1209:13): [True: 0, False: 0]
   |  Branch (1209:35): [True: 0, False: 0]
@@ -6604,11 +6604,11 @@ kill_announcements:
   678|       |
   679|  15.9k|    for (uint32_t i = 0; i < ANNOUNCE_BUCKETS * ANNOUNCE_BUCKET_SIZE; ++i) {
   ------------------
-  |  |   66|  15.9k|#define ANNOUNCE_BUCKETS 32 // ANNOUNCE_BUCKETS = 2 ** ANNOUNCE_BUCKET_PREFIX_LENGTH
+  |  |   67|  15.9k|#define ANNOUNCE_BUCKETS 32 // ANNOUNCE_BUCKETS = 2 ** ANNOUNCE_BUCKET_PREFIX_LENGTH
   ------------------
                   for (uint32_t i = 0; i < ANNOUNCE_BUCKETS * ANNOUNCE_BUCKET_SIZE; ++i) {
   ------------------
-  |  |   64|  15.9k|#define ANNOUNCE_BUCKET_SIZE 8
+  |  |   65|  15.9k|#define ANNOUNCE_BUCKET_SIZE 8
   ------------------
   |  Branch (679:26): [True: 15.8k, False: 62]
   ------------------
@@ -6977,7 +6977,7 @@ new_hmac_key:
   444|    201|}
 random_bytes:
   488|  1.21k|{
-  489|  1.21k|    tox_random_bytes(rng, bytes, length);
+  489|  1.21k|    rng_bytes(rng, bytes, length);
   490|  1.21k|}
 
 tox_events_free:
@@ -7156,7 +7156,7 @@ set_friend_request_callback:
   844|     54|    fr_c->fr_request_object = object;
   845|     54|    oniondata_registerhandler(fr_c->onion_c, CRYPTO_PACKET_FRIEND_REQ, fr_request_callback, object);
   ------------------
-  |  |   67|     54|#define CRYPTO_PACKET_FRIEND_REQ    32  // Friend request crypto packet ID.
+  |  |   68|     54|#define CRYPTO_PACKET_FRIEND_REQ    32  // Friend request crypto packet ID.
   ------------------
   846|     54|}
 new_friend_connections:
@@ -7199,29 +7199,29 @@ new_friend_connections:
   ------------------
   |  |   63|     78|#define nullptr NULL
   ------------------
-  |  Branch (913:13): [True: 10, False: 68]
+  |  Branch (913:13): [True: 11, False: 67]
   ------------------
-  914|     10|            LOGGER_ERROR(logger, "could not initialise LAN discovery");
+  914|     11|            LOGGER_ERROR(logger, "could not initialise LAN discovery");
   ------------------
-  |  |   80|     10|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
+  |  |   80|     11|#define LOGGER_ERROR(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_ERROR, __VA_ARGS__)
   |  |  ------------------
-  |  |  |  |   69|     10|    do {                                                                         \
-  |  |  |  |   70|     10|        if (level >= MIN_LOGGER_LEVEL) {                                         \
+  |  |  |  |   69|     11|    do {                                                                         \
+  |  |  |  |   70|     11|        if (level >= MIN_LOGGER_LEVEL) {                                         \
   |  |  |  |  ------------------
-  |  |  |  |  |  |   22|     20|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
+  |  |  |  |  |  |   22|     22|#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (70:13): [True: 10, Folded]
+  |  |  |  |  |  Branch (70:13): [True: 11, Folded]
   |  |  |  |  ------------------
-  |  |  |  |   71|     10|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
-  |  |  |  |   72|     10|        }                                                                        \
-  |  |  |  |   73|     10|    } while (0)
+  |  |  |  |   71|     11|            logger_write(log, level, __FILE__, __LINE__, __func__, __VA_ARGS__); \
+  |  |  |  |   72|     11|        }                                                                        \
+  |  |  |  |   73|     11|    } while (0)
   |  |  |  |  ------------------
-  |  |  |  |  |  Branch (73:14): [Folded, False: 10]
+  |  |  |  |  |  Branch (73:14): [Folded, False: 11]
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
-  915|     10|            temp->local_discovery_enabled = false;
-  916|     10|        }
+  915|     11|            temp->local_discovery_enabled = false;
+  916|     11|        }
   917|     78|    }
   918|       |
   919|     78|    temp->mono_time = mono_time;
@@ -7265,21 +7265,21 @@ do_friend_connections:
   ------------------
   |  |   39|      0|#define FRIEND_DHT_TIMEOUT BAD_NODE_TIMEOUT
   |  |  ------------------
-  |  |  |  |   55|      0|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  |  |   56|      0|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  |  |  ------------------
-  |  |  |  |  |  |   50|      0|#define PING_INTERVAL 60
-  |  |  |  |  ------------------
-  |  |  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   53|      0|#define PINGS_MISSED_NODE_GOES_BAD 1
+  |  |  |  |  |  |   51|      0|#define PING_INTERVAL 60
   |  |  |  |  ------------------
   |  |  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  |  |  ------------------
-  |  |  |  |  |  |   50|      0|#define PING_INTERVAL 60
+  |  |  |  |  |  |   54|      0|#define PINGS_MISSED_NODE_GOES_BAD 1
   |  |  |  |  ------------------
   |  |  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  |  |  ------------------
-  |  |  |  |  |  |   54|      0|#define PING_ROUNDTRIP 2
+  |  |  |  |  |  |   51|      0|#define PING_INTERVAL 60
+  |  |  |  |  ------------------
+  |  |  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   55|      0|#define PING_ROUNDTRIP 2
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
@@ -7302,21 +7302,21 @@ do_friend_connections:
   ------------------
   |  |   39|      0|#define FRIEND_DHT_TIMEOUT BAD_NODE_TIMEOUT
   |  |  ------------------
-  |  |  |  |   55|      0|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  |  |   56|      0|#define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  |  |  ------------------
-  |  |  |  |  |  |   50|      0|#define PING_INTERVAL 60
-  |  |  |  |  ------------------
-  |  |  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
-  |  |  |  |  ------------------
-  |  |  |  |  |  |   53|      0|#define PINGS_MISSED_NODE_GOES_BAD 1
+  |  |  |  |  |  |   51|      0|#define PING_INTERVAL 60
   |  |  |  |  ------------------
   |  |  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  |  |  ------------------
-  |  |  |  |  |  |   50|      0|#define PING_INTERVAL 60
+  |  |  |  |  |  |   54|      0|#define PINGS_MISSED_NODE_GOES_BAD 1
   |  |  |  |  ------------------
   |  |  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
   |  |  |  |  ------------------
-  |  |  |  |  |  |   54|      0|#define PING_ROUNDTRIP 2
+  |  |  |  |  |  |   51|      0|#define PING_INTERVAL 60
+  |  |  |  |  ------------------
+  |  |  |  |               #define BAD_NODE_TIMEOUT (PING_INTERVAL + PINGS_MISSED_NODE_GOES_BAD * (PING_INTERVAL + PING_ROUNDTRIP))
+  |  |  |  |  ------------------
+  |  |  |  |  |  |   55|      0|#define PING_ROUNDTRIP 2
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
@@ -7336,7 +7336,7 @@ do_friend_connections:
   984|      0|                        set_direct_ip_port(fr_c->net_crypto, friend_con->crypt_connection_id, &friend_con->dht_ip_port, false);
   985|      0|                        connect_to_saved_tcp_relays(fr_c, i, MAX_FRIEND_TCP_CONNECTIONS / 2); /* Only fill it half up. */
   ------------------
-  |  |   40|      0|#define MAX_FRIEND_TCP_CONNECTIONS 6
+  |  |   41|      0|#define MAX_FRIEND_TCP_CONNECTIONS 6
   ------------------
   986|      0|                    }
   987|      0|                }
@@ -8073,15 +8073,15 @@ bs_list_init:
   ------------------
   148|    109|        if (!resize(list, initial_capacity)) {
   ------------------
-  |  Branch (148:13): [True: 91, False: 18]
+  |  Branch (148:13): [True: 92, False: 17]
   ------------------
-  149|     91|            return 0;
-  150|     91|        }
+  149|     92|            return 0;
+  150|     92|        }
   151|    109|    }
   152|       |
-  153|     97|    list->capacity = initial_capacity;
+  153|     96|    list->capacity = initial_capacity;
   154|       |
-  155|     97|    return 1;
+  155|     96|    return 1;
   156|    188|}
 bs_list_free:
   159|    188|{
@@ -8123,28 +8123,28 @@ list.c:resize:
   ------------------
   |  |   63|    109|#define nullptr NULL
   ------------------
-  |  Branch (118:9): [True: 87, False: 22]
+  |  Branch (118:9): [True: 88, False: 21]
   ------------------
-  119|     87|        return false;
-  120|     87|    }
+  119|     88|        return false;
+  120|     88|    }
   121|       |
-  122|     22|    list->data = data;
+  122|     21|    list->data = data;
   123|       |
-  124|     22|    int *ids = (int *)mem_vrealloc(list->mem, list->ids, new_size, sizeof(int));
+  124|     21|    int *ids = (int *)mem_vrealloc(list->mem, list->ids, new_size, sizeof(int));
   125|       |
-  126|     22|    if (ids == nullptr) {
+  126|     21|    if (ids == nullptr) {
   ------------------
-  |  |   63|     22|#define nullptr NULL
+  |  |   63|     21|#define nullptr NULL
   ------------------
-  |  Branch (126:9): [True: 4, False: 18]
+  |  Branch (126:9): [True: 4, False: 17]
   ------------------
   127|      4|        return false;
   128|      4|    }
   129|       |
-  130|     18|    list->ids = ids;
+  130|     17|    list->ids = ids;
   131|       |
   132|       |    return true;
-  133|     22|}
+  133|     21|}
 
 logger_new:
    33|    104|{
@@ -8190,21 +8190,21 @@ logger_callback_log:
    59|    103|    log->userdata = userdata;
    60|    103|}
 logger_write:
-   64|    145|{
-   65|    145|    if (log == nullptr) {
+   64|    146|{
+   65|    146|    if (log == nullptr) {
   ------------------
-  |  |   63|    145|#define nullptr NULL
+  |  |   63|    146|#define nullptr NULL
   ------------------
-  |  Branch (65:9): [True: 0, False: 145]
+  |  Branch (65:9): [True: 0, False: 146]
   ------------------
    66|      0|        return;
    67|      0|    }
    68|       |
-   69|    145|    if (log->callback == nullptr) {
+   69|    146|    if (log->callback == nullptr) {
   ------------------
-  |  |   63|    145|#define nullptr NULL
+  |  |   63|    146|#define nullptr NULL
   ------------------
-  |  Branch (69:9): [True: 0, False: 145]
+  |  Branch (69:9): [True: 0, False: 146]
   ------------------
    70|      0|        return;
    71|      0|    }
@@ -8212,12 +8212,12 @@ logger_write:
    73|       |    // Only pass the file name, not the entire file path, for privacy reasons.
    74|       |    // The full path may contain PII of the person compiling toxcore (their
    75|       |    // username and directory layout).
-   76|    145|    const char *filename = strrchr(file, '/');
-   77|    145|    file = filename != nullptr ? filename + 1 : file;
+   76|    146|    const char *filename = strrchr(file, '/');
+   77|    146|    file = filename != nullptr ? filename + 1 : file;
   ------------------
-  |  |   63|    145|#define nullptr NULL
+  |  |   63|    146|#define nullptr NULL
   ------------------
-  |  Branch (77:12): [True: 145, False: 0]
+  |  Branch (77:12): [True: 146, False: 0]
   ------------------
    78|       |#if defined(_WIN32) || defined(__CYGWIN__)
    79|       |    // On Windows, the path separator *may* be a backslash, so we look for that
@@ -8227,86 +8227,78 @@ logger_write:
    83|       |#endif /* WIN32 */
    84|       |
    85|       |    // Format message
-   86|    145|    char msg[1024];
-   87|    145|    va_list args;
-   88|    145|    va_start(args, format);
-   89|    145|    vsnprintf(msg, sizeof(msg), format, args);
-   90|    145|    va_end(args);
+   86|    146|    char msg[1024];
+   87|    146|    va_list args;
+   88|    146|    va_start(args, format);
+   89|    146|    vsnprintf(msg, sizeof(msg), format, args);
+   90|    146|    va_end(args);
    91|       |
-   92|    145|    log->callback(log->context, level, file, line, func, msg, log->userdata);
-   93|    145|}
+   92|    146|    log->callback(log->context, level, file, line, func, msg, log->userdata);
+   93|    146|}
 
 mem_balloc:
-   14|     98|{
-   15|     98|    void *const ptr = tox_memory_malloc(mem, size);
-   16|     98|    return ptr;
-   17|     98|}
+   13|  3.91k|{
+   14|  3.91k|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
+   15|  3.91k|    return ptr;
+   16|  3.91k|}
 mem_brealloc:
-   20|    109|{
-   21|    109|    void *const new_ptr = tox_memory_realloc(mem, ptr, size);
-   22|    109|    return new_ptr;
-   23|    109|}
+   19|    798|{
+   20|    798|    void *const new_ptr = mem->funcs->realloc_callback(mem->user_data, ptr, size);
+   21|    798|    return new_ptr;
+   22|    798|}
 mem_alloc:
-   26|  2.99k|{
-   27|  2.99k|    void *const ptr = tox_memory_malloc(mem, size);
-   28|  2.99k|    if (ptr != nullptr) {
+   25|  3.81k|{
+   26|  3.81k|    void *const ptr = mem_balloc(mem, size);
+   27|  3.81k|    if (ptr != nullptr) {
   ------------------
-  |  |   63|  2.99k|#define nullptr NULL
+  |  |   63|  3.81k|#define nullptr NULL
   ------------------
-  |  Branch (28:9): [True: 2.87k, False: 119]
+  |  Branch (27:9): [True: 3.68k, False: 134]
   ------------------
-   29|  2.87k|        memset(ptr, 0, size);
-   30|  2.87k|    }
-   31|  2.99k|    return ptr;
-   32|  2.99k|}
+   28|  3.68k|        memset(ptr, 0, size);
+   29|  3.68k|    }
+   30|  3.81k|    return ptr;
+   31|  3.81k|}
 mem_valloc:
-   35|    818|{
-   36|    818|    const uint32_t bytes = nmemb * size;
-   37|       |
-   38|    818|    if (size != 0 && bytes / size != nmemb) {
+   34|    818|{
+   35|    818|    const uint32_t bytes = nmemb * size;
+   36|       |
+   37|    818|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (38:9): [True: 818, False: 0]
-  |  Branch (38:22): [True: 0, False: 818]
+  |  Branch (37:9): [True: 818, False: 0]
+  |  Branch (37:22): [True: 0, False: 818]
   ------------------
-   39|      0|        return nullptr;
+   38|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-   40|      0|    }
-   41|       |
-   42|    818|    void *const ptr = tox_memory_malloc(mem, bytes);
-   43|    818|    if (ptr != nullptr) {
-  ------------------
-  |  |   63|    818|#define nullptr NULL
-  ------------------
-  |  Branch (43:9): [True: 804, False: 14]
-  ------------------
-   44|    804|        memset(ptr, 0, bytes);
-   45|    804|    }
-   46|    818|    return ptr;
-   47|    818|}
+   39|      0|    }
+   40|       |
+   41|    818|    void *const ptr = mem_alloc(mem, bytes);
+   42|    818|    return ptr;
+   43|    818|}
 mem_vrealloc:
-   50|    690|{
-   51|    690|    const uint32_t bytes = nmemb * size;
-   52|       |
-   53|    690|    if (size != 0 && bytes / size != nmemb) {
+   46|    689|{
+   47|    689|    const uint32_t bytes = nmemb * size;
+   48|       |
+   49|    689|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (53:9): [True: 690, False: 0]
-  |  Branch (53:22): [True: 0, False: 690]
+  |  Branch (49:9): [True: 689, False: 0]
+  |  Branch (49:22): [True: 0, False: 689]
   ------------------
-   54|      0|        return nullptr;
+   50|      0|        return nullptr;
   ------------------
   |  |   63|      0|#define nullptr NULL
   ------------------
-   55|      0|    }
-   56|       |
-   57|    690|    void *const new_ptr = tox_memory_realloc(mem, ptr, bytes);
-   58|    690|    return new_ptr;
-   59|    690|}
+   51|      0|    }
+   52|       |
+   53|    689|    void *const new_ptr = mem_brealloc(mem, ptr, bytes);
+   54|    689|    return new_ptr;
+   55|    689|}
 mem_delete:
-   62|  20.7k|{
-   63|  20.7k|    tox_memory_dealloc(mem, ptr);
-   64|  20.7k|}
+   58|  20.7k|{
+   59|  20.7k|    mem->funcs->dealloc_callback(mem->user_data, ptr);
+   60|  20.7k|}
 
 mono_time_new:
   111|    108|{
@@ -8542,7 +8534,7 @@ new_net_crypto:
  3000|       |
  3001|     84|    temp->current_sleep_time = CRYPTO_SEND_PACKET_INTERVAL;
   ------------------
-  |  |  109|     84|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  110|     84|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
  3002|       |
  3003|     84|    networking_registerhandler(net, NET_PACKET_COOKIE_REQUEST, &udp_handle_cookie_request, temp);
@@ -8650,7 +8642,7 @@ net_crypto.c:kill_timedout:
   ------------------
  3026|      0|            if (conn->temp_packet_num_sent < MAX_NUM_SENDPACKET_TRIES) {
   ------------------
-  |  |  115|      0|#define MAX_NUM_SENDPACKET_TRIES 8
+  |  |  116|      0|#define MAX_NUM_SENDPACKET_TRIES 8
   ------------------
   |  Branch (3026:17): [True: 0, False: 0]
   ------------------
@@ -8733,7 +8725,7 @@ net_crypto.c:send_crypto_packets:
  2507|       |
  2508|      0|        if ((CRYPTO_SEND_PACKET_INTERVAL + conn->temp_packet_sent_time) < temp_time) {
   ------------------
-  |  |  109|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  110|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
   |  Branch (2508:13): [True: 0, False: 0]
   ------------------
@@ -8747,7 +8739,7 @@ net_crypto.c:send_crypto_packets:
   ------------------
  2513|      0|                && (CRYPTO_SEND_PACKET_INTERVAL + conn->last_request_packet_sent) < temp_time) {
   ------------------
-  |  |  109|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  110|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
   |  Branch (2513:20): [True: 0, False: 0]
   ------------------
@@ -8765,7 +8757,7 @@ net_crypto.c:send_crypto_packets:
   ------------------
  2520|      0|            if (conn->packet_recv_rate > CRYPTO_PACKET_MIN_RATE) {
   ------------------
-  |  |   95|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   96|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
   |  Branch (2520:17): [True: 0, False: 0]
   ------------------
@@ -8777,11 +8769,11 @@ net_crypto.c:send_crypto_packets:
  2523|       |
  2524|      0|                const double request_packet_interval2 = ((CRYPTO_PACKET_MIN_RATE / conn->packet_recv_rate) *
   ------------------
-  |  |   95|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   96|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
  2525|      0|                                                        (double)CRYPTO_SEND_PACKET_INTERVAL) + (double)PACKET_COUNTER_AVERAGE_INTERVAL;
   ------------------
-  |  |  109|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  110|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
                                                                       (double)CRYPTO_SEND_PACKET_INTERVAL) + (double)PACKET_COUNTER_AVERAGE_INTERVAL;
   ------------------
@@ -8809,13 +8801,13 @@ net_crypto.c:send_crypto_packets:
  2534|       |
  2535|      0|                if (request_packet_interval > CRYPTO_SEND_PACKET_INTERVAL) {
   ------------------
-  |  |  109|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  110|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
   |  Branch (2535:21): [True: 0, False: 0]
   ------------------
  2536|      0|                    request_packet_interval = CRYPTO_SEND_PACKET_INTERVAL;
   ------------------
-  |  |  109|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  110|      0|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
  2537|      0|                }
  2538|       |
@@ -8863,7 +8855,7 @@ net_crypto.c:send_crypto_packets:
  2566|       |
  2567|      0|                const unsigned int pos = conn->last_sendqueue_counter % CONGESTION_QUEUE_ARRAY_SIZE;
   ------------------
-  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   ------------------
  2568|      0|                conn->last_sendqueue_size[pos] = num_packets_array(&conn->send_array);
  2569|       |
@@ -8871,14 +8863,14 @@ net_crypto.c:send_crypto_packets:
  2571|      0|                sum = (long signed int)conn->last_sendqueue_size[pos] -
  2572|      0|                      (long signed int)conn->last_sendqueue_size[(pos + 1) % CONGESTION_QUEUE_ARRAY_SIZE];
   ------------------
-  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   ------------------
  2573|       |
  2574|      0|                const unsigned int n_p_pos = conn->last_sendqueue_counter % CONGESTION_LAST_SENT_ARRAY_SIZE;
   ------------------
-  |  |  131|      0|#define CONGESTION_LAST_SENT_ARRAY_SIZE (CONGESTION_QUEUE_ARRAY_SIZE * 2)
+  |  |  132|      0|#define CONGESTION_LAST_SENT_ARRAY_SIZE (CONGESTION_QUEUE_ARRAY_SIZE * 2)
   |  |  ------------------
-  |  |  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   |  |  ------------------
   ------------------
  2575|      0|                conn->last_num_packets_sent[n_p_pos] = packets_sent;
@@ -8887,13 +8879,13 @@ net_crypto.c:send_crypto_packets:
  2578|      0|                conn->last_sendqueue_counter = (conn->last_sendqueue_counter + 1) %
  2579|      0|                                               (CONGESTION_QUEUE_ARRAY_SIZE * CONGESTION_LAST_SENT_ARRAY_SIZE);
   ------------------
-  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   ------------------
                                                              (CONGESTION_QUEUE_ARRAY_SIZE * CONGESTION_LAST_SENT_ARRAY_SIZE);
   ------------------
-  |  |  131|      0|#define CONGESTION_LAST_SENT_ARRAY_SIZE (CONGESTION_QUEUE_ARRAY_SIZE * 2)
+  |  |  132|      0|#define CONGESTION_LAST_SENT_ARRAY_SIZE (CONGESTION_QUEUE_ARRAY_SIZE * 2)
   |  |  ------------------
-  |  |  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   |  |  ------------------
   ------------------
  2580|       |
@@ -8922,14 +8914,14 @@ net_crypto.c:send_crypto_packets:
   ------------------
  2592|      0|                    const unsigned int packets_set_rem_array = CONGESTION_LAST_SENT_ARRAY_SIZE - CONGESTION_QUEUE_ARRAY_SIZE;
   ------------------
-  |  |  131|      0|#define CONGESTION_LAST_SENT_ARRAY_SIZE (CONGESTION_QUEUE_ARRAY_SIZE * 2)
+  |  |  132|      0|#define CONGESTION_LAST_SENT_ARRAY_SIZE (CONGESTION_QUEUE_ARRAY_SIZE * 2)
   |  |  ------------------
-  |  |  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   |  |  ------------------
   ------------------
                                   const unsigned int packets_set_rem_array = CONGESTION_LAST_SENT_ARRAY_SIZE - CONGESTION_QUEUE_ARRAY_SIZE;
   ------------------
-  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   ------------------
  2593|       |
  2594|      0|                    if (delay > packets_set_rem_array) {
@@ -8941,15 +8933,15 @@ net_crypto.c:send_crypto_packets:
  2597|       |
  2598|      0|                    for (unsigned j = 0; j < CONGESTION_QUEUE_ARRAY_SIZE; ++j) {
   ------------------
-  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   ------------------
   |  Branch (2598:42): [True: 0, False: 0]
   ------------------
  2599|      0|                        const unsigned int ind = (j + (packets_set_rem_array  - delay) + n_p_pos) % CONGESTION_LAST_SENT_ARRAY_SIZE;
   ------------------
-  |  |  131|      0|#define CONGESTION_LAST_SENT_ARRAY_SIZE (CONGESTION_QUEUE_ARRAY_SIZE * 2)
+  |  |  132|      0|#define CONGESTION_LAST_SENT_ARRAY_SIZE (CONGESTION_QUEUE_ARRAY_SIZE * 2)
   |  |  ------------------
-  |  |  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   |  |  ------------------
   ------------------
  2600|      0|                        total_sent += conn->last_num_packets_sent[ind];
@@ -8974,7 +8966,7 @@ net_crypto.c:send_crypto_packets:
  2613|      0|                    const uint32_t npackets = num_packets_array(&conn->send_array);
  2614|      0|                    double min_speed = 1000.0 * (((double)total_sent) / ((double)CONGESTION_QUEUE_ARRAY_SIZE *
   ------------------
-  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   ------------------
  2615|      0|                                                 PACKET_COUNTER_AVERAGE_INTERVAL));
   ------------------
@@ -8984,7 +8976,7 @@ net_crypto.c:send_crypto_packets:
  2617|      0|                    const double min_speed_request = 1000.0 * (((double)(total_sent + total_resent)) / (
  2618|      0|                                                         (double)CONGESTION_QUEUE_ARRAY_SIZE * PACKET_COUNTER_AVERAGE_INTERVAL));
   ------------------
-  |  |  130|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
+  |  |  131|      0|#define CONGESTION_QUEUE_ARRAY_SIZE 12
   ------------------
                                                                        (double)CONGESTION_QUEUE_ARRAY_SIZE * PACKET_COUNTER_AVERAGE_INTERVAL));
   ------------------
@@ -8993,13 +8985,13 @@ net_crypto.c:send_crypto_packets:
  2619|       |
  2620|      0|                    if (min_speed < CRYPTO_PACKET_MIN_RATE) {
   ------------------
-  |  |   95|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   96|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
   |  Branch (2620:25): [True: 0, False: 0]
   ------------------
  2621|      0|                        min_speed = CRYPTO_PACKET_MIN_RATE;
   ------------------
-  |  |   95|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   96|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
  2622|      0|                    }
  2623|       |
@@ -9012,7 +9004,7 @@ net_crypto.c:send_crypto_packets:
   ------------------
                                   if (send_array_ratio > SEND_QUEUE_RATIO && CRYPTO_MIN_QUEUE_LENGTH < npackets) {
   ------------------
-  |  |   98|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
+  |  |   99|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
   ------------------
   |  Branch (2627:25): [True: 0, False: 0]
   |  Branch (2627:64): [True: 0, False: 0]
@@ -9036,13 +9028,13 @@ net_crypto.c:send_crypto_packets:
  2636|       |
  2637|      0|                    if (conn->packet_send_rate < CRYPTO_PACKET_MIN_RATE) {
   ------------------
-  |  |   95|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   96|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
   |  Branch (2637:25): [True: 0, False: 0]
   ------------------
  2638|      0|                        conn->packet_send_rate = CRYPTO_PACKET_MIN_RATE;
   ------------------
-  |  |   95|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   96|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
  2639|      0|                    }
  2640|       |
@@ -9064,11 +9056,11 @@ net_crypto.c:send_crypto_packets:
  2649|      0|                conn->last_packets_left_set = temp_time;
  2650|      0|                conn->packets_left_requested = CRYPTO_MIN_QUEUE_LENGTH;
   ------------------
-  |  |   98|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
+  |  |   99|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
   ------------------
  2651|      0|                conn->packets_left = CRYPTO_MIN_QUEUE_LENGTH;
   ------------------
-  |  |   98|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
+  |  |   99|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
   ------------------
  2652|      0|            } else {
  2653|      0|                if (((uint64_t)((1000.0 / conn->packet_send_rate) + 0.5) + conn->last_packets_left_set) <= temp_time) {
@@ -9083,13 +9075,13 @@ net_crypto.c:send_crypto_packets:
  2659|       |
  2660|      0|                    if (conn->packets_left > num_packets * 4 + CRYPTO_MIN_QUEUE_LENGTH) {
   ------------------
-  |  |   98|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
+  |  |   99|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
   ------------------
   |  Branch (2660:25): [True: 0, False: 0]
   ------------------
  2661|      0|                        conn->packets_left = num_packets * 4 + CRYPTO_MIN_QUEUE_LENGTH;
   ------------------
-  |  |   98|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
+  |  |   99|      0|#define CRYPTO_MIN_QUEUE_LENGTH 64
   ------------------
  2662|      0|                    } else {
  2663|      0|                        conn->packets_left += num_packets;
@@ -9146,7 +9138,7 @@ net_crypto.c:send_crypto_packets:
  2702|       |
  2703|      0|            if (conn->packet_send_rate > CRYPTO_PACKET_MIN_RATE * 1.5) {
   ------------------
-  |  |   95|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   96|      0|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
   |  Branch (2703:17): [True: 0, False: 0]
   ------------------
@@ -9167,7 +9159,7 @@ net_crypto.c:send_crypto_packets:
  2715|       |
  2716|     35|    if (total_send_rate > CRYPTO_PACKET_MIN_RATE) {
   ------------------
-  |  |   95|     35|#define CRYPTO_PACKET_MIN_RATE 4.0
+  |  |   96|     35|#define CRYPTO_PACKET_MIN_RATE 4.0
   ------------------
   |  Branch (2716:9): [True: 0, False: 35]
   ------------------
@@ -9183,7 +9175,7 @@ net_crypto.c:send_crypto_packets:
  2723|       |
  2724|     35|    sleep_time = CRYPTO_SEND_PACKET_INTERVAL;
   ------------------
-  |  |  109|     35|#define CRYPTO_SEND_PACKET_INTERVAL 1000
+  |  |  110|     35|#define CRYPTO_SEND_PACKET_INTERVAL 1000
   ------------------
  2725|       |
  2726|     35|    if (c->current_sleep_time > sleep_time) {
@@ -11735,12 +11727,12 @@ new_onion_client:
   ------------------
   |  |   65|     79|#define ONION_DATA_DHTPK CRYPTO_PACKET_DHTPK
   |  |  ------------------
-  |  |  |  |   68|     79|#define CRYPTO_PACKET_DHTPK         156
+  |  |  |  |   69|     79|#define CRYPTO_PACKET_DHTPK         156
   |  |  ------------------
   ------------------
  2217|     79|    cryptopacket_registerhandler(onion_c->dht, CRYPTO_PACKET_DHTPK, &handle_dht_dhtpk, onion_c);
   ------------------
-  |  |   68|     79|#define CRYPTO_PACKET_DHTPK         156
+  |  |   69|     79|#define CRYPTO_PACKET_DHTPK         156
   ------------------
  2218|     79|    set_onion_packet_tcp_connection_callback(nc_get_tcp_c(onion_c->c), &handle_tcp_onion, onion_c);
  2219|       |
@@ -11790,7 +11782,7 @@ kill_onion_client:
   ------------------
   |  |   65|     79|#define ONION_DATA_DHTPK CRYPTO_PACKET_DHTPK
   |  |  ------------------
-  |  |  |  |   68|     79|#define CRYPTO_PACKET_DHTPK         156
+  |  |  |  |   69|     79|#define CRYPTO_PACKET_DHTPK         156
   |  |  ------------------
   ------------------
                   oniondata_registerhandler(onion_c, ONION_DATA_DHTPK, nullptr, nullptr);
@@ -11803,7 +11795,7 @@ kill_onion_client:
   ------------------
  2238|     79|    cryptopacket_registerhandler(onion_c->dht, CRYPTO_PACKET_DHTPK, nullptr, nullptr);
   ------------------
-  |  |   68|     79|#define CRYPTO_PACKET_DHTPK         156
+  |  |   69|     79|#define CRYPTO_PACKET_DHTPK         156
   ------------------
                   cryptopacket_registerhandler(onion_c->dht, CRYPTO_PACKET_DHTPK, nullptr, nullptr);
   ------------------
@@ -11901,7 +11893,7 @@ onion_client.c:populate_path_nodes:
  1750|       |
  1751|     27|    const unsigned int num_nodes = randfriends_nodes(onion_c->dht, node_list, MAX_FRIEND_CLIENTS);
   ------------------
-  |  |   30|     27|#define MAX_FRIEND_CLIENTS 8
+  |  |   31|     27|#define MAX_FRIEND_CLIENTS 8
   ------------------
  1752|       |
  1753|     27|    for (unsigned int i = 0; i < num_nodes; ++i) {
@@ -12308,9 +12300,9 @@ onion_client.c:onion_isconnected:
  2105|      0|}
 
 os_memory:
-   38|    109|{
-   39|    109|    return &os_memory_obj;
-   40|    109|}
+   37|    109|{
+   38|    109|    return &os_memory_obj;
+   39|    109|}
 
 os_random:
    31|    109|{
@@ -12361,7 +12353,7 @@ ping_new:
   ------------------
                   Ping_Array *const ping_array = ping_array_new(mem, PING_NUM_MAX, PING_TIMEOUT);
   ------------------
-  |  |   44|     97|#define PING_TIMEOUT 5
+  |  |   45|     97|#define PING_TIMEOUT 5
   ------------------
   337|       |
   338|     97|    if (ping_array == nullptr) {
@@ -12583,6 +12575,11 @@ ping_array.c:ping_array_clear_timedout:
   103|      0|        ++array->last_deleted;
   104|      0|    }
   105|     15|}
+
+rng_bytes:
+    7|  1.21k|{
+    8|  1.21k|    rng->funcs->bytes_callback(rng->user_data, bytes, length);
+    9|  1.21k|}
 
 shared_key_cache_new:
    50|    542|{
@@ -13520,11 +13517,11 @@ tox_callback_friend_lossy_packet:
  2811|       |    /* start at PACKET_ID_RANGE_LOSSY_CUSTOM_START so ToxAV Packets are excluded */
  2812|  2.91k|    for (uint8_t i = PACKET_ID_RANGE_LOSSY_CUSTOM_START; i <= PACKET_ID_RANGE_LOSSY_END; ++i) {
   ------------------
-  |  |   60|     52|#define PACKET_ID_RANGE_LOSSY_CUSTOM_START 200
+  |  |   61|     52|#define PACKET_ID_RANGE_LOSSY_CUSTOM_START 200
   ------------------
                   for (uint8_t i = PACKET_ID_RANGE_LOSSY_CUSTOM_START; i <= PACKET_ID_RANGE_LOSSY_END; ++i) {
   ------------------
-  |  |   62|  2.91k|#define PACKET_ID_RANGE_LOSSY_END 254
+  |  |   63|  2.91k|#define PACKET_ID_RANGE_LOSSY_END 254
   ------------------
   |  Branch (2812:58): [True: 2.86k, False: 52]
   ------------------
@@ -13540,11 +13537,11 @@ tox_callback_friend_lossless_packet:
  2845|       |
  2846|  1.71k|    for (uint8_t i = PACKET_ID_RANGE_LOSSLESS_CUSTOM_START; i <= PACKET_ID_RANGE_LOSSLESS_CUSTOM_END; ++i) {
   ------------------
-  |  |   52|     52|#define PACKET_ID_RANGE_LOSSLESS_CUSTOM_START 160
+  |  |   53|     52|#define PACKET_ID_RANGE_LOSSLESS_CUSTOM_START 160
   ------------------
                   for (uint8_t i = PACKET_ID_RANGE_LOSSLESS_CUSTOM_START; i <= PACKET_ID_RANGE_LOSSLESS_CUSTOM_END; ++i) {
   ------------------
-  |  |   53|  1.71k|#define PACKET_ID_RANGE_LOSSLESS_CUSTOM_END 191
+  |  |   54|  1.71k|#define PACKET_ID_RANGE_LOSSLESS_CUSTOM_END 191
   ------------------
   |  Branch (2846:61): [True: 1.66k, False: 52]
   ------------------
@@ -14507,22 +14504,22 @@ tox.c:tox_new_system:
   948|     52|    return tox;
   949|     52|}
 tox.c:tox_log_handler:
-   85|    145|{
-   86|    145|    Tox *tox = (Tox *)context;
-   87|    145|    assert(tox != nullptr);
+   85|    146|{
+   86|    146|    Tox *tox = (Tox *)context;
+   87|    146|    assert(tox != nullptr);
   ------------------
-  |  Branch (87:5): [True: 145, False: 0]
+  |  Branch (87:5): [True: 146, False: 0]
   ------------------
    88|       |
-   89|    145|    if (tox->log_callback != nullptr) {
+   89|    146|    if (tox->log_callback != nullptr) {
   ------------------
-  |  |   63|    145|#define nullptr NULL
+  |  |   63|    146|#define nullptr NULL
   ------------------
-  |  Branch (89:9): [True: 145, False: 0]
+  |  Branch (89:9): [True: 146, False: 0]
   ------------------
-   90|    145|        tox->log_callback(tox, (Tox_Log_Level)level, file, line, func, message, userdata);
-   91|    145|    }
-   92|    145|}
+   90|    146|        tox->log_callback(tox, (Tox_Log_Level)level, file, line, func, message, userdata);
+   91|    146|    }
+   92|    146|}
 tox.c:resolve_bootstrap_node:
  1054|    104|{
  1055|    104|    assert(tox != nullptr);
@@ -14949,21 +14946,6 @@ tox_events.c:tox_events_get_events:
   ------------------
    80|    140|}
 
-tox_memory_malloc:
-   37|  3.91k|{
-   38|  3.91k|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
-   39|  3.91k|    return ptr;
-   40|  3.91k|}
-tox_memory_realloc:
-   52|    799|{
-   53|    799|    void *const new_ptr = mem->funcs->realloc_callback(mem->user_data, ptr, size);
-   54|    799|    return new_ptr;
-   55|    799|}
-tox_memory_dealloc:
-   58|  20.7k|{
-   59|  20.7k|    mem->funcs->dealloc_callback(mem->user_data, ptr);
-   60|  20.7k|}
-
 tox_options_get_ipv6_enabled:
    22|    109|{
    23|    109|    return options->ipv6_enabled;
@@ -15351,11 +15333,6 @@ tox_callback_dht_nodes_response:
   ------------------
   102|     52|    tox->dht_nodes_response_callback = callback;
   103|     52|}
-
-tox_random_bytes:
-   35|  1.21k|{
-   36|  1.21k|    rng->funcs->bytes_callback(rng->user_data, bytes, length);
-   37|  1.21k|}
 
 memzero:
    99|  1.69k|{

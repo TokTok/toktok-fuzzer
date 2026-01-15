@@ -208,7 +208,7 @@ _ZN3tox4test10FakeMemory4freeEPv:
   120|     17|    std::free(header);
   121|     17|}
 _ZN3tox4test10FakeMemory8c_memoryEv:
-  130|     23|struct Tox_Memory FakeMemory::c_memory() { return Tox_Memory{&kFakeMemoryVtable, this}; }
+  130|     23|struct Memory FakeMemory::c_memory() { return Memory{&kFakeMemoryVtable, this}; }
 _ZN3tox4test10FakeMemory13on_allocationEm:
   137|     17|{
   138|     17|    size_t current = current_allocation_.fetch_add(size) + size;
@@ -314,7 +314,7 @@ handle_request:
   ------------------
                   if (packet_length <= CRYPTO_SIZE + CRYPTO_MAC_SIZE || packet_length > MAX_CRYPTO_REQUEST_SIZE) {
   ------------------
-  |  |   65|      3|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   66|      3|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   |  Branch (317:9): [True: 1, False: 3]
   |  Branch (317:59): [True: 1, False: 2]
@@ -373,7 +373,7 @@ handle_request:
   ------------------
   332|      0|        crypto_memzero(temp, MAX_CRYPTO_REQUEST_SIZE);
   ------------------
-  |  |   65|      0|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   66|      0|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   333|      0|        return -1;
   334|      0|    }
@@ -393,7 +393,7 @@ handle_request:
   342|      1|    memcpy(data, temp + 1, len1);
   343|      1|    crypto_memzero(temp, MAX_CRYPTO_REQUEST_SIZE);
   ------------------
-  |  |   65|      1|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   66|      1|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   344|      1|    return len1;
   345|      1|}
@@ -560,7 +560,7 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
    43|     17|        Logger *logger = logger_new(&c_mem);
    44|     17|        std::vector<std::uint8_t> packed(packed_count * PACKED_NODE_SIZE_IP6);
   ------------------
-  |  |   73|     17|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
+  |  |   74|     17|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
   |  |  ------------------
   |  |  |  |   32|     17|#define SIZE_IP6 16
   |  |  ------------------
@@ -935,23 +935,28 @@ logger_kill:
    51|     17|    mem_delete(log->mem, log);
    52|     17|}
 
+mem_balloc:
+   13|     17|{
+   14|     17|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
+   15|     17|    return ptr;
+   16|     17|}
 mem_alloc:
-   26|     17|{
-   27|     17|    void *const ptr = tox_memory_malloc(mem, size);
-   28|     17|    if (ptr != nullptr) {
+   25|     17|{
+   26|     17|    void *const ptr = mem_balloc(mem, size);
+   27|     17|    if (ptr != nullptr) {
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-  |  Branch (28:9): [True: 17, False: 0]
+  |  Branch (27:9): [True: 17, False: 0]
   ------------------
-   29|     17|        memset(ptr, 0, size);
-   30|     17|    }
-   31|     17|    return ptr;
-   32|     17|}
+   28|     17|        memset(ptr, 0, size);
+   29|     17|    }
+   30|     17|    return ptr;
+   31|     17|}
 mem_delete:
-   62|     17|{
-   63|     17|    tox_memory_dealloc(mem, ptr);
-   64|     17|}
+   58|     17|{
+   59|     17|    mem->funcs->dealloc_callback(mem->user_data, ptr);
+   60|     17|}
 
 net_family_ipv4:
   387|     33|{
@@ -1217,16 +1222,6 @@ network.c:bin_pack_ip:
   ------------------
  1507|     30|    }
  1508|     76|}
-
-tox_memory_malloc:
-   37|     17|{
-   38|     17|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
-   39|     17|    return ptr;
-   40|     17|}
-tox_memory_dealloc:
-   58|     17|{
-   59|     17|    mem->funcs->dealloc_callback(mem->user_data, ptr);
-   60|     17|}
 
 memzero:
    99|      2|{
