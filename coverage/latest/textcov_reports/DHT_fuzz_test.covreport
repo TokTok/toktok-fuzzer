@@ -4,122 +4,122 @@ _ZN3tox4test15NetworkUniverseD2Ev:
    25|     23|NetworkUniverse::~NetworkUniverse() { }
 
 _ZNK3tox4test9Fuzz_Data4sizeEv:
-   99|    164|    std::size_t size() const { return size_; }
+  101|    164|    std::size_t size() const { return size_; }
 _ZN3tox4test9Fuzz_Data7consumeEPKcm:
-  105|     50|    {
-  106|     50|        if (count > size_)
+  107|     50|    {
+  108|     50|        if (count > size_)
   ------------------
-  |  Branch (106:13): [True: 0, False: 50]
+  |  Branch (108:13): [True: 0, False: 50]
   ------------------
-  107|      0|            return nullptr;
-  108|     50|        const uint8_t *val = data_;
-  109|     50|        if (FUZZ_DEBUG) {
+  109|      0|            return nullptr;
+  110|     50|        const uint8_t *_Nonnull val = data_;
+  111|     50|        if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (109:13): [Folded, False: 50]
+  |  Branch (111:13): [Folded, False: 50]
   ------------------
-  110|      0|            if (count == 1) {
+  112|      0|            if (count == 1) {
   ------------------
-  |  Branch (110:17): [True: 0, False: 0]
+  |  Branch (112:17): [True: 0, False: 0]
   ------------------
-  111|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
-  112|      0|            } else if (count != 0) {
+  113|      0|                std::printf("consume@%zu(%s): %d (0x%02x)\n", pos(), func, val[0], val[0]);
+  114|      0|            } else if (count != 0) {
   ------------------
-  |  Branch (112:24): [True: 0, False: 0]
+  |  Branch (114:24): [True: 0, False: 0]
   ------------------
-  113|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
-  114|      0|                    val[count - 1], count);
-  115|      0|            }
-  116|      0|        }
-  117|     50|        data_ += count;
-  118|     50|        size_ -= count;
-  119|     50|        return val;
-  120|     50|    }
+  115|      0|                std::printf("consume@%zu(%s): %02x..%02x[%zu]\n", pos(), func, val[0],
+  116|      0|                    val[count - 1], count);
+  117|      0|            }
+  118|      0|        }
+  119|     50|        data_ += count;
+  120|     50|        size_ -= count;
+  121|     50|        return val;
+  122|     50|    }
 _ZNK3tox4test9Fuzz_Data4dataEv:
-  101|     37|    const uint8_t *data() const { return data_; }
+  103|     37|    const uint8_t *_Nonnull data() const { return data_; }
 _ZN3tox4test9Fuzz_Data8consume1EPKc:
-   61|     74|    Consumer consume1(const char *func) { return Consumer{func, *this}; }
+   63|     74|    Consumer consume1(const char *_Nonnull func) { return Consumer{func, *this}; }
 _ZN3tox4test9Fuzz_Data8ConsumercvbEv:
-   37|     33|        {
-   38|     33|            if (fd.empty())
+   39|     33|        {
+   40|     33|            if (fd.empty())
   ------------------
-  |  Branch (38:17): [True: 0, False: 33]
+  |  Branch (40:17): [True: 0, False: 33]
   ------------------
-   39|      0|                return false;
-   40|     33|            const bool val = fd.data_[0];
-   41|     33|            if (FUZZ_DEBUG) {
+   41|      0|                return false;
+   42|     33|            const bool val = fd.data_[0];
+   43|     33|            if (FUZZ_DEBUG) {
   ------------------
-  |  Branch (41:17): [Folded, False: 33]
+  |  Branch (43:17): [Folded, False: 33]
   ------------------
-   42|      0|                std::printf("consume@%zu(%s): bool %s\n", fd.pos(), func, val ? "true" : "false");
+   44|      0|                std::printf("consume@%zu(%s): bool %s\n", fd.pos(), func, val ? "true" : "false");
   ------------------
-  |  Branch (42:75): [True: 0, False: 0]
+  |  Branch (44:75): [True: 0, False: 0]
   ------------------
-   43|      0|            }
-   44|     33|            ++fd.data_;
-   45|     33|            --fd.size_;
-   46|     33|            return val;
-   47|     33|        }
+   45|      0|            }
+   46|     33|            ++fd.data_;
+   47|     33|            --fd.size_;
+   48|     33|            return val;
+   49|     33|        }
 _ZNK3tox4test9Fuzz_Data5emptyEv:
-  102|     33|    bool empty() const { return size_ == 0; }
+  104|     33|    bool empty() const { return size_ == 0; }
 DHT_fuzz_test.cc:_ZN3tox4test18fuzz_select_targetIJXadL_ZN12_GLOBAL__N_117TestHandleRequestERNS0_9Fuzz_DataEEEXadL_ZNS2_15TestUnpackNodesES4_EEEEEvPKhm:
-  174|     41|{
-  175|     41|    Fuzz_Data input{data, size};
-  176|       |
-  177|     41|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
+  176|     41|{
+  177|     41|    Fuzz_Data input{data, size};
+  178|       |
+  179|     41|    CONSUME1_OR_RETURN(const uint8_t, selector, input);
   ------------------
-  |  |  124|     41|    if ((INPUT).size() < sizeof(TYPE)) {      \
+  |  |  126|     41|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (124:9): [True: 0, False: 41]
+  |  |  |  Branch (126:9): [True: 0, False: 41]
   |  |  ------------------
-  |  |  125|      0|        return;                               \
-  |  |  126|      0|    }                                         \
-  |  |  127|     41|    TYPE NAME = (INPUT).consume1(__func__)
+  |  |  127|      0|        return;                               \
+  |  |  128|      0|    }                                         \
+  |  |  129|     41|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
-  178|     41|    return Fuzz_Target_Selector<Args...>::select(selector, input);
-  179|     41|}
+  180|     41|    return Fuzz_Target_Selector<Args...>::select(selector, input);
+  181|     41|}
 _ZN3tox4test9Fuzz_DataC2EPKhm:
-   23|     41|        : data_(input_data)
-   24|     41|        , base_(input_data)
-   25|     41|        , size_(input_size)
-   26|     41|    {
-   27|     41|    }
+   25|     41|        : data_(input_data)
+   26|     41|        , base_(input_data)
+   27|     41|        , size_(input_size)
+   28|     41|    {
+   29|     41|    }
 _ZN3tox4test9Fuzz_Data8ConsumercvT_IhEEv:
-   51|     41|        {
-   52|     41|            if (sizeof(T) > fd.size())
+   53|     41|        {
+   54|     41|            if (sizeof(T) > fd.size())
   ------------------
-  |  Branch (52:17): [True: 0, False: 41]
+  |  Branch (54:17): [True: 0, False: 41]
   ------------------
-   53|      0|                return T{};
-   54|     41|            const uint8_t *bytes = fd.consume(func, sizeof(T));
-   55|     41|            T val;
-   56|     41|            std::memcpy(&val, bytes, sizeof(T));
-   57|     41|            return val;
-   58|     41|        }
+   55|      0|                return T{};
+   56|     41|            const uint8_t *_Nonnull bytes = fd.consume(func, sizeof(T));
+   57|     41|            T val;
+   58|     41|            std::memcpy(&val, bytes, sizeof(T));
+   59|     41|            return val;
+   60|     41|        }
 DHT_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_117TestHandleRequestERNS0_9Fuzz_DataEEEXadL_ZNS2_15TestUnpackNodesES4_EEEE6selectEhS4_:
-  155|     41|    {
-  156|     41|        if (selector == sizeof...(Args)) {
+  157|     41|    {
+  158|     41|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (156:13): [True: 6, False: 35]
+  |  Branch (158:13): [True: 6, False: 35]
   ------------------
-  157|      6|            return Arg(input);
-  158|      6|        }
-  159|     35|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  160|     41|    }
+  159|      6|            return Arg(input);
+  160|      6|        }
+  161|     35|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  162|     41|    }
 DHT_fuzz_test.cc:_ZN3tox4test20Fuzz_Target_SelectorIJXadL_ZN12_GLOBAL__N_115TestUnpackNodesERNS0_9Fuzz_DataEEEEE6selectEhS4_:
-  155|     35|    {
-  156|     35|        if (selector == sizeof...(Args)) {
+  157|     35|    {
+  158|     35|        if (selector == sizeof...(Args)) {
   ------------------
-  |  Branch (156:13): [True: 34, False: 1]
+  |  Branch (158:13): [True: 34, False: 1]
   ------------------
-  157|     34|            return Arg(input);
-  158|     34|        }
-  159|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
-  160|     35|    }
+  159|     34|            return Arg(input);
+  160|     34|        }
+  161|      1|        return Fuzz_Target_Selector<Args...>::select(selector, input);
+  162|     35|    }
 _ZN3tox4test20Fuzz_Target_SelectorIJEE6selectEhRNS0_9Fuzz_DataE:
-  166|      1|    {
-  167|       |        // The selector selected no function, so we do nothing and rely on the
-  168|       |        // fuzzer to come up with a better selector.
-  169|      1|    }
+  168|      1|    {
+  169|       |        // The selector selected no function, so we do nothing and rely on the
+  170|       |        // fuzzer to come up with a better selector.
+  171|      1|    }
 
 _ZN3tox4test11ClockSystemD2Ev:
     5|     23|ClockSystem::~ClockSystem() = default;
@@ -133,98 +133,98 @@ _ZN3tox4test9FakeClockC2Em:
     8|     23|}
 
 _ZN3tox4test10FakeMemoryC2Ev:
-   24|     23|FakeMemory::FakeMemory() = default;
+   25|     23|FakeMemory::FakeMemory() = default;
 _ZN3tox4test10FakeMemoryD2Ev:
-   25|     23|FakeMemory::~FakeMemory() = default;
+   26|     23|FakeMemory::~FakeMemory() = default;
 _ZN3tox4test10FakeMemory6mallocEm:
-   28|     17|{
-   29|     17|    bool fail = failure_injector_ && failure_injector_(size);
+   29|     17|{
+   30|     17|    bool fail = failure_injector_ && failure_injector_(size);
   ------------------
-  |  Branch (29:17): [True: 0, False: 17]
-  |  Branch (29:38): [True: 0, False: 0]
+  |  Branch (30:17): [True: 0, False: 17]
+  |  Branch (30:38): [True: 0, False: 0]
   ------------------
-   30|       |
-   31|     17|    if (observer_) {
+   31|       |
+   32|     17|    if (observer_) {
   ------------------
-  |  Branch (31:9): [True: 0, False: 17]
+  |  Branch (32:9): [True: 0, False: 17]
   ------------------
-   32|      0|        observer_(!fail);
-   33|      0|    }
-   34|       |
-   35|     17|    if (fail) {
+   33|      0|        observer_(!fail);
+   34|      0|    }
+   35|       |
+   36|     17|    if (fail) {
   ------------------
-  |  Branch (35:9): [True: 0, False: 17]
+  |  Branch (36:9): [True: 0, False: 17]
   ------------------
-   36|      0|        return nullptr;
-   37|      0|    }
-   38|       |
-   39|     17|    void *ptr = std::malloc(size + sizeof(Header));
-   40|     17|    if (!ptr) {
+   37|      0|        return nullptr;
+   38|      0|    }
+   39|       |
+   40|     17|    void *ptr = std::malloc(size + sizeof(Header));
+   41|     17|    if (!ptr) {
   ------------------
-  |  Branch (40:9): [True: 0, False: 17]
+  |  Branch (41:9): [True: 0, False: 17]
   ------------------
-   41|      0|        return nullptr;
-   42|      0|    }
-   43|       |
-   44|     17|    Header *header = static_cast<Header *>(ptr);
-   45|     17|    header->size = size;
-   46|     17|    header->magic = kMagic;
-   47|       |
-   48|     17|    on_allocation(size);
-   49|       |
-   50|     17|    return header + 1;
-   51|     17|}
+   42|      0|        return nullptr;
+   43|      0|    }
+   44|       |
+   45|     17|    Header *header = static_cast<Header *>(ptr);
+   46|     17|    header->size = size;
+   47|     17|    header->magic = kMagic;
+   48|       |
+   49|     17|    on_allocation(size);
+   50|       |
+   51|     17|    return header + 1;
+   52|     17|}
 _ZN3tox4test10FakeMemory4freeEPv:
-   99|     17|{
-  100|     17|    if (!ptr) {
+  100|     17|{
+  101|     17|    if (!ptr) {
   ------------------
-  |  Branch (100:9): [True: 0, False: 17]
+  |  Branch (101:9): [True: 0, False: 17]
   ------------------
-  101|      0|        return;
-  102|      0|    }
-  103|       |
-  104|     17|    Header *header = static_cast<Header *>(ptr) - 1;
-  105|     17|    if (header->magic != kMagic) {
+  102|      0|        return;
+  103|      0|    }
+  104|       |
+  105|     17|    Header *header = static_cast<Header *>(ptr) - 1;
+  106|     17|    if (header->magic != kMagic) {
   ------------------
-  |  Branch (105:9): [True: 0, False: 17]
+  |  Branch (106:9): [True: 0, False: 17]
   ------------------
-  106|      0|        if (header->magic == kFreeMagic) {
+  107|      0|        if (header->magic == kFreeMagic) {
   ------------------
-  |  Branch (106:13): [True: 0, False: 0]
+  |  Branch (107:13): [True: 0, False: 0]
   ------------------
-  107|      0|            std::cerr << "[FakeMemory] free: Double free detected at " << ptr
-  108|      0|                      << " (header=" << header << ")" << std::endl;
-  109|      0|        } else {
-  110|      0|            std::cerr << "[FakeMemory] free: Invalid pointer (wrong magic 0x" << std::hex
-  111|      0|                      << header->magic << ") at " << ptr << " (header=" << header << ")"
-  112|      0|                      << std::endl;
-  113|      0|        }
-  114|      0|        std::abort();
-  115|      0|    }
-  116|       |
-  117|     17|    size_t size = header->size;
-  118|     17|    on_deallocation(size);
-  119|     17|    header->magic = kFreeMagic;  // Mark as free
-  120|     17|    std::free(header);
-  121|     17|}
+  108|      0|            std::cerr << "[FakeMemory] free: Double free detected at " << ptr
+  109|      0|                      << " (header=" << header << ")" << std::endl;
+  110|      0|        } else {
+  111|      0|            std::cerr << "[FakeMemory] free: Invalid pointer (wrong magic 0x" << std::hex
+  112|      0|                      << header->magic << ") at " << ptr << " (header=" << header << ")"
+  113|      0|                      << std::endl;
+  114|      0|        }
+  115|      0|        std::abort();
+  116|      0|    }
+  117|       |
+  118|     17|    size_t size = header->size;
+  119|     17|    on_deallocation(size);
+  120|     17|    header->magic = kFreeMagic;  // Mark as free
+  121|     17|    std::free(header);
+  122|     17|}
 _ZN3tox4test10FakeMemory8c_memoryEv:
-  130|     23|struct Memory FakeMemory::c_memory() { return Memory{&kFakeMemoryVtable, this}; }
+  131|     23|struct Memory FakeMemory::c_memory() { return Memory{&kFakeMemoryVtable, this}; }
 _ZN3tox4test10FakeMemory13on_allocationEm:
-  137|     17|{
-  138|     17|    size_t current = current_allocation_.fetch_add(size) + size;
-  139|     17|    size_t max = max_allocation_.load(std::memory_order_relaxed);
-  140|     17|    while (current > max && !max_allocation_.compare_exchange_weak(max, current)) { }
+  138|     17|{
+  139|     17|    size_t current = current_allocation_.fetch_add(size) + size;
+  140|     17|    size_t max = max_allocation_.load(std::memory_order_relaxed);
+  141|     17|    while (current > max && !max_allocation_.compare_exchange_weak(max, current)) { }
   ------------------
-  |  Branch (140:12): [True: 17, False: 0]
-  |  Branch (140:29): [True: 0, False: 17]
+  |  Branch (141:12): [True: 17, False: 0]
+  |  Branch (141:29): [True: 0, False: 17]
   ------------------
-  141|     17|}
+  142|     17|}
 _ZN3tox4test10FakeMemory15on_deallocationEm:
-  143|     17|void FakeMemory::on_deallocation(size_t size) { current_allocation_.fetch_sub(size); }
+  144|     17|void FakeMemory::on_deallocation(size_t size) { current_allocation_.fetch_sub(size); }
 fake_memory.cc:_ZNK3tox4test3$_0clEPvj:
-   15|     17|    = [](void *obj, uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
+   15|     17|                           uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
 fake_memory.cc:_ZNK3tox4test3$_2clEPvS2_:
-   19|     17|    .dealloc_callback = [](void *obj, void *ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
+   20|     17|    = [](void *_Nonnull obj, void *_Nullable ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
 
 _ZN3tox4test10FakeRandomC2Em:
    21|     23|    : rng_(seed)
@@ -314,7 +314,7 @@ handle_request:
   ------------------
                   if (packet_length <= CRYPTO_SIZE + CRYPTO_MAC_SIZE || packet_length > MAX_CRYPTO_REQUEST_SIZE) {
   ------------------
-  |  |   66|      3|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   67|      3|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   |  Branch (317:9): [True: 1, False: 3]
   |  Branch (317:59): [True: 1, False: 2]
@@ -373,7 +373,7 @@ handle_request:
   ------------------
   332|      0|        crypto_memzero(temp, MAX_CRYPTO_REQUEST_SIZE);
   ------------------
-  |  |   66|      0|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   67|      0|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   333|      0|        return -1;
   334|      0|    }
@@ -393,7 +393,7 @@ handle_request:
   342|      1|    memcpy(data, temp + 1, len1);
   343|      1|    crypto_memzero(temp, MAX_CRYPTO_REQUEST_SIZE);
   ------------------
-  |  |   66|      1|#define MAX_CRYPTO_REQUEST_SIZE 1024
+  |  |   67|      1|#define MAX_CRYPTO_REQUEST_SIZE 1024
   ------------------
   344|      1|    return len1;
   345|      1|}
@@ -508,23 +508,23 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_117TestHandleRequestERN3tox4test9Fuzz_DataE:
    20|       |
    21|      6|    CONSUME_OR_RETURN(const std::uint8_t *self_public_key, input, CRYPTO_PUBLIC_KEY_SIZE);
   ------------------
-  |  |  136|      6|    if ((INPUT).size() < (SIZE)) {           \
+  |  |  138|      6|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (136:9): [True: 1, False: 5]
+  |  |  |  Branch (138:9): [True: 1, False: 5]
   |  |  ------------------
-  |  |  137|      1|        return;                              \
-  |  |  138|      1|    }                                        \
-  |  |  139|      6|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  139|      1|        return;                              \
+  |  |  140|      1|    }                                        \
+  |  |  141|      6|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
    22|      5|    CONSUME_OR_RETURN(const std::uint8_t *self_secret_key, input, CRYPTO_SECRET_KEY_SIZE);
   ------------------
-  |  |  136|      5|    if ((INPUT).size() < (SIZE)) {           \
+  |  |  138|      5|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
-  |  |  |  Branch (136:9): [True: 1, False: 4]
+  |  |  |  Branch (138:9): [True: 1, False: 4]
   |  |  ------------------
-  |  |  137|      1|        return;                              \
-  |  |  138|      1|    }                                        \
-  |  |  139|      5|    DECL = (INPUT).consume(__func__, (SIZE))
+  |  |  139|      1|        return;                              \
+  |  |  140|      1|    }                                        \
+  |  |  141|      5|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
    23|       |
    24|      4|    std::uint8_t public_key[CRYPTO_PUBLIC_KEY_SIZE];
@@ -537,13 +537,13 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
    32|     34|{
    33|     34|    CONSUME1_OR_RETURN(const bool, tcp_enabled, input);
   ------------------
-  |  |  124|     34|    if ((INPUT).size() < sizeof(TYPE)) {      \
+  |  |  126|     34|    if ((INPUT).size() < sizeof(TYPE)) {      \
   |  |  ------------------
-  |  |  |  Branch (124:9): [True: 1, False: 33]
+  |  |  |  Branch (126:9): [True: 1, False: 33]
   |  |  ------------------
-  |  |  125|      1|        return;                               \
-  |  |  126|      1|    }                                         \
-  |  |  127|     34|    TYPE NAME = (INPUT).consume1(__func__)
+  |  |  127|      1|        return;                               \
+  |  |  128|      1|    }                                         \
+  |  |  129|     34|    TYPE NAME = (INPUT).consume1(__func__)
   ------------------
    34|       |
    35|     33|    const std::uint16_t node_count = 5;
@@ -560,9 +560,9 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
    43|     17|        Logger *logger = logger_new(&c_mem);
    44|     17|        std::vector<std::uint8_t> packed(packed_count * PACKED_NODE_SIZE_IP6);
   ------------------
-  |  |   74|     17|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
+  |  |   75|     17|#define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
   |  |  ------------------
-  |  |  |  |   32|     17|#define SIZE_IP6 16
+  |  |  |  |   26|     17|#define SIZE_IP6 16
   |  |  ------------------
   |  |               #define PACKED_NODE_SIZE_IP6 (1 + SIZE_IP6 + sizeof(uint16_t) + CRYPTO_PUBLIC_KEY_SIZE)
   |  |  ------------------
@@ -959,97 +959,98 @@ mem_delete:
    60|     17|}
 
 net_family_ipv4:
-  387|     33|{
-  388|     33|    return family_ipv4;
-  389|     33|}
+  180|     33|{
+  181|     33|    return family_ipv4;
+  182|     33|}
 net_family_ipv6:
-  392|     23|{
-  393|     23|    return family_ipv6;
-  394|     23|}
+  185|     23|{
+  186|     23|    return family_ipv6;
+  187|     23|}
 net_family_tcp_ipv4:
-  407|     29|{
-  408|     29|    return family_tcp_ipv4;
-  409|     29|}
+  200|     29|{
+  201|     29|    return family_tcp_ipv4;
+  202|     29|}
 net_family_tcp_ipv6:
-  412|     18|{
-  413|     18|    return family_tcp_ipv6;
-  414|     18|}
+  205|     18|{
+  206|     18|    return family_tcp_ipv6;
+  207|     18|}
 net_family_is_ipv4:
-  432|     76|{
-  433|     76|    return family.value == family_ipv4.value;
-  434|     76|}
+  225|     76|{
+  226|     76|    return family.value == family_ipv4.value;
+  227|     76|}
 net_family_is_ipv6:
-  437|     30|{
-  438|     30|    return family.value == family_ipv6.value;
-  439|     30|}
+  230|     30|{
+  231|     30|    return family.value == family_ipv6.value;
+  232|     30|}
 net_family_is_tcp_ipv4:
-  452|     48|{
-  453|     48|    return family.value == family_tcp_ipv4.value;
-  454|     48|}
+  245|     48|{
+  246|     48|    return family.value == family_tcp_ipv4.value;
+  247|     48|}
 net_family_is_tcp_ipv6:
-  457|     14|{
-  458|     14|    return family.value == family_tcp_ipv6.value;
-  459|     14|}
+  250|     14|{
+  251|     14|    return family.value == family_tcp_ipv6.value;
+  252|     14|}
+
 ipport_reset:
- 1422|    103|{
- 1423|    103|    if (ipport == nullptr) {
+  647|    103|{
+  648|    103|    if (ipport == nullptr) {
   ------------------
   |  |   63|    103|#define nullptr NULL
   ------------------
-  |  Branch (1423:9): [True: 0, False: 103]
+  |  Branch (648:9): [True: 0, False: 103]
   ------------------
- 1424|      0|        return;
- 1425|      0|    }
- 1426|       |
- 1427|    103|    *ipport = empty_ip_port;
- 1428|    103|}
+  649|      0|        return;
+  650|      0|    }
+  651|       |
+  652|    103|    *ipport = empty_ip_port;
+  653|    103|}
 bin_pack_ip_port:
- 1515|     76|{
- 1516|     76|    bool is_ipv4;
- 1517|     76|    uint8_t family;
- 1518|       |
- 1519|     76|    if (net_family_is_ipv4(ip_port->ip.family)) {
+  740|     76|{
+  741|     76|    bool is_ipv4;
+  742|     76|    uint8_t family;
+  743|       |
+  744|     76|    if (net_family_is_ipv4(ip_port->ip.family)) {
   ------------------
-  |  Branch (1519:9): [True: 28, False: 48]
+  |  Branch (744:9): [True: 28, False: 48]
   ------------------
- 1520|       |        // TODO(irungentoo): use functions to convert endianness
- 1521|     28|        is_ipv4 = true;
- 1522|     28|        family = TOX_AF_INET;
+  745|       |        // TODO(irungentoo): use functions to convert endianness
+  746|     28|        is_ipv4 = true;
+  747|     28|        family = TOX_AF_INET;
   ------------------
-  |  |  197|     28|#define TOX_AF_INET 2
+  |  |   65|     28|#define TOX_AF_INET 2
   ------------------
- 1523|     48|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
+  748|     48|    } else if (net_family_is_tcp_ipv4(ip_port->ip.family)) {
   ------------------
-  |  Branch (1523:16): [True: 18, False: 30]
+  |  Branch (748:16): [True: 18, False: 30]
   ------------------
- 1524|     18|        is_ipv4 = true;
- 1525|     18|        family = TOX_TCP_INET;
+  749|     18|        is_ipv4 = true;
+  750|     18|        family = TOX_TCP_INET;
   ------------------
-  |  |  199|     18|#define TOX_TCP_INET 130
+  |  |   67|     18|#define TOX_TCP_INET 130
   ------------------
- 1526|     30|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
+  751|     30|    } else if (net_family_is_ipv6(ip_port->ip.family)) {
   ------------------
-  |  Branch (1526:16): [True: 16, False: 14]
+  |  Branch (751:16): [True: 16, False: 14]
   ------------------
- 1527|     16|        is_ipv4 = false;
- 1528|     16|        family = TOX_AF_INET6;
+  752|     16|        is_ipv4 = false;
+  753|     16|        family = TOX_AF_INET6;
   ------------------
-  |  |  198|     16|#define TOX_AF_INET6 10
+  |  |   66|     16|#define TOX_AF_INET6 10
   ------------------
- 1529|     16|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
+  754|     16|    } else if (net_family_is_tcp_ipv6(ip_port->ip.family)) {
   ------------------
-  |  Branch (1529:16): [True: 14, False: 0]
+  |  Branch (754:16): [True: 14, False: 0]
   ------------------
- 1530|     14|        is_ipv4 = false;
- 1531|     14|        family = TOX_TCP_INET6;
+  755|     14|        is_ipv4 = false;
+  756|     14|        family = TOX_TCP_INET6;
   ------------------
-  |  |  200|     14|#define TOX_TCP_INET6 138
+  |  |   68|     14|#define TOX_TCP_INET6 138
   ------------------
- 1532|     14|    } else {
- 1533|      0|        Ip_Ntoa ip_str;
- 1534|       |        // TODO(iphydf): Find out why we're trying to pack invalid IPs, stop
- 1535|       |        // doing that, and turn this into an error.
- 1536|      0|        LOGGER_TRACE(logger, "cannot pack invalid IP: %s", net_ip_ntoa(&ip_port->ip, &ip_str));
+  757|     14|    } else {
+  758|      0|        Ip_Ntoa ip_str;
+  759|       |        // TODO(iphydf): Find out why we're trying to pack invalid IPs, stop
+  760|       |        // doing that, and turn this into an error.
+  761|      0|        LOGGER_TRACE(logger, "cannot pack invalid IP: %s", net_ip_ntoa(&ip_port->ip, &ip_str));
   ------------------
   |  |   76|      0|#define LOGGER_TRACE(log, ...)   LOGGER_WRITE(log, LOGGER_LEVEL_TRACE, __VA_ARGS__)
   |  |  ------------------
@@ -1068,160 +1069,161 @@ bin_pack_ip_port:
   |  |  |  |  ------------------
   |  |  ------------------
   ------------------
- 1537|      0|        return false;
- 1538|      0|    }
- 1539|       |
- 1540|     76|    return bin_pack_u08_b(bp, family)
+  762|      0|        return false;
+  763|      0|    }
+  764|       |
+  765|     76|    return bin_pack_u08_b(bp, family)
   ------------------
-  |  Branch (1540:12): [True: 76, False: 0]
+  |  Branch (765:12): [True: 76, False: 0]
   ------------------
- 1541|     76|           && bin_pack_ip(bp, &ip_port->ip, is_ipv4)
+  766|     76|           && bin_pack_ip(bp, &ip_port->ip, is_ipv4)
   ------------------
-  |  Branch (1541:15): [True: 76, False: 0]
+  |  Branch (766:15): [True: 76, False: 0]
   ------------------
- 1542|     76|           && bin_pack_u16_b(bp, net_ntohs(ip_port->port));
+  767|     76|           && bin_pack_u16_b(bp, net_ntohs(ip_port->port));
   ------------------
-  |  Branch (1542:15): [True: 76, False: 0]
+  |  Branch (767:15): [True: 76, False: 0]
   ------------------
- 1543|     76|}
+  768|     76|}
 unpack_ip_port:
- 1568|    116|{
- 1569|    116|    if (data == nullptr) {
+  793|    116|{
+  794|    116|    if (data == nullptr) {
   ------------------
   |  |   63|    116|#define nullptr NULL
   ------------------
-  |  Branch (1569:9): [True: 0, False: 116]
+  |  Branch (794:9): [True: 0, False: 116]
   ------------------
- 1570|      0|        return -1;
- 1571|      0|    }
- 1572|       |
- 1573|    116|    bool is_ipv4;
- 1574|    116|    Family host_family;
- 1575|       |
- 1576|    116|    if (data[0] == TOX_AF_INET) {
+  795|      0|        return -1;
+  796|      0|    }
+  797|       |
+  798|    116|    bool is_ipv4;
+  799|    116|    Family host_family;
+  800|       |
+  801|    116|    if (data[0] == TOX_AF_INET) {
   ------------------
-  |  |  197|    116|#define TOX_AF_INET 2
+  |  |   65|    116|#define TOX_AF_INET 2
   ------------------
-  |  Branch (1576:9): [True: 33, False: 83]
+  |  Branch (801:9): [True: 33, False: 83]
   ------------------
- 1577|     33|        is_ipv4 = true;
- 1578|     33|        host_family = net_family_ipv4();
- 1579|     83|    } else if (data[0] == TOX_TCP_INET) {
+  802|     33|        is_ipv4 = true;
+  803|     33|        host_family = net_family_ipv4();
+  804|     83|    } else if (data[0] == TOX_TCP_INET) {
   ------------------
-  |  |  199|     83|#define TOX_TCP_INET 130
+  |  |   67|     83|#define TOX_TCP_INET 130
   ------------------
-  |  Branch (1579:16): [True: 30, False: 53]
+  |  Branch (804:16): [True: 30, False: 53]
   ------------------
- 1580|     30|        if (!tcp_enabled) {
+  805|     30|        if (!tcp_enabled) {
   ------------------
-  |  Branch (1580:13): [True: 1, False: 29]
+  |  Branch (805:13): [True: 1, False: 29]
   ------------------
- 1581|      1|            return -1;
- 1582|      1|        }
- 1583|       |
- 1584|     29|        is_ipv4 = true;
- 1585|     29|        host_family = net_family_tcp_ipv4();
- 1586|     53|    } else if (data[0] == TOX_AF_INET6) {
+  806|      1|            return -1;
+  807|      1|        }
+  808|       |
+  809|     29|        is_ipv4 = true;
+  810|     29|        host_family = net_family_tcp_ipv4();
+  811|     53|    } else if (data[0] == TOX_AF_INET6) {
   ------------------
-  |  |  198|     53|#define TOX_AF_INET6 10
+  |  |   66|     53|#define TOX_AF_INET6 10
   ------------------
-  |  Branch (1586:16): [True: 23, False: 30]
+  |  Branch (811:16): [True: 23, False: 30]
   ------------------
- 1587|     23|        is_ipv4 = false;
- 1588|     23|        host_family = net_family_ipv6();
- 1589|     30|    } else if (data[0] == TOX_TCP_INET6) {
+  812|     23|        is_ipv4 = false;
+  813|     23|        host_family = net_family_ipv6();
+  814|     30|    } else if (data[0] == TOX_TCP_INET6) {
   ------------------
-  |  |  200|     30|#define TOX_TCP_INET6 138
+  |  |   68|     30|#define TOX_TCP_INET6 138
   ------------------
-  |  Branch (1589:16): [True: 19, False: 11]
+  |  Branch (814:16): [True: 19, False: 11]
   ------------------
- 1590|     19|        if (!tcp_enabled) {
+  815|     19|        if (!tcp_enabled) {
   ------------------
-  |  Branch (1590:13): [True: 1, False: 18]
+  |  Branch (815:13): [True: 1, False: 18]
   ------------------
- 1591|      1|            return -1;
- 1592|      1|        }
- 1593|       |
- 1594|     18|        is_ipv4 = false;
- 1595|     18|        host_family = net_family_tcp_ipv6();
- 1596|     18|    } else {
- 1597|     11|        return -1;
- 1598|     11|    }
- 1599|       |
- 1600|    103|    ipport_reset(ip_port);
- 1601|       |
- 1602|    103|    if (is_ipv4) {
+  816|      1|            return -1;
+  817|      1|        }
+  818|       |
+  819|     18|        is_ipv4 = false;
+  820|     18|        host_family = net_family_tcp_ipv6();
+  821|     18|    } else {
+  822|     11|        return -1;
+  823|     11|    }
+  824|       |
+  825|    103|    ipport_reset(ip_port);
+  826|       |
+  827|    103|    if (is_ipv4) {
   ------------------
-  |  Branch (1602:9): [True: 62, False: 41]
+  |  Branch (827:9): [True: 62, False: 41]
   ------------------
- 1603|     62|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
+  828|     62|        const uint32_t size = 1 + SIZE_IP4 + sizeof(uint16_t);
   ------------------
-  |  |   31|     62|#define SIZE_IP4 4
+  |  |   25|     62|#define SIZE_IP4 4
   ------------------
- 1604|       |
- 1605|     62|        if (size > length) {
+  829|       |
+  830|     62|        if (size > length) {
   ------------------
-  |  Branch (1605:13): [True: 4, False: 58]
+  |  Branch (830:13): [True: 4, False: 58]
   ------------------
- 1606|      4|            return -1;
- 1607|      4|        }
- 1608|       |
- 1609|     58|        ip_port->ip.family = host_family;
- 1610|     58|        memcpy(ip_port->ip.ip.v4.uint8, data + 1, SIZE_IP4);
+  831|      4|            return -1;
+  832|      4|        }
+  833|       |
+  834|     58|        ip_port->ip.family = host_family;
+  835|     58|        memcpy(ip_port->ip.ip.v4.uint8, data + 1, SIZE_IP4);
   ------------------
-  |  |   31|     58|#define SIZE_IP4 4
+  |  |   25|     58|#define SIZE_IP4 4
   ------------------
- 1611|     58|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
+  836|     58|        memcpy(&ip_port->port, data + 1 + SIZE_IP4, sizeof(uint16_t));
   ------------------
-  |  |   31|     58|#define SIZE_IP4 4
+  |  |   25|     58|#define SIZE_IP4 4
   ------------------
- 1612|     58|        return size;
- 1613|     62|    } else {
- 1614|     41|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
+  837|     58|        return size;
+  838|     62|    } else {
+  839|     41|        const uint32_t size = 1 + SIZE_IP6 + sizeof(uint16_t);
   ------------------
-  |  |   32|     41|#define SIZE_IP6 16
+  |  |   26|     41|#define SIZE_IP6 16
   ------------------
- 1615|       |
- 1616|     41|        if (size > length) {
+  840|       |
+  841|     41|        if (size > length) {
   ------------------
-  |  Branch (1616:13): [True: 3, False: 38]
+  |  Branch (841:13): [True: 3, False: 38]
   ------------------
- 1617|      3|            return -1;
- 1618|      3|        }
- 1619|       |
- 1620|     38|        ip_port->ip.family = host_family;
- 1621|     38|        memcpy(ip_port->ip.ip.v6.uint8, data + 1, SIZE_IP6);
+  842|      3|            return -1;
+  843|      3|        }
+  844|       |
+  845|     38|        ip_port->ip.family = host_family;
+  846|     38|        memcpy(ip_port->ip.ip.v6.uint8, data + 1, SIZE_IP6);
   ------------------
-  |  |   32|     38|#define SIZE_IP6 16
+  |  |   26|     38|#define SIZE_IP6 16
   ------------------
- 1622|     38|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
+  847|     38|        memcpy(&ip_port->port, data + 1 + SIZE_IP6, sizeof(uint16_t));
   ------------------
-  |  |   32|     38|#define SIZE_IP6 16
+  |  |   26|     38|#define SIZE_IP6 16
   ------------------
- 1623|     38|        return size;
- 1624|     41|    }
- 1625|    103|}
-net_ntohs:
- 1970|     76|{
- 1971|       |    return ntohs(hostshort);
- 1972|     76|}
+  848|     38|        return size;
+  849|     41|    }
+  850|    103|}
 network.c:bin_pack_ip:
- 1502|     76|{
- 1503|     76|    if (is_ipv4) {
+  727|     76|{
+  728|     76|    if (is_ipv4) {
   ------------------
-  |  Branch (1503:9): [True: 46, False: 30]
+  |  Branch (728:9): [True: 46, False: 30]
   ------------------
- 1504|     46|        return bin_pack_bin_b(bp, ip->ip.v4.uint8, SIZE_IP4);
+  729|     46|        return bin_pack_bin_b(bp, ip->ip.v4.uint8, SIZE_IP4);
   ------------------
-  |  |   31|     46|#define SIZE_IP4 4
+  |  |   25|     46|#define SIZE_IP4 4
   ------------------
- 1505|     46|    } else {
- 1506|     30|        return bin_pack_bin_b(bp, ip->ip.v6.uint8, SIZE_IP6);
+  730|     46|    } else {
+  731|     30|        return bin_pack_bin_b(bp, ip->ip.v6.uint8, SIZE_IP6);
   ------------------
-  |  |   32|     30|#define SIZE_IP6 16
+  |  |   26|     30|#define SIZE_IP6 16
   ------------------
- 1507|     30|    }
- 1508|     76|}
+  732|     30|    }
+  733|     76|}
+
+net_ntohs:
+  606|     76|{
+  607|       |    return ntohs(hostshort);
+  608|     76|}
 
 memzero:
    99|      2|{
