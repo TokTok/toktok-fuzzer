@@ -656,124 +656,150 @@ DHT_fuzz_test.cc:_ZN12_GLOBAL__N_115TestUnpackNodesERN3tox4test9Fuzz_DataE:
    64|     33|}
 
 bin_pack_obj_array_b_size:
-   81|     17|{
-   82|     17|    Bin_Pack bp;
-   83|     17|    bin_pack_init(&bp, nullptr, 0);
+   89|     17|{
+   90|     17|    Bin_Pack bp;
+   91|     17|    bin_pack_init(&bp, nullptr, 0);
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-   84|     17|    if (arr == nullptr) {
+   92|     17|    if (arr == nullptr) {
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-  |  Branch (84:9): [True: 0, False: 17]
+  |  Branch (92:9): [True: 0, False: 17]
   ------------------
-   85|      0|        assert(arr_size == 0);
+   93|      0|        assert(arr_size == 0);
   ------------------
-  |  Branch (85:9): [True: 0, False: 0]
+  |  Branch (93:9): [True: 0, False: 0]
   ------------------
-   86|      0|    }
-   87|     55|    for (uint32_t i = 0; i < arr_size; ++i) {
+   94|      0|    }
+   95|     55|    for (uint32_t i = 0; i < arr_size; ++i) {
   ------------------
-  |  Branch (87:26): [True: 38, False: 17]
+  |  Branch (95:26): [True: 38, False: 17]
   ------------------
-   88|     38|        if (!callback(arr, i, logger, &bp)) {
+   96|     38|        if (!callback(arr, i, logger, &bp)) {
   ------------------
-  |  Branch (88:13): [True: 0, False: 38]
+  |  Branch (96:13): [True: 0, False: 38]
   ------------------
-   89|      0|            return UINT32_MAX;
-   90|      0|        }
-   91|     38|    }
-   92|     17|    return bp.bytes_pos;
-   93|     17|}
+   97|      0|            return UINT32_MAX;
+   98|      0|        }
+   99|     38|    }
+  100|     17|    return bp.bytes_pos;
+  101|     17|}
 bin_pack_obj_array_b:
-   96|     17|{
-   97|     17|    Bin_Pack bp;
-   98|     17|    bin_pack_init(&bp, buf, buf_size);
-   99|     17|    if (arr == nullptr) {
+  104|     17|{
+  105|     17|    Bin_Pack bp;
+  106|     17|    bin_pack_init(&bp, buf, buf_size);
+  107|     17|    if (arr == nullptr) {
   ------------------
   |  |   63|     17|#define nullptr NULL
   ------------------
-  |  Branch (99:9): [True: 0, False: 17]
+  |  Branch (107:9): [True: 0, False: 17]
   ------------------
-  100|      0|        assert(arr_size == 0);
+  108|      0|        assert(arr_size == 0);
   ------------------
-  |  Branch (100:9): [True: 0, False: 0]
+  |  Branch (108:9): [True: 0, False: 0]
   ------------------
-  101|      0|    }
-  102|     55|    for (uint32_t i = 0; i < arr_size; ++i) {
+  109|      0|    }
+  110|     55|    for (uint32_t i = 0; i < arr_size; ++i) {
   ------------------
-  |  Branch (102:26): [True: 38, False: 17]
+  |  Branch (110:26): [True: 38, False: 17]
   ------------------
-  103|     38|        if (!callback(arr, i, logger, &bp)) {
+  111|     38|        if (!callback(arr, i, logger, &bp)) {
   ------------------
-  |  Branch (103:13): [True: 0, False: 38]
+  |  Branch (111:13): [True: 0, False: 38]
   ------------------
-  104|      0|            return false;
-  105|      0|        }
-  106|     38|    }
-  107|     17|    return true;
-  108|     17|}
+  112|      0|            return false;
+  113|      0|        }
+  114|     38|    }
+  115|     17|    return true;
+  116|     17|}
 bin_pack_u08_b:
-  176|    228|{
-  177|    228|    return bp->ctx.write(&bp->ctx, &val, 1) == 1;
-  178|    228|}
+  205|    228|{
+  206|    228|    return bp->ctx.write(&bp->ctx, &val, 1) == 1;
+  207|    228|}
 bin_pack_u16_b:
-  181|     76|{
-  182|     76|    return bin_pack_u08_b(bp, (val >> 8) & 0xff)
+  210|     76|{
+  211|     76|    return bin_pack_u08_b(bp, (val >> 8) & 0xff)
   ------------------
-  |  Branch (182:12): [True: 76, False: 0]
+  |  Branch (211:12): [True: 76, False: 0]
   ------------------
-  183|     76|           && bin_pack_u08_b(bp, val & 0xff);
+  212|     76|           && bin_pack_u08_b(bp, val & 0xff);
   ------------------
-  |  Branch (183:15): [True: 76, False: 0]
+  |  Branch (212:15): [True: 76, False: 0]
   ------------------
-  184|     76|}
+  213|     76|}
 bin_pack_bin_b:
-  199|    152|{
-  200|    152|    return bp->ctx.write(&bp->ctx, data, length) == length;
-  201|    152|}
+  228|    152|{
+  229|    152|    if (length > 0 && data == nullptr) {
+  ------------------
+  |  |   63|    152|#define nullptr NULL
+  ------------------
+  |  Branch (229:9): [True: 152, False: 0]
+  |  Branch (229:23): [True: 0, False: 152]
+  ------------------
+  230|      0|        return false;
+  231|      0|    }
+  232|       |
+  233|    152|    return bp->ctx.write(&bp->ctx, data, length) == length;
+  234|    152|}
 bin_pack.c:bin_pack_init:
-   56|     34|{
-   57|     34|    bp->bytes = buf;
-   58|     34|    bp->bytes_size = buf_size;
-   59|     34|    bp->bytes_pos = 0;
-   60|     34|    cmp_init(&bp->ctx, bp, null_reader, null_skipper, buf_writer);
-   61|     34|}
+   64|     34|{
+   65|     34|    bp->bytes = buf;
+   66|     34|    bp->bytes_size = buf_size;
+   67|     34|    bp->bytes_pos = 0;
+   68|     34|    cmp_init(&bp->ctx, bp, null_reader, null_skipper, buf_writer);
+   69|     34|}
 bin_pack.c:buf_writer:
    35|    380|{
-   36|    380|    const uint8_t *bytes = (const uint8_t *)data;
-   37|    380|    Bin_Pack *bp = (Bin_Pack *)ctx->buf;
-   38|    380|    assert(bp != nullptr);
+   36|    380|    const uint8_t *const bytes = (const uint8_t *)data;
+   37|       |
+   38|    380|    if (count == 0) {
   ------------------
-  |  Branch (38:5): [True: 380, False: 0]
+  |  Branch (38:9): [True: 0, False: 380]
   ------------------
-   39|    380|    const uint32_t new_pos = bp->bytes_pos + count;
-   40|    380|    if (new_pos < bp->bytes_pos) {
-  ------------------
-  |  Branch (40:9): [True: 0, False: 380]
-  ------------------
-   41|       |        // 32 bit overflow.
-   42|      0|        return 0;
-   43|      0|    }
-   44|    380|    if (bp->bytes != nullptr) {
+   39|      0|        return 0;
+   40|      0|    }
+   41|       |
+   42|    380|    if (bytes == nullptr) {
   ------------------
   |  |   63|    380|#define nullptr NULL
   ------------------
-  |  Branch (44:9): [True: 190, False: 190]
+  |  Branch (42:9): [True: 0, False: 380]
   ------------------
-   45|    190|        if (new_pos > bp->bytes_size) {
+   43|      0|        return 0;
+   44|      0|    }
+   45|    380|    Bin_Pack *const bp = (Bin_Pack *)ctx->buf;
+   46|    380|    assert(bp != nullptr);
   ------------------
-  |  Branch (45:13): [True: 0, False: 190]
+  |  Branch (46:5): [True: 380, False: 0]
   ------------------
-   46|       |            // Buffer too small.
-   47|      0|            return 0;
-   48|      0|        }
-   49|    190|        memcpy(&bp->bytes[bp->bytes_pos], bytes, count);
-   50|    190|    }
-   51|    380|    bp->bytes_pos += count;
-   52|    380|    return count;
-   53|    380|}
+   47|    380|    const uint32_t new_pos = bp->bytes_pos + count;
+   48|    380|    if (new_pos < bp->bytes_pos) {
+  ------------------
+  |  Branch (48:9): [True: 0, False: 380]
+  ------------------
+   49|       |        // 32 bit overflow.
+   50|      0|        return 0;
+   51|      0|    }
+   52|    380|    if (bp->bytes != nullptr) {
+  ------------------
+  |  |   63|    380|#define nullptr NULL
+  ------------------
+  |  Branch (52:9): [True: 190, False: 190]
+  ------------------
+   53|    190|        if (new_pos > bp->bytes_size) {
+  ------------------
+  |  Branch (53:13): [True: 0, False: 190]
+  ------------------
+   54|       |            // Buffer too small.
+   55|      0|            return 0;
+   56|      0|        }
+   57|    190|        memcpy(&bp->bytes[bp->bytes_pos], bytes, count);
+   58|    190|    }
+   59|    380|    bp->bytes_pos += count;
+   60|    380|    return count;
+   61|    380|}
 
 crypto_memzero:
   115|      2|{
