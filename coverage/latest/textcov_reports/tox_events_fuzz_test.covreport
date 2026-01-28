@@ -1,30 +1,30 @@
 _ZN3tox4test16FakeNetworkStackC2ERNS0_15NetworkUniverseERK2IP:
-   98|    705|    : universe_(universe)
-   99|    705|    , node_ip_(node_ip)
-  100|    705|{
-  101|    705|}
+   98|    706|    : universe_(universe)
+   99|    706|    , node_ip_(node_ip)
+  100|    706|{
+  101|    706|}
 _ZN3tox4test16FakeNetworkStackD2Ev:
-  103|    705|FakeNetworkStack::~FakeNetworkStack() = default;
+  103|    706|FakeNetworkStack::~FakeNetworkStack() = default;
 _ZN3tox4test16FakeNetworkStack9c_networkEv:
-  105|    705|struct Network FakeNetworkStack::c_network() { return Network{&kNetworkVtable, this}; }
+  105|    706|struct Network FakeNetworkStack::c_network() { return Network{&kNetworkVtable, this}; }
 _ZN3tox4test16FakeNetworkStack6socketEiii:
-  108|    705|{
-  109|    705|    std::lock_guard<std::mutex> lock(mutex_);
-  110|    705|    int fd = next_fd_++;
+  108|    706|{
+  109|    706|    std::lock_guard<std::mutex> lock(mutex_);
+  110|    706|    int fd = next_fd_++;
   111|       |
-  112|    705|    std::unique_ptr<FakeSocket> sock;
-  113|    705|    if (type == SOCK_DGRAM) {
+  112|    706|    std::unique_ptr<FakeSocket> sock;
+  113|    706|    if (type == SOCK_DGRAM) {
   ------------------
-  |  Branch (113:9): [True: 705, False: 0]
+  |  Branch (113:9): [True: 706, False: 0]
   ------------------
-  114|    705|        if (universe_.is_verbose()) {
+  114|    706|        if (universe_.is_verbose()) {
   ------------------
-  |  Branch (114:13): [True: 0, False: 705]
+  |  Branch (114:13): [True: 0, False: 706]
   ------------------
   115|      0|            std::cerr << "[FakeNetworkStack] create UDP socket fd=" << fd << std::endl;
   116|      0|        }
-  117|    705|        sock = std::make_unique<FakeUdpSocket>(universe_);
-  118|    705|    } else if (type == SOCK_STREAM) {
+  117|    706|        sock = std::make_unique<FakeUdpSocket>(universe_);
+  118|    706|    } else if (type == SOCK_STREAM) {
   ------------------
   |  Branch (118:16): [True: 0, False: 0]
   ------------------
@@ -40,32 +40,32 @@ _ZN3tox4test16FakeNetworkStack6socketEiii:
   125|      0|        return net_socket_from_native(-1);
   126|      0|    }
   127|       |
-  128|    705|    sockets_[fd] = std::move(sock);
-  129|    705|    sockets_[fd]->set_ip(node_ip_);
-  130|    705|    return net_socket_from_native(fd);
-  131|    705|}
+  128|    706|    sockets_[fd] = std::move(sock);
+  129|    706|    sockets_[fd]->set_ip(node_ip_);
+  130|    706|    return net_socket_from_native(fd);
+  131|    706|}
 _ZN3tox4test16FakeNetworkStack8get_sockE6Socket:
-  134|    705|{
-  135|    705|    std::lock_guard<std::mutex> lock(mutex_);
-  136|    705|    auto it = sockets_.find(net_socket_to_native(sock));
-  137|    705|    if (it != sockets_.end()) {
+  134|    706|{
+  135|    706|    std::lock_guard<std::mutex> lock(mutex_);
+  136|    706|    auto it = sockets_.find(net_socket_to_native(sock));
+  137|    706|    if (it != sockets_.end()) {
   ------------------
-  |  Branch (137:9): [True: 705, False: 0]
+  |  Branch (137:9): [True: 706, False: 0]
   ------------------
-  138|    705|        return it->second.get();
-  139|    705|    }
+  138|    706|        return it->second.get();
+  139|    706|    }
   140|      0|    return nullptr;
-  141|    705|}
+  141|    706|}
 _ZN3tox4test16FakeNetworkStack4bindE6SocketPK7IP_Port:
-  159|    705|{
-  160|    705|    if (auto *s = get_sock(sock)) {
+  159|    706|{
+  160|    706|    if (auto *s = get_sock(sock)) {
   ------------------
-  |  Branch (160:15): [True: 705, False: 0]
+  |  Branch (160:15): [True: 706, False: 0]
   ------------------
-  161|    705|        int ret = s->bind(addr);
-  162|    705|        if (universe_.is_verbose() && ret == 0) {
+  161|    706|        int ret = s->bind(addr);
+  162|    706|        if (universe_.is_verbose() && ret == 0) {
   ------------------
-  |  Branch (162:13): [True: 0, False: 705]
+  |  Branch (162:13): [True: 0, False: 706]
   |  Branch (162:39): [True: 0, False: 0]
   ------------------
   163|      0|            char ip_str[TOX_INET_ADDRSTRLEN];
@@ -73,92 +73,92 @@ _ZN3tox4test16FakeNetworkStack4bindE6SocketPK7IP_Port:
   165|      0|            std::cerr << "[FakeNetworkStack] bound socket to " << ip_str << ":" << s->local_port()
   166|      0|                      << std::endl;
   167|      0|        }
-  168|    705|        return ret;
-  169|    705|    }
-  170|    705|    errno = EBADF;
+  168|    706|        return ret;
+  169|    706|    }
+  170|    706|    errno = EBADF;
   171|      0|    return -1;
-  172|    705|}
+  172|    706|}
 _ZN3tox4test16FakeNetworkStack21get_bound_udp_socketsEv:
-  292|    705|{
-  293|    705|    std::lock_guard<std::mutex> lock(mutex_);
-  294|    705|    std::vector<FakeUdpSocket *> result;
-  295|    705|    for (const auto &pair : sockets_) {
+  292|    706|{
+  293|    706|    std::lock_guard<std::mutex> lock(mutex_);
+  294|    706|    std::vector<FakeUdpSocket *> result;
+  295|    706|    for (const auto &pair : sockets_) {
   ------------------
-  |  Branch (295:27): [True: 705, False: 705]
+  |  Branch (295:27): [True: 706, False: 706]
   ------------------
-  296|    705|        FakeSocket *s = pair.second.get();
-  297|    705|        if (s->type() == SOCK_DGRAM && s->local_port() != 0) {
+  296|    706|        FakeSocket *s = pair.second.get();
+  297|    706|        if (s->type() == SOCK_DGRAM && s->local_port() != 0) {
   ------------------
-  |  Branch (297:13): [True: 705, False: 0]
-  |  Branch (297:40): [True: 705, False: 0]
+  |  Branch (297:13): [True: 706, False: 0]
+  |  Branch (297:40): [True: 706, False: 0]
   ------------------
-  298|    705|            result.push_back(static_cast<FakeUdpSocket *>(s));
-  299|    705|        }
-  300|    705|    }
-  301|    705|    return result;
-  302|    705|}
+  298|    706|            result.push_back(static_cast<FakeUdpSocket *>(s));
+  299|    706|        }
+  300|    706|    }
+  301|    706|    return result;
+  302|    706|}
 
 _ZN3tox4test10FakeSocketC2ERNS0_15NetworkUniverseEi:
-   19|    705|    : universe_(universe)
-   20|    705|    , type_(type)
-   21|    705|{
-   22|    705|    ip_init(&ip_, false);
-   23|    705|    ip_.ip.v4.uint32 = net_htonl(0x7F000001);
-   24|    705|}
+   19|    706|    : universe_(universe)
+   20|    706|    , type_(type)
+   21|    706|{
+   22|    706|    ip_init(&ip_, false);
+   23|    706|    ip_.ip.v4.uint32 = net_htonl(0x7F000001);
+   24|    706|}
 _ZN3tox4test10FakeSocketD2Ev:
-   26|    705|FakeSocket::~FakeSocket() = default;
+   26|    706|FakeSocket::~FakeSocket() = default;
 _ZN3tox4test13FakeUdpSocketC2ERNS0_15NetworkUniverseE:
-   51|    705|    : FakeSocket(universe, SOCK_DGRAM)
-   52|    705|{
-   53|    705|}
+   51|    706|    : FakeSocket(universe, SOCK_DGRAM)
+   52|    706|{
+   53|    706|}
 _ZN3tox4test13FakeUdpSocketD2Ev:
-   55|    705|FakeUdpSocket::~FakeUdpSocket() { close_impl(); }
+   55|    706|FakeUdpSocket::~FakeUdpSocket() { close_impl(); }
 _ZN3tox4test13FakeUdpSocket10close_implEv:
-   65|    705|{
-   66|    705|    if (local_port_ != 0) {
+   65|    706|{
+   66|    706|    if (local_port_ != 0) {
   ------------------
-  |  Branch (66:9): [True: 705, False: 0]
+  |  Branch (66:9): [True: 706, False: 0]
   ------------------
-   67|    705|        universe_.unbind_udp(ip_, local_port_);
-   68|    705|        local_port_ = 0;
-   69|    705|    }
-   70|    705|}
+   67|    706|        universe_.unbind_udp(ip_, local_port_);
+   68|    706|        local_port_ = 0;
+   69|    706|    }
+   70|    706|}
 _ZN3tox4test13FakeUdpSocket4bindEPK7IP_Port:
-   73|    705|{
-   74|    705|    std::lock_guard<std::mutex> lock(mutex_);
-   75|    705|    if (local_port_ != 0)
+   73|    706|{
+   74|    706|    std::lock_guard<std::mutex> lock(mutex_);
+   75|    706|    if (local_port_ != 0)
   ------------------
-  |  Branch (75:9): [True: 0, False: 705]
+  |  Branch (75:9): [True: 0, False: 706]
   ------------------
    76|      0|        return -1;  // Already bound
    77|       |
-   78|    705|    uint16_t port = addr->port;
-   79|    705|    if (port == 0) {
+   78|    706|    uint16_t port = addr->port;
+   79|    706|    if (port == 0) {
   ------------------
-  |  Branch (79:9): [True: 0, False: 705]
+  |  Branch (79:9): [True: 0, False: 706]
   ------------------
    80|      0|        port = universe_.find_free_port(ip_);
-   81|    705|    } else {
-   82|    705|        port = net_ntohs(port);
-   83|    705|    }
+   81|    706|    } else {
+   82|    706|        port = net_ntohs(port);
+   83|    706|    }
    84|       |
-   85|    705|    if (universe_.bind_udp(ip_, port, this)) {
+   85|    706|    if (universe_.bind_udp(ip_, port, this)) {
   ------------------
-  |  Branch (85:9): [True: 705, False: 0]
+  |  Branch (85:9): [True: 706, False: 0]
   ------------------
-   86|    705|        local_port_ = port;
-   87|    705|        return 0;
-   88|    705|    }
-   89|    705|    errno = EADDRINUSE;
+   86|    706|        local_port_ = port;
+   87|    706|        return 0;
+   88|    706|    }
+   89|    706|    errno = EADDRINUSE;
    90|      0|    return -1;
-   91|    705|}
+   91|    706|}
 
 _ZNK3tox4test10FakeSocket4typeEv:
-   59|    705|    int type() const { return type_; }
+   59|    706|    int type() const { return type_; }
 _ZNK3tox4test10FakeSocket10local_portEv:
-   60|    705|    uint16_t local_port() const { return local_port_; }
+   60|    706|    uint16_t local_port() const { return local_port_; }
 _ZN3tox4test10FakeSocket6set_ipERK2IP:
-   63|    705|    void set_ip(const IP &ip) { ip_ = ip; }
+   63|    706|    void set_ip(const IP &ip) { ip_ = ip; }
 
 _ZNK3tox4test15NetworkUniverse11IP_Port_KeyltERKS2_:
    35|  1.41k|{
@@ -183,26 +183,26 @@ _ZNK3tox4test15NetworkUniverse11IP_Port_KeyltERKS2_:
    45|      0|    return std::memcmp(&ip.ip.v6, &other.ip.ip.v6, sizeof(ip.ip.v6)) < 0;
    46|  1.41k|}
 _ZN3tox4test15NetworkUniverseC2Ev:
-   48|    705|NetworkUniverse::NetworkUniverse() { }
+   48|    706|NetworkUniverse::NetworkUniverse() { }
 _ZN3tox4test15NetworkUniverseD2Ev:
-   49|    705|NetworkUniverse::~NetworkUniverse() { }
+   49|    706|NetworkUniverse::~NetworkUniverse() { }
 _ZN3tox4test15NetworkUniverse8bind_udpE2IPtPNS0_13FakeUdpSocketE:
-   52|    705|{
-   53|    705|    std::lock_guard<std::recursive_mutex> lock(mutex_);
-   54|    705|    IP_Port_Key key{ip, port};
-   55|    705|    if (udp_bindings_.count(key))
+   52|    706|{
+   53|    706|    std::lock_guard<std::recursive_mutex> lock(mutex_);
+   54|    706|    IP_Port_Key key{ip, port};
+   55|    706|    if (udp_bindings_.count(key))
   ------------------
-  |  Branch (55:9): [True: 0, False: 705]
+  |  Branch (55:9): [True: 0, False: 706]
   ------------------
    56|      0|        return false;
-   57|    705|    udp_bindings_[key] = socket;
-   58|    705|    return true;
-   59|    705|}
+   57|    706|    udp_bindings_[key] = socket;
+   58|    706|    return true;
+   59|    706|}
 _ZN3tox4test15NetworkUniverse10unbind_udpE2IPt:
-   62|    705|{
-   63|    705|    std::lock_guard<std::recursive_mutex> lock(mutex_);
-   64|    705|    udp_bindings_.erase({ip, port});
-   65|    705|}
+   62|    706|{
+   63|    706|    std::lock_guard<std::recursive_mutex> lock(mutex_);
+   64|    706|    udp_bindings_.erase({ip, port});
+   65|    706|}
 _ZNK3tox4test15NetworkUniverse10is_verboseEv:
   292|  2.11k|bool NetworkUniverse::is_verbose() const { return verbose_; }
 
@@ -238,54 +238,54 @@ _ZN3tox4test9Fuzz_Data7consumeEPKcm:
   121|  2.19k|        return val;
   122|  2.19k|    }
 _ZNK3tox4test9Fuzz_Data5emptyEv:
-  104|    706|    bool empty() const { return size_ == 0; }
+  104|    707|    bool empty() const { return size_ == 0; }
 _ZN3tox4test9Fuzz_DataC2EPKhm:
-   25|    708|        : data_(input_data)
-   26|    708|        , base_(input_data)
-   27|    708|        , size_(input_size)
-   28|    708|    {
-   29|    708|    }
+   25|    709|        : data_(input_data)
+   26|    709|        , base_(input_data)
+   27|    709|        , size_(input_size)
+   28|    709|    {
+   29|    709|    }
 
 _ZN3tox4test10Simulation5clockEv:
-  155|    705|    FakeClock &clock() { return *clock_; }
+  155|    706|    FakeClock &clock() { return *clock_; }
 _ZN3tox4test10Simulation3netEv:
-  157|    705|    NetworkUniverse &net() { return *net_; }
+  157|    706|    NetworkUniverse &net() { return *net_; }
 _ZN3tox4test13SimulatedNode12fake_networkEv:
   201|  1.41k|    FakeNetworkStack &fake_network() { return *network_; }
 _ZN3tox4test9LogFilterC2Ev:
-   51|    705|    LogFilter() = default;
+   51|    706|    LogFilter() = default;
 
 _ZN3tox4test11ClockSystemD2Ev:
-    5|    705|ClockSystem::~ClockSystem() = default;
+    5|    706|ClockSystem::~ClockSystem() = default;
 
 _ZN3tox4test11EnvironmentD2Ev:
     5|  1.41k|Environment::~Environment() = default;
 
 _ZN3tox4test9FakeClockC2Em:
-    6|    705|    : now_ms_(start_time_ms)
-    7|    705|{
-    8|    705|}
+    6|    706|    : now_ms_(start_time_ms)
+    7|    706|{
+    8|    706|}
 
 _ZN3tox4test10FakeMemoryC2Ev:
    25|  1.41k|FakeMemory::FakeMemory() = default;
 _ZN3tox4test10FakeMemoryD2Ev:
    26|  1.41k|FakeMemory::~FakeMemory() = default;
 _ZN3tox4test10FakeMemory6mallocEm:
-   29|  2.79k|{
-   30|  2.79k|    bool fail = failure_injector_ && failure_injector_(size);
+   29|  2.78k|{
+   30|  2.78k|    bool fail = failure_injector_ && failure_injector_(size);
   ------------------
-  |  Branch (30:17): [True: 2.79k, False: 0]
+  |  Branch (30:17): [True: 2.78k, False: 0]
   |  Branch (30:38): [True: 44, False: 2.74k]
   ------------------
    31|       |
-   32|  2.79k|    if (observer_) {
+   32|  2.78k|    if (observer_) {
   ------------------
-  |  Branch (32:9): [True: 0, False: 2.79k]
+  |  Branch (32:9): [True: 0, False: 2.78k]
   ------------------
    33|      0|        observer_(!fail);
    34|      0|    }
    35|       |
-   36|  2.79k|    if (fail) {
+   36|  2.78k|    if (fail) {
   ------------------
   |  Branch (36:9): [True: 44, False: 2.74k]
   ------------------
@@ -309,18 +309,18 @@ _ZN3tox4test10FakeMemory6mallocEm:
    51|  2.74k|    return header + 1;
    52|  2.74k|}
 _ZN3tox4test10FakeMemory7reallocEPvm:
-   55|    832|{
-   56|    832|    if (!ptr) {
+   55|    828|{
+   56|    828|    if (!ptr) {
   ------------------
-  |  Branch (56:9): [True: 380, False: 452]
+  |  Branch (56:9): [True: 377, False: 451]
   ------------------
-   57|    380|        return malloc(size);
-   58|    380|    }
+   57|    377|        return malloc(size);
+   58|    377|    }
    59|       |
-   60|    452|    Header *old_header = static_cast<Header *>(ptr) - 1;
-   61|    452|    if (old_header->magic != kMagic) {
+   60|    451|    Header *old_header = static_cast<Header *>(ptr) - 1;
+   61|    451|    if (old_header->magic != kMagic) {
   ------------------
-  |  Branch (61:9): [True: 0, False: 452]
+  |  Branch (61:9): [True: 0, False: 451]
   ------------------
    62|      0|        if (old_header->magic == kFreeMagic) {
   ------------------
@@ -336,52 +336,52 @@ _ZN3tox4test10FakeMemory7reallocEPvm:
    70|      0|        std::abort();
    71|      0|    }
    72|       |
-   73|    452|    bool fail = failure_injector_ && failure_injector_(size);
+   73|    451|    bool fail = failure_injector_ && failure_injector_(size);
   ------------------
-  |  Branch (73:17): [True: 452, False: 0]
-  |  Branch (73:38): [True: 1, False: 451]
+  |  Branch (73:17): [True: 451, False: 0]
+  |  Branch (73:38): [True: 1, False: 450]
   ------------------
    74|       |
-   75|    452|    if (observer_) {
+   75|    451|    if (observer_) {
   ------------------
-  |  Branch (75:9): [True: 0, False: 452]
+  |  Branch (75:9): [True: 0, False: 451]
   ------------------
    76|      0|        observer_(!fail);
    77|      0|    }
    78|       |
-   79|    452|    if (fail) {
+   79|    451|    if (fail) {
   ------------------
-  |  Branch (79:9): [True: 1, False: 451]
+  |  Branch (79:9): [True: 1, False: 450]
   ------------------
    80|      1|        return nullptr;
    81|      1|    }
    82|       |
-   83|    451|    size_t old_size = old_header->size;
-   84|    451|    void *new_ptr = std::realloc(old_header, size + sizeof(Header));
-   85|    451|    if (!new_ptr) {
+   83|    450|    size_t old_size = old_header->size;
+   84|    450|    void *new_ptr = std::realloc(old_header, size + sizeof(Header));
+   85|    450|    if (!new_ptr) {
   ------------------
-  |  Branch (85:9): [True: 0, False: 451]
+  |  Branch (85:9): [True: 0, False: 450]
   ------------------
    86|      0|        return nullptr;
    87|      0|    }
    88|       |
-   89|    451|    on_deallocation(old_size);
-   90|    451|    on_allocation(size);
+   89|    450|    on_deallocation(old_size);
+   90|    450|    on_allocation(size);
    91|       |
-   92|    451|    Header *header = static_cast<Header *>(new_ptr);
-   93|    451|    header->size = size;
-   94|    451|    header->magic = kMagic;
+   92|    450|    Header *header = static_cast<Header *>(new_ptr);
+   93|    450|    header->size = size;
+   94|    450|    header->magic = kMagic;
    95|       |
-   96|    451|    return header + 1;
-   97|    451|}
+   96|    450|    return header + 1;
+   97|    450|}
 _ZN3tox4test10FakeMemory4freeEPv:
-  100|  3.73k|{
-  101|  3.73k|    if (!ptr) {
+  100|  3.72k|{
+  101|  3.72k|    if (!ptr) {
   ------------------
-  |  Branch (101:9): [True: 985, False: 2.74k]
+  |  Branch (101:9): [True: 987, False: 2.74k]
   ------------------
-  102|    985|        return;
-  103|    985|    }
+  102|    987|        return;
+  103|    987|    }
   104|       |
   105|  2.74k|    Header *header = static_cast<Header *>(ptr) - 1;
   106|  2.74k|    if (header->magic != kMagic) {
@@ -408,9 +408,9 @@ _ZN3tox4test10FakeMemory4freeEPv:
   121|  2.74k|    std::free(header);
   122|  2.74k|}
 _ZN3tox4test10FakeMemory20set_failure_injectorENSt3__18functionIFbmEEE:
-  125|    705|{
-  126|    705|    failure_injector_ = std::move(injector);
-  127|    705|}
+  125|    706|{
+  126|    706|    failure_injector_ = std::move(injector);
+  127|    706|}
 _ZN3tox4test10FakeMemory8c_memoryEv:
   131|  1.41k|struct Memory FakeMemory::c_memory() { return Memory{&kFakeMemoryVtable, this}; }
 _ZN3tox4test10FakeMemory13on_allocationEm:
@@ -426,11 +426,11 @@ _ZN3tox4test10FakeMemory13on_allocationEm:
 _ZN3tox4test10FakeMemory15on_deallocationEm:
   144|  3.19k|void FakeMemory::on_deallocation(size_t size) { current_allocation_.fetch_sub(size); }
 fake_memory.cc:_ZNK3tox4test3$_0clEPvj:
-   15|  2.41k|                           uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
+   15|  2.40k|                           uint32_t size) { return static_cast<FakeMemory *>(obj)->malloc(size); },
 fake_memory.cc:_ZNK3tox4test3$_1clEPvS2_j:
-   18|    832|          uint32_t size) { return static_cast<FakeMemory *>(obj)->realloc(ptr, size); },
+   18|    828|          uint32_t size) { return static_cast<FakeMemory *>(obj)->realloc(ptr, size); },
 fake_memory.cc:_ZNK3tox4test3$_2clEPvS2_:
-   20|  3.73k|    = [](void *_Nonnull obj, void *_Nullable ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
+   20|  3.72k|    = [](void *_Nonnull obj, void *_Nullable ptr) { static_cast<FakeMemory *>(obj)->free(ptr); },
 
 _ZN3tox4test10FakeRandomC2Em:
    21|  1.41k|    : rng_(seed)
@@ -440,42 +440,42 @@ _ZN3tox4test10FakeRandom8c_randomEv:
    61|  1.41k|struct Random FakeRandom::c_random() { return Random{&kFakeRandomVtable, this}; }
 
 _ZN3tox4test28configure_fuzz_memory_sourceERNS0_10FakeMemoryERNS0_9Fuzz_DataE:
-   44|    705|{
-   45|    705|    memory.set_failure_injector([&input](size_t size) -> bool {
-   46|    705|        if (input.size() < 1) {
+   44|    706|{
+   45|    706|    memory.set_failure_injector([&input](size_t size) -> bool {
+   46|    706|        if (input.size() < 1) {
    47|       |            // Legacy behavior: if input runs out, allocation succeeds.
-   48|    705|            return false;
-   49|    705|        }
+   48|    706|            return false;
+   49|    706|        }
    50|       |
-   51|    705|        const uint8_t *b = input.consume("malloc_decision", 1);
-   52|    705|        bool succeed = (b && *b);
-   53|    705|        return !succeed;  // Return true to fail
-   54|    705|    });
-   55|    705|}
+   51|    706|        const uint8_t *b = input.consume("malloc_decision", 1);
+   52|    706|        bool succeed = (b && *b);
+   53|    706|        return !succeed;  // Return true to fail
+   54|    706|    });
+   55|    706|}
 fuzz_helpers.cc:_ZZN3tox4test28configure_fuzz_memory_sourceERNS0_10FakeMemoryERNS0_9Fuzz_DataEENK3$_0clEm:
-   45|  3.24k|    memory.set_failure_injector([&input](size_t size) -> bool {
-   46|  3.24k|        if (input.size() < 1) {
+   45|  3.23k|    memory.set_failure_injector([&input](size_t size) -> bool {
+   46|  3.23k|        if (input.size() < 1) {
   ------------------
-  |  Branch (46:13): [True: 2.45k, False: 783]
+  |  Branch (46:13): [True: 2.45k, False: 782]
   ------------------
    47|       |            // Legacy behavior: if input runs out, allocation succeeds.
    48|  2.45k|            return false;
    49|  2.45k|        }
    50|       |
-   51|    783|        const uint8_t *b = input.consume("malloc_decision", 1);
-   52|    783|        bool succeed = (b && *b);
+   51|    782|        const uint8_t *b = input.consume("malloc_decision", 1);
+   52|    782|        bool succeed = (b && *b);
   ------------------
-  |  Branch (52:25): [True: 783, False: 0]
-  |  Branch (52:30): [True: 738, False: 45]
+  |  Branch (52:25): [True: 782, False: 0]
+  |  Branch (52:30): [True: 737, False: 45]
   ------------------
-   53|    783|        return !succeed;  // Return true to fail
-   54|  3.24k|    });
+   53|    782|        return !succeed;  // Return true to fail
+   54|  3.23k|    });
 
 _ZN3tox4test12MemorySystemD2Ev:
     5|  1.41k|MemorySystem::~MemorySystem() = default;
 
 _ZN3tox4test13NetworkSystemD2Ev:
-    5|    705|NetworkSystem::~NetworkSystem() = default;
+    5|    706|NetworkSystem::~NetworkSystem() = default;
 _ZN3tox4test7make_ipEj:
     8|  1.41k|{
     9|  1.41k|    IP ip;
@@ -493,100 +493,100 @@ _ZN3tox4test12RandomSystemD2Ev:
     5|  1.41k|RandomSystem::~RandomSystem() = default;
 
 _ZN3tox4test20SimulatedEnvironmentC2Ev:
-    8|    705|    : sim_(std::make_unique<Simulation>())
-    9|    705|    , global_random_(std::make_unique<FakeRandom>(12345))
-   10|    705|    , global_memory_(std::make_unique<FakeMemory>())
-   11|    705|{
-   12|    705|}
+    8|    706|    : sim_(std::make_unique<Simulation>())
+    9|    706|    , global_random_(std::make_unique<FakeRandom>(12345))
+   10|    706|    , global_memory_(std::make_unique<FakeMemory>())
+   11|    706|{
+   12|    706|}
 _ZN3tox4test20SimulatedEnvironmentD2Ev:
-   14|    705|SimulatedEnvironment::~SimulatedEnvironment() = default;
+   14|    706|SimulatedEnvironment::~SimulatedEnvironment() = default;
 _ZN3tox4test20SimulatedEnvironment11fake_memoryEv:
-   34|    705|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
+   34|    706|FakeMemory &SimulatedEnvironment::fake_memory() { return *global_memory_; }
 _ZN3tox4test20SimulatedEnvironment11create_nodeEt:
-   37|    705|{
-   38|    705|    auto scoped = std::make_unique<ScopedToxSystem>();
-   39|    705|    scoped->node = sim_->create_node();
+   37|    706|{
+   38|    706|    auto scoped = std::make_unique<ScopedToxSystem>();
+   39|    706|    scoped->node = sim_->create_node();
    40|       |
    41|       |    // Bind port
-   42|    705|    if (port != 0) {
+   42|    706|    if (port != 0) {
   ------------------
-  |  Branch (42:9): [True: 705, False: 0]
+  |  Branch (42:9): [True: 706, False: 0]
   ------------------
-   43|    705|        Socket s = scoped->node->fake_network().socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-   44|    705|        IP_Port addr;
-   45|    705|        ip_init(&addr.ip, false);
-   46|    705|        addr.ip.ip.v4.uint32 = 0;
-   47|    705|        addr.port = net_htons(port);
-   48|    705|        scoped->node->fake_network().bind(s, &addr);
-   49|    705|    }
+   43|    706|        Socket s = scoped->node->fake_network().socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+   44|    706|        IP_Port addr;
+   45|    706|        ip_init(&addr.ip, false);
+   46|    706|        addr.ip.ip.v4.uint32 = 0;
+   47|    706|        addr.port = net_htons(port);
+   48|    706|        scoped->node->fake_network().bind(s, &addr);
+   49|    706|    }
    50|       |
    51|       |    // Get Primary Endpoint for Fuzzer
-   52|    705|    scoped->endpoint = scoped->node->get_primary_socket();
+   52|    706|    scoped->endpoint = scoped->node->get_primary_socket();
    53|       |
    54|       |    // Use global Random and Memory for legacy compatibility.
-   55|    705|    scoped->c_random = global_random_->c_random();
-   56|    705|    scoped->c_memory = global_memory_->c_memory();
+   55|    706|    scoped->c_random = global_random_->c_random();
+   56|    706|    scoped->c_memory = global_memory_->c_memory();
    57|       |
    58|       |    // Use Node's Network
-   59|    705|    scoped->c_network = scoped->node->c_network;
+   59|    706|    scoped->c_network = scoped->node->c_network;
    60|       |
    61|       |    // Setup System
-   62|    705|    scoped->system.mem = &scoped->c_memory;
-   63|    705|    scoped->system.ns = &scoped->c_network;
-   64|    705|    scoped->system.rng = &scoped->c_random;
+   62|    706|    scoped->system.mem = &scoped->c_memory;
+   63|    706|    scoped->system.ns = &scoped->c_network;
+   64|    706|    scoped->system.rng = &scoped->c_random;
    65|       |
-   66|    705|    scoped->system.mono_time_user_data = &sim_->clock();
-   67|    705|    scoped->system.mono_time_callback = [](void *_Nullable user_data) -> uint64_t {
-   68|    705|        return static_cast<FakeClock *>(user_data)->current_time_ms();
-   69|    705|    };
+   66|    706|    scoped->system.mono_time_user_data = &sim_->clock();
+   67|    706|    scoped->system.mono_time_callback = [](void *_Nullable user_data) -> uint64_t {
+   68|    706|        return static_cast<FakeClock *>(user_data)->current_time_ms();
+   69|    706|    };
    70|       |
-   71|    705|    return scoped;
-   72|    705|}
+   71|    706|    return scoped;
+   72|    706|}
 
 _ZN3tox4test10SimulationC2Ev:
-   97|    705|    : clock_(std::make_unique<FakeClock>())
-   98|    705|    , net_(std::make_unique<NetworkUniverse>())
-   99|    705|{
-  100|    705|}
+   97|    706|    : clock_(std::make_unique<FakeClock>())
+   98|    706|    , net_(std::make_unique<NetworkUniverse>())
+   99|    706|{
+  100|    706|}
 _ZN3tox4test10SimulationD2Ev:
-  102|    705|Simulation::~Simulation() = default;
+  102|    706|Simulation::~Simulation() = default;
 _ZN3tox4test10Simulation11create_nodeEv:
-  236|    705|{
-  237|    705|    auto node = std::make_unique<SimulatedNode>(*this, ++node_count_);
-  238|    705|    if (net_->is_verbose()) {
+  236|    706|{
+  237|    706|    auto node = std::make_unique<SimulatedNode>(*this, ++node_count_);
+  238|    706|    if (net_->is_verbose()) {
   ------------------
-  |  Branch (238:9): [True: 0, False: 705]
+  |  Branch (238:9): [True: 0, False: 706]
   ------------------
   239|      0|        uint32_t ip4 = net_ntohl(node->ip.ip.v4.uint32);
   240|      0|        std::cerr << "[Simulation] Created node " << node_count_ << " with IP "
   241|      0|                  << ((ip4 >> 24) & 0xFF) << "." << ((ip4 >> 16) & 0xFF) << "."
   242|      0|                  << ((ip4 >> 8) & 0xFF) << "." << (ip4 & 0xFF) << std::endl;
   243|      0|    }
-  244|    705|    return node;
-  245|    705|}
+  244|    706|    return node;
+  245|    706|}
 _ZN3tox4test13SimulatedNodeC2ERNS0_10SimulationEj:
-  250|    705|    : sim_(sim)
-  251|    705|    , network_(std::make_unique<FakeNetworkStack>(sim.net(), make_node_ip(node_id)))
-  252|    705|    , random_(std::make_unique<FakeRandom>(12345 + node_id))  // Unique seed
-  253|    705|    , memory_(std::make_unique<FakeMemory>())
-  254|    705|    , c_network(network_->c_network())
-  255|    705|    , c_random(random_->c_random())
-  256|    705|    , c_memory(memory_->c_memory())
-  257|    705|    , ip(make_node_ip(node_id))
-  258|    705|{
-  259|    705|}
+  250|    706|    : sim_(sim)
+  251|    706|    , network_(std::make_unique<FakeNetworkStack>(sim.net(), make_node_ip(node_id)))
+  252|    706|    , random_(std::make_unique<FakeRandom>(12345 + node_id))  // Unique seed
+  253|    706|    , memory_(std::make_unique<FakeMemory>())
+  254|    706|    , c_network(network_->c_network())
+  255|    706|    , c_random(random_->c_random())
+  256|    706|    , c_memory(memory_->c_memory())
+  257|    706|    , ip(make_node_ip(node_id))
+  258|    706|{
+  259|    706|}
 _ZN3tox4test13SimulatedNodeD2Ev:
-  261|    705|SimulatedNode::~SimulatedNode() = default;
+  261|    706|SimulatedNode::~SimulatedNode() = default;
 _ZN3tox4test13SimulatedNode18get_primary_socketEv:
-  331|    705|{
-  332|    705|    auto sockets = network_->get_bound_udp_sockets();
-  333|    705|    if (sockets.empty())
+  331|    706|{
+  332|    706|    auto sockets = network_->get_bound_udp_sockets();
+  333|    706|    if (sockets.empty())
   ------------------
-  |  Branch (333:9): [True: 0, False: 705]
+  |  Branch (333:9): [True: 0, False: 706]
   ------------------
   334|      0|        return nullptr;
-  335|    705|    return sockets.front();  // Return the first one bound
-  336|    705|}
+  335|    706|    return sockets.front();  // Return the first one bound
+  336|    706|}
 
 cmp_init:
   837|  1.08k|                                         cmp_writer *write) {
@@ -978,48 +978,48 @@ cmp_read_ushort:
  2208|       |  return false;
  2209|    196|}
 cmp_read_uint:
- 2211|  4.45k|bool cmp_read_uint(cmp_ctx_t *ctx, uint32_t *i) {
- 2212|  4.45k|  cmp_object_t obj;
+ 2211|  4.43k|bool cmp_read_uint(cmp_ctx_t *ctx, uint32_t *i) {
+ 2212|  4.43k|  cmp_object_t obj;
  2213|       |
- 2214|  4.45k|  if (!cmp_read_object(ctx, &obj))
+ 2214|  4.43k|  if (!cmp_read_object(ctx, &obj))
   ------------------
-  |  Branch (2214:7): [True: 92, False: 4.36k]
+  |  Branch (2214:7): [True: 91, False: 4.34k]
   ------------------
- 2215|     92|    return false;
+ 2215|     91|    return false;
  2216|       |
- 2217|  4.36k|  switch (obj.type) {
- 2218|  4.10k|    case CMP_TYPE_POSITIVE_FIXNUM:
+ 2217|  4.34k|  switch (obj.type) {
+ 2218|  4.08k|    case CMP_TYPE_POSITIVE_FIXNUM:
   ------------------
-  |  Branch (2218:5): [True: 4.10k, False: 260]
+  |  Branch (2218:5): [True: 4.08k, False: 259]
   ------------------
- 2219|  4.18k|    case CMP_TYPE_UINT8: {
+ 2219|  4.16k|    case CMP_TYPE_UINT8: {
   ------------------
-  |  Branch (2219:5): [True: 77, False: 4.28k]
+  |  Branch (2219:5): [True: 77, False: 4.27k]
   ------------------
- 2220|  4.18k|      *i = obj.as.u8;
- 2221|  4.18k|      return true;
- 2222|  4.10k|    }
+ 2220|  4.16k|      *i = obj.as.u8;
+ 2221|  4.16k|      return true;
+ 2222|  4.08k|    }
  2223|     49|    case CMP_TYPE_UINT16: {
   ------------------
-  |  Branch (2223:5): [True: 49, False: 4.31k]
+  |  Branch (2223:5): [True: 49, False: 4.29k]
   ------------------
  2224|     49|      *i = obj.as.u16;
  2225|     49|      return true;
- 2226|  4.10k|    }
+ 2226|  4.08k|    }
  2227|     41|    case CMP_TYPE_UINT32: {
   ------------------
-  |  Branch (2227:5): [True: 41, False: 4.32k]
+  |  Branch (2227:5): [True: 41, False: 4.30k]
   ------------------
  2228|     41|      *i = obj.as.u32;
  2229|     41|      return true;
- 2230|  4.10k|    }
+ 2230|  4.08k|    }
  2231|      1|    case CMP_TYPE_NEGATIVE_FIXNUM:
   ------------------
-  |  Branch (2231:5): [True: 1, False: 4.36k]
+  |  Branch (2231:5): [True: 1, False: 4.34k]
   ------------------
  2232|     41|    case CMP_TYPE_SINT8: {
   ------------------
-  |  Branch (2232:5): [True: 40, False: 4.32k]
+  |  Branch (2232:5): [True: 40, False: 4.30k]
   ------------------
  2233|     41|      if (obj.as.s8 >= 0) {
   ------------------
@@ -1032,7 +1032,7 @@ cmp_read_uint:
  2238|     41|    }
  2239|     29|    case CMP_TYPE_SINT16: {
   ------------------
-  |  Branch (2239:5): [True: 29, False: 4.33k]
+  |  Branch (2239:5): [True: 29, False: 4.31k]
   ------------------
  2240|     29|      if (obj.as.s16 >= 0) {
   ------------------
@@ -1045,7 +1045,7 @@ cmp_read_uint:
  2245|     29|    }
  2246|     16|    case CMP_TYPE_SINT32: {
   ------------------
-  |  Branch (2246:5): [True: 16, False: 4.34k]
+  |  Branch (2246:5): [True: 16, False: 4.33k]
   ------------------
  2247|     16|      if (obj.as.s32 >= 0) {
   ------------------
@@ -1056,16 +1056,16 @@ cmp_read_uint:
  2250|     15|      }
  2251|      1|      break;
  2252|     16|    }
- 2253|      7|    default:
+ 2253|      6|    default:
   ------------------
-  |  Branch (2253:5): [True: 7, False: 4.35k]
+  |  Branch (2253:5): [True: 6, False: 4.34k]
   ------------------
- 2254|      7|      break;
- 2255|  4.36k|  }
+ 2254|      6|      break;
+ 2255|  4.34k|  }
  2256|       |
- 2257|     10|  ctx->error = CMP_ERROR_INVALID_TYPE;
+ 2257|      9|  ctx->error = CMP_ERROR_INVALID_TYPE;
  2258|       |  return false;
- 2259|  4.36k|}
+ 2259|  4.34k|}
 cmp_read_ulong:
  2261|    275|bool cmp_read_ulong(cmp_ctx_t *ctx, uint64_t *u) {
  2262|    275|  cmp_object_t obj;
@@ -1205,134 +1205,134 @@ cmp_read_bool:
  2412|       |  return true;
  2413|     34|}
 cmp_read_str_size:
- 2435|     17|bool cmp_read_str_size(cmp_ctx_t *ctx, uint32_t *size) {
- 2436|     17|  cmp_object_t obj;
+ 2435|     19|bool cmp_read_str_size(cmp_ctx_t *ctx, uint32_t *size) {
+ 2436|     19|  cmp_object_t obj;
  2437|       |
- 2438|     17|  if (!cmp_read_object(ctx, &obj))
+ 2438|     19|  if (!cmp_read_object(ctx, &obj))
   ------------------
-  |  Branch (2438:7): [True: 2, False: 15]
+  |  Branch (2438:7): [True: 2, False: 17]
   ------------------
  2439|      2|    return false;
  2440|       |
- 2441|     15|  switch (obj.type) {
+ 2441|     17|  switch (obj.type) {
  2442|      3|    case CMP_TYPE_FIXSTR:
   ------------------
-  |  Branch (2442:5): [True: 3, False: 12]
+  |  Branch (2442:5): [True: 3, False: 14]
   ------------------
  2443|      6|    case CMP_TYPE_STR8:
   ------------------
-  |  Branch (2443:5): [True: 3, False: 12]
+  |  Branch (2443:5): [True: 3, False: 14]
   ------------------
  2444|      9|    case CMP_TYPE_STR16:
   ------------------
-  |  Branch (2444:5): [True: 3, False: 12]
+  |  Branch (2444:5): [True: 3, False: 14]
   ------------------
  2445|     11|    case CMP_TYPE_STR32: {
   ------------------
-  |  Branch (2445:5): [True: 2, False: 13]
+  |  Branch (2445:5): [True: 2, False: 15]
   ------------------
  2446|     11|      *size = obj.as.str_size;
  2447|     11|      return true;
  2448|      9|    }
- 2449|      4|    default: {
+ 2449|      6|    default: {
   ------------------
-  |  Branch (2449:5): [True: 4, False: 11]
+  |  Branch (2449:5): [True: 6, False: 11]
   ------------------
- 2450|      4|      ctx->error = CMP_ERROR_INVALID_TYPE;
+ 2450|      6|      ctx->error = CMP_ERROR_INVALID_TYPE;
  2451|       |      return false;
  2452|      9|    }
- 2453|     15|  }
- 2454|     15|}
+ 2453|     17|  }
+ 2454|     17|}
 cmp_read_bin_size:
- 2479|    585|bool cmp_read_bin_size(cmp_ctx_t *ctx, uint32_t *size) {
- 2480|    585|  cmp_object_t obj;
+ 2479|    584|bool cmp_read_bin_size(cmp_ctx_t *ctx, uint32_t *size) {
+ 2480|    584|  cmp_object_t obj;
  2481|       |
- 2482|    585|  if (!cmp_read_object(ctx, &obj))
+ 2482|    584|  if (!cmp_read_object(ctx, &obj))
   ------------------
-  |  Branch (2482:7): [True: 57, False: 528]
+  |  Branch (2482:7): [True: 57, False: 527]
   ------------------
  2483|     57|    return false;
  2484|       |
- 2485|    528|  switch (obj.type) {
+ 2485|    527|  switch (obj.type) {
  2486|    135|    case CMP_TYPE_BIN8:
   ------------------
-  |  Branch (2486:5): [True: 135, False: 393]
+  |  Branch (2486:5): [True: 135, False: 392]
   ------------------
- 2487|    422|    case CMP_TYPE_BIN16:
+ 2487|    424|    case CMP_TYPE_BIN16:
   ------------------
-  |  Branch (2487:5): [True: 287, False: 241]
+  |  Branch (2487:5): [True: 289, False: 238]
   ------------------
- 2488|    518|    case CMP_TYPE_BIN32: {
+ 2488|    513|    case CMP_TYPE_BIN32: {
   ------------------
-  |  Branch (2488:5): [True: 96, False: 432]
+  |  Branch (2488:5): [True: 89, False: 438]
   ------------------
- 2489|    518|      *size = obj.as.bin_size;
- 2490|    518|      return true;
- 2491|    422|    }
- 2492|     10|    default: {
+ 2489|    513|      *size = obj.as.bin_size;
+ 2490|    513|      return true;
+ 2491|    424|    }
+ 2492|     14|    default: {
   ------------------
-  |  Branch (2492:5): [True: 10, False: 518]
+  |  Branch (2492:5): [True: 14, False: 513]
   ------------------
- 2493|     10|      ctx->error = CMP_ERROR_INVALID_TYPE;
+ 2493|     14|      ctx->error = CMP_ERROR_INVALID_TYPE;
  2494|       |      return false;
- 2495|    422|    }
- 2496|    528|  }
- 2497|    528|}
+ 2495|    424|    }
+ 2496|    527|  }
+ 2497|    527|}
 cmp_read_array:
  2519|  3.69k|bool cmp_read_array(cmp_ctx_t *ctx, uint32_t *size) {
  2520|  3.69k|  cmp_object_t obj;
  2521|       |
  2522|  3.69k|  if (!cmp_read_object(ctx, &obj))
   ------------------
-  |  Branch (2522:7): [True: 143, False: 3.55k]
+  |  Branch (2522:7): [True: 142, False: 3.55k]
   ------------------
- 2523|    143|    return false;
+ 2523|    142|    return false;
  2524|       |
  2525|  3.55k|  switch (obj.type) {
  2526|  3.49k|    case CMP_TYPE_FIXARRAY:
   ------------------
-  |  Branch (2526:5): [True: 3.49k, False: 56]
+  |  Branch (2526:5): [True: 3.49k, False: 55]
   ------------------
- 2527|  3.50k|    case CMP_TYPE_ARRAY16:
+ 2527|  3.49k|    case CMP_TYPE_ARRAY16:
   ------------------
-  |  Branch (2527:5): [True: 3, False: 3.55k]
+  |  Branch (2527:5): [True: 3, False: 3.54k]
   ------------------
  2528|  3.50k|    case CMP_TYPE_ARRAY32: {
   ------------------
-  |  Branch (2528:5): [True: 4, False: 3.55k]
+  |  Branch (2528:5): [True: 4, False: 3.54k]
   ------------------
  2529|  3.50k|      *size = obj.as.array_size;
  2530|  3.50k|      return true;
- 2531|  3.50k|    }
- 2532|     49|    default: {
+ 2531|  3.49k|    }
+ 2532|     48|    default: {
   ------------------
-  |  Branch (2532:5): [True: 49, False: 3.50k]
+  |  Branch (2532:5): [True: 48, False: 3.50k]
   ------------------
- 2533|     49|      ctx->error = CMP_ERROR_INVALID_TYPE;
+ 2533|     48|      ctx->error = CMP_ERROR_INVALID_TYPE;
  2534|       |      return false;
- 2535|  3.50k|    }
+ 2535|  3.49k|    }
  2536|  3.55k|  }
  2537|  3.55k|}
 cmp_read_object:
- 2810|  9.28k|bool cmp_read_object(cmp_ctx_t *ctx, cmp_object_t *obj) {
- 2811|  9.28k|  uint8_t type_marker = 0;
+ 2810|  9.26k|bool cmp_read_object(cmp_ctx_t *ctx, cmp_object_t *obj) {
+ 2811|  9.26k|  uint8_t type_marker = 0;
  2812|       |
- 2813|  9.28k|  if (!read_type_marker(ctx, &type_marker))
+ 2813|  9.26k|  if (!read_type_marker(ctx, &type_marker))
   ------------------
-  |  Branch (2813:7): [True: 278, False: 9.01k]
+  |  Branch (2813:7): [True: 277, False: 8.99k]
   ------------------
- 2814|    278|    return false;
+ 2814|    277|    return false;
  2815|       |
- 2816|  9.01k|  if (!type_marker_to_cmp_type(type_marker, &obj->type)) {
+ 2816|  8.99k|  if (!type_marker_to_cmp_type(type_marker, &obj->type)) {
   ------------------
-  |  Branch (2816:7): [True: 7, False: 9.00k]
+  |  Branch (2816:7): [True: 7, False: 8.98k]
   ------------------
  2817|      7|    ctx->error = CMP_ERROR_INVALID_TYPE;
  2818|      7|    return false;
  2819|      7|  }
  2820|       |
- 2821|  9.00k|  return read_obj_data(ctx, type_marker, obj);
- 2822|  9.01k|}
+ 2821|  8.98k|  return read_obj_data(ctx, type_marker, obj);
+ 2822|  8.99k|}
 cmp.c:write_fixed_value:
   245|  7.18k|static bool write_fixed_value(cmp_ctx_t *ctx, uint8_t value) {
   246|  7.18k|  if (write_byte(ctx, value))
@@ -1372,36 +1372,36 @@ cmp.c:sbe64:
   150|     14|  return (int64_t)be64((uint64_t)x);
   151|     14|}
 cmp.c:be16:
-  119|  1.25k|static uint16_t be16(uint16_t x) {
-  120|  1.25k|  if (!is_bigendian())
+  119|  1.24k|static uint16_t be16(uint16_t x) {
+  120|  1.24k|  if (!is_bigendian())
   ------------------
-  |  Branch (120:7): [True: 1.25k, False: 0]
+  |  Branch (120:7): [True: 1.24k, False: 0]
   ------------------
-  121|  1.25k|    return ((x >> 8) & 0x00ff)
-  122|  1.25k|         | ((x << 8) & 0xff00);
+  121|  1.24k|    return ((x >> 8) & 0x00ff)
+  122|  1.24k|         | ((x << 8) & 0xff00);
   123|       |
   124|      0|  return x;
-  125|  1.25k|}
+  125|  1.24k|}
 cmp.c:is_bigendian:
-  109|  1.63k|static bool is_bigendian(void) {
+  109|  1.61k|static bool is_bigendian(void) {
   110|       |#ifdef WORDS_BIGENDIAN
   111|       |  return WORDS_BIGENDIAN;
   112|       |#else
-  113|  1.63k|  const int32_t i_ = 1;
-  114|  1.63k|  const char *i_bytes = (const char *)&i_;
-  115|  1.63k|  return *i_bytes == 0;
-  116|  1.63k|#endif /* WORDS_BIGENDIAN */
-  117|  1.63k|}
+  113|  1.61k|  const int32_t i_ = 1;
+  114|  1.61k|  const char *i_bytes = (const char *)&i_;
+  115|  1.61k|  return *i_bytes == 0;
+  116|  1.61k|#endif /* WORDS_BIGENDIAN */
+  117|  1.61k|}
 cmp.c:be32:
-  131|    334|static uint32_t be32(uint32_t x) {
-  132|    334|  if (!is_bigendian())
+  131|    327|static uint32_t be32(uint32_t x) {
+  132|    327|  if (!is_bigendian())
   ------------------
-  |  Branch (132:7): [True: 334, False: 0]
+  |  Branch (132:7): [True: 327, False: 0]
   ------------------
-  133|    334|    return ((uint32_t)be16((uint16_t)(x & 0xffff)) << 16) | (uint32_t)be16((uint16_t)(x >> 16));
+  133|    327|    return ((uint32_t)be16((uint16_t)(x & 0xffff)) << 16) | (uint32_t)be16((uint16_t)(x >> 16));
   134|       |
   135|      0|  return x;
-  136|    334|}
+  136|    327|}
 cmp.c:be64:
   142|     48|static uint64_t be64(uint64_t x) {
   143|     48|  if (!is_bigendian())
@@ -1413,40 +1413,40 @@ cmp.c:be64:
   146|      0|  return x;
   147|     48|}
 cmp.c:read_type_marker:
-  228|  9.28k|static bool read_type_marker(cmp_ctx_t *ctx, uint8_t *marker) {
-  229|  9.28k|  if (read_byte(ctx, marker)) {
+  228|  9.26k|static bool read_type_marker(cmp_ctx_t *ctx, uint8_t *marker) {
+  229|  9.26k|  if (read_byte(ctx, marker)) {
   ------------------
-  |  Branch (229:7): [True: 9.01k, False: 278]
+  |  Branch (229:7): [True: 8.99k, False: 277]
   ------------------
-  230|  9.01k|    return true;
-  231|  9.01k|  }
+  230|  8.99k|    return true;
+  231|  8.99k|  }
   232|       |
-  233|    278|  ctx->error = CMP_ERROR_TYPE_MARKER_READING;
+  233|    277|  ctx->error = CMP_ERROR_TYPE_MARKER_READING;
   234|       |  return false;
-  235|  9.28k|}
+  235|  9.26k|}
 cmp.c:read_byte:
-  203|  9.28k|static bool read_byte(cmp_ctx_t *ctx, uint8_t *x) {
-  204|  9.28k|  return ctx->read(ctx, x, sizeof(uint8_t));
-  205|  9.28k|}
+  203|  9.26k|static bool read_byte(cmp_ctx_t *ctx, uint8_t *x) {
+  204|  9.26k|  return ctx->read(ctx, x, sizeof(uint8_t));
+  205|  9.26k|}
 cmp.c:type_marker_to_cmp_type:
-  253|  9.01k|static bool type_marker_to_cmp_type(uint8_t type_marker, uint8_t *cmp_type) {
-  254|  9.01k|  if (type_marker <= 0x7F) {
+  253|  8.99k|static bool type_marker_to_cmp_type(uint8_t type_marker, uint8_t *cmp_type) {
+  254|  8.99k|  if (type_marker <= 0x7F) {
   ------------------
-  |  Branch (254:7): [True: 4.31k, False: 4.69k]
+  |  Branch (254:7): [True: 4.29k, False: 4.69k]
   ------------------
-  255|  4.31k|    *cmp_type = CMP_TYPE_POSITIVE_FIXNUM;
-  256|  4.31k|    return true;
-  257|  4.31k|  }
+  255|  4.29k|    *cmp_type = CMP_TYPE_POSITIVE_FIXNUM;
+  256|  4.29k|    return true;
+  257|  4.29k|  }
   258|       |
   259|  4.69k|  if (type_marker <= 0x8F) {
   ------------------
-  |  Branch (259:7): [True: 7, False: 4.69k]
+  |  Branch (259:7): [True: 7, False: 4.68k]
   ------------------
   260|      7|    *cmp_type = CMP_TYPE_FIXMAP;
   261|      7|    return true;
   262|      7|  }
   263|       |
-  264|  4.69k|  if (type_marker <= 0x9F) {
+  264|  4.68k|  if (type_marker <= 0x9F) {
   ------------------
   |  Branch (264:7): [True: 3.50k, False: 1.18k]
   ------------------
@@ -1464,16 +1464,16 @@ cmp.c:type_marker_to_cmp_type:
   273|       |
   274|  1.17k|  if (type_marker >= 0xE0) {
   ------------------
-  |  Branch (274:7): [True: 9, False: 1.16k]
+  |  Branch (274:7): [True: 10, False: 1.16k]
   ------------------
-  275|      9|    *cmp_type = CMP_TYPE_NEGATIVE_FIXNUM;
-  276|      9|    return true;
-  277|      9|  }
+  275|     10|    *cmp_type = CMP_TYPE_NEGATIVE_FIXNUM;
+  276|     10|    return true;
+  277|     10|  }
   278|       |
   279|  1.16k|  switch (type_marker) {
   280|      3|    case NIL_MARKER: {
   ------------------
-  |  Branch (280:5): [True: 3, False: 1.16k]
+  |  Branch (280:5): [True: 3, False: 1.15k]
   ------------------
   281|      3|      *cmp_type = CMP_TYPE_NIL;
   282|      3|      return true;
@@ -1499,149 +1499,149 @@ cmp.c:type_marker_to_cmp_type:
   293|    139|      *cmp_type = CMP_TYPE_BIN8;
   294|    139|      return true;
   295|      0|    }
-  296|    292|    case BIN16_MARKER: {
+  296|    294|    case BIN16_MARKER: {
   ------------------
-  |  Branch (296:5): [True: 292, False: 874]
+  |  Branch (296:5): [True: 294, False: 866]
   ------------------
-  297|    292|      *cmp_type = CMP_TYPE_BIN16;
-  298|    292|      return true;
+  297|    294|      *cmp_type = CMP_TYPE_BIN16;
+  298|    294|      return true;
   299|      0|    }
-  300|    102|    case BIN32_MARKER: {
+  300|     95|    case BIN32_MARKER: {
   ------------------
-  |  Branch (300:5): [True: 102, False: 1.06k]
+  |  Branch (300:5): [True: 95, False: 1.06k]
   ------------------
-  301|    102|      *cmp_type = CMP_TYPE_BIN32;
-  302|    102|      return true;
+  301|     95|      *cmp_type = CMP_TYPE_BIN32;
+  302|     95|      return true;
   303|      0|    }
   304|      4|    case EXT8_MARKER: {
   ------------------
-  |  Branch (304:5): [True: 4, False: 1.16k]
+  |  Branch (304:5): [True: 4, False: 1.15k]
   ------------------
   305|      4|      *cmp_type = CMP_TYPE_EXT8;
   306|      4|      return true;
   307|      0|    }
   308|      4|    case EXT16_MARKER: {
   ------------------
-  |  Branch (308:5): [True: 4, False: 1.16k]
+  |  Branch (308:5): [True: 4, False: 1.15k]
   ------------------
   309|      4|      *cmp_type = CMP_TYPE_EXT16;
   310|      4|      return true;
   311|      0|    }
   312|      4|    case EXT32_MARKER: {
   ------------------
-  |  Branch (312:5): [True: 4, False: 1.16k]
+  |  Branch (312:5): [True: 4, False: 1.15k]
   ------------------
   313|      4|      *cmp_type = CMP_TYPE_EXT32;
   314|      4|      return true;
   315|      0|    }
   316|      1|    case FLOAT_MARKER: {
   ------------------
-  |  Branch (316:5): [True: 1, False: 1.16k]
+  |  Branch (316:5): [True: 1, False: 1.15k]
   ------------------
   317|      1|      *cmp_type = CMP_TYPE_FLOAT;
   318|      1|      return true;
   319|      0|    }
   320|      1|    case DOUBLE_MARKER: {
   ------------------
-  |  Branch (320:5): [True: 1, False: 1.16k]
+  |  Branch (320:5): [True: 1, False: 1.15k]
   ------------------
   321|      1|      *cmp_type = CMP_TYPE_DOUBLE;
   322|      1|      return true;
   323|      0|    }
   324|    154|    case U8_MARKER: {
   ------------------
-  |  Branch (324:5): [True: 154, False: 1.01k]
+  |  Branch (324:5): [True: 154, False: 1.00k]
   ------------------
   325|    154|      *cmp_type = CMP_TYPE_UINT8;
   326|    154|      return true;
   327|      0|    }
   328|    101|    case U16_MARKER: {
   ------------------
-  |  Branch (328:5): [True: 101, False: 1.06k]
+  |  Branch (328:5): [True: 101, False: 1.05k]
   ------------------
   329|    101|      *cmp_type = CMP_TYPE_UINT16;
   330|    101|      return true;
   331|      0|    }
   332|     55|    case U32_MARKER: {
   ------------------
-  |  Branch (332:5): [True: 55, False: 1.11k]
+  |  Branch (332:5): [True: 55, False: 1.10k]
   ------------------
   333|     55|      *cmp_type = CMP_TYPE_UINT32;
   334|     55|      return true;
   335|      0|    }
-  336|     22|    case U64_MARKER: {
+  336|     21|    case U64_MARKER: {
   ------------------
-  |  Branch (336:5): [True: 22, False: 1.14k]
+  |  Branch (336:5): [True: 21, False: 1.13k]
   ------------------
-  337|     22|      *cmp_type = CMP_TYPE_UINT64;
-  338|     22|      return true;
+  337|     21|      *cmp_type = CMP_TYPE_UINT64;
+  338|     21|      return true;
   339|      0|    }
   340|     63|    case S8_MARKER: {
   ------------------
-  |  Branch (340:5): [True: 63, False: 1.10k]
+  |  Branch (340:5): [True: 63, False: 1.09k]
   ------------------
   341|     63|      *cmp_type = CMP_TYPE_SINT8;
   342|     63|      return true;
   343|      0|    }
   344|     84|    case S16_MARKER: {
   ------------------
-  |  Branch (344:5): [True: 84, False: 1.08k]
+  |  Branch (344:5): [True: 84, False: 1.07k]
   ------------------
   345|     84|      *cmp_type = CMP_TYPE_SINT16;
   346|     84|      return true;
   347|      0|    }
   348|     32|    case S32_MARKER: {
   ------------------
-  |  Branch (348:5): [True: 32, False: 1.13k]
+  |  Branch (348:5): [True: 32, False: 1.12k]
   ------------------
   349|     32|      *cmp_type = CMP_TYPE_SINT32;
   350|     32|      return true;
   351|      0|    }
   352|     15|    case S64_MARKER: {
   ------------------
-  |  Branch (352:5): [True: 15, False: 1.15k]
+  |  Branch (352:5): [True: 15, False: 1.14k]
   ------------------
   353|     15|      *cmp_type = CMP_TYPE_SINT64;
   354|     15|      return true;
   355|      0|    }
   356|      3|    case FIXEXT1_MARKER: {
   ------------------
-  |  Branch (356:5): [True: 3, False: 1.16k]
+  |  Branch (356:5): [True: 3, False: 1.15k]
   ------------------
   357|      3|      *cmp_type = CMP_TYPE_FIXEXT1;
   358|      3|      return true;
   359|      0|    }
   360|      3|    case FIXEXT2_MARKER: {
   ------------------
-  |  Branch (360:5): [True: 3, False: 1.16k]
+  |  Branch (360:5): [True: 3, False: 1.15k]
   ------------------
   361|      3|      *cmp_type = CMP_TYPE_FIXEXT2;
   362|      3|      return true;
   363|      0|    }
   364|      2|    case FIXEXT4_MARKER: {
   ------------------
-  |  Branch (364:5): [True: 2, False: 1.16k]
+  |  Branch (364:5): [True: 2, False: 1.15k]
   ------------------
   365|      2|      *cmp_type = CMP_TYPE_FIXEXT4;
   366|      2|      return true;
   367|      0|    }
   368|      3|    case FIXEXT8_MARKER: {
   ------------------
-  |  Branch (368:5): [True: 3, False: 1.16k]
+  |  Branch (368:5): [True: 3, False: 1.15k]
   ------------------
   369|      3|      *cmp_type = CMP_TYPE_FIXEXT8;
   370|      3|      return true;
   371|      0|    }
   372|      2|    case FIXEXT16_MARKER: {
   ------------------
-  |  Branch (372:5): [True: 2, False: 1.16k]
+  |  Branch (372:5): [True: 2, False: 1.15k]
   ------------------
   373|      2|      *cmp_type = CMP_TYPE_FIXEXT16;
   374|      2|      return true;
   375|      0|    }
   376|      6|    case STR8_MARKER: {
   ------------------
-  |  Branch (376:5): [True: 6, False: 1.16k]
+  |  Branch (376:5): [True: 6, False: 1.15k]
   ------------------
   377|      6|      *cmp_type = CMP_TYPE_STR8;
   378|      6|      return true;
@@ -1655,35 +1655,35 @@ cmp.c:type_marker_to_cmp_type:
   383|      0|    }
   384|      6|    case STR32_MARKER: {
   ------------------
-  |  Branch (384:5): [True: 6, False: 1.16k]
+  |  Branch (384:5): [True: 6, False: 1.15k]
   ------------------
   385|      6|      *cmp_type = CMP_TYPE_STR32;
   386|      6|      return true;
   387|      0|    }
   388|      4|    case ARRAY16_MARKER: {
   ------------------
-  |  Branch (388:5): [True: 4, False: 1.16k]
+  |  Branch (388:5): [True: 4, False: 1.15k]
   ------------------
   389|      4|      *cmp_type = CMP_TYPE_ARRAY16;
   390|      4|      return true;
   391|      0|    }
   392|      6|    case ARRAY32_MARKER: {
   ------------------
-  |  Branch (392:5): [True: 6, False: 1.16k]
+  |  Branch (392:5): [True: 6, False: 1.15k]
   ------------------
   393|      6|      *cmp_type = CMP_TYPE_ARRAY32;
   394|      6|      return true;
   395|      0|    }
   396|      2|    case MAP16_MARKER: {
   ------------------
-  |  Branch (396:5): [True: 2, False: 1.16k]
+  |  Branch (396:5): [True: 2, False: 1.15k]
   ------------------
   397|      2|      *cmp_type = CMP_TYPE_MAP16;
   398|      2|      return true;
   399|      0|    }
   400|      2|    case MAP32_MARKER: {
   ------------------
-  |  Branch (400:5): [True: 2, False: 1.16k]
+  |  Branch (400:5): [True: 2, False: 1.15k]
   ------------------
   401|      2|      *cmp_type = CMP_TYPE_MAP32;
   402|      2|      return true;
@@ -1697,32 +1697,32 @@ cmp.c:type_marker_to_cmp_type:
   407|  1.16k|  }
   408|  1.16k|}
 cmp.c:read_obj_data:
-  618|  9.00k|                                          cmp_object_t *obj) {
-  619|  9.00k|  switch (obj->type) {
-  620|  4.31k|    case CMP_TYPE_POSITIVE_FIXNUM: {
+  618|  8.98k|                                          cmp_object_t *obj) {
+  619|  8.98k|  switch (obj->type) {
+  620|  4.29k|    case CMP_TYPE_POSITIVE_FIXNUM: {
   ------------------
-  |  Branch (620:5): [True: 4.31k, False: 4.69k]
+  |  Branch (620:5): [True: 4.29k, False: 4.68k]
   ------------------
-  621|  4.31k|      obj->as.u8 = type_marker;
-  622|  4.31k|      return true;
+  621|  4.29k|      obj->as.u8 = type_marker;
+  622|  4.29k|      return true;
   623|      0|    }
-  624|      9|    case CMP_TYPE_NEGATIVE_FIXNUM: {
+  624|     10|    case CMP_TYPE_NEGATIVE_FIXNUM: {
   ------------------
-  |  Branch (624:5): [True: 9, False: 8.99k]
+  |  Branch (624:5): [True: 10, False: 8.97k]
   ------------------
-  625|      9|      obj->as.s8 = (int8_t)type_marker;
-  626|      9|      return true;
+  625|     10|      obj->as.s8 = (int8_t)type_marker;
+  626|     10|      return true;
   627|      0|    }
   628|      3|    case CMP_TYPE_NIL: {
   ------------------
-  |  Branch (628:5): [True: 3, False: 9.00k]
+  |  Branch (628:5): [True: 3, False: 8.98k]
   ------------------
   629|      3|      obj->as.u8 = 0;
   630|      3|      return true;
   631|      0|    }
   632|     37|    case CMP_TYPE_BOOLEAN: {
   ------------------
-  |  Branch (632:5): [True: 37, False: 8.96k]
+  |  Branch (632:5): [True: 37, False: 8.94k]
   ------------------
   633|     37|      switch (type_marker) {
   634|     19|        case TRUE_MARKER: {
@@ -1750,7 +1750,7 @@ cmp.c:read_obj_data:
   647|     37|    }
   648|    154|    case CMP_TYPE_UINT8: {
   ------------------
-  |  Branch (648:5): [True: 154, False: 8.85k]
+  |  Branch (648:5): [True: 154, False: 8.82k]
   ------------------
   649|    154|      if (!ctx->read(ctx, &obj->as.u8, sizeof(uint8_t))) {
   ------------------
@@ -1763,7 +1763,7 @@ cmp.c:read_obj_data:
   654|    154|    }
   655|    101|    case CMP_TYPE_UINT16: {
   ------------------
-  |  Branch (655:5): [True: 101, False: 8.90k]
+  |  Branch (655:5): [True: 101, False: 8.88k]
   ------------------
   656|    101|      if (!ctx->read(ctx, &obj->as.u16, sizeof(uint16_t))) {
   ------------------
@@ -1777,7 +1777,7 @@ cmp.c:read_obj_data:
   662|    101|    }
   663|     55|    case CMP_TYPE_UINT32: {
   ------------------
-  |  Branch (663:5): [True: 55, False: 8.94k]
+  |  Branch (663:5): [True: 55, False: 8.92k]
   ------------------
   664|     55|      if (!ctx->read(ctx, &obj->as.u32, sizeof(uint32_t))) {
   ------------------
@@ -1789,23 +1789,23 @@ cmp.c:read_obj_data:
   668|     54|      obj->as.u32 = be32(obj->as.u32);
   669|     54|      return true;
   670|     55|    }
-  671|     22|    case CMP_TYPE_UINT64: {
+  671|     21|    case CMP_TYPE_UINT64: {
   ------------------
-  |  Branch (671:5): [True: 22, False: 8.98k]
+  |  Branch (671:5): [True: 21, False: 8.96k]
   ------------------
-  672|     22|      if (!ctx->read(ctx, &obj->as.u64, sizeof(uint64_t))) {
+  672|     21|      if (!ctx->read(ctx, &obj->as.u64, sizeof(uint64_t))) {
   ------------------
-  |  Branch (672:11): [True: 2, False: 20]
+  |  Branch (672:11): [True: 1, False: 20]
   ------------------
-  673|      2|        ctx->error = CMP_ERROR_DATA_READING;
-  674|      2|        return false;
-  675|      2|      }
+  673|      1|        ctx->error = CMP_ERROR_DATA_READING;
+  674|      1|        return false;
+  675|      1|      }
   676|     20|      obj->as.u64 = be64(obj->as.u64);
   677|     20|      return true;
-  678|     22|    }
+  678|     21|    }
   679|     63|    case CMP_TYPE_SINT8: {
   ------------------
-  |  Branch (679:5): [True: 63, False: 8.94k]
+  |  Branch (679:5): [True: 63, False: 8.92k]
   ------------------
   680|     63|      if (!ctx->read(ctx, &obj->as.s8, sizeof(int8_t))) {
   ------------------
@@ -1818,7 +1818,7 @@ cmp.c:read_obj_data:
   685|     63|    }
   686|     84|    case CMP_TYPE_SINT16: {
   ------------------
-  |  Branch (686:5): [True: 84, False: 8.92k]
+  |  Branch (686:5): [True: 84, False: 8.89k]
   ------------------
   687|     84|      if (!ctx->read(ctx, &obj->as.s16, sizeof(int16_t))) {
   ------------------
@@ -1832,7 +1832,7 @@ cmp.c:read_obj_data:
   693|     84|    }
   694|     32|    case CMP_TYPE_SINT32: {
   ------------------
-  |  Branch (694:5): [True: 32, False: 8.97k]
+  |  Branch (694:5): [True: 32, False: 8.95k]
   ------------------
   695|     32|      if (!ctx->read(ctx, &obj->as.s32, sizeof(int32_t))) {
   ------------------
@@ -1846,7 +1846,7 @@ cmp.c:read_obj_data:
   701|     32|    }
   702|     15|    case CMP_TYPE_SINT64: {
   ------------------
-  |  Branch (702:5): [True: 15, False: 8.98k]
+  |  Branch (702:5): [True: 15, False: 8.96k]
   ------------------
   703|     15|      if (!ctx->read(ctx, &obj->as.s64, sizeof(int64_t))) {
   ------------------
@@ -1860,7 +1860,7 @@ cmp.c:read_obj_data:
   709|     15|    }
   710|      1|    case CMP_TYPE_FLOAT: {
   ------------------
-  |  Branch (710:5): [True: 1, False: 9.00k]
+  |  Branch (710:5): [True: 1, False: 8.98k]
   ------------------
   711|       |#ifndef CMP_NO_FLOAT
   712|       |      char bytes[4];
@@ -1878,7 +1878,7 @@ cmp.c:read_obj_data:
   724|     15|    }
   725|      1|    case CMP_TYPE_DOUBLE: {
   ------------------
-  |  Branch (725:5): [True: 1, False: 9.00k]
+  |  Branch (725:5): [True: 1, False: 8.98k]
   ------------------
   726|       |#ifndef CMP_NO_FLOAT
   727|       |      char bytes[8];
@@ -1896,63 +1896,63 @@ cmp.c:read_obj_data:
   739|     15|    }
   740|    139|    case CMP_TYPE_BIN8:
   ------------------
-  |  Branch (740:5): [True: 139, False: 8.86k]
+  |  Branch (740:5): [True: 139, False: 8.84k]
   ------------------
-  741|    431|    case CMP_TYPE_BIN16:
+  741|    433|    case CMP_TYPE_BIN16:
   ------------------
-  |  Branch (741:5): [True: 292, False: 8.71k]
+  |  Branch (741:5): [True: 294, False: 8.68k]
   ------------------
-  742|    533|    case CMP_TYPE_BIN32:
+  742|    528|    case CMP_TYPE_BIN32:
   ------------------
-  |  Branch (742:5): [True: 102, False: 8.90k]
+  |  Branch (742:5): [True: 95, False: 8.88k]
   ------------------
-  743|    533|      return read_type_size(ctx, type_marker, obj->type, &obj->as.bin_size);
+  743|    528|      return read_type_size(ctx, type_marker, obj->type, &obj->as.bin_size);
   744|     10|    case CMP_TYPE_FIXSTR:
   ------------------
-  |  Branch (744:5): [True: 10, False: 8.99k]
+  |  Branch (744:5): [True: 10, False: 8.97k]
   ------------------
   745|     16|    case CMP_TYPE_STR8:
   ------------------
-  |  Branch (745:5): [True: 6, False: 8.99k]
+  |  Branch (745:5): [True: 6, False: 8.97k]
   ------------------
   746|     23|    case CMP_TYPE_STR16:
   ------------------
-  |  Branch (746:5): [True: 7, False: 8.99k]
+  |  Branch (746:5): [True: 7, False: 8.97k]
   ------------------
   747|     29|    case CMP_TYPE_STR32:
   ------------------
-  |  Branch (747:5): [True: 6, False: 8.99k]
+  |  Branch (747:5): [True: 6, False: 8.97k]
   ------------------
   748|     29|      return read_type_size(ctx, type_marker, obj->type, &obj->as.str_size);
   749|  3.50k|    case CMP_TYPE_FIXARRAY:
   ------------------
-  |  Branch (749:5): [True: 3.50k, False: 5.49k]
+  |  Branch (749:5): [True: 3.50k, False: 5.47k]
   ------------------
-  750|  3.51k|    case CMP_TYPE_ARRAY16:
+  750|  3.50k|    case CMP_TYPE_ARRAY16:
   ------------------
-  |  Branch (750:5): [True: 4, False: 9.00k]
+  |  Branch (750:5): [True: 4, False: 8.97k]
   ------------------
   751|  3.51k|    case CMP_TYPE_ARRAY32:
   ------------------
-  |  Branch (751:5): [True: 6, False: 8.99k]
+  |  Branch (751:5): [True: 6, False: 8.97k]
   ------------------
   752|  3.51k|      return read_type_size(ctx, type_marker, obj->type, &obj->as.array_size);
   753|      7|    case CMP_TYPE_FIXMAP:
   ------------------
-  |  Branch (753:5): [True: 7, False: 8.99k]
+  |  Branch (753:5): [True: 7, False: 8.97k]
   ------------------
   754|      9|    case CMP_TYPE_MAP16:
   ------------------
-  |  Branch (754:5): [True: 2, False: 9.00k]
+  |  Branch (754:5): [True: 2, False: 8.98k]
   ------------------
   755|     11|    case CMP_TYPE_MAP32:
   ------------------
-  |  Branch (755:5): [True: 2, False: 9.00k]
+  |  Branch (755:5): [True: 2, False: 8.98k]
   ------------------
   756|     11|      return read_type_size(ctx, type_marker, obj->type, &obj->as.map_size);
   757|      3|    case CMP_TYPE_FIXEXT1: {
   ------------------
-  |  Branch (757:5): [True: 3, False: 9.00k]
+  |  Branch (757:5): [True: 3, False: 8.98k]
   ------------------
   758|      3|      if (!ctx->read(ctx, &obj->as.ext.type, sizeof(int8_t))) {
   ------------------
@@ -1966,7 +1966,7 @@ cmp.c:read_obj_data:
   764|      3|    }
   765|      3|    case CMP_TYPE_FIXEXT2: {
   ------------------
-  |  Branch (765:5): [True: 3, False: 9.00k]
+  |  Branch (765:5): [True: 3, False: 8.98k]
   ------------------
   766|      3|      if (!ctx->read(ctx, &obj->as.ext.type, sizeof(int8_t))) {
   ------------------
@@ -1980,7 +1980,7 @@ cmp.c:read_obj_data:
   772|      3|    }
   773|      2|    case CMP_TYPE_FIXEXT4: {
   ------------------
-  |  Branch (773:5): [True: 2, False: 9.00k]
+  |  Branch (773:5): [True: 2, False: 8.98k]
   ------------------
   774|      2|      if (!ctx->read(ctx, &obj->as.ext.type, sizeof(int8_t))) {
   ------------------
@@ -1994,7 +1994,7 @@ cmp.c:read_obj_data:
   780|      2|    }
   781|      3|    case CMP_TYPE_FIXEXT8: {
   ------------------
-  |  Branch (781:5): [True: 3, False: 9.00k]
+  |  Branch (781:5): [True: 3, False: 8.98k]
   ------------------
   782|      3|      if (!ctx->read(ctx, &obj->as.ext.type, sizeof(int8_t))) {
   ------------------
@@ -2008,7 +2008,7 @@ cmp.c:read_obj_data:
   788|      3|    }
   789|      2|    case CMP_TYPE_FIXEXT16: {
   ------------------
-  |  Branch (789:5): [True: 2, False: 9.00k]
+  |  Branch (789:5): [True: 2, False: 8.98k]
   ------------------
   790|      2|      if (!ctx->read(ctx, &obj->as.ext.type, sizeof(int8_t))) {
   ------------------
@@ -2022,7 +2022,7 @@ cmp.c:read_obj_data:
   796|      2|    }
   797|      4|    case CMP_TYPE_EXT8: {
   ------------------
-  |  Branch (797:5): [True: 4, False: 9.00k]
+  |  Branch (797:5): [True: 4, False: 8.97k]
   ------------------
   798|      4|      if (!read_type_size(ctx, type_marker, obj->type, &obj->as.ext.size)) {
   ------------------
@@ -2041,7 +2041,7 @@ cmp.c:read_obj_data:
   806|      2|    }
   807|      4|    case CMP_TYPE_EXT16: {
   ------------------
-  |  Branch (807:5): [True: 4, False: 9.00k]
+  |  Branch (807:5): [True: 4, False: 8.97k]
   ------------------
   808|      4|      if (!read_type_size(ctx, type_marker, obj->type, &obj->as.ext.size)) {
   ------------------
@@ -2060,7 +2060,7 @@ cmp.c:read_obj_data:
   816|      2|    }
   817|      4|    case CMP_TYPE_EXT32: {
   ------------------
-  |  Branch (817:5): [True: 4, False: 9.00k]
+  |  Branch (817:5): [True: 4, False: 8.97k]
   ------------------
   818|      4|      if (!read_type_size(ctx, type_marker, obj->type, &obj->as.ext.size)) {
   ------------------
@@ -2079,66 +2079,66 @@ cmp.c:read_obj_data:
   826|      2|    }
   827|      0|    default:
   ------------------
-  |  Branch (827:5): [True: 0, False: 9.00k]
+  |  Branch (827:5): [True: 0, False: 8.98k]
   ------------------
   828|      0|      break;
-  829|  9.00k|  }
+  829|  8.98k|  }
   830|       |
   831|      0|  ctx->error = CMP_ERROR_INVALID_TYPE;
   832|       |  return false;
-  833|  9.00k|}
+  833|  8.98k|}
 cmp.c:read_type_size:
-  412|  4.10k|                                           uint32_t *size) {
-  413|  4.10k|  uint8_t u8temp = 0;
-  414|  4.10k|  uint16_t u16temp = 0;
-  415|  4.10k|  uint32_t u32temp = 0;
+  412|  4.09k|                                           uint32_t *size) {
+  413|  4.09k|  uint8_t u8temp = 0;
+  414|  4.09k|  uint16_t u16temp = 0;
+  415|  4.09k|  uint32_t u32temp = 0;
   416|       |
-  417|  4.10k|  switch (cmp_type) {
+  417|  4.09k|  switch (cmp_type) {
   418|      0|    case CMP_TYPE_POSITIVE_FIXNUM: {
   ------------------
-  |  Branch (418:5): [True: 0, False: 4.10k]
+  |  Branch (418:5): [True: 0, False: 4.09k]
   ------------------
   419|      0|      *size = 0;
   420|      0|      return true;
   421|      0|    }
   422|      7|    case CMP_TYPE_FIXMAP: {
   ------------------
-  |  Branch (422:5): [True: 7, False: 4.09k]
+  |  Branch (422:5): [True: 7, False: 4.08k]
   ------------------
   423|      7|      *size = type_marker & FIXMAP_SIZE;
   424|      7|      return true;
   425|      0|    }
   426|  3.50k|    case CMP_TYPE_FIXARRAY: {
   ------------------
-  |  Branch (426:5): [True: 3.50k, False: 595]
+  |  Branch (426:5): [True: 3.50k, False: 590]
   ------------------
   427|  3.50k|      *size = type_marker & FIXARRAY_SIZE;
   428|  3.50k|      return true;
   429|      0|    }
   430|     10|    case CMP_TYPE_FIXSTR: {
   ------------------
-  |  Branch (430:5): [True: 10, False: 4.09k]
+  |  Branch (430:5): [True: 10, False: 4.08k]
   ------------------
   431|     10|      *size = type_marker & FIXSTR_SIZE;
   432|     10|      return true;
   433|      0|    }
   434|      0|    case CMP_TYPE_NIL: {
   ------------------
-  |  Branch (434:5): [True: 0, False: 4.10k]
+  |  Branch (434:5): [True: 0, False: 4.09k]
   ------------------
   435|      0|      *size = 0;
   436|      0|      return true;
   437|      0|    }
   438|      0|    case CMP_TYPE_BOOLEAN: {
   ------------------
-  |  Branch (438:5): [True: 0, False: 4.10k]
+  |  Branch (438:5): [True: 0, False: 4.09k]
   ------------------
   439|      0|      *size = 0;
   440|      0|      return true;
   441|      0|    }
   442|    139|    case CMP_TYPE_BIN8: {
   ------------------
-  |  Branch (442:5): [True: 139, False: 3.96k]
+  |  Branch (442:5): [True: 139, False: 3.95k]
   ------------------
   443|    139|      if (!ctx->read(ctx, &u8temp, sizeof(uint8_t))) {
   ------------------
@@ -2150,34 +2150,34 @@ cmp.c:read_type_size:
   447|    138|      *size = u8temp;
   448|    138|      return true;
   449|    139|    }
-  450|    292|    case CMP_TYPE_BIN16: {
+  450|    294|    case CMP_TYPE_BIN16: {
   ------------------
-  |  Branch (450:5): [True: 292, False: 3.80k]
+  |  Branch (450:5): [True: 294, False: 3.80k]
   ------------------
-  451|    292|      if (!ctx->read(ctx, &u16temp, sizeof(uint16_t))) {
+  451|    294|      if (!ctx->read(ctx, &u16temp, sizeof(uint16_t))) {
   ------------------
-  |  Branch (451:11): [True: 3, False: 289]
+  |  Branch (451:11): [True: 3, False: 291]
   ------------------
   452|      3|        ctx->error = CMP_ERROR_LENGTH_READING;
   453|      3|        return false;
   454|      3|      }
-  455|    289|      *size = be16(u16temp);
-  456|    289|      return true;
-  457|    292|    }
-  458|    102|    case CMP_TYPE_BIN32: {
+  455|    291|      *size = be16(u16temp);
+  456|    291|      return true;
+  457|    294|    }
+  458|     95|    case CMP_TYPE_BIN32: {
   ------------------
-  |  Branch (458:5): [True: 102, False: 3.99k]
+  |  Branch (458:5): [True: 95, False: 3.99k]
   ------------------
-  459|    102|      if (!ctx->read(ctx, &u32temp, sizeof(uint32_t))) {
+  459|     95|      if (!ctx->read(ctx, &u32temp, sizeof(uint32_t))) {
   ------------------
-  |  Branch (459:11): [True: 4, False: 98]
+  |  Branch (459:11): [True: 4, False: 91]
   ------------------
   460|      4|        ctx->error = CMP_ERROR_LENGTH_READING;
   461|      4|        return false;
   462|      4|      }
-  463|     98|      *size = be32(u32temp);
-  464|     98|      return true;
-  465|    102|    }
+  463|     91|      *size = be32(u32temp);
+  464|     91|      return true;
+  465|     95|    }
   466|      4|    case CMP_TYPE_EXT8: {
   ------------------
   |  Branch (466:5): [True: 4, False: 4.09k]
@@ -2222,112 +2222,112 @@ cmp.c:read_type_size:
   489|      4|    }
   490|      0|    case CMP_TYPE_FLOAT: {
   ------------------
-  |  Branch (490:5): [True: 0, False: 4.10k]
+  |  Branch (490:5): [True: 0, False: 4.09k]
   ------------------
   491|      0|      *size = 4;
   492|      0|      return true;
   493|      4|    }
   494|      0|    case CMP_TYPE_DOUBLE: {
   ------------------
-  |  Branch (494:5): [True: 0, False: 4.10k]
+  |  Branch (494:5): [True: 0, False: 4.09k]
   ------------------
   495|      0|      *size = 8;
   496|      0|      return true;
   497|      4|    }
   498|      0|    case CMP_TYPE_UINT8: {
   ------------------
-  |  Branch (498:5): [True: 0, False: 4.10k]
+  |  Branch (498:5): [True: 0, False: 4.09k]
   ------------------
   499|      0|      *size = 1;
   500|      0|      return true;
   501|      4|    }
   502|      0|    case CMP_TYPE_UINT16: {
   ------------------
-  |  Branch (502:5): [True: 0, False: 4.10k]
+  |  Branch (502:5): [True: 0, False: 4.09k]
   ------------------
   503|      0|      *size = 2;
   504|      0|      return true;
   505|      4|    }
   506|      0|    case CMP_TYPE_UINT32: {
   ------------------
-  |  Branch (506:5): [True: 0, False: 4.10k]
+  |  Branch (506:5): [True: 0, False: 4.09k]
   ------------------
   507|      0|      *size = 4;
   508|      0|      return true;
   509|      4|    }
   510|      0|    case CMP_TYPE_UINT64: {
   ------------------
-  |  Branch (510:5): [True: 0, False: 4.10k]
+  |  Branch (510:5): [True: 0, False: 4.09k]
   ------------------
   511|      0|      *size = 8;
   512|      0|      return true;
   513|      4|    }
   514|      0|    case CMP_TYPE_SINT8: {
   ------------------
-  |  Branch (514:5): [True: 0, False: 4.10k]
+  |  Branch (514:5): [True: 0, False: 4.09k]
   ------------------
   515|      0|      *size = 1;
   516|      0|      return true;
   517|      4|    }
   518|      0|    case CMP_TYPE_SINT16: {
   ------------------
-  |  Branch (518:5): [True: 0, False: 4.10k]
+  |  Branch (518:5): [True: 0, False: 4.09k]
   ------------------
   519|      0|      *size = 2;
   520|      0|      return true;
   521|      4|    }
   522|      0|    case CMP_TYPE_SINT32: {
   ------------------
-  |  Branch (522:5): [True: 0, False: 4.10k]
+  |  Branch (522:5): [True: 0, False: 4.09k]
   ------------------
   523|      0|      *size = 4;
   524|      0|      return true;
   525|      4|    }
   526|      0|    case CMP_TYPE_SINT64: {
   ------------------
-  |  Branch (526:5): [True: 0, False: 4.10k]
+  |  Branch (526:5): [True: 0, False: 4.09k]
   ------------------
   527|      0|      *size = 8;
   528|      0|      return true;
   529|      4|    }
   530|      0|    case CMP_TYPE_FIXEXT1: {
   ------------------
-  |  Branch (530:5): [True: 0, False: 4.10k]
+  |  Branch (530:5): [True: 0, False: 4.09k]
   ------------------
   531|      0|      *size = 1;
   532|      0|      return true;
   533|      4|    }
   534|      0|    case CMP_TYPE_FIXEXT2: {
   ------------------
-  |  Branch (534:5): [True: 0, False: 4.10k]
+  |  Branch (534:5): [True: 0, False: 4.09k]
   ------------------
   535|      0|      *size = 2;
   536|      0|      return true;
   537|      4|    }
   538|      0|    case CMP_TYPE_FIXEXT4: {
   ------------------
-  |  Branch (538:5): [True: 0, False: 4.10k]
+  |  Branch (538:5): [True: 0, False: 4.09k]
   ------------------
   539|      0|      *size = 4;
   540|      0|      return true;
   541|      4|    }
   542|      0|    case CMP_TYPE_FIXEXT8: {
   ------------------
-  |  Branch (542:5): [True: 0, False: 4.10k]
+  |  Branch (542:5): [True: 0, False: 4.09k]
   ------------------
   543|      0|      *size = 8;
   544|      0|      return true;
   545|      4|    }
   546|      0|    case CMP_TYPE_FIXEXT16: {
   ------------------
-  |  Branch (546:5): [True: 0, False: 4.10k]
+  |  Branch (546:5): [True: 0, False: 4.09k]
   ------------------
   547|      0|      *size = 16;
   548|      0|      return true;
   549|      4|    }
   550|      6|    case CMP_TYPE_STR8: {
   ------------------
-  |  Branch (550:5): [True: 6, False: 4.09k]
+  |  Branch (550:5): [True: 6, False: 4.08k]
   ------------------
   551|      6|      if (!ctx->read(ctx, &u8temp, sizeof(uint8_t))) {
   ------------------
@@ -2341,7 +2341,7 @@ cmp.c:read_type_size:
   557|      6|    }
   558|      7|    case CMP_TYPE_STR16: {
   ------------------
-  |  Branch (558:5): [True: 7, False: 4.09k]
+  |  Branch (558:5): [True: 7, False: 4.08k]
   ------------------
   559|      7|      if (!ctx->read(ctx, &u16temp, sizeof(uint16_t))) {
   ------------------
@@ -2355,7 +2355,7 @@ cmp.c:read_type_size:
   565|      7|    }
   566|      6|    case CMP_TYPE_STR32: {
   ------------------
-  |  Branch (566:5): [True: 6, False: 4.09k]
+  |  Branch (566:5): [True: 6, False: 4.08k]
   ------------------
   567|      6|      if (!ctx->read(ctx, &u32temp, sizeof(uint32_t))) {
   ------------------
@@ -2383,7 +2383,7 @@ cmp.c:read_type_size:
   581|      4|    }
   582|      6|    case CMP_TYPE_ARRAY32: {
   ------------------
-  |  Branch (582:5): [True: 6, False: 4.09k]
+  |  Branch (582:5): [True: 6, False: 4.08k]
   ------------------
   583|      6|      if (!ctx->read(ctx, &u32temp, sizeof(uint32_t))) {
   ------------------
@@ -2425,20 +2425,20 @@ cmp.c:read_type_size:
   605|      2|    }
   606|      0|    case CMP_TYPE_NEGATIVE_FIXNUM: {
   ------------------
-  |  Branch (606:5): [True: 0, False: 4.10k]
+  |  Branch (606:5): [True: 0, False: 4.09k]
   ------------------
   607|      0|      *size = 0;
   608|      0|      return true;
   609|      2|    }
   610|      0|    default: {
   ------------------
-  |  Branch (610:5): [True: 0, False: 4.10k]
+  |  Branch (610:5): [True: 0, False: 4.09k]
   ------------------
   611|      0|      ctx->error = CMP_ERROR_INVALID_TYPE;
   612|       |      return false;
   613|      2|    }
-  614|  4.10k|  }
-  615|  4.10k|}
+  614|  4.09k|  }
+  615|  4.09k|}
 
 bin_pack_obj_size:
    72|    189|{
@@ -2616,37 +2616,37 @@ bin_pack.c:buf_writer:
    61|  8.99k|}
 
 bin_unpack_obj:
-   75|    704|{
-   76|    704|    Bin_Unpack bu;
-   77|    704|    bin_unpack_init(&bu, mem, buf, buf_size);
-   78|    704|    return callback(obj, &bu);
-   79|    704|}
+   75|    705|{
+   76|    705|    Bin_Unpack bu;
+   77|    705|    bin_unpack_init(&bu, mem, buf, buf_size);
+   78|    705|    return callback(obj, &bu);
+   79|    705|}
 bin_unpack_array:
-   82|    704|{
-   83|    704|    return cmp_read_array(&bu->ctx, size) && *size <= bu->bytes_size;
+   82|    705|{
+   83|    705|    return cmp_read_array(&bu->ctx, size) && *size <= bu->bytes_size;
   ------------------
-  |  Branch (83:12): [True: 641, False: 63]
-  |  Branch (83:46): [True: 639, False: 2]
+  |  Branch (83:12): [True: 642, False: 63]
+  |  Branch (83:46): [True: 640, False: 2]
   ------------------
-   84|    704|}
+   84|    705|}
 bin_unpack_array_fixed:
-   87|  2.99k|{
-   88|  2.99k|    uint32_t size = 0;
-   89|  2.99k|    const bool success = cmp_read_array(&bu->ctx, &size) && size == required_size;
+   87|  2.98k|{
+   88|  2.98k|    uint32_t size = 0;
+   89|  2.98k|    const bool success = cmp_read_array(&bu->ctx, &size) && size == required_size;
   ------------------
-  |  Branch (89:26): [True: 2.86k, False: 129]
-  |  Branch (89:61): [True: 2.86k, False: 4]
+  |  Branch (89:26): [True: 2.86k, False: 127]
+  |  Branch (89:61): [True: 2.85k, False: 6]
   ------------------
-   90|  2.99k|    if (actual_size != nullptr) {
+   90|  2.98k|    if (actual_size != nullptr) {
   ------------------
-  |  |   63|  2.99k|#define nullptr NULL
+  |  |   63|  2.98k|#define nullptr NULL
   ------------------
-  |  Branch (90:9): [True: 0, False: 2.99k]
+  |  Branch (90:9): [True: 0, False: 2.98k]
   ------------------
    91|      0|        *actual_size = size;
    92|      0|    }
-   93|  2.99k|    return success;
-   94|  2.99k|}
+   93|  2.98k|    return success;
+   94|  2.98k|}
 bin_unpack_bool:
    97|     36|{
    98|     36|    return cmp_read_bool(&bu->ctx, val);
@@ -2656,36 +2656,36 @@ bin_unpack_u16:
   108|    223|    return cmp_read_ushort(&bu->ctx, val);
   109|    223|}
 bin_unpack_u32:
-  112|  4.45k|{
-  113|  4.45k|    return cmp_read_uint(&bu->ctx, val);
-  114|  4.45k|}
+  112|  4.43k|{
+  113|  4.43k|    return cmp_read_uint(&bu->ctx, val);
+  114|  4.43k|}
 bin_unpack_u64:
   117|    275|{
   118|    275|    return cmp_read_ulong(&bu->ctx, val);
   119|    275|}
 bin_unpack_bin:
-  127|    540|{
-  128|    540|    uint32_t bin_size;
-  129|    540|    if (!bin_unpack_bin_size(bu, &bin_size) || bin_size > bu->bytes_size) {
+  127|    537|{
+  128|    537|    uint32_t bin_size;
+  129|    537|    if (!bin_unpack_bin_size(bu, &bin_size) || bin_size > bu->bytes_size) {
   ------------------
-  |  Branch (129:9): [True: 61, False: 479]
-  |  Branch (129:48): [True: 5, False: 474]
+  |  Branch (129:9): [True: 65, False: 472]
+  |  Branch (129:48): [True: 1, False: 471]
   ------------------
   130|       |        // There aren't as many bytes as this bin claims to want to allocate.
   131|     66|        return false;
   132|     66|    }
   133|       |
-  134|    474|    if (bin_size == 0) {
+  134|    471|    if (bin_size == 0) {
   ------------------
-  |  Branch (134:9): [True: 431, False: 43]
+  |  Branch (134:9): [True: 428, False: 43]
   ------------------
-  135|    431|        *data_ptr = nullptr;
+  135|    428|        *data_ptr = nullptr;
   ------------------
-  |  |   63|    431|#define nullptr NULL
+  |  |   63|    428|#define nullptr NULL
   ------------------
-  136|    431|        *data_length_ptr = 0;
-  137|    431|        return true;
-  138|    431|    }
+  136|    428|        *data_length_ptr = 0;
+  137|    428|        return true;
+  138|    428|    }
   139|       |
   140|     43|    uint8_t *const data = (uint8_t *)mem_balloc(bu->mem, bin_size);
   141|       |
@@ -2711,15 +2711,15 @@ bin_unpack_bin:
   153|       |    return true;
   154|     42|}
 bin_unpack_str:
-  157|     17|{
-  158|     17|    uint32_t str_size;
-  159|     17|    if (!cmp_read_str_size(&bu->ctx, &str_size) || str_size > bu->bytes_size) {
+  157|     19|{
+  158|     19|    uint32_t str_size;
+  159|     19|    if (!cmp_read_str_size(&bu->ctx, &str_size) || str_size > bu->bytes_size) {
   ------------------
-  |  Branch (159:9): [True: 6, False: 11]
+  |  Branch (159:9): [True: 8, False: 11]
   |  Branch (159:52): [True: 2, False: 9]
   ------------------
-  160|      8|        return false;
-  161|      8|    }
+  160|     10|        return false;
+  161|     10|    }
   162|       |
   163|      9|    if (str_size == UINT32_MAX) {
   ------------------
@@ -2758,33 +2758,33 @@ bin_unpack_str:
   183|       |    return true;
   184|      8|}
 bin_unpack_bin_fixed:
-  199|     45|{
-  200|     45|    uint32_t bin_size;
-  201|     45|    if (!bin_unpack_bin_size(bu, &bin_size) || bin_size != data_length) {
+  199|     47|{
+  200|     47|    uint32_t bin_size;
+  201|     47|    if (!bin_unpack_bin_size(bu, &bin_size) || bin_size != data_length) {
   ------------------
-  |  Branch (201:9): [True: 6, False: 39]
-  |  Branch (201:48): [True: 1, False: 38]
+  |  Branch (201:9): [True: 6, False: 41]
+  |  Branch (201:48): [True: 1, False: 40]
   ------------------
   202|      7|        return false;
   203|      7|    }
   204|       |
-  205|     38|    return bin_unpack_bin_b(bu, data, bin_size);
-  206|     45|}
+  205|     40|    return bin_unpack_bin_b(bu, data, bin_size);
+  206|     47|}
 bin_unpack_bin_size:
-  209|    585|{
-  210|    585|    return cmp_read_bin_size(&bu->ctx, size);
-  211|    585|}
+  209|    584|{
+  210|    584|    return cmp_read_bin_size(&bu->ctx, size);
+  211|    584|}
 bin_unpack_bin_b:
-  255|     82|{
-  256|     82|    return bu->ctx.read(&bu->ctx, data, length);
-  257|     82|}
+  255|     84|{
+  256|     84|    return bu->ctx.read(&bu->ctx, data, length);
+  257|     84|}
 bin_unpack.c:bin_unpack_init:
-   67|    704|{
-   68|    704|    bu->mem = mem;
-   69|    704|    bu->bytes = buf;
-   70|    704|    bu->bytes_size = buf_size;
-   71|    704|    cmp_init(&bu->ctx, bu, buf_reader, buf_skipper, null_writer);
-   72|    704|}
+   67|    705|{
+   68|    705|    bu->mem = mem;
+   69|    705|    bu->bytes = buf;
+   70|    705|    bu->bytes_size = buf_size;
+   71|    705|    cmp_init(&bu->ctx, bu, buf_reader, buf_skipper, null_writer);
+   72|    705|}
 bin_unpack.c:buf_reader:
    24|  10.4k|{
    25|  10.4k|    uint8_t *const bytes = (uint8_t *)data;
@@ -2812,10 +2812,10 @@ bin_unpack.c:buf_reader:
   ------------------
    36|  10.4k|    if (limit > reader->bytes_size) {
   ------------------
-  |  Branch (36:9): [True: 327, False: 10.1k]
+  |  Branch (36:9): [True: 325, False: 10.1k]
   ------------------
-   37|    327|        return false;
-   38|    327|    }
+   37|    325|        return false;
+   38|    325|    }
    39|  10.1k|    memcpy(bytes, reader->bytes, limit);
    40|  10.1k|    reader->bytes += limit;
    41|  10.1k|    reader->bytes_size -= limit;
@@ -3009,7 +3009,7 @@ conference_invite.c:tox_event_conference_invite_unpack_into:
   ------------------
   129|     22|           && bin_unpack_bin(bu, &event->cookie, &event->cookie_length);
   ------------------
-  |  Branch (129:15): [True: 18, False: 4]
+  |  Branch (129:15): [True: 19, False: 3]
   ------------------
   130|     26|}
 
@@ -3460,15 +3460,15 @@ tox_event_dht_nodes_response_pack:
   ------------------
   118|      4|}
 tox_event_dht_nodes_response_new:
-  144|     24|{
-  145|     24|    Tox_Event_Dht_Nodes_Response *const dht_nodes_response =
-  146|     24|        (Tox_Event_Dht_Nodes_Response *)mem_alloc(mem, sizeof(Tox_Event_Dht_Nodes_Response));
+  144|     26|{
+  145|     26|    Tox_Event_Dht_Nodes_Response *const dht_nodes_response =
+  146|     26|        (Tox_Event_Dht_Nodes_Response *)mem_alloc(mem, sizeof(Tox_Event_Dht_Nodes_Response));
   147|       |
-  148|     24|    if (dht_nodes_response == nullptr) {
+  148|     26|    if (dht_nodes_response == nullptr) {
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     26|#define nullptr NULL
   ------------------
-  |  Branch (148:9): [True: 1, False: 23]
+  |  Branch (148:9): [True: 1, False: 25]
   ------------------
   149|      1|        return nullptr;
   ------------------
@@ -3476,86 +3476,86 @@ tox_event_dht_nodes_response_new:
   ------------------
   150|      1|    }
   151|       |
-  152|     23|    tox_event_dht_nodes_response_construct(dht_nodes_response);
-  153|     23|    return dht_nodes_response;
-  154|     24|}
+  152|     25|    tox_event_dht_nodes_response_construct(dht_nodes_response);
+  153|     25|    return dht_nodes_response;
+  154|     26|}
 tox_event_dht_nodes_response_free:
-  157|     24|{
-  158|     24|    if (dht_nodes_response != nullptr) {
+  157|     26|{
+  158|     26|    if (dht_nodes_response != nullptr) {
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     26|#define nullptr NULL
   ------------------
-  |  Branch (158:9): [True: 23, False: 1]
+  |  Branch (158:9): [True: 25, False: 1]
   ------------------
-  159|     23|        tox_event_dht_nodes_response_destruct(dht_nodes_response, mem);
-  160|     23|    }
-  161|     24|    mem_delete(mem, dht_nodes_response);
-  162|     24|}
+  159|     25|        tox_event_dht_nodes_response_destruct(dht_nodes_response, mem);
+  160|     25|    }
+  161|     26|    mem_delete(mem, dht_nodes_response);
+  162|     26|}
 tox_event_dht_nodes_response_unpack:
-  185|     24|{
-  186|     24|    assert(event != nullptr);
+  185|     26|{
+  186|     26|    assert(event != nullptr);
   ------------------
-  |  Branch (186:5): [True: 24, False: 0]
+  |  Branch (186:5): [True: 26, False: 0]
   ------------------
-  187|     24|    assert(*event == nullptr);
+  187|     26|    assert(*event == nullptr);
   ------------------
-  |  Branch (187:5): [True: 24, False: 0]
+  |  Branch (187:5): [True: 26, False: 0]
   ------------------
-  188|     24|    *event = tox_event_dht_nodes_response_new(mem);
+  188|     26|    *event = tox_event_dht_nodes_response_new(mem);
   189|       |
-  190|     24|    if (*event == nullptr) {
+  190|     26|    if (*event == nullptr) {
   ------------------
-  |  |   63|     24|#define nullptr NULL
+  |  |   63|     26|#define nullptr NULL
   ------------------
-  |  Branch (190:9): [True: 1, False: 23]
+  |  Branch (190:9): [True: 1, False: 25]
   ------------------
   191|      1|        return false;
   192|      1|    }
   193|       |
-  194|     23|    return tox_event_dht_nodes_response_unpack_into(*event, bu);
-  195|     24|}
+  194|     25|    return tox_event_dht_nodes_response_unpack_into(*event, bu);
+  195|     26|}
 dht_nodes_response.c:tox_event_dht_nodes_response_construct:
-   99|     23|{
-  100|     23|    *dht_nodes_response = (Tox_Event_Dht_Nodes_Response) {
-  101|     23|        {
-  102|     23|            0
-  103|     23|        }
-  104|     23|    };
-  105|     23|}
+   99|     25|{
+  100|     25|    *dht_nodes_response = (Tox_Event_Dht_Nodes_Response) {
+  101|     25|        {
+  102|     25|            0
+  103|     25|        }
+  104|     25|    };
+  105|     25|}
 dht_nodes_response.c:tox_event_dht_nodes_response_destruct:
-  107|     23|{
-  108|     23|    mem_delete(mem, dht_nodes_response->ip);
-  109|     23|}
+  107|     25|{
+  108|     25|    mem_delete(mem, dht_nodes_response->ip);
+  109|     25|}
 dht_nodes_response.c:tox_event_dht_nodes_response_unpack_into:
-  121|     23|{
-  122|     23|    assert(event != nullptr);
+  121|     25|{
+  122|     25|    assert(event != nullptr);
   ------------------
-  |  Branch (122:5): [True: 23, False: 0]
+  |  Branch (122:5): [True: 25, False: 0]
   ------------------
-  123|     23|    if (!bin_unpack_array_fixed(bu, 3, nullptr)) {
+  123|     25|    if (!bin_unpack_array_fixed(bu, 3, nullptr)) {
   ------------------
-  |  |   63|     23|#define nullptr NULL
+  |  |   63|     25|#define nullptr NULL
   ------------------
-  |  Branch (123:9): [True: 2, False: 21]
+  |  Branch (123:9): [True: 2, False: 23]
   ------------------
   124|      2|        return false;
   125|      2|    }
   126|       |
-  127|     21|    return bin_unpack_bin_fixed(bu, event->public_key, TOX_PUBLIC_KEY_SIZE)
+  127|     23|    return bin_unpack_bin_fixed(bu, event->public_key, TOX_PUBLIC_KEY_SIZE)
   ------------------
-  |  |  212|     21|#define TOX_PUBLIC_KEY_SIZE            32
+  |  |  212|     23|#define TOX_PUBLIC_KEY_SIZE            32
   ------------------
-  |  Branch (127:12): [True: 17, False: 4]
+  |  Branch (127:12): [True: 19, False: 4]
   ------------------
-  128|     17|           && bin_unpack_str(bu, &event->ip, &event->ip_length)
+  128|     19|           && bin_unpack_str(bu, &event->ip, &event->ip_length)
   ------------------
-  |  Branch (128:15): [True: 8, False: 9]
+  |  Branch (128:15): [True: 8, False: 11]
   ------------------
   129|      8|           && bin_unpack_u16(bu, &event->port);
   ------------------
   |  Branch (129:15): [True: 2, False: 6]
   ------------------
-  130|     23|}
+  130|     25|}
 
 tox_events_free:
    44|  1.22k|{
@@ -3563,21 +3563,21 @@ tox_events_free:
   ------------------
   |  |   63|  1.22k|#define nullptr NULL
   ------------------
-  |  Branch (45:9): [True: 516, False: 704]
+  |  Branch (45:9): [True: 517, False: 705]
   ------------------
-   46|    516|        return;
-   47|    516|    }
+   46|    517|        return;
+   47|    517|    }
    48|       |
-   49|  1.99k|    for (uint32_t i = 0; i < events->events_size; ++i) {
+   49|  1.98k|    for (uint32_t i = 0; i < events->events_size; ++i) {
   ------------------
-  |  Branch (49:26): [True: 1.28k, False: 704]
+  |  Branch (49:26): [True: 1.28k, False: 705]
   ------------------
    50|  1.28k|        tox_event_destruct(&events->events[i], events->mem);
    51|  1.28k|    }
    52|       |
-   53|    704|    mem_delete(events->mem, events->events);
-   54|    704|    mem_delete(events->mem, events);
-   55|    704|}
+   53|    705|    mem_delete(events->mem, events->events);
+   54|    705|    mem_delete(events->mem, events);
+   55|    705|}
 tox_events_add:
    58|  1.28k|{
    59|  1.28k|    if (events->events_size == UINT32_MAX) {
@@ -3589,33 +3589,33 @@ tox_events_add:
    62|       |
    63|  1.28k|    if (events->events_size == events->events_capacity) {
   ------------------
-  |  Branch (63:9): [True: 832, False: 456]
+  |  Branch (63:9): [True: 828, False: 456]
   ------------------
-   64|    832|        const uint64_t new_events_capacity_64 = (uint64_t)events->events_capacity * 2 + 1;
+   64|    828|        const uint64_t new_events_capacity_64 = (uint64_t)events->events_capacity * 2 + 1;
    65|       |
-   66|    832|        if (new_events_capacity_64 > UINT32_MAX) {
+   66|    828|        if (new_events_capacity_64 > UINT32_MAX) {
   ------------------
-  |  Branch (66:13): [True: 0, False: 832]
+  |  Branch (66:13): [True: 0, False: 828]
   ------------------
    67|      0|            return false;
    68|      0|        }
    69|       |
-   70|    832|        const uint32_t new_events_capacity = (uint32_t)new_events_capacity_64;
-   71|    832|        Tox_Event *new_events = (Tox_Event *)mem_vrealloc(
-   72|    832|                                    events->mem, events->events, new_events_capacity, sizeof(Tox_Event));
+   70|    828|        const uint32_t new_events_capacity = (uint32_t)new_events_capacity_64;
+   71|    828|        Tox_Event *new_events = (Tox_Event *)mem_vrealloc(
+   72|    828|                                    events->mem, events->events, new_events_capacity, sizeof(Tox_Event));
    73|       |
-   74|    832|        if (new_events == nullptr) {
+   74|    828|        if (new_events == nullptr) {
   ------------------
-  |  |   63|    832|#define nullptr NULL
+  |  |   63|    828|#define nullptr NULL
   ------------------
-  |  Branch (74:13): [True: 2, False: 830]
+  |  Branch (74:13): [True: 2, False: 826]
   ------------------
    75|      2|            return false;
    76|      2|        }
    77|       |
-   78|    830|        events->events = new_events;
-   79|    830|        events->events_capacity = new_events_capacity;
-   80|    830|    }
+   78|    826|        events->events = new_events;
+   79|    826|        events->events_capacity = new_events_capacity;
+   80|    826|    }
    81|       |
    82|  1.28k|    events->events[events->events_size] = *event;
    83|  1.28k|    ++events->events_size;
@@ -4014,15 +4014,15 @@ tox_event_file_recv_control_pack:
   ------------------
    84|     26|}
 tox_event_file_recv_control_new:
-  110|     42|{
-  111|     42|    Tox_Event_File_Recv_Control *const file_recv_control =
-  112|     42|        (Tox_Event_File_Recv_Control *)mem_alloc(mem, sizeof(Tox_Event_File_Recv_Control));
+  110|     38|{
+  111|     38|    Tox_Event_File_Recv_Control *const file_recv_control =
+  112|     38|        (Tox_Event_File_Recv_Control *)mem_alloc(mem, sizeof(Tox_Event_File_Recv_Control));
   113|       |
-  114|     42|    if (file_recv_control == nullptr) {
+  114|     38|    if (file_recv_control == nullptr) {
   ------------------
-  |  |   63|     42|#define nullptr NULL
+  |  |   63|     38|#define nullptr NULL
   ------------------
-  |  Branch (114:9): [True: 1, False: 41]
+  |  Branch (114:9): [True: 1, False: 37]
   ------------------
   115|      1|        return nullptr;
   ------------------
@@ -4030,82 +4030,82 @@ tox_event_file_recv_control_new:
   ------------------
   116|      1|    }
   117|       |
-  118|     41|    tox_event_file_recv_control_construct(file_recv_control);
-  119|     41|    return file_recv_control;
-  120|     42|}
+  118|     37|    tox_event_file_recv_control_construct(file_recv_control);
+  119|     37|    return file_recv_control;
+  120|     38|}
 tox_event_file_recv_control_free:
-  123|     42|{
-  124|     42|    if (file_recv_control != nullptr) {
+  123|     38|{
+  124|     38|    if (file_recv_control != nullptr) {
   ------------------
-  |  |   63|     42|#define nullptr NULL
+  |  |   63|     38|#define nullptr NULL
   ------------------
-  |  Branch (124:9): [True: 41, False: 1]
+  |  Branch (124:9): [True: 37, False: 1]
   ------------------
-  125|     41|        tox_event_file_recv_control_destruct(file_recv_control, mem);
-  126|     41|    }
-  127|     42|    mem_delete(mem, file_recv_control);
-  128|     42|}
+  125|     37|        tox_event_file_recv_control_destruct(file_recv_control, mem);
+  126|     37|    }
+  127|     38|    mem_delete(mem, file_recv_control);
+  128|     38|}
 tox_event_file_recv_control_unpack:
-  151|     42|{
-  152|     42|    assert(event != nullptr);
+  151|     38|{
+  152|     38|    assert(event != nullptr);
   ------------------
-  |  Branch (152:5): [True: 42, False: 0]
+  |  Branch (152:5): [True: 38, False: 0]
   ------------------
-  153|     42|    assert(*event == nullptr);
+  153|     38|    assert(*event == nullptr);
   ------------------
-  |  Branch (153:5): [True: 42, False: 0]
+  |  Branch (153:5): [True: 38, False: 0]
   ------------------
-  154|     42|    *event = tox_event_file_recv_control_new(mem);
+  154|     38|    *event = tox_event_file_recv_control_new(mem);
   155|       |
-  156|     42|    if (*event == nullptr) {
+  156|     38|    if (*event == nullptr) {
   ------------------
-  |  |   63|     42|#define nullptr NULL
+  |  |   63|     38|#define nullptr NULL
   ------------------
-  |  Branch (156:9): [True: 1, False: 41]
+  |  Branch (156:9): [True: 1, False: 37]
   ------------------
   157|      1|        return false;
   158|      1|    }
   159|       |
-  160|     41|    return tox_event_file_recv_control_unpack_into(*event, bu);
-  161|     42|}
+  160|     37|    return tox_event_file_recv_control_unpack_into(*event, bu);
+  161|     38|}
 file_recv_control.c:tox_event_file_recv_control_construct:
-   67|     41|{
-   68|     41|    *file_recv_control = (Tox_Event_File_Recv_Control) {
-   69|     41|        0
-   70|     41|    };
-   71|     41|}
+   67|     37|{
+   68|     37|    *file_recv_control = (Tox_Event_File_Recv_Control) {
+   69|     37|        0
+   70|     37|    };
+   71|     37|}
 file_recv_control.c:tox_event_file_recv_control_destruct:
-   73|     41|{
-   74|     41|    return;
-   75|     41|}
+   73|     37|{
+   74|     37|    return;
+   75|     37|}
 file_recv_control.c:tox_event_file_recv_control_unpack_into:
-   87|     41|{
-   88|     41|    assert(event != nullptr);
+   87|     37|{
+   88|     37|    assert(event != nullptr);
   ------------------
-  |  Branch (88:5): [True: 41, False: 0]
+  |  Branch (88:5): [True: 37, False: 0]
   ------------------
-   89|     41|    if (!bin_unpack_array_fixed(bu, 3, nullptr)) {
+   89|     37|    if (!bin_unpack_array_fixed(bu, 3, nullptr)) {
   ------------------
-  |  |   63|     41|#define nullptr NULL
+  |  |   63|     37|#define nullptr NULL
   ------------------
-  |  Branch (89:9): [True: 4, False: 37]
+  |  Branch (89:9): [True: 4, False: 33]
   ------------------
    90|      4|        return false;
    91|      4|    }
    92|       |
-   93|     37|    return bin_unpack_u32(bu, &event->friend_number)
+   93|     33|    return bin_unpack_u32(bu, &event->friend_number)
   ------------------
-  |  Branch (93:12): [True: 36, False: 1]
+  |  Branch (93:12): [True: 32, False: 1]
   ------------------
-   94|     36|           && bin_unpack_u32(bu, &event->file_number)
+   94|     32|           && bin_unpack_u32(bu, &event->file_number)
   ------------------
-  |  Branch (94:15): [True: 35, False: 1]
+  |  Branch (94:15): [True: 31, False: 1]
   ------------------
-   95|     35|           && tox_file_control_unpack(&event->control, bu);
+   95|     31|           && tox_file_control_unpack(&event->control, bu);
   ------------------
-  |  Branch (95:15): [True: 32, False: 3]
+  |  Branch (95:15): [True: 28, False: 3]
   ------------------
-   96|     41|}
+   96|     37|}
 
 tox_event_friend_connection_status_pack:
    67|     40|{
@@ -5527,15 +5527,15 @@ tox_event_group_join_fail_pack:
   ------------------
    71|     36|}
 tox_event_group_join_fail_new:
-   96|     48|{
-   97|     48|    Tox_Event_Group_Join_Fail *const group_join_fail =
-   98|     48|        (Tox_Event_Group_Join_Fail *)mem_alloc(mem, sizeof(Tox_Event_Group_Join_Fail));
+   96|     49|{
+   97|     49|    Tox_Event_Group_Join_Fail *const group_join_fail =
+   98|     49|        (Tox_Event_Group_Join_Fail *)mem_alloc(mem, sizeof(Tox_Event_Group_Join_Fail));
    99|       |
-  100|     48|    if (group_join_fail == nullptr) {
+  100|     49|    if (group_join_fail == nullptr) {
   ------------------
-  |  |   63|     48|#define nullptr NULL
+  |  |   63|     49|#define nullptr NULL
   ------------------
-  |  Branch (100:9): [True: 1, False: 47]
+  |  Branch (100:9): [True: 1, False: 48]
   ------------------
   101|      1|        return nullptr;
   ------------------
@@ -5543,78 +5543,78 @@ tox_event_group_join_fail_new:
   ------------------
   102|      1|    }
   103|       |
-  104|     47|    tox_event_group_join_fail_construct(group_join_fail);
-  105|     47|    return group_join_fail;
-  106|     48|}
+  104|     48|    tox_event_group_join_fail_construct(group_join_fail);
+  105|     48|    return group_join_fail;
+  106|     49|}
 tox_event_group_join_fail_free:
-  109|     48|{
-  110|     48|    if (group_join_fail != nullptr) {
+  109|     49|{
+  110|     49|    if (group_join_fail != nullptr) {
   ------------------
-  |  |   63|     48|#define nullptr NULL
+  |  |   63|     49|#define nullptr NULL
   ------------------
-  |  Branch (110:9): [True: 47, False: 1]
+  |  Branch (110:9): [True: 48, False: 1]
   ------------------
-  111|     47|        tox_event_group_join_fail_destruct(group_join_fail, mem);
-  112|     47|    }
-  113|     48|    mem_delete(mem, group_join_fail);
-  114|     48|}
+  111|     48|        tox_event_group_join_fail_destruct(group_join_fail, mem);
+  112|     48|    }
+  113|     49|    mem_delete(mem, group_join_fail);
+  114|     49|}
 tox_event_group_join_fail_unpack:
-  137|     48|{
-  138|     48|    assert(event != nullptr);
+  137|     49|{
+  138|     49|    assert(event != nullptr);
   ------------------
-  |  Branch (138:5): [True: 48, False: 0]
+  |  Branch (138:5): [True: 49, False: 0]
   ------------------
-  139|     48|    assert(*event == nullptr);
+  139|     49|    assert(*event == nullptr);
   ------------------
-  |  Branch (139:5): [True: 48, False: 0]
+  |  Branch (139:5): [True: 49, False: 0]
   ------------------
-  140|     48|    *event = tox_event_group_join_fail_new(mem);
+  140|     49|    *event = tox_event_group_join_fail_new(mem);
   141|       |
-  142|     48|    if (*event == nullptr) {
+  142|     49|    if (*event == nullptr) {
   ------------------
-  |  |   63|     48|#define nullptr NULL
+  |  |   63|     49|#define nullptr NULL
   ------------------
-  |  Branch (142:9): [True: 1, False: 47]
+  |  Branch (142:9): [True: 1, False: 48]
   ------------------
   143|      1|        return false;
   144|      1|    }
   145|       |
-  146|     47|    return tox_event_group_join_fail_unpack_into(*event, bu);
-  147|     48|}
+  146|     48|    return tox_event_group_join_fail_unpack_into(*event, bu);
+  147|     49|}
 group_join_fail.c:tox_event_group_join_fail_construct:
-   55|     47|{
-   56|     47|    *group_join_fail = (Tox_Event_Group_Join_Fail) {
-   57|     47|        0
-   58|     47|    };
-   59|     47|}
+   55|     48|{
+   56|     48|    *group_join_fail = (Tox_Event_Group_Join_Fail) {
+   57|     48|        0
+   58|     48|    };
+   59|     48|}
 group_join_fail.c:tox_event_group_join_fail_destruct:
-   61|     47|{
-   62|     47|    return;
-   63|     47|}
+   61|     48|{
+   62|     48|    return;
+   63|     48|}
 group_join_fail.c:tox_event_group_join_fail_unpack_into:
-   74|     47|{
-   75|     47|    assert(event != nullptr);
+   74|     48|{
+   75|     48|    assert(event != nullptr);
   ------------------
-  |  Branch (75:5): [True: 47, False: 0]
+  |  Branch (75:5): [True: 48, False: 0]
   ------------------
-   76|     47|    if (!bin_unpack_array_fixed(bu, 2, nullptr)) {
+   76|     48|    if (!bin_unpack_array_fixed(bu, 2, nullptr)) {
   ------------------
-  |  |   63|     47|#define nullptr NULL
+  |  |   63|     48|#define nullptr NULL
   ------------------
-  |  Branch (76:9): [True: 2, False: 45]
+  |  Branch (76:9): [True: 2, False: 46]
   ------------------
    77|      2|        return false;
    78|      2|    }
    79|       |
-   80|     45|    return bin_unpack_u32(bu, &event->group_number)
+   80|     46|    return bin_unpack_u32(bu, &event->group_number)
   ------------------
-  |  Branch (80:12): [True: 44, False: 1]
+  |  Branch (80:12): [True: 45, False: 1]
   ------------------
-   81|     44|           && tox_group_join_fail_unpack(&event->fail_type, bu);
+   81|     45|           && tox_group_join_fail_unpack(&event->fail_type, bu);
   ------------------
-  |  Branch (81:15): [True: 41, False: 3]
+  |  Branch (81:15): [True: 42, False: 3]
   ------------------
-   82|     47|}
+   82|     48|}
 
 tox_event_group_message_pack:
   137|     20|{
@@ -5999,15 +5999,15 @@ tox_event_group_peer_exit_pack:
   ------------------
   178|     28|}
 tox_event_group_peer_exit_new:
-  206|     66|{
-  207|     66|    Tox_Event_Group_Peer_Exit *const group_peer_exit =
-  208|     66|        (Tox_Event_Group_Peer_Exit *)mem_alloc(mem, sizeof(Tox_Event_Group_Peer_Exit));
+  206|     64|{
+  207|     64|    Tox_Event_Group_Peer_Exit *const group_peer_exit =
+  208|     64|        (Tox_Event_Group_Peer_Exit *)mem_alloc(mem, sizeof(Tox_Event_Group_Peer_Exit));
   209|       |
-  210|     66|    if (group_peer_exit == nullptr) {
+  210|     64|    if (group_peer_exit == nullptr) {
   ------------------
-  |  |   63|     66|#define nullptr NULL
+  |  |   63|     64|#define nullptr NULL
   ------------------
-  |  Branch (210:9): [True: 1, False: 65]
+  |  Branch (210:9): [True: 1, False: 63]
   ------------------
   211|      1|        return nullptr;
   ------------------
@@ -6015,91 +6015,91 @@ tox_event_group_peer_exit_new:
   ------------------
   212|      1|    }
   213|       |
-  214|     65|    tox_event_group_peer_exit_construct(group_peer_exit);
-  215|     65|    return group_peer_exit;
-  216|     66|}
+  214|     63|    tox_event_group_peer_exit_construct(group_peer_exit);
+  215|     63|    return group_peer_exit;
+  216|     64|}
 tox_event_group_peer_exit_free:
-  219|     66|{
-  220|     66|    if (group_peer_exit != nullptr) {
+  219|     64|{
+  220|     64|    if (group_peer_exit != nullptr) {
   ------------------
-  |  |   63|     66|#define nullptr NULL
+  |  |   63|     64|#define nullptr NULL
   ------------------
-  |  Branch (220:9): [True: 65, False: 1]
+  |  Branch (220:9): [True: 63, False: 1]
   ------------------
-  221|     65|        tox_event_group_peer_exit_destruct(group_peer_exit, mem);
-  222|     65|    }
-  223|     66|    mem_delete(mem, group_peer_exit);
-  224|     66|}
+  221|     63|        tox_event_group_peer_exit_destruct(group_peer_exit, mem);
+  222|     63|    }
+  223|     64|    mem_delete(mem, group_peer_exit);
+  224|     64|}
 tox_event_group_peer_exit_unpack:
-  247|     66|{
-  248|     66|    assert(event != nullptr);
+  247|     64|{
+  248|     64|    assert(event != nullptr);
   ------------------
-  |  Branch (248:5): [True: 66, False: 0]
+  |  Branch (248:5): [True: 64, False: 0]
   ------------------
-  249|     66|    assert(*event == nullptr);
+  249|     64|    assert(*event == nullptr);
   ------------------
-  |  Branch (249:5): [True: 66, False: 0]
+  |  Branch (249:5): [True: 64, False: 0]
   ------------------
-  250|     66|    *event = tox_event_group_peer_exit_new(mem);
+  250|     64|    *event = tox_event_group_peer_exit_new(mem);
   251|       |
-  252|     66|    if (*event == nullptr) {
+  252|     64|    if (*event == nullptr) {
   ------------------
-  |  |   63|     66|#define nullptr NULL
+  |  |   63|     64|#define nullptr NULL
   ------------------
-  |  Branch (252:9): [True: 1, False: 65]
+  |  Branch (252:9): [True: 1, False: 63]
   ------------------
   253|      1|        return false;
   254|      1|    }
   255|       |
-  256|     65|    return tox_event_group_peer_exit_unpack_into(*event, bu);
-  257|     66|}
+  256|     63|    return tox_event_group_peer_exit_unpack_into(*event, bu);
+  257|     64|}
 group_peer_exit.c:tox_event_group_peer_exit_construct:
-  158|     65|{
-  159|     65|    *group_peer_exit = (Tox_Event_Group_Peer_Exit) {
-  160|     65|        0
-  161|     65|    };
-  162|     65|}
+  158|     63|{
+  159|     63|    *group_peer_exit = (Tox_Event_Group_Peer_Exit) {
+  160|     63|        0
+  161|     63|    };
+  162|     63|}
 group_peer_exit.c:tox_event_group_peer_exit_destruct:
-  164|     65|{
-  165|     65|    mem_delete(mem, group_peer_exit->name);
-  166|     65|    mem_delete(mem, group_peer_exit->part_message);
-  167|     65|}
+  164|     63|{
+  165|     63|    mem_delete(mem, group_peer_exit->name);
+  166|     63|    mem_delete(mem, group_peer_exit->part_message);
+  167|     63|}
 group_peer_exit.c:tox_event_group_peer_exit_unpack_into:
-  181|     65|{
-  182|     65|    assert(event != nullptr);
+  181|     63|{
+  182|     63|    assert(event != nullptr);
   ------------------
-  |  Branch (182:5): [True: 65, False: 0]
+  |  Branch (182:5): [True: 63, False: 0]
   ------------------
-  183|     65|    if (!bin_unpack_array_fixed(bu, 5, nullptr)) {
+  183|     63|    if (!bin_unpack_array_fixed(bu, 5, nullptr)) {
   ------------------
-  |  |   63|     65|#define nullptr NULL
+  |  |   63|     63|#define nullptr NULL
   ------------------
-  |  Branch (183:9): [True: 3, False: 62]
+  |  Branch (183:9): [True: 3, False: 60]
   ------------------
   184|      3|        return false;
   185|      3|    }
   186|       |
-  187|     62|    return bin_unpack_u32(bu, &event->group_number)
+  187|     60|    return bin_unpack_u32(bu, &event->group_number)
   ------------------
-  |  Branch (187:12): [True: 61, False: 1]
+  |  Branch (187:12): [True: 59, False: 1]
   ------------------
-  188|     61|           && bin_unpack_u32(bu, &event->peer_id)
+  188|     59|           && bin_unpack_u32(bu, &event->peer_id)
   ------------------
-  |  Branch (188:15): [True: 60, False: 1]
+  |  Branch (188:15): [True: 58, False: 1]
   ------------------
-  189|     60|           && tox_group_exit_type_unpack(&event->exit_type, bu)
+  189|     58|           && tox_group_exit_type_unpack(&event->exit_type, bu)
   ------------------
-  |  Branch (189:15): [True: 58, False: 2]
+  |  Branch (189:15): [True: 56, False: 2]
   ------------------
-  190|     58|           && bin_unpack_bin(bu, &event->name, &event->name_length)
+  190|     56|           && bin_unpack_bin(bu, &event->name, &event->name_length)
   ------------------
-  |  Branch (190:15): [True: 49, False: 9]
+  |  Branch (190:15): [True: 48, False: 8]
   ------------------
-  191|     49|           && bin_unpack_bin(bu, &event->part_message, &event->part_message_length);
+  191|     48|           && bin_unpack_bin(bu, &event->part_message, &event->part_message_length);
   ------------------
-  |  Branch (191:15): [True: 43, False: 6]
+  |  Branch (191:15): [True: 40, False: 8]
   ------------------
-  192|     65|}
+  192|     63|}
 
 tox_event_group_peer_join_pack:
    65|     56|{
@@ -7177,15 +7177,15 @@ tox_event_self_connection_status_pack:
    56|    226|    return tox_connection_pack(event->connection_status, bp);
    57|    226|}
 tox_event_self_connection_status_new:
-   77|    176|{
-   78|    176|    Tox_Event_Self_Connection_Status *const self_connection_status =
-   79|    176|        (Tox_Event_Self_Connection_Status *)mem_alloc(mem, sizeof(Tox_Event_Self_Connection_Status));
+   77|    177|{
+   78|    177|    Tox_Event_Self_Connection_Status *const self_connection_status =
+   79|    177|        (Tox_Event_Self_Connection_Status *)mem_alloc(mem, sizeof(Tox_Event_Self_Connection_Status));
    80|       |
-   81|    176|    if (self_connection_status == nullptr) {
+   81|    177|    if (self_connection_status == nullptr) {
   ------------------
-  |  |   63|    176|#define nullptr NULL
+  |  |   63|    177|#define nullptr NULL
   ------------------
-  |  Branch (81:9): [True: 1, False: 175]
+  |  Branch (81:9): [True: 1, False: 176]
   ------------------
    82|      1|        return nullptr;
   ------------------
@@ -7193,73 +7193,73 @@ tox_event_self_connection_status_new:
   ------------------
    83|      1|    }
    84|       |
-   85|    175|    tox_event_self_connection_status_construct(self_connection_status);
-   86|    175|    return self_connection_status;
-   87|    176|}
+   85|    176|    tox_event_self_connection_status_construct(self_connection_status);
+   86|    176|    return self_connection_status;
+   87|    177|}
 tox_event_self_connection_status_free:
-   90|    176|{
-   91|    176|    if (self_connection_status != nullptr) {
+   90|    177|{
+   91|    177|    if (self_connection_status != nullptr) {
   ------------------
-  |  |   63|    176|#define nullptr NULL
+  |  |   63|    177|#define nullptr NULL
   ------------------
-  |  Branch (91:9): [True: 175, False: 1]
+  |  Branch (91:9): [True: 176, False: 1]
   ------------------
-   92|    175|        tox_event_self_connection_status_destruct(self_connection_status, mem);
-   93|    175|    }
-   94|    176|    mem_delete(mem, self_connection_status);
-   95|    176|}
+   92|    176|        tox_event_self_connection_status_destruct(self_connection_status, mem);
+   93|    176|    }
+   94|    177|    mem_delete(mem, self_connection_status);
+   95|    177|}
 tox_event_self_connection_status_unpack:
-  118|    176|{
-  119|    176|    assert(event != nullptr);
+  118|    177|{
+  119|    177|    assert(event != nullptr);
   ------------------
-  |  Branch (119:5): [True: 176, False: 0]
+  |  Branch (119:5): [True: 177, False: 0]
   ------------------
-  120|    176|    assert(*event == nullptr);
+  120|    177|    assert(*event == nullptr);
   ------------------
-  |  Branch (120:5): [True: 176, False: 0]
+  |  Branch (120:5): [True: 177, False: 0]
   ------------------
-  121|    176|    *event = tox_event_self_connection_status_new(mem);
+  121|    177|    *event = tox_event_self_connection_status_new(mem);
   122|       |
-  123|    176|    if (*event == nullptr) {
+  123|    177|    if (*event == nullptr) {
   ------------------
-  |  |   63|    176|#define nullptr NULL
+  |  |   63|    177|#define nullptr NULL
   ------------------
-  |  Branch (123:9): [True: 1, False: 175]
+  |  Branch (123:9): [True: 1, False: 176]
   ------------------
   124|      1|        return false;
   125|      1|    }
   126|       |
-  127|    175|    return tox_event_self_connection_status_unpack_into(*event, bu);
-  128|    176|}
+  127|    176|    return tox_event_self_connection_status_unpack_into(*event, bu);
+  128|    177|}
 self_connection_status.c:tox_event_self_connection_status_construct:
-   43|    175|{
-   44|    175|    *self_connection_status = (Tox_Event_Self_Connection_Status) {
-   45|    175|        TOX_CONNECTION_NONE
-   46|    175|    };
-   47|    175|}
+   43|    176|{
+   44|    176|    *self_connection_status = (Tox_Event_Self_Connection_Status) {
+   45|    176|        TOX_CONNECTION_NONE
+   46|    176|    };
+   47|    176|}
 self_connection_status.c:tox_event_self_connection_status_destruct:
-   49|    175|{
-   50|    175|    return;
-   51|    175|}
+   49|    176|{
+   50|    176|    return;
+   51|    176|}
 self_connection_status.c:tox_event_self_connection_status_unpack_into:
-   60|    175|{
-   61|    175|    assert(event != nullptr);
+   60|    176|{
+   61|    176|    assert(event != nullptr);
   ------------------
-  |  Branch (61:5): [True: 175, False: 0]
+  |  Branch (61:5): [True: 176, False: 0]
   ------------------
-   62|    175|    return tox_connection_unpack(&event->connection_status, bu);
-   63|    175|}
+   62|    176|    return tox_connection_unpack(&event->connection_status, bu);
+   63|    176|}
 
 mem_balloc:
-   13|  2.41k|{
-   14|  2.41k|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
-   15|  2.41k|    return ptr;
-   16|  2.41k|}
+   13|  2.40k|{
+   14|  2.40k|    void *const ptr = mem->funcs->malloc_callback(mem->user_data, size);
+   15|  2.40k|    return ptr;
+   16|  2.40k|}
 mem_brealloc:
-   19|    832|{
-   20|    832|    void *const new_ptr = mem->funcs->realloc_callback(mem->user_data, ptr, size);
-   21|    832|    return new_ptr;
-   22|    832|}
+   19|    828|{
+   20|    828|    void *const new_ptr = mem->funcs->realloc_callback(mem->user_data, ptr, size);
+   21|    828|    return new_ptr;
+   22|    828|}
 mem_alloc:
    25|  2.35k|{
    26|  2.35k|    void *const ptr = mem_balloc(mem, size);
@@ -7274,13 +7274,13 @@ mem_alloc:
    30|  2.35k|    return ptr;
    31|  2.35k|}
 mem_vrealloc:
-   46|    832|{
-   47|    832|    const uint32_t bytes = nmemb * size;
+   46|    828|{
+   47|    828|    const uint32_t bytes = nmemb * size;
    48|       |
-   49|    832|    if (size != 0 && bytes / size != nmemb) {
+   49|    828|    if (size != 0 && bytes / size != nmemb) {
   ------------------
-  |  Branch (49:9): [True: 832, False: 0]
-  |  Branch (49:22): [True: 0, False: 832]
+  |  Branch (49:9): [True: 828, False: 0]
+  |  Branch (49:22): [True: 0, False: 828]
   ------------------
    50|      0|        return nullptr;
   ------------------
@@ -7288,23 +7288,23 @@ mem_vrealloc:
   ------------------
    51|      0|    }
    52|       |
-   53|    832|    void *const new_ptr = mem_brealloc(mem, ptr, bytes);
-   54|    832|    return new_ptr;
-   55|    832|}
+   53|    828|    void *const new_ptr = mem_brealloc(mem, ptr, bytes);
+   54|    828|    return new_ptr;
+   55|    828|}
 mem_delete:
-   58|  3.73k|{
-   59|  3.73k|    mem->funcs->dealloc_callback(mem->user_data, ptr);
-   60|  3.73k|}
+   58|  3.72k|{
+   59|  3.72k|    mem->funcs->dealloc_callback(mem->user_data, ptr);
+   60|  3.72k|}
 
 net_socket_to_native:
-    9|    705|{
-   10|    705|    return (force int)sock.value;
-   11|    705|}
+    9|    706|{
+   10|    706|    return (force int)sock.value;
+   11|    706|}
 net_socket_from_native:
-   14|    705|{
-   15|    705|    const Socket res = {(force Socket_Value)sock};
-   16|    705|    return res;
-   17|    705|}
+   14|    706|{
+   15|    706|    const Socket res = {(force Socket_Value)sock};
+   16|    706|    return res;
+   17|    706|}
 net_family_ipv4:
   180|  2.82k|{
   181|  2.82k|    return family_ipv4;
@@ -7350,23 +7350,23 @@ net_htonl:
   592|       |    return htonl(hostlong);
   593|  2.11k|}
 net_htons:
-  596|    705|{
+  596|    706|{
   597|       |    return htons(hostshort);
-  598|    705|}
+  598|    706|}
 net_ntohs:
-  606|    705|{
+  606|    706|{
   607|       |    return ntohs(hostshort);
-  608|    705|}
+  608|    706|}
 
 tox_dispatch_new:
-   60|    705|{
-   61|    705|    Tox_Dispatch *dispatch = (Tox_Dispatch *)calloc(1, sizeof(Tox_Dispatch));
+   60|    706|{
+   61|    706|    Tox_Dispatch *dispatch = (Tox_Dispatch *)calloc(1, sizeof(Tox_Dispatch));
    62|       |
-   63|    705|    if (dispatch == nullptr) {
+   63|    706|    if (dispatch == nullptr) {
   ------------------
-  |  |   63|    705|#define nullptr NULL
+  |  |   63|    706|#define nullptr NULL
   ------------------
-  |  Branch (63:9): [True: 0, False: 705]
+  |  Branch (63:9): [True: 0, False: 706]
   ------------------
    64|      0|        if (error != nullptr) {
   ------------------
@@ -7383,184 +7383,184 @@ tox_dispatch_new:
   ------------------
    69|      0|    }
    70|       |
-   71|    705|    *dispatch = (Tox_Dispatch) {
-   72|    705|        nullptr
+   71|    706|    *dispatch = (Tox_Dispatch) {
+   72|    706|        nullptr
   ------------------
-  |  |   63|    705|#define nullptr NULL
+  |  |   63|    706|#define nullptr NULL
   ------------------
-   73|    705|    };
+   73|    706|    };
    74|       |
-   75|    705|    if (error != nullptr) {
+   75|    706|    if (error != nullptr) {
   ------------------
-  |  |   63|    705|#define nullptr NULL
+  |  |   63|    706|#define nullptr NULL
   ------------------
-  |  Branch (75:9): [True: 0, False: 705]
+  |  Branch (75:9): [True: 0, False: 706]
   ------------------
    76|      0|        *error = TOX_ERR_DISPATCH_NEW_OK;
    77|      0|    }
    78|       |
-   79|    705|    return dispatch;
-   80|    705|}
+   79|    706|    return dispatch;
+   80|    706|}
 tox_dispatch_free:
-   83|    705|{
-   84|    705|    free(dispatch);
-   85|    705|}
+   83|    706|{
+   84|    706|    free(dispatch);
+   85|    706|}
 tox_events_callback_conference_connected:
-   89|    705|{
-   90|    705|    dispatch->conference_connected_callback = callback;
-   91|    705|}
+   89|    706|{
+   90|    706|    dispatch->conference_connected_callback = callback;
+   91|    706|}
 tox_events_callback_conference_invite:
-   94|    705|{
-   95|    705|    dispatch->conference_invite_callback = callback;
-   96|    705|}
+   94|    706|{
+   95|    706|    dispatch->conference_invite_callback = callback;
+   96|    706|}
 tox_events_callback_conference_message:
-   99|    705|{
-  100|    705|    dispatch->conference_message_callback = callback;
-  101|    705|}
+   99|    706|{
+  100|    706|    dispatch->conference_message_callback = callback;
+  101|    706|}
 tox_events_callback_conference_peer_list_changed:
-  104|    705|{
-  105|    705|    dispatch->conference_peer_list_changed_callback = callback;
-  106|    705|}
+  104|    706|{
+  105|    706|    dispatch->conference_peer_list_changed_callback = callback;
+  106|    706|}
 tox_events_callback_conference_peer_name:
-  109|    705|{
-  110|    705|    dispatch->conference_peer_name_callback = callback;
-  111|    705|}
+  109|    706|{
+  110|    706|    dispatch->conference_peer_name_callback = callback;
+  111|    706|}
 tox_events_callback_conference_title:
-  114|    705|{
-  115|    705|    dispatch->conference_title_callback = callback;
-  116|    705|}
+  114|    706|{
+  115|    706|    dispatch->conference_title_callback = callback;
+  116|    706|}
 tox_events_callback_file_chunk_request:
-  119|    705|{
-  120|    705|    dispatch->file_chunk_request_callback = callback;
-  121|    705|}
+  119|    706|{
+  120|    706|    dispatch->file_chunk_request_callback = callback;
+  121|    706|}
 tox_events_callback_file_recv:
-  124|    705|{
-  125|    705|    dispatch->file_recv_callback = callback;
-  126|    705|}
+  124|    706|{
+  125|    706|    dispatch->file_recv_callback = callback;
+  126|    706|}
 tox_events_callback_file_recv_chunk:
-  129|    705|{
-  130|    705|    dispatch->file_recv_chunk_callback = callback;
-  131|    705|}
+  129|    706|{
+  130|    706|    dispatch->file_recv_chunk_callback = callback;
+  131|    706|}
 tox_events_callback_file_recv_control:
-  134|    705|{
-  135|    705|    dispatch->file_recv_control_callback = callback;
-  136|    705|}
+  134|    706|{
+  135|    706|    dispatch->file_recv_control_callback = callback;
+  136|    706|}
 tox_events_callback_friend_connection_status:
-  139|    705|{
-  140|    705|    dispatch->friend_connection_status_callback = callback;
-  141|    705|}
+  139|    706|{
+  140|    706|    dispatch->friend_connection_status_callback = callback;
+  141|    706|}
 tox_events_callback_friend_lossless_packet:
-  144|    705|{
-  145|    705|    dispatch->friend_lossless_packet_callback = callback;
-  146|    705|}
+  144|    706|{
+  145|    706|    dispatch->friend_lossless_packet_callback = callback;
+  146|    706|}
 tox_events_callback_friend_lossy_packet:
-  149|    705|{
-  150|    705|    dispatch->friend_lossy_packet_callback = callback;
-  151|    705|}
+  149|    706|{
+  150|    706|    dispatch->friend_lossy_packet_callback = callback;
+  151|    706|}
 tox_events_callback_friend_message:
-  154|    705|{
-  155|    705|    dispatch->friend_message_callback = callback;
-  156|    705|}
+  154|    706|{
+  155|    706|    dispatch->friend_message_callback = callback;
+  156|    706|}
 tox_events_callback_friend_name:
-  159|    705|{
-  160|    705|    dispatch->friend_name_callback = callback;
-  161|    705|}
+  159|    706|{
+  160|    706|    dispatch->friend_name_callback = callback;
+  161|    706|}
 tox_events_callback_friend_read_receipt:
-  164|    705|{
-  165|    705|    dispatch->friend_read_receipt_callback = callback;
-  166|    705|}
+  164|    706|{
+  165|    706|    dispatch->friend_read_receipt_callback = callback;
+  166|    706|}
 tox_events_callback_friend_request:
-  169|    705|{
-  170|    705|    dispatch->friend_request_callback = callback;
-  171|    705|}
+  169|    706|{
+  170|    706|    dispatch->friend_request_callback = callback;
+  171|    706|}
 tox_events_callback_friend_status:
-  174|    705|{
-  175|    705|    dispatch->friend_status_callback = callback;
-  176|    705|}
+  174|    706|{
+  175|    706|    dispatch->friend_status_callback = callback;
+  176|    706|}
 tox_events_callback_friend_status_message:
-  179|    705|{
-  180|    705|    dispatch->friend_status_message_callback = callback;
-  181|    705|}
+  179|    706|{
+  180|    706|    dispatch->friend_status_message_callback = callback;
+  181|    706|}
 tox_events_callback_friend_typing:
-  184|    705|{
-  185|    705|    dispatch->friend_typing_callback = callback;
-  186|    705|}
+  184|    706|{
+  185|    706|    dispatch->friend_typing_callback = callback;
+  186|    706|}
 tox_events_callback_self_connection_status:
-  189|    705|{
-  190|    705|    dispatch->self_connection_status_callback = callback;
-  191|    705|}
+  189|    706|{
+  190|    706|    dispatch->self_connection_status_callback = callback;
+  191|    706|}
 tox_events_callback_group_peer_name:
-  194|    705|{
-  195|    705|    dispatch->group_peer_name_callback = callback;
-  196|    705|}
+  194|    706|{
+  195|    706|    dispatch->group_peer_name_callback = callback;
+  196|    706|}
 tox_events_callback_group_peer_status:
-  199|    705|{
-  200|    705|    dispatch->group_peer_status_callback = callback;
-  201|    705|}
+  199|    706|{
+  200|    706|    dispatch->group_peer_status_callback = callback;
+  201|    706|}
 tox_events_callback_group_topic:
-  204|    705|{
-  205|    705|    dispatch->group_topic_callback = callback;
-  206|    705|}
+  204|    706|{
+  205|    706|    dispatch->group_topic_callback = callback;
+  206|    706|}
 tox_events_callback_group_privacy_state:
-  209|    705|{
-  210|    705|    dispatch->group_privacy_state_callback = callback;
-  211|    705|}
+  209|    706|{
+  210|    706|    dispatch->group_privacy_state_callback = callback;
+  211|    706|}
 tox_events_callback_group_voice_state:
-  214|    705|{
-  215|    705|    dispatch->group_voice_state_callback = callback;
-  216|    705|}
+  214|    706|{
+  215|    706|    dispatch->group_voice_state_callback = callback;
+  216|    706|}
 tox_events_callback_group_topic_lock:
-  219|    705|{
-  220|    705|    dispatch->group_topic_lock_callback = callback;
-  221|    705|}
+  219|    706|{
+  220|    706|    dispatch->group_topic_lock_callback = callback;
+  221|    706|}
 tox_events_callback_group_peer_limit:
-  224|    705|{
-  225|    705|    dispatch->group_peer_limit_callback = callback;
-  226|    705|}
+  224|    706|{
+  225|    706|    dispatch->group_peer_limit_callback = callback;
+  226|    706|}
 tox_events_callback_group_password:
-  229|    705|{
-  230|    705|    dispatch->group_password_callback = callback;
-  231|    705|}
+  229|    706|{
+  230|    706|    dispatch->group_password_callback = callback;
+  231|    706|}
 tox_events_callback_group_message:
-  234|    705|{
-  235|    705|    dispatch->group_message_callback = callback;
-  236|    705|}
+  234|    706|{
+  235|    706|    dispatch->group_message_callback = callback;
+  236|    706|}
 tox_events_callback_group_private_message:
-  239|    705|{
-  240|    705|    dispatch->group_private_message_callback = callback;
-  241|    705|}
+  239|    706|{
+  240|    706|    dispatch->group_private_message_callback = callback;
+  241|    706|}
 tox_events_callback_group_custom_packet:
-  244|    705|{
-  245|    705|    dispatch->group_custom_packet_callback = callback;
-  246|    705|}
+  244|    706|{
+  245|    706|    dispatch->group_custom_packet_callback = callback;
+  246|    706|}
 tox_events_callback_group_custom_private_packet:
-  249|    705|{
-  250|    705|    dispatch->group_custom_private_packet_callback = callback;
-  251|    705|}
+  249|    706|{
+  250|    706|    dispatch->group_custom_private_packet_callback = callback;
+  251|    706|}
 tox_events_callback_group_invite:
-  254|    705|{
-  255|    705|    dispatch->group_invite_callback = callback;
-  256|    705|}
+  254|    706|{
+  255|    706|    dispatch->group_invite_callback = callback;
+  256|    706|}
 tox_events_callback_group_peer_join:
-  259|    705|{
-  260|    705|    dispatch->group_peer_join_callback = callback;
-  261|    705|}
+  259|    706|{
+  260|    706|    dispatch->group_peer_join_callback = callback;
+  261|    706|}
 tox_events_callback_group_peer_exit:
-  264|    705|{
-  265|    705|    dispatch->group_peer_exit_callback = callback;
-  266|    705|}
+  264|    706|{
+  265|    706|    dispatch->group_peer_exit_callback = callback;
+  266|    706|}
 tox_events_callback_group_self_join:
-  269|    705|{
-  270|    705|    dispatch->group_self_join_callback = callback;
-  271|    705|}
+  269|    706|{
+  270|    706|    dispatch->group_self_join_callback = callback;
+  271|    706|}
 tox_events_callback_group_join_fail:
-  274|    705|{
-  275|    705|    dispatch->group_join_fail_callback = callback;
-  276|    705|}
+  274|    706|{
+  275|    706|    dispatch->group_join_fail_callback = callback;
+  276|    706|}
 tox_events_callback_group_moderation:
-  279|    705|{
-  280|    705|    dispatch->group_moderation_callback = callback;
-  281|    705|}
+  279|    706|{
+  280|    706|    dispatch->group_moderation_callback = callback;
+  281|    706|}
 tox_dispatch_invoke:
   618|    189|{
   619|    189|    const uint32_t size = tox_events_get_size(events);
@@ -8284,7 +8284,7 @@ tox_event_destruct:
   397|       |
   398|     56|        case TOX_EVENT_CONFERENCE_TITLE: {
   ------------------
-  |  Branch (398:9): [True: 56, False: 1.68k]
+  |  Branch (398:9): [True: 56, False: 1.67k]
   ------------------
   399|     56|            tox_event_conference_title_free(event->data.conference_title, mem);
   400|     56|            break;
@@ -8300,18 +8300,18 @@ tox_event_destruct:
   407|       |
   408|     25|        case TOX_EVENT_FILE_RECV_CHUNK: {
   ------------------
-  |  Branch (408:9): [True: 25, False: 1.71k]
+  |  Branch (408:9): [True: 25, False: 1.70k]
   ------------------
   409|     25|            tox_event_file_recv_chunk_free(event->data.file_recv_chunk, mem);
   410|     25|            break;
   411|      0|        }
   412|       |
-  413|     42|        case TOX_EVENT_FILE_RECV_CONTROL: {
+  413|     38|        case TOX_EVENT_FILE_RECV_CONTROL: {
   ------------------
-  |  Branch (413:9): [True: 42, False: 1.69k]
+  |  Branch (413:9): [True: 38, False: 1.69k]
   ------------------
-  414|     42|            tox_event_file_recv_control_free(event->data.file_recv_control, mem);
-  415|     42|            break;
+  414|     38|            tox_event_file_recv_control_free(event->data.file_recv_control, mem);
+  415|     38|            break;
   416|      0|        }
   417|       |
   418|     33|        case TOX_EVENT_FILE_RECV: {
@@ -8348,7 +8348,7 @@ tox_event_destruct:
   437|       |
   438|     16|        case TOX_EVENT_FRIEND_MESSAGE: {
   ------------------
-  |  Branch (438:9): [True: 16, False: 1.72k]
+  |  Branch (438:9): [True: 16, False: 1.71k]
   ------------------
   439|     16|            tox_event_friend_message_free(event->data.friend_message, mem);
   440|     16|            break;
@@ -8356,7 +8356,7 @@ tox_event_destruct:
   442|       |
   443|     26|        case TOX_EVENT_FRIEND_NAME: {
   ------------------
-  |  Branch (443:9): [True: 26, False: 1.71k]
+  |  Branch (443:9): [True: 26, False: 1.70k]
   ------------------
   444|     26|            tox_event_friend_name_free(event->data.friend_name, mem);
   445|     26|            break;
@@ -8364,7 +8364,7 @@ tox_event_destruct:
   447|       |
   448|     34|        case TOX_EVENT_FRIEND_READ_RECEIPT: {
   ------------------
-  |  Branch (448:9): [True: 34, False: 1.70k]
+  |  Branch (448:9): [True: 34, False: 1.69k]
   ------------------
   449|     34|            tox_event_friend_read_receipt_free(event->data.friend_read_receipt, mem);
   450|     34|            break;
@@ -8372,7 +8372,7 @@ tox_event_destruct:
   452|       |
   453|     26|        case TOX_EVENT_FRIEND_REQUEST: {
   ------------------
-  |  Branch (453:9): [True: 26, False: 1.71k]
+  |  Branch (453:9): [True: 26, False: 1.70k]
   ------------------
   454|     26|            tox_event_friend_request_free(event->data.friend_request, mem);
   455|     26|            break;
@@ -8402,17 +8402,17 @@ tox_event_destruct:
   470|     41|            break;
   471|      0|        }
   472|       |
-  473|    176|        case TOX_EVENT_SELF_CONNECTION_STATUS: {
+  473|    177|        case TOX_EVENT_SELF_CONNECTION_STATUS: {
   ------------------
-  |  Branch (473:9): [True: 176, False: 1.56k]
+  |  Branch (473:9): [True: 177, False: 1.55k]
   ------------------
-  474|    176|            tox_event_self_connection_status_free(event->data.self_connection_status, mem);
-  475|    176|            break;
+  474|    177|            tox_event_self_connection_status_free(event->data.self_connection_status, mem);
+  475|    177|            break;
   476|      0|        }
   477|       |
   478|     24|        case TOX_EVENT_GROUP_PEER_NAME: {
   ------------------
-  |  Branch (478:9): [True: 24, False: 1.71k]
+  |  Branch (478:9): [True: 24, False: 1.70k]
   ------------------
   479|     24|            tox_event_group_peer_name_free(event->data.group_peer_name, mem);
   480|     24|            break;
@@ -8436,7 +8436,7 @@ tox_event_destruct:
   492|       |
   493|     26|        case TOX_EVENT_GROUP_PRIVACY_STATE: {
   ------------------
-  |  Branch (493:9): [True: 26, False: 1.71k]
+  |  Branch (493:9): [True: 26, False: 1.70k]
   ------------------
   494|     26|            tox_event_group_privacy_state_free(event->data.group_privacy_state, mem);
   495|     26|            break;
@@ -8444,7 +8444,7 @@ tox_event_destruct:
   497|       |
   498|     46|        case TOX_EVENT_GROUP_VOICE_STATE: {
   ------------------
-  |  Branch (498:9): [True: 46, False: 1.69k]
+  |  Branch (498:9): [True: 46, False: 1.68k]
   ------------------
   499|     46|            tox_event_group_voice_state_free(event->data.group_voice_state, mem);
   500|     46|            break;
@@ -8452,7 +8452,7 @@ tox_event_destruct:
   502|       |
   503|     26|        case TOX_EVENT_GROUP_TOPIC_LOCK: {
   ------------------
-  |  Branch (503:9): [True: 26, False: 1.71k]
+  |  Branch (503:9): [True: 26, False: 1.70k]
   ------------------
   504|     26|            tox_event_group_topic_lock_free(event->data.group_topic_lock, mem);
   505|     26|            break;
@@ -8460,7 +8460,7 @@ tox_event_destruct:
   507|       |
   508|     14|        case TOX_EVENT_GROUP_PEER_LIMIT: {
   ------------------
-  |  Branch (508:9): [True: 14, False: 1.72k]
+  |  Branch (508:9): [True: 14, False: 1.71k]
   ------------------
   509|     14|            tox_event_group_peer_limit_free(event->data.group_peer_limit, mem);
   510|     14|            break;
@@ -8468,7 +8468,7 @@ tox_event_destruct:
   512|       |
   513|     26|        case TOX_EVENT_GROUP_PASSWORD: {
   ------------------
-  |  Branch (513:9): [True: 26, False: 1.71k]
+  |  Branch (513:9): [True: 26, False: 1.70k]
   ------------------
   514|     26|            tox_event_group_password_free(event->data.group_password, mem);
   515|     26|            break;
@@ -8476,7 +8476,7 @@ tox_event_destruct:
   517|       |
   518|     35|        case TOX_EVENT_GROUP_MESSAGE: {
   ------------------
-  |  Branch (518:9): [True: 35, False: 1.70k]
+  |  Branch (518:9): [True: 35, False: 1.69k]
   ------------------
   519|     35|            tox_event_group_message_free(event->data.group_message, mem);
   520|     35|            break;
@@ -8492,7 +8492,7 @@ tox_event_destruct:
   527|       |
   528|     15|        case TOX_EVENT_GROUP_CUSTOM_PACKET: {
   ------------------
-  |  Branch (528:9): [True: 15, False: 1.72k]
+  |  Branch (528:9): [True: 15, False: 1.71k]
   ------------------
   529|     15|            tox_event_group_custom_packet_free(event->data.group_custom_packet, mem);
   530|     15|            break;
@@ -8516,18 +8516,18 @@ tox_event_destruct:
   542|       |
   543|     46|        case TOX_EVENT_GROUP_PEER_JOIN: {
   ------------------
-  |  Branch (543:9): [True: 46, False: 1.69k]
+  |  Branch (543:9): [True: 46, False: 1.68k]
   ------------------
   544|     46|            tox_event_group_peer_join_free(event->data.group_peer_join, mem);
   545|     46|            break;
   546|      0|        }
   547|       |
-  548|     66|        case TOX_EVENT_GROUP_PEER_EXIT: {
+  548|     64|        case TOX_EVENT_GROUP_PEER_EXIT: {
   ------------------
-  |  Branch (548:9): [True: 66, False: 1.67k]
+  |  Branch (548:9): [True: 64, False: 1.66k]
   ------------------
-  549|     66|            tox_event_group_peer_exit_free(event->data.group_peer_exit, mem);
-  550|     66|            break;
+  549|     64|            tox_event_group_peer_exit_free(event->data.group_peer_exit, mem);
+  550|     64|            break;
   551|      0|        }
   552|       |
   553|     43|        case TOX_EVENT_GROUP_SELF_JOIN: {
@@ -8538,12 +8538,12 @@ tox_event_destruct:
   555|     43|            break;
   556|      0|        }
   557|       |
-  558|     48|        case TOX_EVENT_GROUP_JOIN_FAIL: {
+  558|     49|        case TOX_EVENT_GROUP_JOIN_FAIL: {
   ------------------
-  |  Branch (558:9): [True: 48, False: 1.68k]
+  |  Branch (558:9): [True: 49, False: 1.68k]
   ------------------
-  559|     48|            tox_event_group_join_fail_free(event->data.group_join_fail, mem);
-  560|     48|            break;
+  559|     49|            tox_event_group_join_fail_free(event->data.group_join_fail, mem);
+  560|     49|            break;
   561|      0|        }
   562|       |
   563|     43|        case TOX_EVENT_GROUP_MODERATION: {
@@ -8554,19 +8554,19 @@ tox_event_destruct:
   565|     43|            break;
   566|      0|        }
   567|       |
-  568|     24|        case TOX_EVENT_DHT_NODES_RESPONSE: {
+  568|     26|        case TOX_EVENT_DHT_NODES_RESPONSE: {
   ------------------
-  |  Branch (568:9): [True: 24, False: 1.71k]
+  |  Branch (568:9): [True: 26, False: 1.70k]
   ------------------
-  569|     24|            tox_event_dht_nodes_response_free(event->data.dht_nodes_response, mem);
-  570|     24|            break;
+  569|     26|            tox_event_dht_nodes_response_free(event->data.dht_nodes_response, mem);
+  570|     26|            break;
   571|      0|        }
   572|       |
-  573|     83|        case TOX_EVENT_INVALID: {
+  573|     82|        case TOX_EVENT_INVALID: {
   ------------------
-  |  Branch (573:9): [True: 83, False: 1.65k]
+  |  Branch (573:9): [True: 82, False: 1.65k]
   ------------------
-  574|     83|            break;
+  574|     82|            break;
   575|      0|        }
   576|  1.73k|    }
   577|       |
@@ -8605,11 +8605,11 @@ tox_event_unpack_into:
   ------------------
  1080|  1.66k|           && tox_event_type_unpack(&event->type, bu)  //
   ------------------
-  |  Branch (1080:15): [True: 1.65k, False: 15]
+  |  Branch (1080:15): [True: 1.65k, False: 14]
   ------------------
  1081|  1.65k|           && tox_event_data_unpack(event->type, &event->data, bu, mem);
   ------------------
-  |  Branch (1081:15): [True: 1.28k, False: 366]
+  |  Branch (1081:15): [True: 1.28k, False: 368]
   ------------------
  1082|  1.73k|}
 tox_event.c:tox_event_type_pack:
@@ -8876,7 +8876,7 @@ tox_event.c:tox_event_type_unpack:
   942|  1.66k|    uint32_t u32;
   943|  1.66k|    return bin_unpack_u32(bu, &u32)
   ------------------
-  |  Branch (943:12): [True: 1.65k, False: 10]
+  |  Branch (943:12): [True: 1.65k, False: 9]
   ------------------
   944|  1.65k|           && tox_event_type_from_int(u32, val);
   ------------------
@@ -8886,12 +8886,12 @@ tox_event.c:tox_event_type_unpack:
 tox_event.c:tox_event_type_from_int:
   726|  1.65k|{
   727|  1.65k|    switch (value) {
-  728|    176|        case TOX_EVENT_SELF_CONNECTION_STATUS: {
+  728|    177|        case TOX_EVENT_SELF_CONNECTION_STATUS: {
   ------------------
-  |  Branch (728:9): [True: 176, False: 1.48k]
+  |  Branch (728:9): [True: 177, False: 1.48k]
   ------------------
-  729|    176|            *out_enum = TOX_EVENT_SELF_CONNECTION_STATUS;
-  730|    176|            return true;
+  729|    177|            *out_enum = TOX_EVENT_SELF_CONNECTION_STATUS;
+  730|    177|            return true;
   731|      0|        }
   732|       |
   733|     26|        case TOX_EVENT_FRIEND_REQUEST: {
@@ -8936,7 +8936,7 @@ tox_event.c:tox_event_type_from_int:
   757|       |
   758|     29|        case TOX_EVENT_FRIEND_STATUS: {
   ------------------
-  |  Branch (758:9): [True: 29, False: 1.63k]
+  |  Branch (758:9): [True: 29, False: 1.62k]
   ------------------
   759|     29|            *out_enum = TOX_EVENT_FRIEND_STATUS;
   760|     29|            return true;
@@ -8944,7 +8944,7 @@ tox_event.c:tox_event_type_from_int:
   762|       |
   763|     19|        case TOX_EVENT_FRIEND_STATUS_MESSAGE: {
   ------------------
-  |  Branch (763:9): [True: 19, False: 1.64k]
+  |  Branch (763:9): [True: 19, False: 1.63k]
   ------------------
   764|     19|            *out_enum = TOX_EVENT_FRIEND_STATUS_MESSAGE;
   765|     19|            return true;
@@ -8998,12 +8998,12 @@ tox_event.c:tox_event_type_from_int:
   795|     25|            return true;
   796|      0|        }
   797|       |
-  798|     42|        case TOX_EVENT_FILE_RECV_CONTROL: {
+  798|     38|        case TOX_EVENT_FILE_RECV_CONTROL: {
   ------------------
-  |  Branch (798:9): [True: 42, False: 1.61k]
+  |  Branch (798:9): [True: 38, False: 1.61k]
   ------------------
-  799|     42|            *out_enum = TOX_EVENT_FILE_RECV_CONTROL;
-  800|     42|            return true;
+  799|     38|            *out_enum = TOX_EVENT_FILE_RECV_CONTROL;
+  800|     38|            return true;
   801|      0|        }
   802|       |
   803|     27|        case TOX_EVENT_CONFERENCE_INVITE: {
@@ -9024,7 +9024,7 @@ tox_event.c:tox_event_type_from_int:
   812|       |
   813|    118|        case TOX_EVENT_CONFERENCE_PEER_LIST_CHANGED: {
   ------------------
-  |  Branch (813:9): [True: 118, False: 1.54k]
+  |  Branch (813:9): [True: 118, False: 1.53k]
   ------------------
   814|    118|            *out_enum = TOX_EVENT_CONFERENCE_PEER_LIST_CHANGED;
   815|    118|            return true;
@@ -9032,7 +9032,7 @@ tox_event.c:tox_event_type_from_int:
   817|       |
   818|     19|        case TOX_EVENT_CONFERENCE_PEER_NAME: {
   ------------------
-  |  Branch (818:9): [True: 19, False: 1.64k]
+  |  Branch (818:9): [True: 19, False: 1.63k]
   ------------------
   819|     19|            *out_enum = TOX_EVENT_CONFERENCE_PEER_NAME;
   820|     19|            return true;
@@ -9166,12 +9166,12 @@ tox_event.c:tox_event_type_from_int:
   900|     46|            return true;
   901|      0|        }
   902|       |
-  903|     66|        case TOX_EVENT_GROUP_PEER_EXIT: {
+  903|     64|        case TOX_EVENT_GROUP_PEER_EXIT: {
   ------------------
-  |  Branch (903:9): [True: 66, False: 1.59k]
+  |  Branch (903:9): [True: 64, False: 1.59k]
   ------------------
-  904|     66|            *out_enum = TOX_EVENT_GROUP_PEER_EXIT;
-  905|     66|            return true;
+  904|     64|            *out_enum = TOX_EVENT_GROUP_PEER_EXIT;
+  905|     64|            return true;
   906|      0|        }
   907|       |
   908|     43|        case TOX_EVENT_GROUP_SELF_JOIN: {
@@ -9182,12 +9182,12 @@ tox_event.c:tox_event_type_from_int:
   910|     43|            return true;
   911|      0|        }
   912|       |
-  913|     48|        case TOX_EVENT_GROUP_JOIN_FAIL: {
+  913|     49|        case TOX_EVENT_GROUP_JOIN_FAIL: {
   ------------------
-  |  Branch (913:9): [True: 48, False: 1.61k]
+  |  Branch (913:9): [True: 49, False: 1.60k]
   ------------------
-  914|     48|            *out_enum = TOX_EVENT_GROUP_JOIN_FAIL;
-  915|     48|            return true;
+  914|     49|            *out_enum = TOX_EVENT_GROUP_JOIN_FAIL;
+  915|     49|            return true;
   916|      0|        }
   917|       |
   918|     43|        case TOX_EVENT_GROUP_MODERATION: {
@@ -9198,12 +9198,12 @@ tox_event.c:tox_event_type_from_int:
   920|     43|            return true;
   921|      0|        }
   922|       |
-  923|     24|        case TOX_EVENT_DHT_NODES_RESPONSE: {
+  923|     26|        case TOX_EVENT_DHT_NODES_RESPONSE: {
   ------------------
-  |  Branch (923:9): [True: 24, False: 1.63k]
+  |  Branch (923:9): [True: 26, False: 1.63k]
   ------------------
-  924|     24|            *out_enum = TOX_EVENT_DHT_NODES_RESPONSE;
-  925|     24|            return true;
+  924|     26|            *out_enum = TOX_EVENT_DHT_NODES_RESPONSE;
+  925|     26|            return true;
   926|      0|        }
   927|       |
   928|      1|        case TOX_EVENT_INVALID: {
@@ -9231,7 +9231,7 @@ tox_event.c:tox_event_data_unpack:
   ------------------
   950|     23|        case TOX_EVENT_CONFERENCE_CONNECTED:
   ------------------
-  |  Branch (950:9): [True: 23, False: 1.63k]
+  |  Branch (950:9): [True: 23, False: 1.62k]
   ------------------
   951|     23|            return tox_event_conference_connected_unpack(&data->conference_connected, bu, mem);
   952|       |
@@ -9267,7 +9267,7 @@ tox_event.c:tox_event_data_unpack:
   967|       |
   968|    233|        case TOX_EVENT_FILE_CHUNK_REQUEST:
   ------------------
-  |  Branch (968:9): [True: 233, False: 1.42k]
+  |  Branch (968:9): [True: 233, False: 1.41k]
   ------------------
   969|    233|            return tox_event_file_chunk_request_unpack(&data->file_chunk_request, bu, mem);
   970|       |
@@ -9277,15 +9277,15 @@ tox_event.c:tox_event_data_unpack:
   ------------------
   972|     25|            return tox_event_file_recv_chunk_unpack(&data->file_recv_chunk, bu, mem);
   973|       |
-  974|     42|        case TOX_EVENT_FILE_RECV_CONTROL:
+  974|     38|        case TOX_EVENT_FILE_RECV_CONTROL:
   ------------------
-  |  Branch (974:9): [True: 42, False: 1.61k]
+  |  Branch (974:9): [True: 38, False: 1.61k]
   ------------------
-  975|     42|            return tox_event_file_recv_control_unpack(&data->file_recv_control, bu, mem);
+  975|     38|            return tox_event_file_recv_control_unpack(&data->file_recv_control, bu, mem);
   976|       |
   977|     33|        case TOX_EVENT_FILE_RECV:
   ------------------
-  |  Branch (977:9): [True: 33, False: 1.62k]
+  |  Branch (977:9): [True: 33, False: 1.61k]
   ------------------
   978|     33|            return tox_event_file_recv_unpack(&data->file_recv, bu, mem);
   979|       |
@@ -9321,7 +9321,7 @@ tox_event.c:tox_event_data_unpack:
   994|       |
   995|     34|        case TOX_EVENT_FRIEND_READ_RECEIPT:
   ------------------
-  |  Branch (995:9): [True: 34, False: 1.62k]
+  |  Branch (995:9): [True: 34, False: 1.61k]
   ------------------
   996|     34|            return tox_event_friend_read_receipt_unpack(&data->friend_read_receipt, bu, mem);
   997|       |
@@ -9349,21 +9349,21 @@ tox_event.c:tox_event_data_unpack:
   ------------------
  1008|     41|            return tox_event_friend_typing_unpack(&data->friend_typing, bu, mem);
  1009|       |
- 1010|    176|        case TOX_EVENT_SELF_CONNECTION_STATUS:
+ 1010|    177|        case TOX_EVENT_SELF_CONNECTION_STATUS:
   ------------------
-  |  Branch (1010:9): [True: 176, False: 1.47k]
+  |  Branch (1010:9): [True: 177, False: 1.47k]
   ------------------
- 1011|    176|            return tox_event_self_connection_status_unpack(&data->self_connection_status, bu, mem);
+ 1011|    177|            return tox_event_self_connection_status_unpack(&data->self_connection_status, bu, mem);
  1012|       |
  1013|     24|        case TOX_EVENT_GROUP_PEER_NAME:
   ------------------
-  |  Branch (1013:9): [True: 24, False: 1.63k]
+  |  Branch (1013:9): [True: 24, False: 1.62k]
   ------------------
  1014|     24|            return tox_event_group_peer_name_unpack(&data->group_peer_name, bu, mem);
  1015|       |
  1016|     23|        case TOX_EVENT_GROUP_PEER_STATUS:
   ------------------
-  |  Branch (1016:9): [True: 23, False: 1.63k]
+  |  Branch (1016:9): [True: 23, False: 1.62k]
   ------------------
  1017|     23|            return tox_event_group_peer_status_unpack(&data->group_peer_status, bu, mem);
  1018|       |
@@ -9393,7 +9393,7 @@ tox_event.c:tox_event_data_unpack:
  1030|       |
  1031|     14|        case TOX_EVENT_GROUP_PEER_LIMIT:
   ------------------
-  |  Branch (1031:9): [True: 14, False: 1.64k]
+  |  Branch (1031:9): [True: 14, False: 1.63k]
   ------------------
  1032|     14|            return tox_event_group_peer_limit_unpack(&data->group_peer_limit, bu, mem);
  1033|       |
@@ -9411,7 +9411,7 @@ tox_event.c:tox_event_data_unpack:
  1039|       |
  1040|     33|        case TOX_EVENT_GROUP_PRIVATE_MESSAGE:
   ------------------
-  |  Branch (1040:9): [True: 33, False: 1.62k]
+  |  Branch (1040:9): [True: 33, False: 1.61k]
   ------------------
  1041|     33|            return tox_event_group_private_message_unpack(&data->group_private_message, bu, mem);
  1042|       |
@@ -9429,7 +9429,7 @@ tox_event.c:tox_event_data_unpack:
  1048|       |
  1049|     23|        case TOX_EVENT_GROUP_INVITE:
   ------------------
-  |  Branch (1049:9): [True: 23, False: 1.63k]
+  |  Branch (1049:9): [True: 23, False: 1.62k]
   ------------------
  1050|     23|            return tox_event_group_invite_unpack(&data->group_invite, bu, mem);
  1051|       |
@@ -9439,35 +9439,35 @@ tox_event.c:tox_event_data_unpack:
   ------------------
  1053|     46|            return tox_event_group_peer_join_unpack(&data->group_peer_join, bu, mem);
  1054|       |
- 1055|     66|        case TOX_EVENT_GROUP_PEER_EXIT:
+ 1055|     64|        case TOX_EVENT_GROUP_PEER_EXIT:
   ------------------
-  |  Branch (1055:9): [True: 66, False: 1.58k]
+  |  Branch (1055:9): [True: 64, False: 1.58k]
   ------------------
- 1056|     66|            return tox_event_group_peer_exit_unpack(&data->group_peer_exit, bu, mem);
+ 1056|     64|            return tox_event_group_peer_exit_unpack(&data->group_peer_exit, bu, mem);
  1057|       |
  1058|     43|        case TOX_EVENT_GROUP_SELF_JOIN:
   ------------------
-  |  Branch (1058:9): [True: 43, False: 1.61k]
+  |  Branch (1058:9): [True: 43, False: 1.60k]
   ------------------
  1059|     43|            return tox_event_group_self_join_unpack(&data->group_self_join, bu, mem);
  1060|       |
- 1061|     48|        case TOX_EVENT_GROUP_JOIN_FAIL:
+ 1061|     49|        case TOX_EVENT_GROUP_JOIN_FAIL:
   ------------------
-  |  Branch (1061:9): [True: 48, False: 1.60k]
+  |  Branch (1061:9): [True: 49, False: 1.60k]
   ------------------
- 1062|     48|            return tox_event_group_join_fail_unpack(&data->group_join_fail, bu, mem);
+ 1062|     49|            return tox_event_group_join_fail_unpack(&data->group_join_fail, bu, mem);
  1063|       |
  1064|     43|        case TOX_EVENT_GROUP_MODERATION:
   ------------------
-  |  Branch (1064:9): [True: 43, False: 1.61k]
+  |  Branch (1064:9): [True: 43, False: 1.60k]
   ------------------
  1065|     43|            return tox_event_group_moderation_unpack(&data->group_moderation, bu, mem);
  1066|       |
- 1067|     24|        case TOX_EVENT_DHT_NODES_RESPONSE:
+ 1067|     26|        case TOX_EVENT_DHT_NODES_RESPONSE:
   ------------------
-  |  Branch (1067:9): [True: 24, False: 1.63k]
+  |  Branch (1067:9): [True: 26, False: 1.62k]
   ------------------
- 1068|     24|            return tox_event_dht_nodes_response_unpack(&data->dht_nodes_response, bu, mem);
+ 1068|     26|            return tox_event_dht_nodes_response_unpack(&data->dht_nodes_response, bu, mem);
  1069|       |
  1070|      1|        case TOX_EVENT_INVALID:
   ------------------
@@ -9503,14 +9503,14 @@ tox_events_get_bytes:
   ------------------
   130|    189|}
 tox_events_load:
-  160|    705|{
-  161|    705|    Tox_Events *events = (Tox_Events *)mem_alloc(sys->mem, sizeof(Tox_Events));
+  160|    706|{
+  161|    706|    Tox_Events *events = (Tox_Events *)mem_alloc(sys->mem, sizeof(Tox_Events));
   162|       |
-  163|    705|    if (events == nullptr) {
+  163|    706|    if (events == nullptr) {
   ------------------
-  |  |   63|    705|#define nullptr NULL
+  |  |   63|    706|#define nullptr NULL
   ------------------
-  |  Branch (163:9): [True: 1, False: 704]
+  |  Branch (163:9): [True: 1, False: 705]
   ------------------
   164|      1|        return nullptr;
   ------------------
@@ -9518,27 +9518,27 @@ tox_events_load:
   ------------------
   165|      1|    }
   166|       |
-  167|    704|    *events = (Tox_Events) {
-  168|    704|        nullptr
+  167|    705|    *events = (Tox_Events) {
+  168|    705|        nullptr
   ------------------
-  |  |   63|    704|#define nullptr NULL
+  |  |   63|    705|#define nullptr NULL
   ------------------
-  169|    704|    };
-  170|    704|    events->mem = sys->mem;
+  169|    705|    };
+  170|    705|    events->mem = sys->mem;
   171|       |
-  172|    704|    if (!bin_unpack_obj(sys->mem, tox_events_unpack_handler, events, bytes, bytes_size)) {
+  172|    705|    if (!bin_unpack_obj(sys->mem, tox_events_unpack_handler, events, bytes, bytes_size)) {
   ------------------
-  |  Branch (172:9): [True: 515, False: 189]
+  |  Branch (172:9): [True: 516, False: 189]
   ------------------
-  173|    515|        tox_events_free(events);
-  174|    515|        return nullptr;
+  173|    516|        tox_events_free(events);
+  174|    516|        return nullptr;
   ------------------
-  |  |   63|    515|#define nullptr NULL
+  |  |   63|    516|#define nullptr NULL
   ------------------
-  175|    515|    }
+  175|    516|    }
   176|       |
   177|    189|    return events;
-  178|    704|}
+  178|    705|}
 tox_events.c:tox_events_pack_handler:
   117|    378|{
   118|    378|    const Tox_Events *events = (const Tox_Events *)obj;
@@ -9567,13 +9567,13 @@ tox_events.c:tox_events_get_events:
   ------------------
    80|    378|}
 tox_events.c:tox_events_unpack_handler:
-  133|    704|{
-  134|    704|    Tox_Events *events = (Tox_Events *)obj;
+  133|    705|{
+  134|    705|    Tox_Events *events = (Tox_Events *)obj;
   135|       |
-  136|    704|    uint32_t size;
-  137|    704|    if (!bin_unpack_array(bu, &size)) {
+  136|    705|    uint32_t size;
+  137|    705|    if (!bin_unpack_array(bu, &size)) {
   ------------------
-  |  Branch (137:9): [True: 65, False: 639]
+  |  Branch (137:9): [True: 65, False: 640]
   ------------------
   138|     65|        return false;
   139|     65|    }
@@ -9585,11 +9585,11 @@ tox_events.c:tox_events_unpack_handler:
   142|  1.73k|        Tox_Event event = {TOX_EVENT_INVALID};
   143|  1.73k|        if (!tox_event_unpack_into(&event, bu, events->mem)) {
   ------------------
-  |  Branch (143:13): [True: 448, False: 1.28k]
+  |  Branch (143:13): [True: 449, False: 1.28k]
   ------------------
-  144|    448|            tox_event_destruct(&event, events->mem);
-  145|    448|            return false;
-  146|    448|        }
+  144|    449|            tox_event_destruct(&event, events->mem);
+  145|    449|            return false;
+  146|    449|        }
   147|       |
   148|  1.28k|        if (!tox_events_add(events, &event)) {
   ------------------
@@ -9601,7 +9601,7 @@ tox_events.c:tox_events_unpack_handler:
   152|  1.28k|    }
   153|       |
   154|       |    // Invariant: if all adds worked, the events size must be the input array size.
-  155|    639|    assert(tox_events_get_size(events) == size);
+  155|    640|    assert(tox_events_get_size(events) == size);
   ------------------
   |  Branch (155:5): [True: 189, False: 0]
   ------------------
@@ -9609,14 +9609,28 @@ tox_events.c:tox_events_unpack_handler:
   157|    189|}
 
 LLVMFuzzerTestOneInput:
-   99|    708|{
-  100|    708|    TestUnpack(Fuzz_Data(data, size));
-  101|    708|    return 0;
-  102|    708|}
+   99|    709|{
+  100|    709|    TestUnpack(Fuzz_Data(data, size));
+  101|    709|    return 0;
+  102|    709|}
 tox_events_fuzz_test.cc:_ZN12_GLOBAL__N_110TestUnpackEN3tox4test9Fuzz_DataE:
-   20|    708|{
+   20|    709|{
    21|       |    // 2 bytes: size of the events data
-   22|    708|    CONSUME_OR_RETURN(const std::uint8_t *events_size_bytes, data, sizeof(std::uint16_t));
+   22|    709|    CONSUME_OR_RETURN(const std::uint8_t *events_size_bytes, data, sizeof(std::uint16_t));
+  ------------------
+  |  |  138|    709|    if ((INPUT).size() < (SIZE)) {           \
+  |  |  ------------------
+  |  |  |  Branch (138:9): [True: 1, False: 708]
+  |  |  ------------------
+  |  |  139|      1|        return;                              \
+  |  |  140|      1|    }                                        \
+  |  |  141|    709|    DECL = (INPUT).consume(__func__, (SIZE))
+  ------------------
+   23|    708|    std::uint16_t events_size;
+   24|    708|    std::memcpy(&events_size, events_size_bytes, sizeof(std::uint16_t));
+   25|       |
+   26|       |    // events_size bytes: events data (max 64K)
+   27|    708|    CONSUME_OR_RETURN(const std::uint8_t *events_data, data, events_size);
   ------------------
   |  |  138|    708|    if ((INPUT).size() < (SIZE)) {           \
   |  |  ------------------
@@ -9626,24 +9640,10 @@ tox_events_fuzz_test.cc:_ZN12_GLOBAL__N_110TestUnpackEN3tox4test9Fuzz_DataE:
   |  |  140|      1|    }                                        \
   |  |  141|    708|    DECL = (INPUT).consume(__func__, (SIZE))
   ------------------
-   23|    707|    std::uint16_t events_size;
-   24|    707|    std::memcpy(&events_size, events_size_bytes, sizeof(std::uint16_t));
-   25|       |
-   26|       |    // events_size bytes: events data (max 64K)
-   27|    707|    CONSUME_OR_RETURN(const std::uint8_t *events_data, data, events_size);
-  ------------------
-  |  |  138|    707|    if ((INPUT).size() < (SIZE)) {           \
-  |  |  ------------------
-  |  |  |  Branch (138:9): [True: 1, False: 706]
-  |  |  ------------------
-  |  |  139|      1|        return;                              \
-  |  |  140|      1|    }                                        \
-  |  |  141|    707|    DECL = (INPUT).consume(__func__, (SIZE))
-  ------------------
    28|       |
-   29|    706|    if (data.empty()) {
+   29|    707|    if (data.empty()) {
   ------------------
-  |  Branch (29:9): [True: 1, False: 705]
+  |  Branch (29:9): [True: 1, False: 706]
   ------------------
    30|       |        // If there's no more input, no std::malloc failure paths can possibly be
    31|       |        // tested, so we ignore this input.
@@ -9651,70 +9651,70 @@ tox_events_fuzz_test.cc:_ZN12_GLOBAL__N_110TestUnpackEN3tox4test9Fuzz_DataE:
    33|      1|    }
    34|       |
    35|       |    // rest of the fuzz data is input for std::malloc
-   36|    705|    SimulatedEnvironment env;
-   37|    705|    auto node = env.create_node(33445);
-   38|    705|    configure_fuzz_memory_source(env.fake_memory(), data);
+   36|    706|    SimulatedEnvironment env;
+   37|    706|    auto node = env.create_node(33445);
+   38|    706|    configure_fuzz_memory_source(env.fake_memory(), data);
    39|       |
-   40|    705|    Tox_Dispatch *dispatch = tox_dispatch_new(nullptr);
-   41|    705|    assert(dispatch != nullptr);
+   40|    706|    Tox_Dispatch *dispatch = tox_dispatch_new(nullptr);
+   41|    706|    assert(dispatch != nullptr);
   ------------------
-  |  Branch (41:5): [True: 705, False: 0]
+  |  Branch (41:5): [True: 706, False: 0]
   ------------------
    42|       |
-   43|    705|    auto ignore = [](auto *event, void *user_data) {};
-   44|    705|    tox_events_callback_conference_connected(dispatch, ignore);
-   45|    705|    tox_events_callback_conference_invite(dispatch, ignore);
-   46|    705|    tox_events_callback_conference_message(dispatch, ignore);
-   47|    705|    tox_events_callback_conference_peer_list_changed(dispatch, ignore);
-   48|    705|    tox_events_callback_conference_peer_name(dispatch, ignore);
-   49|    705|    tox_events_callback_conference_title(dispatch, ignore);
-   50|    705|    tox_events_callback_file_chunk_request(dispatch, ignore);
-   51|    705|    tox_events_callback_file_recv(dispatch, ignore);
-   52|    705|    tox_events_callback_file_recv_chunk(dispatch, ignore);
-   53|    705|    tox_events_callback_file_recv_control(dispatch, ignore);
-   54|    705|    tox_events_callback_friend_connection_status(dispatch, ignore);
-   55|    705|    tox_events_callback_friend_lossless_packet(dispatch, ignore);
-   56|    705|    tox_events_callback_friend_lossy_packet(dispatch, ignore);
-   57|    705|    tox_events_callback_friend_message(dispatch, ignore);
-   58|    705|    tox_events_callback_friend_name(dispatch, ignore);
-   59|    705|    tox_events_callback_friend_read_receipt(dispatch, ignore);
-   60|    705|    tox_events_callback_friend_request(dispatch, ignore);
-   61|    705|    tox_events_callback_friend_status(dispatch, ignore);
-   62|    705|    tox_events_callback_friend_status_message(dispatch, ignore);
-   63|    705|    tox_events_callback_friend_typing(dispatch, ignore);
-   64|    705|    tox_events_callback_self_connection_status(dispatch, ignore);
-   65|    705|    tox_events_callback_group_peer_name(dispatch, ignore);
-   66|    705|    tox_events_callback_group_peer_status(dispatch, ignore);
-   67|    705|    tox_events_callback_group_topic(dispatch, ignore);
-   68|    705|    tox_events_callback_group_privacy_state(dispatch, ignore);
-   69|    705|    tox_events_callback_group_voice_state(dispatch, ignore);
-   70|    705|    tox_events_callback_group_topic_lock(dispatch, ignore);
-   71|    705|    tox_events_callback_group_peer_limit(dispatch, ignore);
-   72|    705|    tox_events_callback_group_password(dispatch, ignore);
-   73|    705|    tox_events_callback_group_message(dispatch, ignore);
-   74|    705|    tox_events_callback_group_private_message(dispatch, ignore);
-   75|    705|    tox_events_callback_group_custom_packet(dispatch, ignore);
-   76|    705|    tox_events_callback_group_custom_private_packet(dispatch, ignore);
-   77|    705|    tox_events_callback_group_invite(dispatch, ignore);
-   78|    705|    tox_events_callback_group_peer_join(dispatch, ignore);
-   79|    705|    tox_events_callback_group_peer_exit(dispatch, ignore);
-   80|    705|    tox_events_callback_group_self_join(dispatch, ignore);
-   81|    705|    tox_events_callback_group_join_fail(dispatch, ignore);
-   82|    705|    tox_events_callback_group_moderation(dispatch, ignore);
+   43|    706|    auto ignore = [](auto *event, void *user_data) {};
+   44|    706|    tox_events_callback_conference_connected(dispatch, ignore);
+   45|    706|    tox_events_callback_conference_invite(dispatch, ignore);
+   46|    706|    tox_events_callback_conference_message(dispatch, ignore);
+   47|    706|    tox_events_callback_conference_peer_list_changed(dispatch, ignore);
+   48|    706|    tox_events_callback_conference_peer_name(dispatch, ignore);
+   49|    706|    tox_events_callback_conference_title(dispatch, ignore);
+   50|    706|    tox_events_callback_file_chunk_request(dispatch, ignore);
+   51|    706|    tox_events_callback_file_recv(dispatch, ignore);
+   52|    706|    tox_events_callback_file_recv_chunk(dispatch, ignore);
+   53|    706|    tox_events_callback_file_recv_control(dispatch, ignore);
+   54|    706|    tox_events_callback_friend_connection_status(dispatch, ignore);
+   55|    706|    tox_events_callback_friend_lossless_packet(dispatch, ignore);
+   56|    706|    tox_events_callback_friend_lossy_packet(dispatch, ignore);
+   57|    706|    tox_events_callback_friend_message(dispatch, ignore);
+   58|    706|    tox_events_callback_friend_name(dispatch, ignore);
+   59|    706|    tox_events_callback_friend_read_receipt(dispatch, ignore);
+   60|    706|    tox_events_callback_friend_request(dispatch, ignore);
+   61|    706|    tox_events_callback_friend_status(dispatch, ignore);
+   62|    706|    tox_events_callback_friend_status_message(dispatch, ignore);
+   63|    706|    tox_events_callback_friend_typing(dispatch, ignore);
+   64|    706|    tox_events_callback_self_connection_status(dispatch, ignore);
+   65|    706|    tox_events_callback_group_peer_name(dispatch, ignore);
+   66|    706|    tox_events_callback_group_peer_status(dispatch, ignore);
+   67|    706|    tox_events_callback_group_topic(dispatch, ignore);
+   68|    706|    tox_events_callback_group_privacy_state(dispatch, ignore);
+   69|    706|    tox_events_callback_group_voice_state(dispatch, ignore);
+   70|    706|    tox_events_callback_group_topic_lock(dispatch, ignore);
+   71|    706|    tox_events_callback_group_peer_limit(dispatch, ignore);
+   72|    706|    tox_events_callback_group_password(dispatch, ignore);
+   73|    706|    tox_events_callback_group_message(dispatch, ignore);
+   74|    706|    tox_events_callback_group_private_message(dispatch, ignore);
+   75|    706|    tox_events_callback_group_custom_packet(dispatch, ignore);
+   76|    706|    tox_events_callback_group_custom_private_packet(dispatch, ignore);
+   77|    706|    tox_events_callback_group_invite(dispatch, ignore);
+   78|    706|    tox_events_callback_group_peer_join(dispatch, ignore);
+   79|    706|    tox_events_callback_group_peer_exit(dispatch, ignore);
+   80|    706|    tox_events_callback_group_self_join(dispatch, ignore);
+   81|    706|    tox_events_callback_group_join_fail(dispatch, ignore);
+   82|    706|    tox_events_callback_group_moderation(dispatch, ignore);
    83|       |
-   84|    705|    Tox_Events *events = tox_events_load(&node->system, events_data, events_size);
-   85|    705|    if (events) {
+   84|    706|    Tox_Events *events = tox_events_load(&node->system, events_data, events_size);
+   85|    706|    if (events) {
   ------------------
-  |  Branch (85:9): [True: 189, False: 516]
+  |  Branch (85:9): [True: 189, False: 517]
   ------------------
    86|    189|        std::vector<std::uint8_t> packed(tox_events_bytes_size(events));
    87|    189|        tox_events_get_bytes(events, packed.data());
    88|       |
    89|    189|        tox_dispatch_invoke(dispatch, events, nullptr);
    90|    189|    }
-   91|    705|    tox_events_free(events);
-   92|    705|    tox_dispatch_free(dispatch);
-   93|    705|}
+   91|    706|    tox_events_free(events);
+   92|    706|    tox_dispatch_free(dispatch);
+   93|    706|}
 tox_events_fuzz_test.cc:_ZZN12_GLOBAL__N_110TestUnpackEN3tox4test9Fuzz_DataEENK3$_0clIK30Tox_Event_Conference_ConnectedEEDaPT_Pv:
    43|     22|    auto ignore = [](auto *event, void *user_data) {};
 tox_events_fuzz_test.cc:_ZZN12_GLOBAL__N_110TestUnpackEN3tox4test9Fuzz_DataEENK3$_0clIK27Tox_Event_Conference_InviteEEDaPT_Pv:
@@ -9852,29 +9852,29 @@ tox_conference_type_unpack:
   ------------------
    37|     24|}
 tox_connection_unpack:
-   65|    208|{
-   66|    208|    uint32_t u32;
-   67|    208|    return bin_unpack_u32(bu, &u32)
+   65|    209|{
+   66|    209|    uint32_t u32;
+   67|    209|    return bin_unpack_u32(bu, &u32)
   ------------------
-  |  Branch (67:12): [True: 205, False: 3]
+  |  Branch (67:12): [True: 206, False: 3]
   ------------------
-   68|    205|           && tox_connection_from_int(u32, val);
+   68|    206|           && tox_connection_from_int(u32, val);
   ------------------
-  |  Branch (68:15): [True: 204, False: 1]
+  |  Branch (68:15): [True: 205, False: 1]
   ------------------
-   69|    208|}
+   69|    209|}
 tox_file_control_unpack:
-   97|     35|{
-   98|     35|    uint32_t u32;
-   99|     35|    return bin_unpack_u32(bu, &u32)
+   97|     31|{
+   98|     31|    uint32_t u32;
+   99|     31|    return bin_unpack_u32(bu, &u32)
   ------------------
-  |  Branch (99:12): [True: 33, False: 2]
+  |  Branch (99:12): [True: 29, False: 2]
   ------------------
-  100|     33|           && tox_file_control_from_int(u32, val);
+  100|     29|           && tox_file_control_from_int(u32, val);
   ------------------
-  |  Branch (100:15): [True: 32, False: 1]
+  |  Branch (100:15): [True: 28, False: 1]
   ------------------
-  101|     35|}
+  101|     31|}
 tox_message_type_unpack:
   124|     87|{
   125|     87|    uint32_t u32;
@@ -9936,17 +9936,17 @@ tox_group_topic_lock_unpack:
   ------------------
   235|     22|}
 tox_group_join_fail_unpack:
-  259|     44|{
-  260|     44|    uint32_t u32;
-  261|     44|    return bin_unpack_u32(bu, &u32)
+  259|     45|{
+  260|     45|    uint32_t u32;
+  261|     45|    return bin_unpack_u32(bu, &u32)
   ------------------
-  |  Branch (261:12): [True: 42, False: 2]
+  |  Branch (261:12): [True: 44, False: 1]
   ------------------
-  262|     42|           && tox_group_join_fail_from_int(u32, val);
+  262|     44|           && tox_group_join_fail_from_int(u32, val);
   ------------------
-  |  Branch (262:15): [True: 41, False: 1]
+  |  Branch (262:15): [True: 42, False: 2]
   ------------------
-  263|     44|}
+  263|     45|}
 tox_group_mod_event_unpack:
   291|     35|{
   292|     35|    uint32_t u32;
@@ -9960,17 +9960,17 @@ tox_group_mod_event_unpack:
   ------------------
   295|     35|}
 tox_group_exit_type_unpack:
-  331|     60|{
-  332|     60|    uint32_t u32;
-  333|     60|    return bin_unpack_u32(bu, &u32)
+  331|     58|{
+  332|     58|    uint32_t u32;
+  333|     58|    return bin_unpack_u32(bu, &u32)
   ------------------
-  |  Branch (333:12): [True: 59, False: 1]
+  |  Branch (333:12): [True: 57, False: 1]
   ------------------
-  334|     59|           && tox_group_exit_type_from_int(u32, val);
+  334|     57|           && tox_group_exit_type_from_int(u32, val);
   ------------------
-  |  Branch (334:15): [True: 58, False: 1]
+  |  Branch (334:15): [True: 56, False: 1]
   ------------------
-  335|     60|}
+  335|     58|}
 tox_unpack.c:tox_conference_type_from_int:
    14|     23|{
    15|     23|    switch (value) {
@@ -10000,11 +10000,11 @@ tox_unpack.c:tox_conference_type_from_int:
    30|     23|    }
    31|     23|}
 tox_unpack.c:tox_connection_from_int:
-   40|    205|{
-   41|    205|    switch (value) {
+   40|    206|{
+   41|    206|    switch (value) {
    42|    121|        case TOX_CONNECTION_NONE: {
   ------------------
-  |  Branch (42:9): [True: 121, False: 84]
+  |  Branch (42:9): [True: 121, False: 85]
   ------------------
    43|    121|            *out_enum = TOX_CONNECTION_NONE;
    44|    121|            return true;
@@ -10012,35 +10012,35 @@ tox_unpack.c:tox_connection_from_int:
    46|       |
    47|     55|        case TOX_CONNECTION_TCP: {
   ------------------
-  |  Branch (47:9): [True: 55, False: 150]
+  |  Branch (47:9): [True: 55, False: 151]
   ------------------
    48|     55|            *out_enum = TOX_CONNECTION_TCP;
    49|     55|            return true;
    50|      0|        }
    51|       |
-   52|     28|        case TOX_CONNECTION_UDP: {
+   52|     29|        case TOX_CONNECTION_UDP: {
   ------------------
-  |  Branch (52:9): [True: 28, False: 177]
+  |  Branch (52:9): [True: 29, False: 177]
   ------------------
-   53|     28|            *out_enum = TOX_CONNECTION_UDP;
-   54|     28|            return true;
+   53|     29|            *out_enum = TOX_CONNECTION_UDP;
+   54|     29|            return true;
    55|      0|        }
    56|       |
    57|      1|        default: {
   ------------------
-  |  Branch (57:9): [True: 1, False: 204]
+  |  Branch (57:9): [True: 1, False: 205]
   ------------------
    58|      1|            *out_enum = TOX_CONNECTION_NONE;
    59|       |            return false;
    60|      0|        }
-   61|    205|    }
-   62|    205|}
+   61|    206|    }
+   62|    206|}
 tox_unpack.c:tox_file_control_from_int:
-   72|     33|{
-   73|     33|    switch (value) {
+   72|     29|{
+   73|     29|    switch (value) {
    74|     11|        case TOX_FILE_CONTROL_RESUME: {
   ------------------
-  |  Branch (74:9): [True: 11, False: 22]
+  |  Branch (74:9): [True: 11, False: 18]
   ------------------
    75|     11|            *out_enum = TOX_FILE_CONTROL_RESUME;
    76|     11|            return true;
@@ -10048,29 +10048,29 @@ tox_unpack.c:tox_file_control_from_int:
    78|       |
    79|     10|        case TOX_FILE_CONTROL_PAUSE: {
   ------------------
-  |  Branch (79:9): [True: 10, False: 23]
+  |  Branch (79:9): [True: 10, False: 19]
   ------------------
    80|     10|            *out_enum = TOX_FILE_CONTROL_PAUSE;
    81|     10|            return true;
    82|      0|        }
    83|       |
-   84|     11|        case TOX_FILE_CONTROL_CANCEL: {
+   84|      7|        case TOX_FILE_CONTROL_CANCEL: {
   ------------------
-  |  Branch (84:9): [True: 11, False: 22]
+  |  Branch (84:9): [True: 7, False: 22]
   ------------------
-   85|     11|            *out_enum = TOX_FILE_CONTROL_CANCEL;
-   86|     11|            return true;
+   85|      7|            *out_enum = TOX_FILE_CONTROL_CANCEL;
+   86|      7|            return true;
    87|      0|        }
    88|       |
    89|      1|        default: {
   ------------------
-  |  Branch (89:9): [True: 1, False: 32]
+  |  Branch (89:9): [True: 1, False: 28]
   ------------------
    90|      1|            *out_enum = TOX_FILE_CONTROL_RESUME;
    91|       |            return false;
    92|      0|        }
-   93|     33|    }
-   94|     33|}
+   93|     29|    }
+   94|     29|}
 tox_unpack.c:tox_message_type_from_int:
   104|     81|{
   105|     81|    switch (value) {
@@ -10221,38 +10221,38 @@ tox_unpack.c:tox_group_topic_lock_from_int:
   228|     21|    }
   229|     21|}
 tox_unpack.c:tox_group_join_fail_from_int:
-  238|     42|{
-  239|     42|    switch (value) {
-  240|     13|        case TOX_GROUP_JOIN_FAIL_PEER_LIMIT: {
+  238|     44|{
+  239|     44|    switch (value) {
+  240|     12|        case TOX_GROUP_JOIN_FAIL_PEER_LIMIT: {
   ------------------
-  |  Branch (240:9): [True: 13, False: 29]
+  |  Branch (240:9): [True: 12, False: 32]
   ------------------
-  241|     13|            *out_enum = TOX_GROUP_JOIN_FAIL_PEER_LIMIT;
-  242|     13|            return true;
+  241|     12|            *out_enum = TOX_GROUP_JOIN_FAIL_PEER_LIMIT;
+  242|     12|            return true;
   243|      0|        }
   244|     10|        case TOX_GROUP_JOIN_FAIL_INVALID_PASSWORD: {
   ------------------
-  |  Branch (244:9): [True: 10, False: 32]
+  |  Branch (244:9): [True: 10, False: 34]
   ------------------
   245|     10|            *out_enum = TOX_GROUP_JOIN_FAIL_INVALID_PASSWORD;
   246|     10|            return true;
   247|      0|        }
-  248|     18|        case TOX_GROUP_JOIN_FAIL_UNKNOWN: {
+  248|     20|        case TOX_GROUP_JOIN_FAIL_UNKNOWN: {
   ------------------
-  |  Branch (248:9): [True: 18, False: 24]
+  |  Branch (248:9): [True: 20, False: 24]
   ------------------
-  249|     18|            *out_enum = TOX_GROUP_JOIN_FAIL_UNKNOWN;
-  250|     18|            return true;
+  249|     20|            *out_enum = TOX_GROUP_JOIN_FAIL_UNKNOWN;
+  250|     20|            return true;
   251|      0|        }
-  252|      1|        default: {
+  252|      2|        default: {
   ------------------
-  |  Branch (252:9): [True: 1, False: 41]
+  |  Branch (252:9): [True: 2, False: 42]
   ------------------
-  253|      1|            *out_enum = TOX_GROUP_JOIN_FAIL_PEER_LIMIT;
+  253|      2|            *out_enum = TOX_GROUP_JOIN_FAIL_PEER_LIMIT;
   254|       |            return false;
   255|      0|        }
-  256|     42|    }
-  257|     42|}
+  256|     44|    }
+  257|     44|}
 tox_unpack.c:tox_group_mod_event_from_int:
   266|     31|{
   267|     31|    switch (value) {
@@ -10294,57 +10294,57 @@ tox_unpack.c:tox_group_mod_event_from_int:
   288|     31|    }
   289|     31|}
 tox_unpack.c:tox_group_exit_type_from_int:
-  298|     59|{
-  299|     59|    switch (value) {
-  300|     15|        case TOX_GROUP_EXIT_TYPE_QUIT: {
+  298|     57|{
+  299|     57|    switch (value) {
+  300|     13|        case TOX_GROUP_EXIT_TYPE_QUIT: {
   ------------------
-  |  Branch (300:9): [True: 15, False: 44]
+  |  Branch (300:9): [True: 13, False: 44]
   ------------------
-  301|     15|            *out_enum = TOX_GROUP_EXIT_TYPE_QUIT;
-  302|     15|            return true;
+  301|     13|            *out_enum = TOX_GROUP_EXIT_TYPE_QUIT;
+  302|     13|            return true;
   303|      0|        }
   304|     21|        case TOX_GROUP_EXIT_TYPE_TIMEOUT: {
   ------------------
-  |  Branch (304:9): [True: 21, False: 38]
+  |  Branch (304:9): [True: 21, False: 36]
   ------------------
   305|     21|            *out_enum = TOX_GROUP_EXIT_TYPE_TIMEOUT;
   306|     21|            return true;
   307|      0|        }
   308|      3|        case TOX_GROUP_EXIT_TYPE_DISCONNECTED: {
   ------------------
-  |  Branch (308:9): [True: 3, False: 56]
+  |  Branch (308:9): [True: 3, False: 54]
   ------------------
   309|      3|            *out_enum = TOX_GROUP_EXIT_TYPE_DISCONNECTED;
   310|      3|            return true;
   311|      0|        }
   312|     10|        case TOX_GROUP_EXIT_TYPE_SELF_DISCONNECTED: {
   ------------------
-  |  Branch (312:9): [True: 10, False: 49]
+  |  Branch (312:9): [True: 10, False: 47]
   ------------------
   313|     10|            *out_enum = TOX_GROUP_EXIT_TYPE_SELF_DISCONNECTED;
   314|     10|            return true;
   315|      0|        }
   316|      6|        case TOX_GROUP_EXIT_TYPE_KICK: {
   ------------------
-  |  Branch (316:9): [True: 6, False: 53]
+  |  Branch (316:9): [True: 6, False: 51]
   ------------------
   317|      6|            *out_enum = TOX_GROUP_EXIT_TYPE_KICK;
   318|      6|            return true;
   319|      0|        }
   320|      3|        case TOX_GROUP_EXIT_TYPE_SYNC_ERROR: {
   ------------------
-  |  Branch (320:9): [True: 3, False: 56]
+  |  Branch (320:9): [True: 3, False: 54]
   ------------------
   321|      3|            *out_enum = TOX_GROUP_EXIT_TYPE_SYNC_ERROR;
   322|      3|            return true;
   323|      0|        }
   324|      1|        default: {
   ------------------
-  |  Branch (324:9): [True: 1, False: 58]
+  |  Branch (324:9): [True: 1, False: 56]
   ------------------
   325|      1|            *out_enum = TOX_GROUP_EXIT_TYPE_QUIT;
   326|       |            return false;
   327|      0|        }
-  328|     59|    }
-  329|     59|}
+  328|     57|    }
+  329|     57|}
 
